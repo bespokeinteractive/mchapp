@@ -1,0 +1,28 @@
+<dataset>
+  <concept concept_id="1738" retired="false" datatype_id="1" class_id="1" is_set="false" creator="1" date_created="2005-01-01 00:00:00.0" uuid="588a31bb-7923-4ef8-a6fc-b8f2ae5d1344"/>
+  <concept concept_id="1739" retired="false" datatype_id="1" class_id="1" is_set="false" creator="1" date_created="2005-01-01 00:00:00.0" uuid="8d85445e-ffed-40f5-80b9-344e0198a8d7"/>
+  <concept concept_id="1740" retired="false" datatype_id="1" class_id="1" is_set="false" creator="1" date_created="2008-08-15 13:52:53.0" uuid="17ab627f-f5a5-418a-b8c6-95376cd25f6b"/>
+  <concept_description concept_description_id="1" concept_id="1738" description="this is a description" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" uuid="8ea631ad-2ac4-4a60-afa1-9e1e6530ba59"/>
+  <concept_name concept_id="1738" name="ANC" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1" voided="false" uuid="a1d78a88-06c1-4386-a47b-72c19b0dbf8c" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="1739" name="PNC" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1" voided="false" uuid="711706d6-24a9-4820-9620-052c11e7dbb4" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="1740" name="CWC" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1" voided="false" uuid="7a297186-9b3a-423d-bb61-dab35fbcb315" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <patient patient_id="2" creator="1" date_created="2006-02-15 00:00:00.0" voided="false"/>
+  <patient patient_id="3" creator="1" date_created="2006-02-15 00:00:00.0" voided="false"/>
+  <patient_program patient_program_id="1" patient_id="2" program_id="1" date_enrolled="2006-10-14 00:00:00.0" creator="1" date_created="2007-09-20 00:00:00.0" voided="false" uuid="9119b9f8-af3d-4ad8-9e2e-2317c3de91c6"/>
+  <person person_id="2" gender="F" birthdate="1995-12-25" birthdate_estimated="false" dead="false" creator="1" date_created="2006-02-15 00:00:00.0" voided="false" uuid="6013a8cd-c6a0-4140-bfac-0af565704420"/>
+  <person person_id="3" gender="F" birthdate="1990-12-16" birthdate_estimated="false" dead="false" creator="1" date_created="2006-02-15 00:00:00.0" voided="false" uuid="f7c033bf-06e6-11e6-9301-34e6d77c15d6"/>
+  <person_name person_name_id="2" preferred="true" person_id="2" given_name="Vicky" middle_name="C" family_name="Dobbs" creator="1" date_created="2006-02-15 00:00:00.0" voided="false" uuid="b0a2a59e-48b2-4f9c-ad28-74d53d9cabd2"/>
+  <person_name person_name_id="3" preferred="true" person_id="3" given_name="Joy" middle_name="C" family_name="Diggs" creator="1" date_created="2006-02-15 00:00:00.0" voided="false" uuid="15b9b16d-06e7-11e6-9301-34e6d77c15d6"/>
+  <program program_id="1" concept_id="1738" creator="1" date_created="2007-09-20 16:00:32.0" retired="false" name="ANC Program" description="Desc" uuid="eae98b4c-e195-403b-b34a-82d94103b2c0"/>
+  <program program_id="2" concept_id="1739" creator="1" date_created="2007-09-20 16:00:32.0" retired="false" name="PNC Program" description="Desc" uuid="0ad47f08-8120-4c74-9567-d69ba97ae1ea"/>
+  <program program_id="3" concept_id="1740" creator="1" date_created="2007-09-20 16:00:32.0" retired="false" name="CWC Program" description="Desc" uuid="d133b61e-847a-475d-92de-762c1f1b9f74"/>
+  
+  <encounter_type encounter_type_id="6" name="Laboratory" description="Visit to the laboratory" creator="1" date_created="2008-08-15 15:39:55.0" retired="true" retired_by="1" date_retired="2008-08-15 00:00:00.0" retire_reason="for testing" uuid="c925d7f2-06fd-11e6-b512-3e1d05defe78"/>
+  <encounter_role encounter_role_id="1" name="Unknown" description="Unknown encounter role for legacy providers with no encounter role set" creator="1" retired="false" date_created="2011-08-18 14:00:00.0" uuid="cd4c02b4-36b7-4fc5-9e24-eac9a451af37" />
+  <provider provider_id="1" person_id="1" identifier="Test" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="aa4b01c5-c0e5-4700-ae2d-466c7b18832b" />
+  <order_type order_type_id="2" name="Lab test" description="An order by a clinician for a laboratory test" creator="1" date_created="2008-08-15 13:50:14.0" retired="false" uuid="d0c8cab0-9d53-43ef-b6ec-554e61b1d493"/>
+  
+  <global_property property="mchapp.ancuuid" property_value="eae98b4c-e195-403b-b34a-82d94103b2c0" uuid="51c2a9f9-bc5b-41e4-82f6-f513b033923e"/>
+  <global_property property="mchapp.pncuuid" property_value="0ad47f08-8120-4c74-9567-d69ba97ae1ea" uuid="811687d0-47dc-44b3-9658-5718f05d9ac7"/>
+  <global_property property="mchapp.cwcuuid" property_value="d133b61e-847a-475d-92de-762c1f1b9f74" uuid="f060b309-dccc-438d-b513-f176c0af14c2"/>
+</dataset>
