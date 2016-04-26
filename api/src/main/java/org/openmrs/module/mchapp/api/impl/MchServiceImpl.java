@@ -8,15 +8,13 @@ import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
 import org.openmrs.api.ProgramWorkflowService;
-import org.openmrs.api.context.Context;
+import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchService;
 
 public class MchServiceImpl implements MchService {
 
 	private static final int MAX_ANC_DURATION = 9;
 	private static final int MAX_PNC_DURATION = 9;
-	private static final String ANC_PROGRAM_UUID = "mchapp.ancuuid";
-	private static final String PNC_PROGRAM_UUID = "mchapp.pncuuid";
 	private ProgramWorkflowService programWorkflowService;
 
 	public ProgramWorkflowService getProgramWorkflowService() {
@@ -29,7 +27,7 @@ public class MchServiceImpl implements MchService {
 
 	@Override
 	public boolean enrolledInANC(Patient patient) {
-		Program ancProgram = programWorkflowService.getProgramByUuid(Context.getAdministrationService().getGlobalProperty(ANC_PROGRAM_UUID));
+		Program ancProgram = programWorkflowService.getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
 		Calendar minEnrollmentDate = Calendar.getInstance();
 		minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_DURATION);
 		List<PatientProgram> ancPatientPrograms = programWorkflowService.getPatientPrograms(patient, ancProgram, minEnrollmentDate.getTime(), null, null, null, false);
@@ -43,7 +41,7 @@ public class MchServiceImpl implements MchService {
 	public void enrollInANC(Patient patient, Date dateEnrolled) {
 		PatientProgram patientProgram = new PatientProgram();
 		patientProgram.setPatient(patient);
-		Program ancProgram = programWorkflowService.getProgramByUuid(Context.getAdministrationService().getGlobalProperty(ANC_PROGRAM_UUID));
+		Program ancProgram = programWorkflowService.getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
 		patientProgram.setProgram(ancProgram);
 		patientProgram.setDateEnrolled(dateEnrolled);
 		//TODO Add creator 
@@ -52,7 +50,7 @@ public class MchServiceImpl implements MchService {
 
 	@Override
 	public boolean enrolledInPNC(Patient patient) {
-		Program pncProgram = programWorkflowService.getProgramByUuid(Context.getAdministrationService().getGlobalProperty(PNC_PROGRAM_UUID));
+		Program pncProgram = programWorkflowService.getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
 		Calendar minEnrollmentDate = Calendar.getInstance();
 		minEnrollmentDate.add(Calendar.MONTH, -MAX_PNC_DURATION);
 		List<PatientProgram> pncPatientPrograms = programWorkflowService.getPatientPrograms(patient, pncProgram, minEnrollmentDate.getTime(), null, null, null, false);
@@ -66,7 +64,7 @@ public class MchServiceImpl implements MchService {
 	public void enrollInPNC(Patient patient, Date dateEnrolled) {
 		PatientProgram patientProgram = new PatientProgram();
 		patientProgram.setPatient(patient);
-		Program pncProgram = programWorkflowService.getProgramByUuid(Context.getAdministrationService().getGlobalProperty(PNC_PROGRAM_UUID));
+		Program pncProgram = programWorkflowService.getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
 		patientProgram.setProgram(pncProgram);
 		patientProgram.setDateEnrolled(dateEnrolled);
 		//TODO Add creator 

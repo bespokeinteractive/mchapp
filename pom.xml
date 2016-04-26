@@ -39,56 +39,31 @@
 
 	<dependencyManagement>
 		<dependencies>
-		
-			<!--
-			Libraries to add as dependencies with compile or runtime scope:
-			Find matching dependencies in the maven central repository.
-			<dependency>
-				<groupId>org.other.library</groupId>
-				<artifactId>library-name</artifactId>
-				<version>library.version</version>
-				<scope>compile</scope>
-			</dependency>
-			-->
-			
-						
 			<!-- Begin OpenMRS modules -->
 			
-						
 			<dependency>
-			
 				<groupId>org.openmrs.module</groupId>
-												
 				<artifactId>uicommons-api</artifactId>
-																								
 				<version>1.7</version>
-												
 				<scope>provided</scope>
-				
 			</dependency>
-						
 			<dependency>
-			
 				<groupId>org.openmrs.module</groupId>
-												
 				<artifactId>uiframework-api</artifactId>
-																								
 				<version>3.3.1</version>
-												
 				<scope>provided</scope>
-				
 			</dependency>
-						
 			<dependency>
-			
 				<groupId>org.openmrs.module</groupId>
-												
-				<artifactId>uicommons-api</artifactId>
-																								
+				<artifactId>metadatadeploy-api</artifactId>
 				<version>1.7</version>
-												
 				<scope>provided</scope>
-				
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>metadatasharing-api</artifactId>
+				<version>1.1.8</version>
+				<scope>provided</scope>
 			</dependency>
 						
 			<!-- End OpenMRS modules -->
