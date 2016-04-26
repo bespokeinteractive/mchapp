@@ -17,15 +17,21 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
 	@Before public void setup() throws Exception {
 		executeDataSet("mch-programs.xml");
 	}
-	
+
 	@Test public void enrolledInANC_shouldReturnFalseWhenPatientIsNotEnrolled() throws Exception {
 		int patientId = 3;
 		Patient patient = Context.getPatientService().getPatient(patientId);
 		Assert.assertFalse(Context.getService(MchService.class).enrolledInANC(patient));
 	}
 
+	@Test public void enrolledInPNC_shouldReturnFalseWhenPatientIsNotEnrolled() throws Exception {
+		int patientId = 3;
+		Patient patient = Context.getPatientService().getPatient(patientId);
+		Assert.assertFalse(Context.getService(MchService.class).enrolledInPNC(patient));
+	}
+
 	
-	@Test public void enrolledInANC_shouldReturnTrueWhenPatientIsEnrolled() throws Exception {
+	@Test public void enrolledInANC_shouldReturnTrueWhenPatientIsRecentlyEnrolledInANC() throws Exception {
 		int patientId = 2;
 		Patient patient = Context.getPatientService().getPatient(patientId);
 		PatientProgram ancPatientProgram = new PatientProgram();
@@ -38,7 +44,21 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
 
 		Assert.assertTrue(Context.getService(MchService.class).enrolledInANC(patient));
 	}
-	
+
+	@Test public void enrolledInPNC_shouldReturnTrueWhenPatientIsRecentlyEnrolledInPNC() throws Exception {
+		int patientId = 2;
+		Patient patient = Context.getPatientService().getPatient(patientId);
+		PatientProgram pncPatientProgram = new PatientProgram();
+		Calendar dateEnrolled = Calendar.getInstance();
+		dateEnrolled.add(Calendar.MONTH, -3);
+		pncPatientProgram.setPatient(patient);
+		pncPatientProgram.setDateEnrolled(dateEnrolled.getTime());
+		pncPatientProgram.setProgram(Context.getProgramWorkflowService().getProgram(2));
+		Context.getProgramWorkflowService().savePatientProgram(pncPatientProgram);
+		
+		Assert.assertTrue(Context.getService(MchService.class).enrolledInPNC(patient));
+	}
+
 	@Test public void enrolledInANC_shouldReturnFalseWhenPatientEnrollmentDateIsMoreThan9MonthsAgo() throws Exception {
 		int patientId = 2;
 		Patient patient = Context.getPatientService().getPatient(patientId);
@@ -52,12 +72,39 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
 		
 		Assert.assertFalse(Context.getService(MchService.class).enrolledInANC(patient));
 	}
+	
+	@Test public void enrolledInPNC_shouldReturnFalseWhenPatientHasNotBeenRecentlyEnrolledInPNC() throws Exception {
+		int patientId = 2;
+		Patient patient = Context.getPatientService().getPatient(patientId);
+		PatientProgram pncPatientProgram = new PatientProgram();
+		Calendar dateEnrolled = Calendar.getInstance();
+		dateEnrolled.add(Calendar.MONTH, -12);
+		pncPatientProgram.setPatient(patient);
+		pncPatientProgram.setDateEnrolled(dateEnrolled.getTime());
+		pncPatientProgram.setProgram(Context.getProgramWorkflowService().getProgram(2));
+		Context.getProgramWorkflowService().savePatientProgram(pncPatientProgram);
+		
+		Assert.assertFalse(Context.getService(MchService.class).enrolledInPNC(patient));
+	}
 
 	@Test public void enroll_shouldEnrollPatientIntoANCProgram() {
 		int patientId = 3;
 		Patient patient = Context.getPatientService().getPatient(patientId);
+		Assert.assertFalse(Context.getService(MchService.class).enrolledInPNC(patient));
+
 		Context.getService(MchService.class).enrollInANC(patient, new Date());
 		
 		Assert.assertTrue(Context.getService(MchService.class).enrolledInANC(patient));
+	}
+	
+	@Test public void enroll_shouldEnrollPatientIntoPNCProgram() {
+		int patientId = 3;
+		Patient patient = Context.getPatientService().getPatient(patientId);
+
+		Assert.assertFalse(Context.getService(MchService.class).enrolledInPNC(patient));
+
+		Context.getService(MchService.class).enrollInPNC(patient, new Date());
+		
+		Assert.assertTrue(Context.getService(MchService.class).enrolledInPNC(patient));
 	}
 }

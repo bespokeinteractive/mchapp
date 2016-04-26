@@ -16,4 +16,8 @@ public interface MchService {
 
 	void enrollInANC(Patient patient, Date dateEnrolled);
 
+	boolean enrolledInPNC(Patient patient);
+
+	void enrollInPNC(Patient patient, Date dateEnrolled);
+
 }
