@@ -4,10 +4,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
 import org.openmrs.api.ProgramWorkflowService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchService;
 
@@ -69,5 +73,22 @@ public class MchServiceImpl implements MchService {
 		patientProgram.setDateEnrolled(dateEnrolled);
 		//TODO Add creator 
 		programWorkflowService.savePatientProgram(patientProgram);
+	}
+
+	@Override
+	public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, String program) {
+		Encounter mchEncounter = new Encounter();
+		mchEncounter.setPatient(patient);
+		Date encounterDateTime = new Date();
+		if (encounterObservations.size() > 0) {
+			encounterDateTime = encounterObservations.get(0).getObsDatetime();
+		}
+		mchEncounter.setEncounterDatetime(encounterDateTime);
+		EncounterType mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE);
+		mchEncounter.setEncounterType(mchEncounterType);
+		for (Obs obs : encounterObservations) {
+			mchEncounter.addObs(obs);
+		}
+		return Context.getEncounterService().saveEncounter(mchEncounter);
 	}
 }

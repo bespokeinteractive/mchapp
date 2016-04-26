@@ -1,11 +1,15 @@
 package org.openmrs.module.mchapp;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.context.Context;
@@ -117,5 +121,27 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertNotNull(Context.getProgramWorkflowService().getProgramByUuid(_MchProgram.ANC_PROGRAM));
 		Assert.assertNotNull(Context.getProgramWorkflowService().getProgramByUuid(_MchProgram.PNC_PROGRAM));
 		Assert.assertNotNull(Context.getProgramWorkflowService().getProgramByUuid(_MchProgram.CWC_PROGRAM));
+	}
+
+	@Test public void saveMchEncounter_shouldSaveANCEncounter() {
+		int patientId = 2;
+		Patient patient = Context.getPatientService().getPatient(patientId);
+		Concept ultrasoundDone = Context.getConceptService().getConcept(1744);
+		Concept yes = Context.getConceptService().getConcept(7);
+		Obs ancObs = new Obs();
+		ancObs.setConcept(ultrasoundDone);
+		ancObs.setValueCoded(yes);
+		ancObs.setObsDatetime(new Date());
+		ancObs.setCreator(Context.getAuthenticatedUser());
+
+		Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, Arrays.asList(ancObs), MchMetadata._MchProgram.ANC_PROGRAM);
+		
+		Assert.assertNotNull(encounter.getId());
+		Assert.assertEquals(1, encounter.getAllObs().size());
+		Assert.assertEquals(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, encounter.getEncounterType().getUuid());
+	}
+
+	@Test public void saveMchEncounter_shouldSavePNCEncounter() {
+		
 	}
 }
