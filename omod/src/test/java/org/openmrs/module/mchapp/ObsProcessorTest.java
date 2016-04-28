@@ -17,7 +17,7 @@ public class ObsProcessorTest extends BaseModuleContextSensitiveTest {
 	public void createObs_shouldReturnASingleObsWhenOnlyASingleValueIsSubmitted() {
 		Concept question = Context.getConceptService().getConceptByUuid("89ca642a-dab6-4f20-b712-e12ca4fc6d36");
 		Patient patient = Context.getPatientService().getPatient(2);
-		List<Obs> observations = new CodedObsProcessor().createObs(question, new String[] { "85b47f49-7f3e-4910-b18b-097f94d66a10" }, patient);
+		List<Obs> observations = new CodedObsProcessor().createObs(question, new String[] { "32d3611a-6699-4d52-823f-b4b788bac3e3" }, patient);
 		
 		Assert.assertThat(observations.size(), Matchers.is(1));
 	}
