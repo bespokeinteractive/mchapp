@@ -25,15 +25,15 @@ public class PostnatalTriageFragmentController {
 	@SuppressWarnings("unchecked")
 	public SimpleObject savePostnatalTriageInformation(@RequestParam("patientId") Patient patient, PageRequest request) {
 		List<Obs> observations = new ArrayList<Obs>();
-		for (Map.Entry<String, String[]> entry :
+		for (Map.Entry<String, String[]> postedParameter :
 			((Map<String, String[]>)request.getRequest().getParameterMap()).entrySet()) {
-			if (StringUtils.contains(entry.getKey(), "concept.")) {
-				String obsConceptUuid = entry.getKey().substring("concept.".length());
+			if (StringUtils.contains(postedParameter.getKey(), "concept.")) {
+				String obsConceptUuid = postedParameter.getKey().substring("concept.".length());
 				Concept obsConcept = Context.getConceptService().getConceptByUuid(obsConceptUuid);
-				if (entry.getValue().length > 0) {
+				if (postedParameter.getValue().length > 0) {
 					ObsProcessor obsProcessor = ObsFactory.getObsProcessor(obsConcept);
 					try {
-						observations.addAll(obsProcessor.createObs(obsConcept, entry.getValue(), patient));
+						observations.addAll(obsProcessor.createObs(obsConcept, postedParameter.getValue(), patient));
 					} catch (Exception e) {
 						return SimpleObject.create("status", "error", "message", e.getMessage());
 					}
