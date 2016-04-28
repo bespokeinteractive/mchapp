@@ -8,12 +8,12 @@
         <input type="text" id="gravidae" />
     </div>
     <div>
-        <label for="lastMenstrualPeriodDate">Date of Last Menstrual Period (LMP)</label>
-        <input type="text" id="lastMenstrualPeriodDate" />
+        <label>Date of Last Menstrual Period (LMP)</label>
+        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'lastMenstrualPeriodDate', id: 'lastMenstrualPeriodDate', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
     </div>
     <div>
-        <label for="expectedDeliveryDate">Expected Date of Delivery (EDD)</label>
-        <input type="text" id="expectedDeliveryDate" />
+        <label>Expected Date of Delivery (EDD)</label>
+        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'expectedDeliveryDate', id: 'expectedDeliveryDate', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
     </div>
     <div>
         <label for="gestation">Gestation in weeks</label>
@@ -42,5 +42,8 @@
     <div>
         <label for="referralOptions">Referral options:</label>
         <input type="text" id="referralOptions" />
+    </div>
+    <div>
+        <input type="button" value="Submit" class="button confirm" id="antenatalTriageFormSubmitButton">
     </div>
 </form>
