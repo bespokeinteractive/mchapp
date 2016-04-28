@@ -18,6 +18,7 @@ public class DateTimeObsProcessor implements ObsProcessor {
 			Obs obs = new Obs();
 			obs.setConcept(question);
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+			dateFormatter.setLenient(false);
 			Date valueDate = dateFormatter.parse(answers[i]);
 			obs.setValueDatetime(valueDate);
 			obs.setPerson(patient);
