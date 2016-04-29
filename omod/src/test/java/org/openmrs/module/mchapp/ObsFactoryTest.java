@@ -49,5 +49,9 @@ public class ObsFactoryTest extends BaseModuleContextSensitiveTest {
 		
 		Assert.assertThat(textObsProcessor, Matchers.instanceOf(TextObsProcessor.class));
 	}
+	
+	//TODO
+	@Test public void getObsProcessor_shouldThrowErrorWhenConceptIsNull() {
+	}
 
 }

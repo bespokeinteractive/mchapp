@@ -24,7 +24,7 @@ public class ObsProcessorTest extends BaseModuleContextSensitiveTest {
 	
 	@Test
 	public void createObs_shouldReturnMultipleObsWhenMultipleValuesAreSubmitted() {
-		Concept question = Context.getConceptService().getConceptByUuid("f4d0b584-6ce5-40e2-9ce5-fa7ec07b32b4");
+		Concept question = Context.getConceptService().getConceptByUuid("96408258-000b-424e-af1a-403919332938");
 		Patient patient = Context.getPatientService().getPatient(2);
 		List<Obs> observations = new TextObsProcessor().createObs(question, new String[] { "Mix", "Wazito", "Mlima" }, patient);
 		
