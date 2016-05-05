@@ -41,7 +41,7 @@ jq(function(){
 		var data = jq("form.pnc-triage-form").serialize();
 
 		jq.post(
-			'${ui.actionLink("mchapp", "postnatalTriage", "savePostnatalTriageInformation"}',
+			'${ui.actionLink("mchapp", "postnatalTriage", "savePostnatalTriageInformation")}',
 			data,
 			function (data) {
 				if (data.status === "success") {
