@@ -56,6 +56,11 @@
 			<artifactId>metadatasharing-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>patientdashboardapp-api</artifactId>
+		</dependency>
+
 		<!-- End OpenMRS modules -->
 
 		<!-- Begin OpenMRS core -->
