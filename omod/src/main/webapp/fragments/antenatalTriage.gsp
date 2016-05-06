@@ -1,3 +1,15 @@
+<script>
+    jq(function () {
+        jq("#lastMenstrualPeriodDate").on("change",function(e){
+            var lastMenstrualPeriodDate = jq("#lastMenstrualPeriodDate-field").val();
+            lastMenstrualPeriodDate = new Date(lastMenstrualPeriodDate);
+            lastMenstrualPeriodDate.setMonth(lastMenstrualPeriodDate.getMonth()+9);
+            jq('#expectedDeliveryDate-field').val(moment(lastMenstrualPeriodDate).format('YYYY-MM-DD'));
+            jq('#expectedDeliveryDate-display').val(moment(lastMenstrualPeriodDate).format('DD MMM YYYY'));
+        });
+    });
+</script>
+
 <form id="antenatalTriageForm">
     <div>
         <label for="parity">Parity</label>
