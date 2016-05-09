@@ -1,3 +1,29 @@
+<script>
+    jq(function () {
+        jq("#lastMenstrualPeriodDate").on("change",function(e){
+            calculateExpectedDeliveryDate();
+            calculateGestationInWeeks();
+        });
+
+        function calculateExpectedDeliveryDate() {
+            var lastMenstrualPeriodDate = jq("#lastMenstrualPeriodDate-field").val();
+            lastMenstrualPeriodDate = new Date(lastMenstrualPeriodDate);
+            lastMenstrualPeriodDate.setMonth(lastMenstrualPeriodDate.getMonth() + 9);
+            jq('#expectedDeliveryDate-field').val(moment(lastMenstrualPeriodDate).format('YYYY-MM-DD'));
+            jq('#expectedDeliveryDate-display').val(moment(lastMenstrualPeriodDate).format('DD MMM YYYY'));
+        }
+
+        function calculateGestationInWeeks(){
+            var lastMenstrualPeriodDate = jq("#lastMenstrualPeriodDate-field").val();
+            lastMenstrualPeriodDate = new Date(lastMenstrualPeriodDate);
+            var todaysDate = new Date();
+            var gestation = todaysDate-lastMenstrualPeriodDate;
+            var gestationInWeeks = Math.floor(gestation/(1000 * 3600 * 24 * 7));
+            jq('#gestation').val(gestationInWeeks);
+        }
+    });
+</script>
+
 <form id="antenatalTriageForm">
     <div>
         <label for="parity">Parity</label>
