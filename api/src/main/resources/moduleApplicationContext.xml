@@ -20,9 +20,6 @@
 	<!-- Add here beans related to the API context -->
 	<bean id="mchService"
 			class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.MchServiceImpl">
-		<property name="programWorkflowService">
-			<ref bean="programWorkflowService" />
-		</property>
 	</bean>
 	
 	<!-- Services accessible via Context.getService() -->
