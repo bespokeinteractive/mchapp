@@ -97,7 +97,14 @@ public class MchServiceImpl implements MchService {
     }
 
     @Override
-    public SimpleObject enrollInCWC(Patient patient, Date dateEnrolled, Map<String,String> cwcInitialStates) {
+    public SimpleObject enrollInCWC(Patient patient, Date dateEnrolled, Map<String, String> cwcInitialStates) {
+        //TODO Add check for not enrolling person of age more than 5 into CWC
+        if (patient.getAge() != null) {
+            if (patient.getAge() >  5){
+                return SimpleObject.create("status", "error", "message", "Patient has outgrown");
+            }
+        }
+
         Program cwcProgram = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
         if (!enrolledInCWC(patient)) {
             PatientProgram patientProgram = new PatientProgram();
@@ -105,18 +112,14 @@ public class MchServiceImpl implements MchService {
             patientProgram.setProgram(cwcProgram);
             patientProgram.setDateEnrolled(dateEnrolled);
             //TODO Add creator
-
-            //TODO Set initial states if present
             for (ProgramWorkflow programWorkflow : cwcProgram.getAllWorkflows()) {
                 String workflowUuid = programWorkflow.getUuid();
-                if(cwcInitialStates.containsKey(workflowUuid)){
+                if (cwcInitialStates.containsKey(workflowUuid)) {
                     ProgramWorkflowState state = programWorkflow.getState(cwcInitialStates.get(workflowUuid));
                     log.debug("Transitioning to state: " + state);
                     patientProgram.transitionToState(state, dateEnrolled);
                 }
             }
-
-            //TODO Assign initial state if present
             Context.getProgramWorkflowService().savePatientProgram(patientProgram);
             return SimpleObject.create("status", "success", "message", "Patient enrolled in CWC successfully");
         } else {
