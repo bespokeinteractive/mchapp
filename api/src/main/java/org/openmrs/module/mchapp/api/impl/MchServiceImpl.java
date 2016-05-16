@@ -98,10 +98,9 @@ public class MchServiceImpl implements MchService {
 
     @Override
     public SimpleObject enrollInCWC(Patient patient, Date dateEnrolled, Map<String, String> cwcInitialStates) {
-        //TODO Add check for not enrolling person of age more than 5 into CWC
         if (patient.getAge() != null) {
             if (patient.getAge() >  5){
-                return SimpleObject.create("status", "error", "message", "Patient has outgrown");
+                return SimpleObject.create("status", "error", "message", "Patient has outgrown program");
             }
         }
 
