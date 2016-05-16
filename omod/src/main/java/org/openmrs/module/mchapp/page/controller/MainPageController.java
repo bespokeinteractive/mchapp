@@ -15,7 +15,6 @@ public class MainPageController {
         model.addAttribute("patient", patient);
         model.addAttribute("enrolledInAnc", mchService.enrolledInANC(patient));
         model.addAttribute("enrolledInPnc", mchService.enrolledInPNC(patient));
-        //TODO add check for enrolled in Cwc to MchService
-        model.addAttribute("enrolledInCwc", false);
+        model.addAttribute("enrolledInCwc", mchService.enrolledInCWC(patient));
     }
 }

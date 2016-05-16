@@ -60,6 +60,13 @@
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>patientdashboardapp-api</artifactId>
 		</dependency>
+		<dependency>
+
+			<groupId>org.openmrs.module</groupId>
+
+			<artifactId>hospitalcore-api</artifactId>
+
+		</dependency>
 
 		<!-- End OpenMRS modules -->
 

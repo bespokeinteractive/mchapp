@@ -2,6 +2,7 @@
     ui.decorateWith("appui", "standardEmrPage", [title: "MCH Module"])
     ui.includeJavascript("billingui", "moment.js")
 %>
+
 <% if (enrolledInAnc){ %>
 	${ui.includeFragment("mchapp","antenatalExamination")}
 <% } else if (enrolledInPnc) { %>
