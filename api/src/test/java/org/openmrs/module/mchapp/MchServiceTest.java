@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class MchServiceTest extends BaseModuleContextSensitiveTest {
 
     @Autowired
     MchMetadata mchMetadata;
+
 
     @Before
     public void setup() throws Exception {
@@ -39,7 +41,6 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         Patient patient = Context.getPatientService().getPatient(patientId);
         Assert.assertFalse(Context.getService(MchService.class).enrolledInPNC(patient));
     }
-
 
     @Test
     public void enrolledInANC_shouldReturnTrueWhenPatientIsRecentlyEnrolledInANC() throws Exception {
@@ -67,6 +68,80 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         pncPatientProgram.setProgram(Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM));
         Context.getProgramWorkflowService().savePatientProgram(pncPatientProgram);
         Assert.assertTrue(Context.getService(MchService.class).enrolledInPNC(patient));
+    }
+
+    @Test
+    public void enrolledInCWC_shouldReturnFalseWhenPatientIsNotEnrolledInCWC() throws Exception {
+        int patientId = 4;
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        Assert.assertFalse(Context.getService(MchService.class).enrolledInCWC(patient));
+    }
+
+    @Test
+    public void enrolledInCWC_shouldReturnTrueWhenPatientIsRecentlyEnrolledInCWC() throws Exception {
+        int patientId = 2;
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        PatientProgram cwcPatientProgram = new PatientProgram();
+        Calendar dateEnrolled = Calendar.getInstance();
+        dateEnrolled.add(Calendar.YEAR, -3);
+        cwcPatientProgram.setPatient(patient);
+        cwcPatientProgram.setDateEnrolled(dateEnrolled.getTime());
+        cwcPatientProgram.setProgram(Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM));
+        Context.getProgramWorkflowService().savePatientProgram(cwcPatientProgram);
+        Assert.assertTrue(Context.getService(MchService.class).enrolledInCWC(patient));
+    }
+
+    @Test
+    public void enrolledInCWC_shouldReturnFalseWhenPatientEnrollmentDateIsMoreThan5YearsAgo() throws Exception {
+        int patientId = 2;
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        PatientProgram cwcPatientProgram = new PatientProgram();
+        Calendar dateEnrolled = Calendar.getInstance();
+        dateEnrolled.add(Calendar.YEAR, -6);
+        cwcPatientProgram.setPatient(patient);
+        cwcPatientProgram.setDateEnrolled(dateEnrolled.getTime());
+        cwcPatientProgram.setProgram(Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM));
+        Context.getProgramWorkflowService().savePatientProgram(cwcPatientProgram);
+        Assert.assertFalse(Context.getService(MchService.class).enrolledInCWC(patient));
+    }
+
+    @Test
+    public void enroll_shouldEnrollPatientIntoCWCCProgram() {
+        int patientId = 3;
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        Assert.assertFalse(Context.getService(MchService.class).enrolledInCWC(patient));
+//        TODO Change map of initial states once loaded as concepts in DB
+//        SimpleObject simpleObject = Context.getService(MchService.class).enrollInCWC(patient, new Date(),_MchProgram.CWC_BCG_WORKFLOW_STATE);
+        SimpleObject simpleObject = Context.getService(MchService.class).enrollInCWC(patient, new Date(), new HashMap<String, String>());
+        Assert.assertEquals(simpleObject.get("status"), "success");
+        Assert.assertTrue(Context.getService(MchService.class).enrolledInCWC(patient));
+    }
+
+    @Test
+    public void enroll_shouldNotEnrollPatientIntoCWCProgramWhenAlreadyEnrolled() {
+        int patientId = 3;
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        Assert.assertFalse(Context.getService(MchService.class).enrolledInCWC(patient));
+        //        TODO Change map of initial states once loaded as concepts in DB
+        SimpleObject simpleObject = Context.getService(MchService.class).enrollInCWC(patient, new Date(), new HashMap<String, String>());
+        Assert.assertEquals(simpleObject.get("status"), "success");
+        Assert.assertTrue(Context.getService(MchService.class).enrolledInCWC(patient));
+        //re-enroll the patient within the same period
+        SimpleObject simpleObject1 = Context.getService(MchService.class).enrollInCWC(patient, new Date(), new HashMap<String, String>());
+        Assert.assertEquals(simpleObject1.get("status"), "error");
+        Assert.assertTrue(Context.getService(MchService.class).enrolledInCWC(patient));
+    }
+
+    @Test
+    public void enroll_shouldReturnErrorWhenPatientAlreadyEnrolledIntoCWCProgramWithinTimePeriod() {
+        int patientId = 3;
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        Assert.assertFalse(Context.getService(MchService.class).enrolledInCWC(patient));
+//        TODO Change map of initial states once loaded as concepts in DB
+        Context.getService(MchService.class).enrollInCWC(patient, new Date(), new HashMap<String, String>());
+        Assert.assertTrue(Context.getService(MchService.class).enrolledInCWC(patient));
+        SimpleObject simpleObject = Context.getService(MchService.class).enrollInCWC(patient, new Date(), new HashMap<String, String>());
+        Assert.assertEquals(simpleObject.get("status"), "error");
     }
 
     @Test
@@ -141,6 +216,7 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         Assert.assertEquals(simpleObject.get("status"), "success");
         Assert.assertTrue(Context.getService(MchService.class).enrolledInPNC(patient));
     }
+
     @Test
     public void enroll_shouldReturnErrorWhenPatientAlreadyEnrolledIntoPNCProgramWithinTimePeriod() {
         int patientId = 3;
