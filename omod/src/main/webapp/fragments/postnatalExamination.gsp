@@ -52,7 +52,24 @@
         jq("#availableReferral").on("change", function (){
             selectReferrals(jq( "#availableReferral" ).val());
         });
+
+        var adddrugdialog = emr.setupConfirmationDialog({
+            selector: '#prescription-dialog',
+            actions: {
+                confirm: function() {
+                    adddrugdialog.close();
+                },
+                cancel: function() {
+                    adddrugdialog.close();
+                }
+            }
+
+        });
+        jq("#addDrugsButton").on("click", function(e){
+            adddrugdialog.show();
+        });
     });
+
     function selectReferrals(selectedReferral){
         //1 = internal referral
         //2 = external referral
@@ -110,7 +127,7 @@
 </table>
 
 <div style="margin-top:5px">
-    <input class="button confirm" type="button" id="Prescribe" name="Prescribe" value="Add">
+    <input class="button confirm" type="button" id="addDrugsButton" name="" value="Add">
 </div>
 
 <br>
