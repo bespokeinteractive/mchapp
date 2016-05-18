@@ -68,6 +68,64 @@
         jq("#addDrugsButton").on("click", function(e){
             adddrugdialog.show();
         });
+
+        jq(".drug-name").on("focus.autocomplete", function () {
+            var selectedInput = this;
+            jq(this).autocomplete({
+                minLength:3,
+                source:function( request, response ) {
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugs") }',
+                            {
+                                q: request.term
+                            }
+                    ).success(function(data) {
+                        var results = [];
+                        for (var i in data) {
+                            var result = { label: data[i].name, value: data[i].id};
+                            results.push(result);
+                        }
+                        response(results);
+                    });
+                },
+                select:function(event, ui){
+                    event.preventDefault();
+                    jq(selectedInput).val(ui.item.label);
+                },
+                change: function (event, ui) {
+                    event.preventDefault();
+                    jq(selectedInput).val(ui.item.label);
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFormulationByDrugName") }',
+                            {
+                                "drugName": ui.item.label
+                            }
+                    ).success(function(data) {
+                        var formulations = jq.map(data, function (formulation) {
+                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name).attr('value', formulation.id));
+                        });
+                    });
+
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFrequencies") }').success(function(data) {
+                        var frequencies = jq.map(data, function (frequency) {
+                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.id));
+                        });
+                    });
+
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
+
+                        var durgunits = jq.map(data, function (drugUnit) {
+                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.name).attr('value', drugUnit.id));
+                        });
+                    });
+                },
+                open: function() {
+                    jq( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                },
+                close: function() {
+                    jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                }
+            });
+        });
+
     });
 
     function selectReferrals(selectedReferral){
@@ -192,21 +250,27 @@
         <ul>
             <li>
                 <label>Drug</label>
-                <input class="drug-name" type="text">
+                <input class="drug-name" id="drugName" type="text">
             </li>
             <li>
                 <label>Dosage</label>
                 <input type="text"  style="width: 60px!important;">
-                <select id="dosage-unit" style="width: 191px!important;"></select>
+                <select id="drugUnitsSelect">
+                    <option value="0">Select Unit</option>
+                </select>
             </li>
 
             <li>
                 <label>Formulation</label>
-                <select ></select>
+                <select id="formulationsSelect" >
+                    <option value="0">Select Formulation</option>
+                </select>
             </li>
             <li>
                 <label>Frequency</label>
-                <select></select>
+                <select id="frequencysSelect">
+                    <option value="0">Select Frequency</option>
+                </select>
             </li>
 
             <li>
