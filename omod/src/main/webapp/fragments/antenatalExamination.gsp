@@ -49,10 +49,84 @@
                 jq("#searchExaminations").val("fdsf");
             }
         });
+        var adddrugdialog = emr.setupConfirmationDialog({
+            selector: '#prescription-dialog',
+            actions: {
+                confirm: function() {
+                    adddrugdialog.close();
+                },
+                cancel: function() {
+                    adddrugdialog.close();
+                }
+            }
+
+        });
 
         jq("#availableReferral").on("change", function (){
             selectReferrals(jq( "#availableReferral" ).val());
         });
+
+        jq("#addDrugsButton").on("click", function(e){
+            adddrugdialog.show();
+        });
+
+        jq(".drug-name").on("focus.autocomplete", function () {
+            var selectedInput = this;
+            jq(this).autocomplete({
+                minLength:3,
+                source:function( request, response ) {
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugs") }',
+                            {
+                                q: request.term
+                            }
+                    ).success(function(data) {
+                        var results = [];
+                        for (var i in data) {
+                            var result = { label: data[i].name, value: data[i].id};
+                            results.push(result);
+                        }
+                        response(results);
+                    });
+                },
+                select:function(event, ui){
+                    event.preventDefault();
+                    jq(selectedInput).val(ui.item.label);
+                },
+                change: function (event, ui) {
+                    event.preventDefault();
+                    jq(selectedInput).val(ui.item.label);
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFormulationByDrugName") }',
+                            {
+                                "drugName": ui.item.label
+                            }
+                    ).success(function(data) {
+                        var formulations = jq.map(data, function (formulation) {
+                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name).attr('value', formulation.id));
+                        });
+                    });
+
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFrequencies") }').success(function(data) {
+                        var frequencies = jq.map(data, function (frequency) {
+                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.id));
+                        });
+                    });
+
+                    jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
+
+                        var durgunits = jq.map(data, function (drugUnit) {
+                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.name).attr('value', drugUnit.id));
+                        });
+                    });
+                },
+                open: function() {
+                    jq( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                },
+                close: function() {
+                    jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                }
+            });
+        });
+
     });
 
     function selectReferrals(selectedReferral){
@@ -92,8 +166,27 @@
 
     </fieldset>
 </div>
-<br>
 
+<h2> Prescribe Drugs</h2>
+
+<table id="addDrugsTable">
+    <thead>
+    <tr>
+        <th>Drug Name</th>
+        <th>Dosage</th>
+        <th>Formulation</th>
+        <th>Frequency</th>
+        <th>Days</th>
+        <th>Comments</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody ></tbody>
+</table>
+
+<div style="margin-top:5px">
+    <input class="button confirm" type="button" id="addDrugsButton" name="" value="Add">
+</div>
 <div>
     <h2> Patient Referral</h2>
     <select id="availableReferral" name="availableReferral">
@@ -140,4 +233,54 @@
 
     <h2>Comment</h2>
     <textarea></textarea>
+</div>
+
+
+<div id="prescription-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Prescription</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+            <li>
+                <label>Drug</label>
+                <input class="drug-name" id="drugName" type="text">
+            </li>
+            <li>
+                <label>Dosage</label>
+                <input type="text"  style="width: 60px!important;">
+                <select id="drugUnitsSelect">
+                    <option value="0">Select Unit</option>
+                </select>
+            </li>
+
+            <li>
+                <label>Formulation</label>
+                <select id="formulationsSelect" >
+                    <option value="0">Select Formulation</option>
+                </select>
+            </li>
+            <li>
+                <label>Frequency</label>
+                <select id="frequencysSelect">
+                    <option value="0">Select Frequency</option>
+                </select>
+            </li>
+
+            <li>
+                <label>Number of Days</label>
+                <input type="text">
+            </li>
+            <li>
+                <label>Comment</label>
+                <textarea></textarea>
+            </li>
+        </ul>
+
+        <label class="button confirm right">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
 </div>
