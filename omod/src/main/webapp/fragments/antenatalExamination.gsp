@@ -127,6 +127,74 @@
             });
         });
 
+        //investigations autocomplete functionality
+        jq("#investigation").autocomplete({
+            source: function( request, response ) {
+                jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getInvestigations") }',
+                        {
+                            q: request.term
+                        }
+                ).success(function(data) {
+                    var results = [];
+                    for (var i in data) {
+                        var result = { label: data[i].name, value: data[i].id};
+                        results.push(result);
+                    }
+                    response(results);
+                });
+            },
+            minLength: 3,
+            select: function( event, ui ) {
+                var selectedInvestigation = document.createElement('option');
+                selectedInvestigation.value = ui.item.value;
+                selectedInvestigation.text = ui.item.label;
+                selectedInvestigation.id = ui.item.value;
+                var selectedInvestigationList = document.getElementById("selectedInvestigationList");
+                //adds the selected procedures to the div
+                var selectedInvestigationP = document.createElement("P");
+                selectedInvestigationP.className = "selectp";
+                var selectedInvestigationT = document.createTextNode(ui.item.label);
+                selectedInvestigationP.id = ui.item.value;
+                selectedInvestigationP.appendChild(selectedInvestigationT);
+                var btnselectedRemoveIcon = document.createElement("p");
+                btnselectedRemoveIcon.className = "icon-remove selecticon";
+                btnselectedRemoveIcon.id = "investigationRemoveIcon";
+                selectedInvestigationP.appendChild(btnselectedRemoveIcon);
+                var selectedInvestigationDiv = document.getElementById("selected-investigations");
+                //check if the item already exist before appending
+                var exists = false;
+                for (var i = 0; i < selectedInvestigationList.length; i++) {
+                    if(selectedInvestigationList.options[i].value==ui.item.value)
+                    {
+                        exists = true;
+                    }
+                }
+                if(exists == false)
+                {
+                    selectedInvestigationList.appendChild(selectedInvestigation);
+                    selectedInvestigationDiv.appendChild(selectedInvestigationP);
+                }
+            },
+            open: function() {
+                jq( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+                jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });
+
+        jq("#selected-investigations").on("click", "#investigationRemoveIcon",function(){
+            var investigationId = jq(this).parent("p").attr("id");
+            var investigationP = jq(this).parent("p");
+            var divProcedure = investigationP.parent("div");
+            var selectInputPosition = divProcedure.siblings("p");
+            var selectedProcedure = selectInputPosition.find("select");
+            var removeProcedure = selectedProcedure.find("#" + investigationId);
+            investigationP.remove();
+            removeProcedure.remove();
+        });
+
+
     });
 
     function selectReferrals(selectedReferral){
@@ -166,6 +234,16 @@
 
     </fieldset>
 </div>
+
+<div>
+    <h2> Investigations </h2>
+     <p>
+        <input type="text" style="width: 450px" id="investigation" name="investigation" placeholder="Enter Investigations" />
+        <select style="display: none" id="selectedInvestigationList"></select>
+        <div class="selectdiv"  id="selected-investigations"></div>
+    </p>
+</div>
+
 
 <h2> Prescribe Drugs</h2>
 
