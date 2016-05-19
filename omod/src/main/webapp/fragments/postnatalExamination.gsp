@@ -57,6 +57,7 @@
             selector: '#prescription-dialog',
             actions: {
                 confirm: function() {
+                    addDrug();
                     adddrugdialog.close();
                 },
                 cancel: function() {
@@ -148,6 +149,18 @@
             jq("#externalRefferalDiv").hide();
         }
     }
+    function addDrug(){
+        var addDrugsTableBody = jq("#addDrugsTable tbody");
+        var drugName = jq("#drugName").val();
+        var drugDosage = jq("#drugDosage").val();
+        var formulationsSelect = jq("#formulationsSelect option:selected").text();
+        var frequencysSelect = jq("#frequencysSelect option:selected").text();
+        var numberOfDays = jq("#numberOfDays").val();
+        var comment = jq("#comment").val();
+
+        addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + "</td><td>" +formulationsSelect + "</td><td>"
+                + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
+    }
 </script>
 
 <div>
@@ -184,7 +197,6 @@
         <th>Frequency</th>
         <th>Days</th>
         <th>Comments</th>
-        <th></th>
     </tr>
     </thead>
     <tbody ></tbody>
@@ -260,7 +272,7 @@
             </li>
             <li>
                 <label>Dosage</label>
-                <input type="text"  style="width: 60px!important;">
+                <input type="text" id="drugDosage"  style="width: 60px!important;">
                 <select id="drugUnitsSelect">
                     <option value="0">Select Unit</option>
                 </select>
@@ -281,11 +293,11 @@
 
             <li>
                 <label>Number of Days</label>
-                <input type="text">
+                <input id="numberOfDays" type="text">
             </li>
             <li>
                 <label>Comment</label>
-                <textarea></textarea>
+                <textarea id="comment"></textarea>
             </li>
         </ul>
 
