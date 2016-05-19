@@ -114,7 +114,7 @@
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
 
                         var durgunits = jq.map(data, function (drugUnit) {
-                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.name).attr('value', drugUnit.id));
+                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
                         });
                     });
                 },
@@ -153,12 +153,13 @@
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
+        var drugUnitsSelect = jq("#drugUnitsSelect option:selected").text();
         var formulationsSelect = jq("#formulationsSelect option:selected").text();
         var frequencysSelect = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
 
-        addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + "</td><td>" +formulationsSelect + "</td><td>"
+        addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
     }
 </script>
