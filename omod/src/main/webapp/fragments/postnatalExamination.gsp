@@ -43,10 +43,10 @@
             source:examinations,
             select:function(event, ui){
                 var examination = _.find(examinations,function(exam){return exam.value === ui.item.value;});
-                console.log(examination);
                 var examTemplate = _.template(jq("#examination-detail-template").html());
                 jq("fieldset").append(examTemplate(examination));
-                jq("#searchExaminations").val("fdsf");
+                jq("#searchExaminations").val("");
+                return false;
             }
         });
         jq("#availableReferral").on("change", function (){
@@ -126,6 +126,11 @@
             });
         });
 
+        jq("fieldset").on("click", "#selectedExamination",function(){
+            console.log(jq(this).parent("div"));
+            jq(this).parent("div").remove();
+        });
+
     });
 
     function selectReferrals(selectedReferral){
@@ -156,6 +161,7 @@
         {{ _.each(answers, function(answer, index) { }}
             <input type="radio" name="concept.{{=value}}" value="{{=answer.uuid}}">{{=answer.display}}
         {{ }); }}
+        <p id="selectedExamination" class="icon-remove selecticon"></p>
     </div>
 </script>
 

@@ -43,10 +43,10 @@
             source:examinations,
             select:function(event, ui){
                 var examination = _.find(examinations,function(exam){return exam.value === ui.item.value;});
-                console.log(examination);
                 var examTemplate = _.template(jq("#examination-detail-template").html());
                 jq("fieldset").append(examTemplate(examination));
-                jq("#searchExaminations").val("fdsf");
+                jq(this).val('');
+                return false;
             }
         });
         var adddrugdialog = emr.setupConfirmationDialog({
@@ -174,6 +174,8 @@
                     selectedInvestigationList.appendChild(selectedInvestigation);
                     selectedInvestigationDiv.appendChild(selectedInvestigationP);
                 }
+                jq(this).val('');
+                return false;
             },
             open: function() {
                 jq( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -195,6 +197,10 @@
         });
 
 
+        jq("fieldset").on("click", "#selectedExamination",function(){
+            console.log(jq(this).parent("div"));
+            jq(this).parent("div").remove();
+        });
     });
 
     function selectReferrals(selectedReferral){
@@ -212,6 +218,7 @@
             jq("#externalRefferalDiv").hide();
         }
     }
+
 </script>
 
 <div>
@@ -220,12 +227,13 @@
 </div>
 
 <script id="examination-detail-template" type="text/template">
-<div>
-    <label>{{-label}}</label>
-    {{ _.each(answers, function(answer, index) { }}
-    <input type="radio" name="concept.{{=value}}" value="{{=answer.uuid}}">{{=answer.display}}
-{{ }); }}
-</div>
+    <div id="examination-detail-div">
+        <label>{{-label}}</label>
+        {{ _.each(answers, function(answer, index) { }}
+            <input type="radio" name="concept.{{=value}}" value="{{=answer.uuid}}">{{=answer.display}}
+        {{ }); }}
+        <p id="selectedExamination" class="icon-remove selecticon"></p>
+    </div>
 </script>
 
 <div>
