@@ -6,6 +6,7 @@ package org.openmrs.module.mchapp.api;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.ui.framework.SimpleObject;
 
 import java.util.Date;
@@ -26,6 +27,6 @@ public interface MchService {
 
 	boolean enrolledInCWC(Patient patient);
 	SimpleObject enrollInCWC(Patient patient, Date dateEnrolled,Map<String,String> cwcInitialStates);
-	Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, String program);
+	Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, String program);
 
 }

@@ -39,5 +39,10 @@
   <global_property property="mchapp.ancuuid" property_value="eae98b4c-e195-403b-b34a-82d94103b2c0" uuid="51c2a9f9-bc5b-41e4-82f6-f513b033923e"/>
   <global_property property="mchapp.pncuuid" property_value="0ad47f08-8120-4c74-9567-d69ba97ae1ea" uuid="811687d0-47dc-44b3-9658-5718f05d9ac7"/>
   <global_property property="mchapp.cwcuuid" property_value="d133b61e-847a-475d-92de-762c1f1b9f74" uuid="f060b309-dccc-438d-b513-f176c0af14c2"/>
+  
+    <concept_name concept_id="9950" name="AMOX" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="4007" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="5951924c-23fc-43df-bf68-2f090c37984b"/>
+
+  <inventory_drug_formulation id="1" name="TAB" dozage="250" created_on="2014-07-14 12:23:19" created_by="Super" />
+  <inventory_drug id="1" name="AMOX" attribute="2" created_on="2014-07-14 12:55:15" created_by="Super" />
 
 </dataset>
