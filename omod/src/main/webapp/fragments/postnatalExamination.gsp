@@ -43,10 +43,10 @@
             source:examinations,
             select:function(event, ui){
                 var examination = _.find(examinations,function(exam){return exam.value === ui.item.value;});
-                console.log(examination);
                 var examTemplate = _.template(jq("#examination-detail-template").html());
                 jq("fieldset").append(examTemplate(examination));
-                jq("#searchExaminations").val("fdsf");
+                jq("#searchExaminations").val("");
+                return false;
             }
         });
         jq("#availableReferral").on("change", function (){
@@ -57,6 +57,7 @@
             selector: '#prescription-dialog',
             actions: {
                 confirm: function() {
+                    addDrug();
                     adddrugdialog.close();
                 },
                 cancel: function() {
@@ -113,7 +114,7 @@
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
 
                         var durgunits = jq.map(data, function (drugUnit) {
-                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.name).attr('value', drugUnit.id));
+                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
                         });
                     });
                 },
@@ -124,6 +125,11 @@
                     jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
                 }
             });
+        });
+
+        jq("fieldset").on("click", "#selectedExamination",function(){
+            console.log(jq(this).parent("div"));
+            jq(this).parent("div").remove();
         });
 
     });
@@ -143,6 +149,19 @@
             jq("#externalRefferalDiv").hide();
         }
     }
+    function addDrug(){
+        var addDrugsTableBody = jq("#addDrugsTable tbody");
+        var drugName = jq("#drugName").val();
+        var drugDosage = jq("#drugDosage").val();
+        var drugUnitsSelect = jq("#drugUnitsSelect option:selected").text();
+        var formulationsSelect = jq("#formulationsSelect option:selected").text();
+        var frequencysSelect = jq("#frequencysSelect option:selected").text();
+        var numberOfDays = jq("#numberOfDays").val();
+        var comment = jq("#comment").val();
+
+        addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
+                + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
+    }
 </script>
 
 <div>
@@ -156,6 +175,7 @@
         {{ _.each(answers, function(answer, index) { }}
             <input type="radio" name="concept.{{=value}}" value="{{=answer.uuid}}">{{=answer.display}}
         {{ }); }}
+        <p id="selectedExamination" class="icon-remove selecticon"></p>
     </div>
 </script>
 
@@ -178,7 +198,6 @@
         <th>Frequency</th>
         <th>Days</th>
         <th>Comments</th>
-        <th></th>
     </tr>
     </thead>
     <tbody ></tbody>
@@ -254,7 +273,7 @@
             </li>
             <li>
                 <label>Dosage</label>
-                <input type="text"  style="width: 60px!important;">
+                <input type="text" id="drugDosage"  style="width: 60px!important;">
                 <select id="drugUnitsSelect">
                     <option value="0">Select Unit</option>
                 </select>
@@ -275,11 +294,11 @@
 
             <li>
                 <label>Number of Days</label>
-                <input type="text">
+                <input id="numberOfDays" type="text">
             </li>
             <li>
                 <label>Comment</label>
-                <textarea></textarea>
+                <textarea id="comment"></textarea>
             </li>
         </ul>
 
