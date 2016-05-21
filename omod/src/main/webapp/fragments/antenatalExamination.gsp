@@ -240,7 +240,7 @@
 </script>
 
 <div>
-    <label>Breast Exam:</label><br>
+    <label>Examination:</label><br>
     <input type="text" id="searchExaminations" name="" value="">
 </div>
 
