@@ -1,10 +1,20 @@
 package org.openmrs.module.mchapp;
 
+import static org.hamcrest.Matchers.is;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.*;
+import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Obs;
+import org.openmrs.Patient;
+import org.openmrs.PatientProgram;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalcore.model.InventoryDrug;
+import org.openmrs.module.hospitalcore.model.InventoryDrugFormulation;
+import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
+import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.MchMetadata._MchProgram;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -252,16 +262,36 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         Patient patient = Context.getPatientService().getPatient(patientId);
         Concept ultrasoundDone = Context.getConceptService().getConcept(1744);
         Concept yes = Context.getConceptService().getConcept(7);
-        Obs ancObs = new Obs();
-        ancObs.setConcept(ultrasoundDone);
-        ancObs.setValueCoded(yes);
+        Obs ancObs = generateObs(ultrasoundDone, yes);
+        OpdDrugOrder drugOrder = generateDrugOrder();
+        Assert.assertNull(drugOrder.getOpdDrugOrderId());
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, Arrays.asList(ancObs), Arrays.asList(drugOrder), MchMetadata._MchProgram.ANC_PROGRAM);
+
+        Assert.assertNotNull(encounter.getId());
+        Assert.assertThat(encounter.getAllObs().size(), is(1));
+        Assert.assertThat(encounter.getEncounterType().getUuid(), is(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE));
+        Assert.assertNotNull(drugOrder.getOpdDrugOrderId());
+    }
+
+	private Obs generateObs(Concept question, Concept answer) {
+		Obs ancObs = new Obs();
+        ancObs.setConcept(question);
+        ancObs.setValueCoded(answer);
         ancObs.setObsDatetime(new Date());
         ancObs.setCreator(Context.getAuthenticatedUser());
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, Arrays.asList(ancObs), MchMetadata._MchProgram.ANC_PROGRAM);
-        Assert.assertNotNull(encounter.getId());
-        Assert.assertEquals(1, encounter.getAllObs().size());
-        Assert.assertEquals(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, encounter.getEncounterType().getUuid());
-    }
+		return ancObs;
+	}
+
+	private OpdDrugOrder generateDrugOrder() {
+		OpdDrugOrder drugOrder = new OpdDrugOrder();
+        InventoryDrug drug = Context.getService(InventoryService.class).getDrugById(1);
+        drugOrder.setInventoryDrug(drug);
+        InventoryDrugFormulation formulation = Context.getService(InventoryService.class).getDrugFormulationById(1);
+        drugOrder.setInventoryDrugFormulation(formulation);
+        drugOrder.setCreatedOn(new Date());
+        drugOrder.setReferralWardName("Ward A");
+		return drugOrder;
+	}
 
     @Test
     public void saveMchEncounter_shouldSavePNCEncounter() {

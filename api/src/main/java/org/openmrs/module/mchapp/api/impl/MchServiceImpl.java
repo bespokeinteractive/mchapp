@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalcore.PatientDashboardService;
+import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
@@ -127,7 +129,7 @@ public class MchServiceImpl implements MchService {
     }
 
     @Override
-    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, String program) {
+    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, String program) {
         Encounter mchEncounter = new Encounter();
         mchEncounter.setPatient(patient);
         Date encounterDateTime = new Date();
@@ -140,7 +142,12 @@ public class MchServiceImpl implements MchService {
         for (Obs obs : encounterObservations) {
             mchEncounter.addObs(obs);
         }
-        return Context.getEncounterService().saveEncounter(mchEncounter);
+        mchEncounter = Context.getEncounterService().saveEncounter(mchEncounter);
+        for (OpdDrugOrder drugOrder : drugOrders) {
+            drugOrder.setEncounter(mchEncounter);
+            Context.getService(PatientDashboardService.class).saveOrUpdateOpdDrugOrder(drugOrder);
+        }
+        return mchEncounter;
     }
 
 }

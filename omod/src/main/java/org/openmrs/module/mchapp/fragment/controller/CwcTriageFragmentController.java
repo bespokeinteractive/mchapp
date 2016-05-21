@@ -14,6 +14,7 @@ import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,13 +30,15 @@ public class CwcTriageFragmentController {
     public SimpleObject saveCwcTriageInfo(@RequestParam("patientId") Patient patient, PageRequest request) {
         SimpleObject saveStatus = null;
         List<Obs> observations = new ArrayList<Obs>();
-        try {
-            observations = ObsRequestParser.parseRequest(patient, (Map<String, String[]>) request.getRequest().getParameterMap());
-        } catch (Exception e) {
-            saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
+        for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getRequest().getParameterMap()).entrySet()) {
+            try {
+                observations = ObsRequestParser.parseRequestParameter(observations, patient, postedParams.getKey(), postedParams.getValue());
+            } catch (Exception e) {
+                saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
+            }
         }
 
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, MchMetadata._MchProgram.CWC_PROGRAM);
+        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM);
 
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;

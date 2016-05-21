@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <concept concept_id="9960" retired="false" datatype_id="4" class_id="20" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="17daa17b-47ae-4a93-8e89-8d7b1eae41b6"/>
+  <concept concept_id="9961" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="62b81b50-4f1a-4d4a-ac05-e14ecaee2909"/>
+  <concept_class concept_class_id="20" name="Frequency" description="Drug frequency" creator="1" date_created="2008-08-15 13:56:55.0" retired="false" uuid="0fd33d76-8b4b-445f-899e-161c5e85d36c"/>
+
+  <concept_name concept_id="9950" name="AMOX" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="4007" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="5951924c-23fc-43df-bf68-2f090c37984b"/>
+
+  <inventory_drug_formulation id="1" name="TAB" dozage="250" created_on="2014-07-14 12:23:19" created_by="Super" />
+  <inventory_drug id="1" name="AMOX" attribute="2" created_on="2014-07-14 12:55:15" created_by="Super" />
+</dataset>
