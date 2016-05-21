@@ -1,8 +1,27 @@
 <script>
     jq(function () {
-        var patientProfile = JSON.parse('${patientProfile.toJSON()}');
-        var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
-        jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+    	var patientProfile = JSON.parse('"details":${patientProfile.toJSON()}');
+        if (patientProfile.details.length > 0) {
+            var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
+            jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+        } else {
+            var patientProfileEditorTemplate = _.template(jq("#patient-profile-editor-template").html());
+            jq("form").prepend(patientProfileEditorTemplate());
+        }
+
+        jq(".patient-profile").on("click", ".edit-profile", function(){
+            jq(".patient-profile").empty();
+            jq("<a href=\"#\" class=\"cancel\">Cancel</a>").on("click", removeProfileEditor).appendTo(jq(".patient-profile"));
+            var patientProfileEditorTemplate = _.template(jq("#patient-profile-editor-template").html());
+            jq("form").prepend(patientProfileEditorTemplate());
+            for (var i = 0; i < patientProfile.details.length; i++) {
+                jq("input[name$='"+ patientProfile.details[i].uuid +"']").val(patientProfile.details[i].value);
+            }
+        });
+
+        function removeProfileEditor() {
+            jq(".profile-editor", document.forms[ 0 ]).remove();
+        }
 
         jq("#lastMenstrualPeriodDate").on("change",function(e){
             calculateExpectedDeliveryDate();
@@ -32,8 +51,8 @@
         <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
     {{ }); }}
 </script>
-
-<form id="antenatalTriageForm">
+<script id="patient-profile-editor-template" type="text/template">
+<div class="profile-editor">
     <div>
         <label for="parity">Parity</label>
         <input type="text" id="parity" />
@@ -54,6 +73,10 @@
         <label for="gestation">Gestation in weeks</label>
         <input type="text" id="gestation" />
     </div>
+</div>
+</script>
+<div class="patient-profile"></div>
+<form id="antenatalTriageForm">
     <div>
         <label for="weight">Weight (Kgs)</label>
         <input type="text" id="weight" />

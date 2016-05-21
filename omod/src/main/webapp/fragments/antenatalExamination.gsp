@@ -1,8 +1,10 @@
 <script>
     jq(function() {
-        var patientProfile = JSON.parse('${patientProfile.toJSON()}');
-        var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
-        jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+        var patientProfile = JSON.parse('"details":${patientProfile.toJSON()}');
+        if (patientProfile.details.length > 0) {
+            var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
+            jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+        }
 
         var examinations = [{
             "value": "48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
