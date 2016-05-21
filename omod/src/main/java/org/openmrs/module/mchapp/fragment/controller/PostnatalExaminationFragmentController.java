@@ -18,6 +18,7 @@ import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.module.patientdashboardapp.model.ReferralReasons;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
+import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Created by qqnarf on 5/17/16.
  */
 public class PostnatalExaminationFragmentController {
-    public void controller(FragmentModel model, UiUtils ui) {
+    public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
+        config.require("patientId");
+        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
+        model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id"));

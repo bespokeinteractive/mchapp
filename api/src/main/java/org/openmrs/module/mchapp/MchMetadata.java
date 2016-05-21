@@ -8,6 +8,12 @@ import static org.openmrs.module.metadatadeploy.bundle.CoreConstructors.*;
 @Component
 public class MchMetadata extends AbstractMetadataBundle{
 
+	public static final class _AncConstantConceptQuestions {
+		public static final String PARITY = "1053AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String GRAVIDA = "5624AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String LAST_MENSTRUAL_PERIOD = "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	}
+
 	public static final class _MchEncounterType {
 		public static final String ANC_ENCOUNTER_TYPE = "40629059-f621-42bd-a7c4-bd22e2636e47";
 		public static final String PNC_ENCOUNTER_TYPE = "c87a3883-90f9-43a1-a972-7f615ed44e03";
@@ -35,9 +41,6 @@ public class MchMetadata extends AbstractMetadataBundle{
 		public static final String CWC_BCG_WORKFLOW_STATE = "PENDING";
 		public static final String CWC_POLIO_WORKFLOW_STATE  = "PENDING";
 		public static final String CWC_MEASLES_WORKFLOW_STATE  = "PENDING";
-
-
-
 
 	}
 

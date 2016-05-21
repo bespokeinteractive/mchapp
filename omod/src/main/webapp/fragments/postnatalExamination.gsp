@@ -1,5 +1,9 @@
 <script>
     jq(function(){
+        var patientProfile = JSON.parse('${patientProfile.toJSON()}');
+        var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
+        jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+
         var examinations = [{
             "value": "48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             "label": "Pregnancy, miscarriage",
@@ -162,6 +166,12 @@
         addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
     }
+</script>
+
+<script id="patient-profile-template" type="text/template">
+    {{ _.each(profileDetails, function(profileDetail) { }}
+        <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
+    {{ }); }}
 </script>
 
 <div>

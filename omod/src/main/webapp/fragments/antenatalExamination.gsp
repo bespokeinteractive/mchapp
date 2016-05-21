@@ -1,5 +1,9 @@
 <script>
     jq(function() {
+        var patientProfile = JSON.parse('${patientProfile.toJSON()}');
+        var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
+        jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+
         var examinations = [{
             "value": "48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             "label": "Pregnancy, miscarriage",
@@ -253,6 +257,14 @@
         <p id="selectedExamination" class="icon-remove selecticon"></p>
     </div>
 </script>
+
+<script id="patient-profile-template" type="text/template">
+    {{ _.each(profileDetails, function(profileDetail) { }}
+        <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
+    {{ }); }}
+</script>
+
+<div class="patient-profile"></div>
 
 <div>
     <fieldset>

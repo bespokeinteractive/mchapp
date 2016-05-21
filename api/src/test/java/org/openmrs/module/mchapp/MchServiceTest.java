@@ -2,6 +2,7 @@ package org.openmrs.module.mchapp;
 
 import static org.hamcrest.Matchers.is;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class MchServiceTest extends BaseModuleContextSensitiveTest {
 
@@ -297,4 +299,96 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
     public void saveMchEncounter_shouldSavePNCEncounter() {
 
     }
+
+    @Test
+    public void getPatientProfile_shouldGetProfileForCurrentProgram() {
+        Calendar dateEnrolled = Calendar.getInstance();
+        dateEnrolled.add(Calendar.MONTH, -1);
+        Patient patient = Context.getPatientService().getPatient(2);
+        MchService mchService = Context.getService(MchService.class);
+        mchService.enrollInANC(patient, dateEnrolled.getTime());
+
+        Concept parity = Context.getConceptService().getConcept(1745);
+        Concept gravida = Context.getConceptService().getConcept(1746);
+        Concept lmp = Context.getConceptService().getConcept(1747);
+        Encounter encounter = generateEncounter(patient, dateEnrolled);
+        Obs parityObs = generateObs(patient, parity, 2D, dateEnrolled.getTime());
+        encounter.addObs(parityObs);
+        Obs gravidaObs = generateObs(patient, gravida, 1D, dateEnrolled.getTime());
+        encounter.addObs(gravidaObs);
+        Calendar lmpDate = Calendar.getInstance();
+        lmpDate.add(Calendar.MONTH, -2);
+        Obs lmpObs = generateObs(patient, lmp, lmpDate.getTime(), dateEnrolled.getTime());
+        encounter.addObs(lmpObs);
+        Context.getEncounterService().saveEncounter(encounter);
+
+        List<Obs> profile = mchService.getPatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM);
+
+        Assert.assertThat(profile.size(), is(3));
+    }
+
+    @Test
+    public void getPatientProfile_shouldReturnMostCurrentProfileForCurrentProgram() {
+        Calendar dateEnrolled = Calendar.getInstance();
+        dateEnrolled.add(Calendar.MONTH, -1);
+        Patient patient = Context.getPatientService().getPatient(2);
+        MchService mchService = Context.getService(MchService.class);
+        mchService.enrollInANC(patient, dateEnrolled.getTime());
+
+        Concept parity = Context.getConceptService().getConcept(1745);
+        Concept gravida = Context.getConceptService().getConcept(1746);
+        Concept lmp = Context.getConceptService().getConcept(1747);
+        Calendar latestObsDate = Calendar.getInstance();
+        latestObsDate.add(Calendar.DATE, -7);
+        Encounter firstEncounter = generateEncounter(patient, dateEnrolled);
+        Obs oldParityObs = generateObs(patient, parity, 2D, dateEnrolled.getTime());
+        firstEncounter.addObs(oldParityObs);
+        Obs gravidaObs = generateObs(patient, gravida, 1D, dateEnrolled.getTime());
+        firstEncounter.addObs(gravidaObs);
+        Calendar lmpDate = Calendar.getInstance();
+        lmpDate.add(Calendar.MONTH, -2);
+        Obs lmpObs = generateObs(patient, lmp, lmpDate.getTime(), dateEnrolled.getTime());
+        firstEncounter.addObs(lmpObs);
+        Context.getEncounterService().saveEncounter(firstEncounter);
+
+        Encounter secondEncounter = generateEncounter(patient, latestObsDate);
+        Obs updatedParityObs = generateObs(patient, parity, 3D, latestObsDate.getTime());
+        secondEncounter.addObs(updatedParityObs);
+        Obs updatedGravidaObs = generateObs(patient, gravida, 2D, latestObsDate.getTime());
+        secondEncounter.addObs(updatedGravidaObs);
+        Calendar updatedLmpDate = Calendar.getInstance();
+        updatedLmpDate.add(Calendar.MONTH, -1);
+        Obs updatedLmpObs = generateObs(patient, lmp, updatedLmpDate.getTime(), latestObsDate.getTime());
+        secondEncounter.addObs(updatedLmpObs);
+        Context.getEncounterService().saveEncounter(secondEncounter);
+
+        List<Obs> profile = mchService.getPatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM);
+
+        Assert.assertThat(profile.size(), is(3));
+        Assert.assertThat(profile, Matchers.containsInAnyOrder(updatedParityObs, updatedGravidaObs, updatedLmpObs));
+    }
+
+    private Obs generateObs(Patient patient, Concept question,
+            Object obsValue, Date obsDatetime) {
+        Obs obs = new Obs();
+        obs.setConcept(question);
+        if (question.isNumeric()) {
+            obs.setValueNumeric((Double)obsValue);
+        } else if (question.getDatatype().isDateTime() || question.getDatatype().isDate()) {
+            obs.setValueDatetime((Date)obsValue);
+        }
+        obs.setPerson(patient);
+        obs.setObsDatetime(obsDatetime);
+        return obs;
+    }
+
+	private Encounter generateEncounter(Patient patient, Calendar encounterDate) {
+		Encounter encounter = new Encounter();
+        encounter.setLocation(Context.getLocationService().getLocation(1));
+        encounter.setEncounterType(Context.getEncounterService().getEncounterType(1));
+        encounter.setEncounterDatetime(encounterDate.getTime());
+        encounter.setPatient(patient);
+        encounter.addProvider(Context.getEncounterService().getEncounterRole(1), Context.getProviderService().getProvider(1));
+		return encounter;
+	}
 }

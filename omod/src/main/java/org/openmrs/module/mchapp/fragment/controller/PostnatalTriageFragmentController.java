@@ -1,17 +1,10 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.ConceptClass;
-import org.openmrs.ConceptDatatype;
-import org.openmrs.ConceptSearchResult;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -19,11 +12,19 @@ import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsRequestParser;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.fragment.FragmentConfiguration;
+import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public class PostnatalTriageFragmentController {
-	public void controller() {
+	public void controller(FragmentModel model, FragmentConfiguration config) {
+		config.require("patientId");
+		Patient patient = Context.getPatientService().getPatient(
+				Integer.parseInt(config.get("patientId").toString()));
+		model.addAttribute("patientProfile", 
+			PatientProfileGenerator.generatePatientProfile(patient,
+						MchMetadata._MchProgram.ANC_PROGRAM));
 	}
 	
 	@SuppressWarnings("unchecked")

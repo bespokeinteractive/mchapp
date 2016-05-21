@@ -63,9 +63,9 @@
 
 
 <% if (enrolledInAnc){ %>
-	${ui.includeFragment("mchapp","antenatalTriage")}
+	${ui.includeFragment("mchapp","antenatalTriage", [patientId: patientId])}
 <% } else if (enrolledInPnc) { %>
-	${ui.includeFragment("mchapp","postnatalTriage")}
+	${ui.includeFragment("mchapp","postnatalTriage", [patientId: patientId])}
 <% } else if (enrolledInCwc) { %>
 	${ui.includeFragment("mchapp","cwcTriage")}
 <% } else { %>

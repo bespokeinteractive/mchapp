@@ -1,3 +1,15 @@
+<script>
+    jq(function(){
+        var patientProfile = JSON.parse('${patientProfile.toJSON()}');
+        var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
+        jq(".patient-profile").append(patientProfileTemplate(patientProfile));
+    });
+</script>
+<script id="patient-profile-template" type="text/template">
+    {{ _.each(profileDetails, function(profileDetail) { }}
+        <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
+    {{ }); }}
+</script>
 <form class="pnc-triage-form">
 	<p>
 		<label for="deliveryDate">Date of Delivery</label>

@@ -7,6 +7,8 @@ import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsRequestParser;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.fragment.FragmentConfiguration;
+import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,7 +21,10 @@ import java.util.Map;
  * Created by qqnarf on 4/27/16.
  */
 public class AntenatalTriageFragmentController {
-    public void controller() {
+    public void controller(FragmentModel model, FragmentConfiguration config) {
+        config.require("patientId");
+        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
+        model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
     }
     @SuppressWarnings("unchecked")
     public SimpleObject saveAntenatalTriageInformation(@RequestParam("patientId") Patient patient, PageRequest request) {
