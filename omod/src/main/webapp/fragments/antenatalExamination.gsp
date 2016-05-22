@@ -1,6 +1,6 @@
 <script>
     jq(function() {
-        var patientProfile = JSON.parse('"details":${patientProfile.toJSON()}');
+        var patientProfile = JSON.parse('${patientProfile.toJSON()}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
             jq(".patient-profile").append(patientProfileTemplate(patientProfile));

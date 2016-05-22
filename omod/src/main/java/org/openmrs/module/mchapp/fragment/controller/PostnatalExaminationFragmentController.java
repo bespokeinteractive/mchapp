@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -20,7 +22,6 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
-import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -37,7 +38,7 @@ public class PostnatalExaminationFragmentController {
     }
 
     @SuppressWarnings("unchecked")
-    public SimpleObject savePostnatalExaminationInformation(@RequestParam("patientId") Patient patient, @RequestParam("queueId") Integer queueId, PageRequest request) {
+    public SimpleObject savePostnatalExaminationInformation(@RequestParam("patientId") Patient patient, @RequestParam("queueId") Integer queueId, HttpServletRequest request) {
         SimpleObject saveStatus = null;
         OpdPatientQueue patientQueue = Context.getService(PatientQueueService.class).getOpdPatientQueueById(queueId);
         String location = "PNC Exam Room";
@@ -46,7 +47,7 @@ public class PostnatalExaminationFragmentController {
         }
         List<Obs> observations = new ArrayList<Obs>();
         List<OpdDrugOrder> drugOrders = new ArrayList<OpdDrugOrder>();
-        for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getRequest().getParameterMap()).entrySet()) {
+        for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
             try {
                 observations = ObsRequestParser.parseRequestParameter(observations, patient, postedParams.getKey(), postedParams.getValue());
                 drugOrders = DrugOrdersParser.parseDrugOrders(patient, drugOrders, postedParams.getKey(), postedParams.getValue(), location);
