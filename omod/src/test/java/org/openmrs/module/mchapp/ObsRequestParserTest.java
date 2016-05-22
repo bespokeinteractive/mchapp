@@ -1,9 +1,7 @@
 package org.openmrs.module.mchapp;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;

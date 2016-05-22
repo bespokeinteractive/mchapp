@@ -1,5 +1,8 @@
 package org.openmrs.module.mchapp.api.impl;
 
+import static java.lang.Math.max;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
@@ -7,6 +10,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.PatientDashboardService;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.mchapp.MchMetadata;
+import org.openmrs.module.mchapp.MchProfileConcepts;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
 
@@ -137,7 +141,14 @@ public class MchServiceImpl implements MchService {
             encounterDateTime = encounterObservations.get(0).getObsDatetime();
         }
         mchEncounter.setEncounterDatetime(encounterDateTime);
-        EncounterType mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE);
+        EncounterType mchEncounterType = null;
+        if (StringUtils.equalsIgnoreCase(MchMetadata._MchProgram.ANC_PROGRAM, program)) {
+            mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE);
+        } else if (StringUtils.equalsIgnoreCase(MchMetadata._MchProgram.PNC_PROGRAM, program)) {
+            mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.PNC_ENCOUNTER_TYPE);
+        } else if (StringUtils.equalsIgnoreCase(MchMetadata._MchProgram.CWC_PROGRAM, program)) {
+            mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.CWC_ENCOUNTER_TYPE);
+        }
         mchEncounter.setEncounterType(mchEncounterType);
         for (Obs obs : encounterObservations) {
             mchEncounter.addObs(obs);
@@ -149,5 +160,54 @@ public class MchServiceImpl implements MchService {
         }
         return mchEncounter;
     }
+
+	@Override
+	public List<Obs> getPatientProfile(Patient patient, String programUuid) {
+		Program program = Context.getProgramWorkflowService().getProgramByUuid(programUuid);
+		Calendar minEnrollmentDate = Calendar.getInstance();
+		minEnrollmentDate.add(Calendar.MONTH, -max(max(MAX_CWC_DURATION, MAX_ANC_DURATION), MAX_PNC_DURATION));
+		List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
+		PatientProgram currentProgram = null;
+		for (PatientProgram patientProgram : patientPrograms) {
+			if (patientProgram.getActive()) {
+				currentProgram = patientProgram;
+				break;
+			}
+		}
+		List<Obs> currentProfileObs = new ArrayList<Obs>();
+		if (currentProgram != null) {
+			Date dateEnrolled = currentProgram.getDateEnrolled();
+			List<Concept> questions = getProfileConcepts(currentProgram);
+			List<Obs> allProfileObs = Context.getObsService().getObservations(Arrays.asList((Person)patient), null, questions, null, null, null, Arrays.asList("obsDatetime"), null, null, dateEnrolled, null, false);
+			getCurrentProfileInfo(currentProfileObs, allProfileObs);
+		}
+		return currentProfileObs;
+	}
+
+	private void getCurrentProfileInfo(List<Obs> currentProfileObs,
+			List<Obs> allProfileObs) {
+		List<Integer> addedProfileInfo = new ArrayList<Integer>();
+		for (Obs profileMatch : allProfileObs) {
+			if (!addedProfileInfo.contains(profileMatch.getConcept().getConceptId())) {
+				addedProfileInfo.add(profileMatch.getConcept().getConceptId());
+				currentProfileObs.add(profileMatch);
+			}
+		}
+	}
+
+	private List<Concept> getProfileConcepts(PatientProgram currentProgram) {
+		List<Concept> questions = new ArrayList<Concept>();
+		if (StringUtils.equalsIgnoreCase(currentProgram.getProgram().getUuid(), MchMetadata._MchProgram.ANC_PROGRAM)) {
+			for (String conceptUuid : MchProfileConcepts.ANC_PROFILE_CONCEPTS) {
+				questions.add(Context.getConceptService().getConceptByUuid(conceptUuid));
+			}
+		}
+		if (StringUtils.equalsIgnoreCase(currentProgram.getProgram().getUuid(), MchMetadata._MchProgram.PNC_PROGRAM)) {
+			for (String conceptUuid : MchProfileConcepts.PNC_PROFILE_CONCEPTS) {
+				questions.add(Context.getConceptService().getConceptByUuid(conceptUuid));
+			}
+		}
+		return questions;
+	}
 
 }

@@ -1,25 +1,38 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "MCH"])
+    ui.includeJavascript("billingui", "moment.js")
 %>
+<script type="text/javascript">
+function isValidDate(str) {
+    var d = moment(str,'D/M/YYYY');
+    if(d == null || !d.isValid()) return false;
+
+   return str.indexOf(d.format('D/M/YYYY')) >= 0 
+        || str.indexOf(d.format('DD/MM/YYYY')) >= 0
+        || str.indexOf(d.format('D/M/YY')) >= 0 
+        || str.indexOf(d.format('DD/MM/YY')) >= 0;
+}
+</script>
 <div class="clear"></div>
 <div id="content">
 	<div class="example">
 		<ul id="breadcrumbs">
 			<li>
 				<a href="${ui.pageLink('referenceapplication','home')}">
-<i class="icon-home small"></i></a>
+				<i class="icon-home small"></i></a>
 			</li>
 
-<li>
-	<i class="icon-chevron-right link"></i>
-	<a href="${ui.pageLink('mchapp','triage')}">MCH</a>
-</li>
-
-<li>
-	<i class="icon-chevron-right link"></i>
-	CWC Triage
-</li>
-</ul>
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('mchapp','triage')}">MCH</a>
+			</li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				CWC Triage
+			</li>
+		</ul>
+	</div>
 </div>
 
 <div class="patient-header new-patient-header">
@@ -63,9 +76,9 @@
 
 
 <% if (enrolledInAnc){ %>
-	${ui.includeFragment("mchapp","antenatalTriage")}
+	${ui.includeFragment("mchapp","antenatalTriage", [patientId: patientId])}
 <% } else if (enrolledInPnc) { %>
-	${ui.includeFragment("mchapp","postnatalTriage")}
+	${ui.includeFragment("mchapp","postnatalTriage", [patientId: patientId])}
 <% } else if (enrolledInCwc) { %>
 	${ui.includeFragment("mchapp","cwcTriage")}
 <% } else { %>

@@ -16,7 +16,7 @@ public class DateTimeObsProcessorTest extends BaseModuleContextSensitiveTest {
 	public void createObs_shouldThrowParseExceptionWhenDateIsWronglyFormatted() throws Exception {
 		Concept question = Context.getConceptService().getConceptByUuid("11716f9c-1434-4f8d-b9fc-9aa14c4d6126");
 		Patient patient = Context.getPatientService().getPatient(2);
-		new DateTimeObsProcessor().createObs(question, new String[] {"2016/23/6"}, patient);
+		new DateTimeObsProcessor().createObs(question, new String[] {"2016-23-6"}, patient);
 	}
 
 }

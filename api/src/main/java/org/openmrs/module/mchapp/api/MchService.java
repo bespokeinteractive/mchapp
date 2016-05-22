@@ -28,5 +28,7 @@ public interface MchService {
 	boolean enrolledInCWC(Patient patient);
 	SimpleObject enrollInCWC(Patient patient, Date dateEnrolled,Map<String,String> cwcInitialStates);
 	Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, String program);
+	
+	List<Obs> getPatientProfile(Patient patient, String program);
 
 }
