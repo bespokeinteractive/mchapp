@@ -1,4 +1,5 @@
 <script>
+    var drugOrder = [];
     jq(function() {
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
@@ -70,10 +71,10 @@
                 select:function(event, ui){
                     event.preventDefault();
                     jq(selectedInput).val(ui.item.label);
+                    jq(selectedInput).attr("identifier", ui.item.value);
                 },
                 change: function (event, ui) {
                     event.preventDefault();
-                    jq(selectedInput).val(ui.item.label);
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFormulationByDrugName") }',
                             {
                                 "drugName": ui.item.label
@@ -146,6 +147,7 @@
                     if(selectedInvestigationList.options[i].value==ui.item.value)
                     {
                         exists = true;
+                        jq().toastmessage('showErrorToast', 'Already exists');
                     }
                 }
                 if(exists == false)
@@ -210,6 +212,20 @@
         var frequencysSelect = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
+
+
+        drugOrder.push(
+                {
+                    identifier: jq("#drugName").attr("identifier"),
+                    name: drugName,
+                    dosage: drugDosage,
+                    dosageunits: jq("#drugUnitsSelect").val(),
+                    formulation: jq("#formulationsSelect").val(),
+                    frequency: jq("#frequencysSelect").val(),
+                    days: numberOfDays,
+                    comment: comment
+                }
+        );
 
         addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td><td><p id=\"removeDrug\" class=\"icon-remove selecticon\"></p></td></tr>");
