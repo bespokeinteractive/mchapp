@@ -30,6 +30,9 @@
 		<require_module version="1.5.3-SNAPSHOT">
 			org.openmrs.module.hospitalcore
 		</require_module>
+		<require_module version="2.0.12-SNAPSHOT">
+			org.openmrs.module.inventory
+		</require_module>
 	</require_modules>
 	<!-- / Required Modules -->
 	
