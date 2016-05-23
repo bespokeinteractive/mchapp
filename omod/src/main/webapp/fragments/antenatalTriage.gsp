@@ -67,7 +67,7 @@
                     if (data.status === "success") {
                         //show success message
                         window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
-                    } else if (data.status === "fail") {
+                    } else if (data.status === "error") {
                         //show error message;
                         jq().toastmessage('showErrorToast', data.message);
                     }

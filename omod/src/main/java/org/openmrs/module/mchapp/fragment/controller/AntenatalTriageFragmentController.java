@@ -4,7 +4,7 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mchapp.MchMetadata;
-import org.openmrs.module.mchapp.ObsRequestParser;
+import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.SendForExaminationParser;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.patientdashboardapp.model.Referral;
@@ -37,7 +37,7 @@ public class AntenatalTriageFragmentController {
         List<Obs> observations = new ArrayList<Obs>();
         for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
             try {
-                observations = ObsRequestParser.parseRequestParameter(observations, patient, postedParams.getKey(), postedParams.getValue());
+                observations = ObsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
                 SendForExaminationParser.parse(postedParams.getKey(), postedParams.getValue(), patient);
             } catch (Exception e) {
                 saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());

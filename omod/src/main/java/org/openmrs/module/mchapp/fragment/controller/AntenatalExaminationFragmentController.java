@@ -14,7 +14,7 @@ import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
 import org.openmrs.module.mchapp.DrugOrdersParser;
 import org.openmrs.module.mchapp.MchMetadata;
-import org.openmrs.module.mchapp.ObsRequestParser;
+import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.module.patientdashboardapp.model.ReferralReasons;
@@ -53,7 +53,7 @@ public class AntenatalExaminationFragmentController {
 		for (Map.Entry<String, String[]> postedParams : ((Map<String, String[]>) 
 				request.getParameterMap()).entrySet()) {
 			try {
-				observations = ObsRequestParser.parseRequestParameter(
+				observations = ObsParser.parse(
 						observations, patient, postedParams.getKey(),
 						postedParams.getValue());
 				drugOrders = DrugOrdersParser.parseDrugOrders(patient,
