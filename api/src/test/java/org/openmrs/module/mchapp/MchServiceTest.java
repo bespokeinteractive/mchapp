@@ -164,7 +164,7 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         SimpleObject simpleObject = Context.getService(MchService.class).enrollInCWC(patient, new Date(), new HashMap<String, String>());
         Assert.assertFalse(Context.getService(MchService.class).enrolledInCWC(patient));
         Assert.assertEquals(simpleObject.get("status"), "error");
-        Assert.assertEquals(simpleObject.get("message"), "Patient has outgrown program");
+        Assert.assertEquals(simpleObject.get("message"), "CWC only allowed for Child under 5 Years");
     }
 
     @Test
