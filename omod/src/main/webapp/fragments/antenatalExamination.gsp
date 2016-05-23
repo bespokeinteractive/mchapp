@@ -1,5 +1,5 @@
 <script>
-    var drugOrder = [];
+    var drugOrders = [];
     jq(function() {
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
@@ -204,6 +204,7 @@
     }
 
     function addDrug(){
+        var drugOrderObject = {};
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
@@ -214,21 +215,28 @@
         var comment = jq("#comment").val();
 
 
-        drugOrder.push(
-                {
-                    identifier: jq("#drugName").attr("identifier"),
+        var identifier= jq("#drugName").attr("identifier");
+
+
+        var drugOrder=  {
                     name: drugName,
                     dosage: drugDosage,
-                    dosageunits: jq("#drugUnitsSelect").val(),
+                    dosage_unit: jq("#drugUnitsSelect").val(),
                     formulation: jq("#formulationsSelect").val(),
                     frequency: jq("#frequencysSelect").val(),
-                    days: numberOfDays,
+                    number_of_days: numberOfDays,
                     comment: comment
-                }
-        );
+                     }
+
+        drugOrderObject[identifier] = drugOrder;
+
+        drugOrders.push(drugOrderObject);
 
         addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td><td><p id=\"removeDrug\" class=\"icon-remove selecticon\"></p></td></tr>");
+    }
+    function myConverterTest() {
+        return objectToQueryString.convert(drugOrders);
     }
 
 </script>
