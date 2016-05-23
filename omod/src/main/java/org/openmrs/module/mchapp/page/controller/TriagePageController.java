@@ -16,9 +16,34 @@ public class TriagePageController {
 					PageModel model) {
 		MchService mchService = Context.getService(MchService.class);
 		model.addAttribute("patient", patient);
-		model.addAttribute("enrolledInAnc", mchService.enrolledInANC(patient));
-		model.addAttribute("enrolledInPnc", mchService.enrolledInPNC(patient));
-		model.addAttribute("enrolledInCwc", mchService.enrolledInCWC(patient));
+
+        if (patient.getGender().equals("M")){
+            model.addAttribute("gender", "Male");
+        }
+        else{
+            model.addAttribute("gender", "Female");
+        }
+
+        boolean enrolledInANC = mchService.enrolledInANC(patient);
+        boolean enrolledInPNC = mchService.enrolledInPNC(patient);
+        boolean enrolledInCWC = mchService.enrolledInCWC(patient);
+
+        model.addAttribute("enrolledInAnc", enrolledInANC);
+        model.addAttribute("enrolledInPnc", enrolledInPNC);
+        model.addAttribute("enrolledInCwc", enrolledInCWC);
+
+        if (enrolledInANC){
+            model.addAttribute("title", "Triage ANC");
+        }
+        else  if (enrolledInPNC){
+            model.addAttribute("title", "Triage PNC");
+        }
+        else  if (enrolledInCWC){
+            model.addAttribute("title", "Triage PNC");
+        }
+        else{
+            model.addAttribute("title", "Triage");
+        }
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
         PatientSearch patientSearch = hospitalCoreService.getPatientByPatientId(patient.getPatientId());

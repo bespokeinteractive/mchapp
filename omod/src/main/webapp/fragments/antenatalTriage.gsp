@@ -10,7 +10,7 @@
 
         jq(".patient-profile").on("click", ".edit-profile", function(){
             jq(".patient-profile").empty();
-            jq("<a href=\"#\" class=\"cancel\">Cancel</a>").appendTo(jq(".patient-profile"));
+            jq("<span style='margin-top: 5px; display: block;'><a href=\"#\" class=\"cancel\"><i class='icon-remove small'></i>Cancel Edit</a></span>").appendTo(jq(".patient-profile"));
             jq(".patient-profile-editor").prependTo(jq(".profile-editor"));
             for (var i = 0; i < patientProfile.details.length; i++) {
                 if (isValidDate(patientProfile.details[i].value)) {
@@ -78,56 +78,193 @@
 </script>
 <script id="patient-profile-template" type="text/template">
     {{ _.each(details, function(profileDetail) { }}
-        <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
+		<span class="menu-title">
+			<i class="icon-angle-right"></i>
+			<span>{{=profileDetail.name}}:</span>{{=profileDetail.value}}
+		</span>
     {{ }); }}
-    <a href="#" class="edit-profile">Edit</a>
+	
+	<span style="border-top: 1px dotted rgb(136, 136, 136); display: block; margin-top: 5px; padding-top: 5px;">
+		<a href="#" class="edit-profile">
+			<i class="icon-pencil"></i>
+			Edit Details
+		</a>	
+	</span>
+	
 </script>
+
+<style>
+	.menu-title span{
+		display: inline-block;
+		width: 65px;
+	}
+	span a:hover{
+		text-decoration: none;
+	}	
+	form label,
+	.form label {
+		display: inline-block;
+		padding-left: 10px;
+		width: 140px;
+	}	
+	form input, 
+	form select, 
+	form textarea, 
+	form ul.select, 
+	.form input, 
+	.form select, 
+	.form textarea, .form ul.select {
+		display: inline-block;
+		min-width: 70%;
+	}
+	#lmpDate label,
+	#eddDate label{
+		display: none;
+	}
+</style>
+
+<div>
+	<div style="padding-top: 15px;" class="col15 clear">
+		<ul id="left-menu" class="left-menu">
+			<li class="menu-item selected" visitid="54">
+				<span class="menu-date">
+					<i class="icon-time"></i>
+					<span id="vistdate">5 Nov 2017<br> &nbsp; &nbsp; (Active since 04:10 PM)</span>
+				</span>
+				
+				<div class="patient-profile">
+				
+				</div>
+				
+				
+				
+				<span class="arrow-border"></span>
+				<span class="arrow"></span>
+			</li>
+
+			<li style="height: 30px;" class="menu-item" visitid="53">
+			</li>
+		</ul>
+	</div>
+	
+	<div style="min-width: 78%" class="col16 dashboard">
+		<div class="info-section">
+			<form id="antenatal-triage-form">
+				<div class="profile-editor"></div>
+				
+				<div class="info-header">
+					<i class="icon-diagnosis"></i>
+					<h3>TRIAGE DETAILS</h3>
+				</div>
+				
+				<div class="info-body">
+						
+					<input type="hidden" name="patientId" value="${patientId}" >
+					<div>
+						<label for="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Weight</label>
+						<input type="text" id="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+						<span class="append-to-value">Kgs</span>
+					</div>
+					<div>
+						<label for="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Height</label>
+						<input type="text" id="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<span class="append-to-value">Mtrs</span>
+					</div>
+					<div>
+						<label for="systolic">Blood Pressure</label>
+						<input type="text" id="systolic" name="concept.5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<span class="append-to-value">Systolic</span>
+					</div>
+					
+					<div>
+						<label for="diastolic"></label>
+						<input type="text" id="diastolic" name="concept.5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<span class="append-to-value">Diastolic</span>
+					</div>					
+					
+					<div>
+						<label></label>
+						<label style="padding-left:0px; width: auto;">
+							<input type="checkbox" name="send_for_examination" value="yes" >
+							Tick to Send to Examination Room
+						</label>
+					</div>
+				</div>
+			</form>
+			
+			<div>
+				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 50px;">
+					<i class="icon-save"></i>
+					Save
+				</span>
+			</div>
+		</div>
+
+		
+
+		
+
+	</div>
+</div>
+
+
+
+<div class="container">	
+	<br style="clear: both">
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="template-holder" style="display:none;">
-<div class="patient-profile-editor">
-    <div>
-        <label for="parity">Parity</label>
-        <input type="text" name="concept.1053AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="parity" />
-    </div>
-    <div>
-        <label for="gravidae">Gravida</label>
-        <input type="text" name="concept.5624AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="gravidae" />
-    </div>
-    <div>
-        <label>Last Menstrual Period (LMP)</label>
-        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-    </div>
-    <div>
-        <label>Expected Date of Delivery (EDD)</label>
-        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-    </div>
-    <div>
-        <label for="gestation">Gestation in weeks</label>
-        <input type="text" id="gestation">
-    </div>
+
+
+	<div class="patient-profile-editor">
+		<div class="info-header">
+			<i class="icon-user-md"></i>
+			<h3>ANTENATAL DETAILS</h3>
+		</div>
+		
+		<div class="info-body" style="margin-bottom: 20px; padding-bottom: 10px;">
+			<div>				
+				<label for="parity">Parity</label>
+				<input type="text" name="concept.1053AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="parity" />				
+				<span class="append-to-value">Pregnancies</span>
+			</div>
+		
+			<div>
+				<label for="gravidae">Gravida</label>
+				<input type="text" name="concept.5624AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="gravida" />
+				<span class="append-to-value">Pregnancies</span>
+			</div>
+			
+			<div>
+				<label>L.M.P</label>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: 'lmpDate', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			</div>
+			
+			<div>
+				<label>E.D.D</label>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: 'eddDate', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			</div>
+			
+			<div>
+				<label for="gestation">Gestation</label>
+				<input type="text" id="gestation">
+				<span class="append-to-value">Weeks</span>
+			</div>
+		</div>
+	</div>
 </div>
-</div>
-<div class="patient-profile"></div>
-<form id="antenatal-triage-form">
-    <input type="hidden" name="patientId" value="${patientId}" >
-    <div class="profile-editor"></div>
-    <div>
-        <label for="weight">Weight (Kgs)</label>
-        <input type="text" id="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-    </div>
-    <div>
-        <label for="height">Height (Metres)</label>
-        <input type="text" id="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
-    </div>
-    <div>
-        <label for="bloodPressure">Blood Pressure</label>
-        <input type="text" id="systolic" name="concept.5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
-        <input type="text" id="diastolic" name="concept.5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
-    </div>
-    <div>
-        <label for="referralOptions">Tick to Send to Examination Room</label>
-        <input type="checkbox" name="send_for_examination" value="yes" >
-    </div>
-    <div>
-        <input type="button" value="Submit" class="button submit confirm" id="antenatalTriageFormSubmitButton">
-    </div>
-</form>
+<div class=""></div>
+
