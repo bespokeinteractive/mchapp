@@ -173,16 +173,16 @@
 		
 			<div>
 				<label for="deliveryPlace">Place of Delivery</label>
-				<input type="text" name="deliveryPlace" >
+				<input type="text" name="concept.f131507e-6acd-4bbe-afb5-4e39503e5a00" >
 			</div>
 			
 			<div>
 				<label for="deliveryMode">Mode of Delivery</label>
-				<input type="text" name="modeOfDeliver" >
+				<input type="text" name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130" >
 			</div>
 			<div>
 				<label for="babyState">State of Baby</label>
-				<input type="text" name="babyState" >
+				<input type="text" name="concept.5ddb1a3e-0e88-426c-939a-abf4776b024a" >
 			</div>
 		</div>	  
 	</div>
