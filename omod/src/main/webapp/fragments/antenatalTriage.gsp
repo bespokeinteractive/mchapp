@@ -50,7 +50,7 @@
 
         function calculateGestationInWeeks(){
             var lastMenstrualPeriod = moment(jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field", document.forms[0]).val(), "YYYY-MM-DD");
-            var expectedDate = moment(jq("#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field", document.forms[0]).val(), "YYYY-MM-DD");
+            var expectedDate = moment();
             var gestationInWeeks = Math.ceil(moment.duration(expectedDate.diff(lastMenstrualPeriod)).asWeeks());
             jq('#gestation', document.forms[0]).val(gestationInWeeks);
         }
