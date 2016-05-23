@@ -1,20 +1,5 @@
 <script>
     jq(function () {
-        jq('#availableReferral').change(function () {
-            if (jq(this).val() == 0) {
-                jq('#internalReferral').hide();
-                jq('#externalReferral').hide();
-            }
-            else if (jq(this).val() == 1) {
-                jq('#internalReferral').show();
-                jq('#externalReferral').hide();
-            }
-            else {
-                jq('#internalReferral').hide();
-                jq('#externalReferral').show();
-            }
-        }).change();
-
 
         //submit data
         jq(".submit").on("click", function (event) {
@@ -103,26 +88,13 @@
 								   id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">
 						<span class="append-to-value">cm</span>
 					</div>
-
-					<div>
-						<label for="availableReferral">Referral</label>
-						<select id="availableReferral" name="availableReferral">
-							<option value="0">Select Option</option>
-							<option value="1">No Referral</option>
-							<option value="2">Internal Referral</option>
-							<option value="3">External Referral</option>
-						</select>
-					</div>
 					
-					<div class="col4">
-						<label for="toWhere">Referral</label>
-						<select id="toWhere" name="toWhere" style="margin-top: 5px;">
-							<% if (internalReferralSources != null || internalReferralSources != "") { %>
-							<% internalReferralSources.each { referTo -> %>
-							<option>${referTo.label}</option>
-							<% } %>
-							<% } %>
-						</select>
+					<div>
+						<label></label>
+						<label style="padding-left:0px; width: auto;">
+							<input type="checkbox" name="send_for_examination" value="yes" >
+							Tick to Send to Examination Room
+						</label>
 					</div>
 				</div>
 			</form>
