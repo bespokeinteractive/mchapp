@@ -33,13 +33,13 @@ public class TriagePageController {
         model.addAttribute("enrolledInCwc", enrolledInCWC);
 
         if (enrolledInANC){
-            model.addAttribute("title", "Triage ANC");
+            model.addAttribute("title", "ANC Triage");
         }
         else  if (enrolledInPNC){
-            model.addAttribute("title", "Triage PNC");
+            model.addAttribute("title", "PNC Triage");
         }
         else  if (enrolledInCWC){
-            model.addAttribute("title", "Triage PNC");
+            model.addAttribute("title", "PNC Triage");
         }
         else{
             model.addAttribute("title", "Triage");

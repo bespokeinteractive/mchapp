@@ -90,38 +90,7 @@
 			Edit Details
 		</a>	
 	</span>
-	
 </script>
-
-<style>
-	.menu-title span{
-		display: inline-block;
-		width: 65px;
-	}
-	span a:hover{
-		text-decoration: none;
-	}	
-	form label,
-	.form label {
-		display: inline-block;
-		padding-left: 10px;
-		width: 140px;
-	}	
-	form input, 
-	form select, 
-	form textarea, 
-	form ul.select, 
-	.form input, 
-	.form select, 
-	.form textarea, .form ul.select {
-		display: inline-block;
-		min-width: 70%;
-	}
-	#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label,
-	#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label{
-		display: none;
-	}
-</style>
 
 <div>
 	<div style="padding-top: 15px;" class="col15 clear">
@@ -129,7 +98,7 @@
 			<li class="menu-item selected" visitid="54">
 				<span class="menu-date">
 					<i class="icon-time"></i>
-					<span id="vistdate">5 Nov 2017<br> &nbsp; &nbsp; (Active since 04:10 PM)</span>
+					<span id="vistdate">23 May 2016<br> &nbsp; &nbsp; (Active since 04:10 PM)</span>
 				</span>
 				
 				<div class="patient-profile">
@@ -157,8 +126,7 @@
 					<h3>TRIAGE DETAILS</h3>
 				</div>
 				
-				<div class="info-body">
-						
+				<div class="info-body">						
 					<input type="hidden" name="patientId" value="${patientId}" >
 					<div>
 						<label for="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Weight</label>
@@ -199,36 +167,15 @@
 				</span>
 			</div>
 		</div>
-
-		
-
-		
-
 	</div>
 </div>
-
-
 
 <div class="container">	
 	<br style="clear: both">
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="template-holder" style="display:none;">
-
-
 	<div class="patient-profile-editor">
 		<div class="info-header">
 			<i class="icon-user-md"></i>

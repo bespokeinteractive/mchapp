@@ -139,6 +139,37 @@ function isValidDate(str) {
 		padding-right: 55px;
 		position: relative;
 	}
+	.menu-title span{
+		display: inline-block;
+		width: 65px;
+	}
+	span a:hover{
+		text-decoration: none;
+	}	
+	form label,
+	.form label {
+		display: inline-block;
+		padding-left: 10px;
+		width: 140px;
+	}	
+	form input, 
+	form textarea,
+	.form input, 
+	.form textarea{
+		display: inline-block;
+		min-width: 70%;
+	}
+	form select,
+	form ul.select, 
+	.form select, 
+	.form ul.select {
+		display: inline-block;
+		min-width: 73%;
+	}
+	#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label,
+	#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label{
+		display: none;
+	}
 </style>
 
 
