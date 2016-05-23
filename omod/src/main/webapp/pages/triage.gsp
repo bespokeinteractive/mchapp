@@ -5,12 +5,17 @@
 <script type="text/javascript">
 function isValidDate(str) {
     var d = moment(str,'D/M/YYYY');
-    if(d == null || !d.isValid()) return false;
+    var dt = moment(str, 'DD MMMM YYYY');
+    if(d == null || !d.isValid() || !dt.isValid()) return false;
 
    return str.indexOf(d.format('D/M/YYYY')) >= 0 
         || str.indexOf(d.format('DD/MM/YYYY')) >= 0
         || str.indexOf(d.format('D/M/YY')) >= 0 
-        || str.indexOf(d.format('DD/MM/YY')) >= 0;
+        || str.indexOf(d.format('DD/MM/YY')) >= 0
+        || str.indexOf(dt.format('D MMM YYYY')) >= 0
+        || str.indexOf(dt.format('DD MMMM YYYY')) >= 0
+        || str.indexOf(dt.format('D MMM YY')) >= 0
+        || str.indexOf(dt.format('DD MMMM YY')) >= 0;
 }
 </script>
 

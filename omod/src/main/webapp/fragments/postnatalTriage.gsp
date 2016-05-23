@@ -10,12 +10,12 @@
 
         jq(".patient-profile").on("click", ".edit-profile", function(){
             jq(".patient-profile").empty();
-            jq("<a href=\"#\" class=\"cancel\">Cancel</a>").appendTo(jq(".patient-profile"));
-            var patientProfileEditorTemplate = _.template(jq("#patient-profile-editor-template").html());
-            jq("form").prepend(patientProfileEditorTemplate());
+            jq("<span style='margin-top: 5px; display: block;'><a href=\"#\" class=\"cancel\"><i class='icon-remove small'></i>Cancel Edit</a></span>").appendTo(jq(".patient-profile"));
+            jq(".patient-profile-editor").prependTo(jq(".profile-editor"));
             for (var i = 0; i < patientProfile.details.length; i++) {
                 if (isValidDate(patientProfile.details[i].value)) {
                     jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(moment(patientProfile.details[i].value, 'D/M/YYYY').format('YYYY-MM-DD'));
+console.log(jq("#"+ patientProfile.details[i].uuid + "-display"));
                     jq("#"+ patientProfile.details[i].uuid + "-display").val(moment(patientProfile.details[i].value, 'D/M/YYYY').format('DD MMM YYYY'));
                 } else {
                     jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(patientProfile.details[i].value);
@@ -34,6 +34,7 @@
                 var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
                 jq(".patient-profile").append(patientProfileTemplate(patientProfile));
             }
+            jq(this).remove();
         });
     });
 </script>
@@ -46,20 +47,19 @@
 <div class="template-holder" style="display:none;">
 <div class="patient-profile-editor">
   <p>
-    <label for="deliveryDate">Date of Delivery</label>
-    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: '', useTime: false, defaultToday: false, endDate: new Date()])}
+    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date of Delivery', useTime: false, defaultToday: false, endDate: new Date()])}
   </p>
   <p>
     <label for="deliveryPlace">Place of Delivery</label>
-    <input type="text" name="deliveryPlace" >
+    <input type="text" name="concept.f131507e-6acd-4bbe-afb5-4e39503e5a00" >
   </p>
   <p>
     <label for="deliveryMode">Mode of Delivery</label>
-    <input type="text" name="modeOfDeliver" >
+    <input type="text" name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130" >
   </p>
   <p>
     <label for="babyState">State of Baby</label>
-    <input type="text" name="babyState" >
+    <input type="text" name="concept.5ddb1a3e-0e88-426c-939a-abf4776b024a" >
   </p>
 </div>
 </div>
@@ -103,7 +103,7 @@ jq(function(){
 				if (data.status === "success") {
 					//show success message
 					window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-				} else if (data.status === "fail") {
+				} else if (data.status === "error") {
 					//show error message;
 					jq().toastmessage('showErrorToast', data.message);
 				}
