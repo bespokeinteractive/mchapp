@@ -6,47 +6,18 @@
             jq(".patient-profile").append(patientProfileTemplate(patientProfile));
         }
 
-        var examinations = [{
-            "value": "48AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "label": "Pregnancy, miscarriage",
-            "answers": [
-                {
-                    "uuid": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "display": "No"
-                },
-                {
-                    "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "display": "Sí"
-                },
-                {
-                    "uuid": "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    "display": "Desconocido"
-                }
-            ]
-        },
-            {
-                "value": "155AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                "label": "Epilepsy",
-                "answers": [
-                    {
-                        "uuid": "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "display": "Sí"
-                    },
-                    {
-                        "uuid": "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "display": "No"
-                    },
-                    {
-                        "uuid": "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                        "display": "Desconocido"
-                    }
-                ]
-            }
-        ];
+        var examinations = [];
 
         jq("#searchExaminations").autocomplete({
             minLength:0,
-            source:examinations,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("mchapp", "examinationFilter", "searchFor") }', {
+                    findingQuery: request.term
+                }).success(function(data) {
+                    examinations = data;
+                    response(data);
+                });
+            },
             select:function(event, ui){
                 var examination = _.find(examinations,function(exam){return exam.value === ui.item.value;});
                 var examTemplate = _.template(jq("#examination-detail-template").html());

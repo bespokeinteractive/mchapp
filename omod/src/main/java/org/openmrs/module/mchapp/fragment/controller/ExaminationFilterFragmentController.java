@@ -25,8 +25,8 @@ public class ExaminationFilterFragmentController {
 		for (ConceptSearchResult conceptSearchResult : possibleMatches) {
 			Concept concept = conceptSearchResult.getConcept();
 			SimpleObject finding = new SimpleObject();
-			finding.put("uuid", concept.getUuid());
-			finding.put("display", concept.getName().getName());
+			finding.put("value", concept.getUuid());
+			finding.put("label", concept.getName().getName());
 			List<SimpleObject> findingAnswers = new ArrayList<SimpleObject>();
 			for (ConceptAnswer answer : concept.getAnswers()) {
 				SimpleObject findingAnswer = new SimpleObject();
