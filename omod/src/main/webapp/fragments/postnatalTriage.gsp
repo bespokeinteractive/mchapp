@@ -47,7 +47,7 @@
 <div class="patient-profile-editor">
   <p>
     <label for="deliveryDate">Date of Delivery</label>
-    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: '', useTime: false, defaultToday: false])}
+    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: '', useTime: false, defaultToday: false, endDate: new Date()])}
   </p>
   <p>
     <label for="deliveryPlace">Place of Delivery</label>

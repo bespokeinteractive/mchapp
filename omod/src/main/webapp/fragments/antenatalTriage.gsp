@@ -14,8 +14,8 @@
             jq(".patient-profile-editor").prependTo(jq(".profile-editor"));
             for (var i = 0; i < patientProfile.details.length; i++) {
                 if (isValidDate(patientProfile.details[i].value)) {
-                    jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(moment(patientProfile.details[i].value, 'D/M/YYYY').format('YYYY-MM-DD'));
-                    jq("#"+ patientProfile.details[i].uuid + "-display").val(moment(patientProfile.details[i].value, 'D/M/YYYY').format('DD MMM YYYY'));
+                    jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(moment(patientProfile.details[i].value, 'D/M/YYYY').format('YYYY-MM-DD')).change();
+                    jq("#"+ patientProfile.details[i].uuid + "-display").val(moment(patientProfile.details[i].value, 'D/M/YYYY').format('DD MMM YYYY')).change();
                 } else {
                     jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(patientProfile.details[i].value);
                 }
@@ -117,8 +117,8 @@
 		display: inline-block;
 		min-width: 70%;
 	}
-	#lmpDate label,
-	#eddDate label{
+	#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label,
+	#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label{
 		display: none;
 	}
 </style>
@@ -248,14 +248,12 @@
 				<span class="append-to-value">Pregnancies</span>
 			</div>
 			
-			<div>
-				<label>L.M.P</label>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: 'lmpDate', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			<div>				
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'L.M.P', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 			</div>
 			
 			<div>
-				<label>E.D.D</label>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: 'eddDate', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'E.D.D', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 			</div>
 			
 			<div>
