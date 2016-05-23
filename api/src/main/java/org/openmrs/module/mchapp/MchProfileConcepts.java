@@ -11,7 +11,7 @@ public class MchProfileConcepts {
 			"5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  //edd
 			);
 	public static final List<String> PNC_PROFILE_CONCEPTS = Arrays.asList(
-			"",
+			"5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", //date of delivery
 			"",
 			"");
 
