@@ -28,7 +28,7 @@ public class PostnatalTriageFragmentController {
 				Integer.parseInt(config.get("patientId").toString()));
 		model.addAttribute("patientProfile", 
 			PatientProfileGenerator.generatePatientProfile(patient,
-						MchMetadata._MchProgram.ANC_PROGRAM));
+						MchMetadata._MchProgram.PNC_PROGRAM));
 		model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
 	}
 	
