@@ -1,7 +1,5 @@
 package org.openmrs.module.mchapp.api.impl;
 
-import static java.lang.Math.max;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +13,8 @@ import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
 
 import java.util.*;
+
+import static java.lang.Math.max;
 
 public class MchServiceImpl implements MchService {
     protected final Log log = LogFactory.getLog(getClass());
@@ -106,7 +106,7 @@ public class MchServiceImpl implements MchService {
     public SimpleObject enrollInCWC(Patient patient, Date dateEnrolled, Map<String, String> cwcInitialStates) {
         if (patient.getAge() != null) {
             if (patient.getAge() >  5){
-                return SimpleObject.create("status", "error", "message", "Patient has outgrown program");
+                return SimpleObject.create("status", "error", "message", "CWC only allowed for Child under 5 Years");
             }
         }
 

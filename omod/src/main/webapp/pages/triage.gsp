@@ -26,11 +26,6 @@ function isValidDate(str) {
 				<i class="icon-chevron-right link"></i>
 				<a href="${ui.pageLink('mchapp','triage')}">MCH</a>
 			</li>
-			
-			<li>
-				<i class="icon-chevron-right link"></i>
-				CWC Triage
-			</li>
 		</ul>
 	</div>
 </div>
