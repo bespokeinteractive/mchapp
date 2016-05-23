@@ -173,7 +173,7 @@ function isValidDate(str) {
 	}
 	form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus{
 		outline: 2px none #007fff;
-		box-shadow: 0 0 2px 0 #888 !important;
+		box-shadow: 0 0 1px 0 #ccc !important;
 	}
 	form input[type="checkbox"], .form input[type="checkbox"] {
 		margin-top: 4px;
