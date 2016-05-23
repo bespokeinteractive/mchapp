@@ -14,7 +14,7 @@
 			jq(".patient-profile-editor").prependTo(jq(".profile-editor"));
             for (var i = 0; i < patientProfile.details.length; i++) {
                 if (isValidDate(patientProfile.details[i].value)) {
-                    jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(moment(patientProfile.details[i].value, 'D MMM YY').format('YYYY-MM-DD'));
+                    jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(moment(patientProfile.details[i].value, 'D MMM YYYY').format('YYYY-MM-DD'));
                     jq("#"+ patientProfile.details[i].uuid + "-display").val(moment(patientProfile.details[i].value, 'D MMM YYYY').format('DD MMM YYYY'));
                 } else {
                     jq("input[name\$='"+ patientProfile.details[i].uuid +"']").val(patientProfile.details[i].value);
