@@ -188,6 +188,26 @@
             var buttonHolder = jq(this).parent("td");
             buttonHolder.parent("tr").remove();
         });
+
+        //submit data
+        jq("#antenatalExaminationSubmitButton").on("click", function(event){
+            event.preventDefault();
+            var data = jq("form#antenatalExaminationsForm").serialize();
+            data = data + convert(drugOrders);
+            console.log(data);
+            jq.post(
+                    '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
+                    data,
+                    function (data) {
+                        if (data.status === "success") {
+                            window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+                        } else if (data.status === "fail") {
+                            jq().toastmessage('showErrorToast', data.message);
+                        }
+                    },
+                    "json");
+        });
+
     });
 
     function selectReferrals(selectedReferral){
@@ -238,119 +258,121 @@
         addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td><td><p id=\"removeDrug\" class=\"icon-remove selecticon\"></p></td></tr>");
     }
-    function myConverterTest() {
-        return convert(drugOrders);
-    }
 </script>
 
-
-<script id="examination-detail-template" type="text/template">
-    <div id="examination-detail-div">
-        <label>{{-label}}</label>
-        {{ _.each(answers, function(answer, index) { }}
-            <input type="radio" name="concept.{{=value}}" value="{{=answer.uuid}}">{{=answer.display}}
-        {{ }); }}
-        <p id="selectedExamination" class="icon-remove selecticon"></p>
+<form id="antenatalExaminationsForm">
+    <div>
+        <label>Examination:</label><br>
+        <input type="text" id="searchExaminations" name="" value="">
     </div>
-</script>
 
-<script id="patient-profile-template" type="text/template">
-    {{ _.each(details, function(profileDetail) { }}
-        <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
-    {{ }); }}
-</script>
+    <script id="examination-detail-template" type="text/template">
+        <div id="examination-detail-div">
+            <label>{{-label}}</label>
+            {{ _.each(answers, function(answer, index) { }}
+                <input type="radio" name="concept.{{=value}}" value="{{=answer.uuid}}">{{=answer.display}}
+            {{ }); }}
+            <p id="selectedExamination" class="icon-remove selecticon"></p>
+        </div>
+    </script>
 
-<div class="patient-profile"></div>
+    <script id="patient-profile-template" type="text/template">
+        {{ _.each(profileDetails, function(profileDetail) { }}
+            <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
+        {{ }); }}
+    </script>
 
-<div>
-    <label>Examination:</label><br>
-    <input type="text" id="searchExaminations" name="" value="">
-</div>
+    <div class="patient-profile"></div>
 
-<div>
-    <fieldset>
-        <legend>Examinations</legend>
+    <div>
+        <fieldset>
+            <legend>Examinations</legend>
 
-    </fieldset>
-</div>
+        </fieldset>
+    </div>
 
-<div>
-    <h2> Investigations </h2>
-     <p>
-        <input type="text" style="width: 450px" id="investigation" name="investigation" placeholder="Enter Investigations" />
-        <select style="display: none" id="selectedInvestigationList"></select>
-        <div class="selectdiv"  id="selected-investigations"></div>
-    </p>
-</div>
+    <div>
+        <h2> Investigations </h2>
+         <p>
+            <input type="text" style="width: 450px" id="investigation" name="investigation" placeholder="Enter Investigations" />
+            <select style="display: none" id="selectedInvestigationList"></select>
+            <div class="selectdiv"  id="selected-investigations"></div>
+        </p>
+    </div>
 
 
-<h2> Prescribe Drugs</h2>
+    <h2> Prescribe Drugs</h2>
 
-<table id="addDrugsTable">
-    <thead>
-    <tr>
-        <th>Drug Name</th>
-        <th>Dosage</th>
-        <th>Formulation</th>
-        <th>Frequency</th>
-        <th>Days</th>
-        <th>Comments</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody ></tbody>
-</table>
+    <table id="addDrugsTable">
+        <thead>
+        <tr>
+            <th>Drug Name</th>
+            <th>Dosage</th>
+            <th>Formulation</th>
+            <th>Frequency</th>
+            <th>Days</th>
+            <th>Comments</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody ></tbody>
+    </table>
 
-<div style="margin-top:5px">
-    <input class="button confirm" type="button" id="addDrugsButton" name="" value="Add">
-</div>
-<div>
-    <h2> Patient Referral</h2>
-    <select id="availableReferral" name="availableReferral">
-        <option value="0">Select Option</option>
-        <option value="1">Internal Referral</option>
-        <option value="2">External Referral</option>
-    </select>
-</div>
-<div id="internalRefferalDiv" style="display: none">
-    <h2> Internal Referral</h2>
-    <select id="internalRefferal" name="">
-        <option value="0">Select Option</option>
-        <% if (internalReferrals != null || internalReferrals != "") { %>
-        <% internalReferrals.each { internalReferral -> %>
-        <option ${internalReferral.id} >${internalReferral.label}</option>
-        <% } %>
-        <% } %>
-    </select>
-</div>
+    <div style="margin-top:5px">
+        <input class="button confirm" type="button" id="addDrugsButton" name="" value="Add">
+    </div>
+    <div>
+        <h2> Patient Referral</h2>
+        <select id="availableReferral" name="availableReferral">
+            <option value="0">Select Option</option>
+            <option value="1">Internal Referral</option>
+            <option value="2">External Referral</option>
+        </select>
+    </div>
+    <div id="internalRefferalDiv" style="display: none">
+        <h2> Internal Referral</h2>
+        <select id="internalRefferal" name="">
+            <option value="0">Select Option</option>
+            <% if (internalReferrals != null || internalReferrals != "") { %>
+            <% internalReferrals.each { internalReferral -> %>
+            <option ${internalReferral.id} >${internalReferral.label}</option>
+            <% } %>
+            <% } %>
+        </select>
+    </div>
 
-<div id="externalRefferalDiv" style="display: none">
-    <h2> External Referral</h2>
-    <select id="externalRefferal" name="">
-        <option value="0">Select Option</option>
-        <% if (externalReferrals != null || externalReferrals != "") { %>
-        <% externalReferrals.each { externalReferral -> %>
-        <option ${externalReferral.id} >${externalReferral.label}</option>
-        <% } %>
-        <% } %>
-    </select>
+    <div id="externalRefferalDiv" style="display: none">
+        <h2> External Referral</h2>
+        <select id="externalRefferal" name="">
+            <option value="0">Select Option</option>
+            <% if (externalReferrals != null || externalReferrals != "") { %>
+            <% externalReferrals.each { externalReferral -> %>
+            <option ${externalReferral.id} >${externalReferral.label}</option>
+            <% } %>
+            <% } %>
+        </select>
 
-    <h2>Facility</h2>
-    <input type="text" id="referralFacility" name="">
+        <h2>Facility</h2>
+        <input type="text" id="referralFacility" name="">
 
-    <h2>Referral Reason</h2>
-    <select id="referralReason" name="">
-        <option value="0">Select Option</option>
-        <% if (referralReasons != null || referralReasons != "") { %>
-        <% referralReasons.each { referralReason -> %>
-        <option ${referralReason.id} >${referralReason.label}</option>
-        <% } %>
-        <% } %>
-    </select>
+        <h2>Referral Reason</h2>
+        <select id="referralReason" name="">
+            <option value="0">Select Option</option>
+            <% if (referralReasons != null || referralReasons != "") { %>
+            <% referralReasons.each { referralReason -> %>
+            <option ${referralReason.id} >${referralReason.label}</option>
+            <% } %>
+            <% } %>
+        </select>
 
-    <h2>Comment</h2>
-    <textarea></textarea>
-</div>
+        <h2>Comment</h2>
+        <textarea></textarea>
+    </div>
+
+    <div style="margin-top:20px">
+        <input type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+    </div>
+</form>
 
 
 <div id="prescription-dialog" class="dialog" style="display:none;">
