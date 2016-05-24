@@ -3,14 +3,42 @@
 %>
 
 <script>
+	var age 	= ${patient.age}
+	var gender 	= '${patient.gender}'
+	
 	jq(function(){
+		if (age <= 5){
+			jq(".button").removeClass("active");
+			jq('#cwc').addClass("active");
+		}
+	
 		jq('.button-group').on("click", ".button", function(){
+			var programme = jq(this).data("role");
+			
+			if (age <= 5 && programme !== 'enrollInCwc'){
+				jq(".button").removeClass("active");
+				jq('#cwc').addClass("active");
+				
+				jq().toastmessage('showErrorToast', 'This programme is only valid for children upto 5yrs');
+				return false;
+			}
+						
 			jq(".button").removeClass("active");
 			jq(this).addClass("active");
 		});
 		
 		jq('.confirm').click(function(){
 			var programme = jq("label.button.active").data("role");
+			
+			if (age <= 5 && programme !== 'enrollInCwc'){				
+				jq().toastmessage('showErrorToast', 'This programme is only valid for children upto 5yrs');
+				return false;
+			}
+			else if (age > 5 && gender =='M'){
+				jq().toastmessage('showErrorToast', 'This programme is only valid for Women and Children upto 5yrs');
+				return false;
+			}
+			
 			handleEnrollInProgram(
 				"${ui.actionLink('mchapp', 'programSelection', '" + programme + "')}",
 				"${ui.pageLink('mchapp','triage',[patientId: patient])}"
@@ -29,7 +57,7 @@
 				'json'
 			).done(function(data){
 				if (data.status === "success") {
-					jq().toastmessage('showNoticeToast', data.message);
+					jq().toastmessage('showSuccessToast', data.message);
 					//redirect to triage page
 					window.location = successUrl;
 				} else if (data.status === "error") {
@@ -93,9 +121,9 @@
 					<span>
 						<div class="example" style="display: inline">
 							<div class="button-group">
-								<label data-role="enrollInAnc" class="button active"> ANC </label>
-								<label data-role="enrollInPnc" class="button"> PNC </label>
-								<label data-role="enrollInCwc" class="button"> CWC </label>
+								<label data-role="enrollInAnc" id="anc" class="button active"> ANC </label>
+								<label data-role="enrollInPnc" id="pnc" class="button"> PNC </label>
+								<label data-role="enrollInCwc" id="cwc" class="button"> CWC </label>
 							</div>
 						</div>
 					

@@ -1,5 +1,8 @@
 <script>
+    var drugOrders = new DisplayDrugOrders();
+    var selectedInvestigationIds = [];
     jq(function(){
+        ko.applyBindings(drugOrders, jq(".drug-table")[0]);
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -35,9 +38,13 @@
             actions: {
                 confirm: function() {
                     addDrug();
+                    jq("#drugForm")[0].reset();
+                    jq('select option[value!="0"]', '#drugForm').remove();
                     adddrugdialog.close();
                 },
                 cancel: function() {
+                    jq("#drugForm")[0].reset();
+                    jq('select option[value!="0"]', '#drugForm').remove();
                     adddrugdialog.close();
                 }
             }
@@ -68,6 +75,7 @@
                 select:function(event, ui){
                     event.preventDefault();
                     jq(selectedInput).val(ui.item.label);
+                    jq(selectedInput).data("drug-id", ui.item.value);
                 },
                 change: function (event, ui) {
                     event.preventDefault();
@@ -89,7 +97,6 @@
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
-
                         var durgunits = jq.map(data, function (drugUnit) {
                             jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
                         });
@@ -107,6 +114,24 @@
         jq("fieldset").on("click", "#selectedExamination",function(){
             console.log(jq(this).parent("div"));
             jq(this).parent("div").remove();
+        });
+        //submit data
+        jq("#postnatalExaminationSubmitButton").on("click", function(event){
+            event.preventDefault();
+            var data = jq("form#postnatalExaminationsForm").serialize();
+            data = data + "&" + convert(drugOrders);
+            console.log(data);
+            jq.post(
+                    '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
+                    data,
+                    function (data) {
+                        if (data.status === "success") {
+                            window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+                        } else if (data.status === "fail") {
+                            jq().toastmessage('showErrorToast', data.message);
+                        }
+                    },
+                    "json");
         });
 
     });
@@ -130,19 +155,23 @@
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
-        var drugUnitsSelect = jq("#drugUnitsSelect option:selected").text();
-        var formulationsSelect = jq("#formulationsSelect option:selected").text();
-        var frequencysSelect = jq("#frequencysSelect option:selected").text();
+        var dosageUnit = jq("#drugUnitsSelect option:selected").text();
+        var formulation = jq("#formulationsSelect option:selected").text();
+        var frequency = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
 
-        addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
-                + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
+        var drugId = jq("#drugName").data("drugId");
+        var drugOrderDetail = new DrugOrder(drugId, drugName, drugDosage,
+                dosageUnit, formulation, frequency,
+                numberOfDays, comment);
+
+        drugOrders.addDrugOrder(drugId, drugOrderDetail);
     }
 </script>
 
 <script id="patient-profile-template" type="text/template">
-    {{ _.each(profileDetails, function(profileDetail) { }}
+    {{ _.each(details, function(profileDetail) { }}
         <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
     {{ }); }}
 </script>
@@ -172,7 +201,7 @@
 
 <h2> Prescribe Drugs</h2>
 
-<table id="addDrugsTable">
+<table class="drug-table">
     <thead>
     <tr>
         <th>Drug Name</th>
@@ -181,9 +210,22 @@
         <th>Frequency</th>
         <th>Days</th>
         <th>Comments</th>
+        <th></th>
     </tr>
     </thead>
-    <tbody ></tbody>
+    <tbody data-bind="foreach: display_drug_orders">
+    <tr>
+        <td data-bind="text: drug_name"></td>
+        <td data-bind="text: (dosage + ' ' + dosage_unit)"></td>
+        <td data-bind="text: formulation"></td>
+        <td data-bind="text: frequency"></td>
+        <td data-bind="text: number_of_days"></td>
+        <td data-bind="text: comment"></td>
+        <td data-bind="click: \$parent.remove">
+            <p class="icon-remove"></p>
+        </td>
+    </tr>
+    </tbody>
 </table>
 
 <div style="margin-top:5px">
@@ -240,6 +282,10 @@
     <textarea></textarea>
 </div>
 
+<div style="margin-top:20px">
+    <input type="button" value="Submit" class="button submit confirm" id="postnatalExaminationSubmitButton">
+</div>
+
 
 <div id="prescription-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">
@@ -249,41 +295,43 @@
     </div>
 
     <div class="dialog-content">
-        <ul>
-            <li>
-                <label>Drug</label>
-                <input class="drug-name" id="drugName" type="text">
-            </li>
-            <li>
-                <label>Dosage</label>
-                <input type="text" id="drugDosage"  style="width: 60px!important;">
-                <select id="drugUnitsSelect">
-                    <option value="0">Select Unit</option>
-                </select>
-            </li>
+        <form id="drugForm">
+            <ul>
+                <li>
+                    <label>Drug</label>
+                    <input class="drug-name" id="drugName" type="text">
+                </li>
+                <li>
+                    <label>Dosage</label>
+                    <input type="text" id="drugDosage"  style="width: 60px!important;">
+                    <select id="drugUnitsSelect">
+                        <option value="0">Select Unit</option>
+                    </select>
+                </li>
 
-            <li>
-                <label>Formulation</label>
-                <select id="formulationsSelect" >
-                    <option value="0">Select Formulation</option>
-                </select>
-            </li>
-            <li>
-                <label>Frequency</label>
-                <select id="frequencysSelect">
-                    <option value="0">Select Frequency</option>
-                </select>
-            </li>
+                <li>
+                    <label>Formulation</label>
+                    <select id="formulationsSelect" >
+                        <option value="0">Select Formulation</option>
+                    </select>
+                </li>
+                <li>
+                    <label>Frequency</label>
+                    <select id="frequencysSelect">
+                        <option value="0">Select Frequency</option>
+                    </select>
+                </li>
 
-            <li>
-                <label>Number of Days</label>
-                <input id="numberOfDays" type="text">
-            </li>
-            <li>
-                <label>Comment</label>
-                <textarea id="comment"></textarea>
-            </li>
-        </ul>
+                <li>
+                    <label>Number of Days</label>
+                    <input id="numberOfDays" type="text">
+                </li>
+                <li>
+                    <label>Comment</label>
+                    <textarea id="comment"></textarea>
+                </li>
+            </ul>
+        </form>
 
         <label class="button confirm right">Confirm</label>
         <label class="button cancel">Cancel</label>
