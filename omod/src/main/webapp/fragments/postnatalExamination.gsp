@@ -1,6 +1,8 @@
 <script>
-    var drugOrders = [];
+    var drugOrders = new DisplayDrugOrders();
+    var selectedInvestigationIds = [];
     jq(function(){
+        ko.applyBindings(drugOrders, jq(".drug-table")[0]);
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -73,7 +75,7 @@
                 select:function(event, ui){
                     event.preventDefault();
                     jq(selectedInput).val(ui.item.label);
-                    jq(selectedInput).attr("identifier", ui.item.value);
+                    jq(selectedInput).data("drug-id", ui.item.value);
                 },
                 change: function (event, ui) {
                     event.preventDefault();
@@ -117,7 +119,7 @@
         jq("#postnatalExaminationSubmitButton").on("click", function(event){
             event.preventDefault();
             var data = jq("form#postnatalExaminationsForm").serialize();
-            data = data + convert(drugOrders);
+            data = data + "&" + convert(drugOrders);
             console.log(data);
             jq.post(
                     '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
@@ -150,37 +152,26 @@
         }
     }
     function addDrug(){
-        var drugOrderObject = {};
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
-        var drugUnitsSelect = jq("#drugUnitsSelect option:selected").text();
-        var formulationsSelect = jq("#formulationsSelect option:selected").text();
-        var frequencysSelect = jq("#frequencysSelect option:selected").text();
+        var dosageUnit = jq("#drugUnitsSelect option:selected").text();
+        var formulation = jq("#formulationsSelect option:selected").text();
+        var frequency = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
-        var identifier= jq("#drugName").attr("identifier");
 
-        var drugOrder=  {
-            name: drugName,
-            dosage: drugDosage,
-            dosage_unit: jq("#drugUnitsSelect").val(),
-            formulation: jq("#formulationsSelect").val(),
-            frequency: jq("#frequencysSelect").val(),
-            number_of_days: numberOfDays,
-            comment: comment
-        }
+        var drugId = jq("#drugName").data("drugId");
+        var drugOrderDetail = new DrugOrder(drugId, drugName, drugDosage,
+                dosageUnit, formulation, frequency,
+                numberOfDays, comment);
 
-        drugOrderObject[identifier] = drugOrder;
-        drugOrders.push(drugOrderObject);
-
-        addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
-                + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
+        drugOrders.addDrugOrder(drugId, drugOrderDetail);
     }
 </script>
 
 <script id="patient-profile-template" type="text/template">
-    {{ _.each(profileDetails, function(profileDetail) { }}
+    {{ _.each(details, function(profileDetail) { }}
         <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
     {{ }); }}
 </script>
@@ -210,7 +201,7 @@
 
 <h2> Prescribe Drugs</h2>
 
-<table id="addDrugsTable">
+<table class="drug-table">
     <thead>
     <tr>
         <th>Drug Name</th>
@@ -219,9 +210,22 @@
         <th>Frequency</th>
         <th>Days</th>
         <th>Comments</th>
+        <th></th>
     </tr>
     </thead>
-    <tbody ></tbody>
+    <tbody data-bind="foreach: display_drug_orders">
+    <tr>
+        <td data-bind="text: drug_name"></td>
+        <td data-bind="text: (dosage + ' ' + dosage_unit)"></td>
+        <td data-bind="text: formulation"></td>
+        <td data-bind="text: frequency"></td>
+        <td data-bind="text: number_of_days"></td>
+        <td data-bind="text: comment"></td>
+        <td data-bind="click: \$parent.remove">
+            <p class="icon-remove"></p>
+        </td>
+    </tr>
+    </tbody>
 </table>
 
 <div style="margin-top:5px">

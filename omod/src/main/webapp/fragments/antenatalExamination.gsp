@@ -1,6 +1,3 @@
-<%
-ui.includeJavascript("patientdashboardapp", "knockout-3.4.0.js")
-%>
 <script>
     var drugOrders = new DisplayDrugOrders();
     var selectedInvestigationIds = [];
@@ -207,7 +204,6 @@ ui.includeJavascript("patientdashboardapp", "knockout-3.4.0.js")
     }
 
     function addDrug(){
-        var drugOrderObject = {};
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
