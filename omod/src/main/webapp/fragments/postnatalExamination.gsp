@@ -1,5 +1,5 @@
 <script>
-    var drugOrder = [];
+    var drugOrders = [];
     jq(function(){
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
@@ -36,6 +36,7 @@
             actions: {
                 confirm: function() {
                     addDrug();
+                    jq("#drugForm")[0].reset();
                     adddrugdialog.close();
                 },
                 cancel: function() {
@@ -110,6 +111,24 @@
             console.log(jq(this).parent("div"));
             jq(this).parent("div").remove();
         });
+        //submit data
+        jq("#postnatalExaminationSubmitButton").on("click", function(event){
+            event.preventDefault();
+            var data = jq("form#postnatalExaminationsForm").serialize();
+            data = data + convert(drugOrders);
+            console.log(data);
+            jq.post(
+                    '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
+                    data,
+                    function (data) {
+                        if (data.status === "success") {
+                            window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+                        } else if (data.status === "fail") {
+                            jq().toastmessage('showErrorToast', data.message);
+                        }
+                    },
+                    "json");
+        });
 
     });
 
@@ -129,6 +148,7 @@
         }
     }
     function addDrug(){
+        var drugOrderObject = {};
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
@@ -137,19 +157,20 @@
         var frequencysSelect = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
+        var identifier= jq("#drugName").attr("identifier");
 
-        drugOrder.push(
-                {
-                    identifier: jq("#drugName").attr("identifier"),
-                    name: drugName,
-                    dosage: drugDosage,
-                    dosageunits: jq("#drugUnitsSelect").val(),
-                    formulation: jq("#formulationsSelect").val(),
-                    frequency: jq("#frequencysSelect").val(),
-                    days: numberOfDays,
-                    comment: comment
-                }
-        );
+        var drugOrder=  {
+            name: drugName,
+            dosage: drugDosage,
+            dosage_unit: jq("#drugUnitsSelect").val(),
+            formulation: jq("#formulationsSelect").val(),
+            frequency: jq("#frequencysSelect").val(),
+            number_of_days: numberOfDays,
+            comment: comment
+        }
+
+        drugOrderObject[identifier] = drugOrder;
+        drugOrders.push(drugOrderObject);
 
         addDrugsTableBody.append("<tr><td>"+  drugName + "</td><td>"+  drugDosage + " " + drugUnitsSelect + "</td><td>" +formulationsSelect + "</td><td>"
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td></tr>");
@@ -255,6 +276,10 @@
     <textarea></textarea>
 </div>
 
+<div style="margin-top:20px">
+    <input type="button" value="Submit" class="button submit confirm" id="postnatalExaminationSubmitButton">
+</div>
+
 
 <div id="prescription-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">
@@ -264,41 +289,43 @@
     </div>
 
     <div class="dialog-content">
-        <ul>
-            <li>
-                <label>Drug</label>
-                <input class="drug-name" id="drugName" type="text">
-            </li>
-            <li>
-                <label>Dosage</label>
-                <input type="text" id="drugDosage"  style="width: 60px!important;">
-                <select id="drugUnitsSelect">
-                    <option value="0">Select Unit</option>
-                </select>
-            </li>
+        <form id="drugForm">
+            <ul>
+                <li>
+                    <label>Drug</label>
+                    <input class="drug-name" id="drugName" type="text">
+                </li>
+                <li>
+                    <label>Dosage</label>
+                    <input type="text" id="drugDosage"  style="width: 60px!important;">
+                    <select id="drugUnitsSelect">
+                        <option value="0">Select Unit</option>
+                    </select>
+                </li>
 
-            <li>
-                <label>Formulation</label>
-                <select id="formulationsSelect" >
-                    <option value="0">Select Formulation</option>
-                </select>
-            </li>
-            <li>
-                <label>Frequency</label>
-                <select id="frequencysSelect">
-                    <option value="0">Select Frequency</option>
-                </select>
-            </li>
+                <li>
+                    <label>Formulation</label>
+                    <select id="formulationsSelect" >
+                        <option value="0">Select Formulation</option>
+                    </select>
+                </li>
+                <li>
+                    <label>Frequency</label>
+                    <select id="frequencysSelect">
+                        <option value="0">Select Frequency</option>
+                    </select>
+                </li>
 
-            <li>
-                <label>Number of Days</label>
-                <input id="numberOfDays" type="text">
-            </li>
-            <li>
-                <label>Comment</label>
-                <textarea id="comment"></textarea>
-            </li>
-        </ul>
+                <li>
+                    <label>Number of Days</label>
+                    <input id="numberOfDays" type="text">
+                </li>
+                <li>
+                    <label>Comment</label>
+                    <textarea id="comment"></textarea>
+                </li>
+            </ul>
+        </form>
 
         <label class="button confirm right">Confirm</label>
         <label class="button cancel">Cancel</label>
