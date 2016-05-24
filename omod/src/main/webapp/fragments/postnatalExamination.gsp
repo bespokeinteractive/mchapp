@@ -37,9 +37,12 @@
                 confirm: function() {
                     addDrug();
                     jq("#drugForm")[0].reset();
+                    jq('select option[value!="0"]', '#drugForm').remove();
                     adddrugdialog.close();
                 },
                 cancel: function() {
+                    jq("#drugForm")[0].reset();
+                    jq('select option[value!="0"]', '#drugForm').remove();
                     adddrugdialog.close();
                 }
             }
@@ -92,7 +95,6 @@
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
-
                         var durgunits = jq.map(data, function (drugUnit) {
                             jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
                         });

@@ -40,9 +40,12 @@ ui.includeJavascript("patientdashboardapp", "knockout-3.4.0.js")
                 confirm: function() {
                     addDrug();
                     jq("#drugForm")[0].reset();
+                    jq('select option[value!="0"]', '#drugForm').remove();
                     adddrugdialog.close();
                 },
                 cancel: function() {
+                    jq("#drugForm")[0].reset();
+                    jq('select option[value!="0"]', '#drugForm').remove();
                     adddrugdialog.close();
                 }
             }
@@ -99,7 +102,6 @@ ui.includeJavascript("patientdashboardapp", "knockout-3.4.0.js")
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
-
                         var durgunits = jq.map(data, function (drugUnit) {
                             jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
                         });
