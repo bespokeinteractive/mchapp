@@ -1,6 +1,8 @@
 <script>
     var drugOrders = [];
+    
     jq(function() {
+
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -33,6 +35,7 @@
             actions: {
                 confirm: function() {
                     addDrug();
+                    jq("#drugForm")[0].reset();
                     adddrugdialog.close();
                 },
                 cancel: function() {
@@ -236,9 +239,8 @@
                 + frequencysSelect + "</td><td>" + numberOfDays + "</td><td>" + comment +"</td><td><p id=\"removeDrug\" class=\"icon-remove selecticon\"></p></td></tr>");
     }
     function myConverterTest() {
-        return objectToQueryString.convert(drugOrders);
+        return convert(drugOrders);
     }
-
 </script>
 
 
@@ -359,43 +361,44 @@
     </div>
 
     <div class="dialog-content">
-        <ul>
-            <li>
-                <label>Drug</label>
-                <input class="drug-name" id="drugName" type="text">
-            </li>
-            <li>
-                <label>Dosage</label>
-                <input type="text" id="drugDosage"  style="width: 60px!important;">
-                <select id="drugUnitsSelect">
-                    <option value="0">Select Unit</option>
-                </select>
-            </li>
+        <form id="drugForm">
+            <ul>
+                <li>
+                    <label>Drug</label>
+                    <input class="drug-name" id="drugName" type="text">
+                </li>
+                <li>
+                    <label>Dosage</label>
+                    <input type="text" id="drugDosage"  style="width: 60px!important;">
+                    <select id="drugUnitsSelect">
+                        <option value="0">Select Unit</option>
+                    </select>
+                </li>
 
-            <li>
-                <label>Formulation</label>
-                <select id="formulationsSelect" >
-                    <option value="0">Select Formulation</option>
-                </select>
-            </li>
-            <li>
-                <label>Frequency</label>
-                <select id="frequencysSelect">
-                    <option value="0">Select Frequency</option>
-                </select>
-            </li>
+                <li>
+                    <label>Formulation</label>
+                    <select id="formulationsSelect" >
+                        <option value="0">Select Formulation</option>
+                    </select>
+                </li>
+                <li>
+                    <label>Frequency</label>
+                    <select id="frequencysSelect">
+                        <option value="0">Select Frequency</option>
+                    </select>
+                </li>
 
-            <li>
-                <label>Number of Days</label>
-                <input id="numberOfDays" type="text">
-            </li>
-            <li>
-                <label>Comment</label>
-                <textarea id="comment"></textarea>
-            </li>
-        </ul>
-
-        <label class="button confirm right">Confirm</label>
-        <label class="button cancel">Cancel</label>
+                <li>
+                    <label>Number of Days</label>
+                    <input id="numberOfDays" type="text">
+                </li>
+                <li>
+                    <label>Comment</label>
+                    <textarea id="comment"></textarea>
+                </li>
+            </ul>
+            <label class="button confirm right">Confirm</label>
+            <label class="button cancel">Cancel</label>
+        </form>
     </div>
 </div>
