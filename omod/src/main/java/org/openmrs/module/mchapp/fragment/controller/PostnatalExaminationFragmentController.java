@@ -1,6 +1,7 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,10 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.mchapp.DrugOrdersParser;
+import org.openmrs.module.mchapp.InvestigationParser;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.api.MchService;
@@ -38,7 +42,11 @@ public class PostnatalExaminationFragmentController {
     }
 
     @SuppressWarnings("unchecked")
-    public SimpleObject savePostnatalExaminationInformation(@RequestParam("patientId") Patient patient, @RequestParam("queueId") Integer queueId, HttpServletRequest request) {
+    public SimpleObject savePostnatalExaminationInformation(
+            @RequestParam("patientId") Patient patient, 
+            @RequestParam("queueId") Integer queueId,
+            UiSessionContext session,
+            HttpServletRequest request) {
         SimpleObject saveStatus = null;
         OpdPatientQueue patientQueue = Context.getService(PatientQueueService.class).getOpdPatientQueueById(queueId);
         String location = "PNC Exam Room";
@@ -47,16 +55,18 @@ public class PostnatalExaminationFragmentController {
         }
         List<Obs> observations = new ArrayList<Obs>();
         List<OpdDrugOrder> drugOrders = new ArrayList<OpdDrugOrder>();
+        List<OpdTestOrder> testOrders = new ArrayList<OpdTestOrder>();
         for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
             try {
                 observations = ObsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
                 drugOrders = DrugOrdersParser.parseDrugOrders(patient, drugOrders, postedParams.getKey(), postedParams.getValue(), location);
+                InvestigationParser.parse(patient, postedParams.getKey(), postedParams.getValue(), location, Context.getAuthenticatedUser(), new Date(), testOrders);
             } catch (Exception e) {
                 saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
 
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, MchMetadata._MchProgram.ANC_PROGRAM);
+        Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, null);
 
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;

@@ -12,5 +12,6 @@
         <mapping resource="OpdPatientQueue.hbm.xml"/>
         <mapping resource="TriagePatientData.hbm.xml"/>
         <mapping resource="TriagePatientQueueLog.hbm.xml"/>
+        <mapping resource="BillableService.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

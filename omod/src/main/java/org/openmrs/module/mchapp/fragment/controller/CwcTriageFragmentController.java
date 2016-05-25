@@ -1,10 +1,19 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
 import org.openmrs.module.mchapp.MchMetadata;
@@ -16,9 +25,6 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * Created by USER on 5/4/2016.
@@ -32,7 +38,10 @@ public class CwcTriageFragmentController {
 
     @SuppressWarnings("unchecked")
 
-    public SimpleObject saveCwcTriageInfo(@RequestParam("patientId") Patient patient, HttpServletRequest request) {
+    public SimpleObject saveCwcTriageInfo(
+            @RequestParam("patientId") Patient patient,
+            UiSessionContext session,
+            HttpServletRequest request) {
         List<Obs> observations = new ArrayList<Obs>();
         for (Map.Entry<String, String[]> postedParams :
                 ((Map<String, String[]>) request.getParameterMap()).entrySet()) {
@@ -54,8 +63,7 @@ public class CwcTriageFragmentController {
             sendPatientToOPDQueue(patient, referralSpecialClinicConcept, true, paymentCategory);
         }
 
-
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, MchMetadata._MchProgram.PNC_PROGRAM);
+        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, null);
 
         return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
 

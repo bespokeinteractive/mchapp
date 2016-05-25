@@ -10,5 +10,9 @@
         <mapping resource="InventoryDrugCategory.hbm.xml"/>
         <mapping resource="InventoryDrugUnit.hbm.xml"/>
         <mapping resource="OpdDrugOrder.hbm.xml"/>
+        <mapping resource="BillableService.hbm.xml" />
+        <mapping resource="OpdTestOrder.hbm.xml" />
+        <mapping resource="Lab.hbm.xml" />
+        <mapping resource="LabTest.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

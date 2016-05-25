@@ -71,6 +71,12 @@
 				<version>1.0-SNAPSHOT</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>appui-omod</artifactId>
+				<version>1.3</version>
+				<scope>provided</scope>
+			</dependency>
 						
 			<!-- End OpenMRS modules -->
 			

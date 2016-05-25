@@ -3,6 +3,7 @@ package org.openmrs.module.mchapp.fragment.controller;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.SendForExaminationParser;
@@ -32,7 +33,10 @@ public class AntenatalTriageFragmentController {
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
     }
     @SuppressWarnings("unchecked")
-    public SimpleObject saveAntenatalTriageInformation(@RequestParam("patientId") Patient patient, HttpServletRequest request) {
+    public SimpleObject saveAntenatalTriageInformation(
+            @RequestParam("patientId") Patient patient,
+            UiSessionContext session,
+            HttpServletRequest request) {
         SimpleObject saveStatus = null;
         List<Obs> observations = new ArrayList<Obs>();
         for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
@@ -44,7 +48,7 @@ public class AntenatalTriageFragmentController {
             }
         }
 
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM);
+        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, null);
 
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;

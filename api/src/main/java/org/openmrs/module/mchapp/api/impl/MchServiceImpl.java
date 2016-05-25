@@ -7,6 +7,8 @@ import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.PatientDashboardService;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
+import org.openmrs.module.hospitalcore.model.OpdTestOrder;
+import org.openmrs.module.mchapp.FreeInvestigationProcessor;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.MchProfileConcepts;
 import org.openmrs.module.mchapp.api.MchService;
@@ -133,9 +135,10 @@ public class MchServiceImpl implements MchService {
     }
 
     @Override
-    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, String program) {
+    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, List<OpdTestOrder> testOrders, String program, Location location) {
         Encounter mchEncounter = new Encounter();
         mchEncounter.setPatient(patient);
+        mchEncounter.setLocation(location);
         Date encounterDateTime = new Date();
         if (encounterObservations.size() > 0) {
             encounterDateTime = encounterObservations.get(0).getObsDatetime();
@@ -157,6 +160,11 @@ public class MchServiceImpl implements MchService {
         for (OpdDrugOrder drugOrder : drugOrders) {
             drugOrder.setEncounter(mchEncounter);
             Context.getService(PatientDashboardService.class).saveOrUpdateOpdDrugOrder(drugOrder);
+        }
+        for (OpdTestOrder testOrder : testOrders) {
+            testOrder.setEncounter(mchEncounter);
+            Context.getService(PatientDashboardService.class).saveOrUpdateOpdOrder(testOrder);
+            FreeInvestigationProcessor.process(testOrder, location);
         }
         return mchEncounter;
     }

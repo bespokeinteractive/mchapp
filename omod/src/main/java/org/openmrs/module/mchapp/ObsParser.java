@@ -18,8 +18,14 @@ public class ObsParser {
         if (observations == null) {
             observations = new ArrayList<Obs>();
         }
-        if (StringUtils.contains(parameterKey, "concept.")) {
-            String obsConceptUuid = parameterKey.substring("concept.".length());
+        if (StringUtils.contains(parameterKey, "concept.")
+                || StringUtils.contains(parameterKey, "test_order")) {
+            String obsConceptUuid;
+            if (StringUtils.contains(parameterKey, "concept.")) {
+                obsConceptUuid = parameterKey.substring("concept.".length());
+            } else {
+                obsConceptUuid = parameterKey.substring("test_order.".length());
+            }
             Concept obsConcept = Context.getConceptService().getConceptByUuid(obsConceptUuid);
             if (obsConcept ==  null) {
                 throw new NullPointerException("concept with uuid: " + obsConceptUuid + " is not defined.");

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.SendForExaminationParser;
@@ -33,7 +34,10 @@ public class PostnatalTriageFragmentController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public SimpleObject savePostnatalTriageInformation(@RequestParam("patientId") Patient patient, HttpServletRequest request) {
+	public SimpleObject savePostnatalTriageInformation(
+			@RequestParam("patientId") Patient patient,
+			UiSessionContext session,
+			HttpServletRequest request) {
 		List<Obs> observations = new ArrayList<Obs>();
 		for (Map.Entry<String, String[]> postedParams : 
 			((Map<String, String[]>) request.getParameterMap()).entrySet()) {
@@ -47,7 +51,7 @@ public class PostnatalTriageFragmentController {
 			}
 		}
 		
-		Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, MchMetadata._MchProgram.PNC_PROGRAM);
+		Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.PNC_PROGRAM, null);
 		
 		return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
 	}
