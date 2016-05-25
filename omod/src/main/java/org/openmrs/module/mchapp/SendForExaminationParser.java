@@ -1,8 +1,5 @@
 package org.openmrs.module.mchapp;
 
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Patient;
@@ -12,6 +9,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+
+import java.util.Date;
+import java.util.List;
 
 public class SendForExaminationParser {
 	private static final String TRIAGE_ROOM_CONCEPT_UUID = "7f5cd7ad-ff69-4d60-b70c-799a98b046ef";
@@ -32,7 +32,6 @@ public class SendForExaminationParser {
 					selectedCategory = pa.getValue();
 				}
 			}
-
 			OpdPatientQueue queue = new OpdPatientQueue();
 			queue.setPatient(patient);
 			queue.setCreatedOn(new Date());
