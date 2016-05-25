@@ -1,6 +1,13 @@
 package org.openmrs.module.mchapp;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -8,25 +15,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalcore.BillingService;
+import org.openmrs.module.hospitalcore.model.BillableService;
+import org.openmrs.module.hospitalcore.model.DepartmentConcept;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.hospitalcore.model.InventoryDrugFormulation;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
+import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.MchMetadata._MchProgram;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.ui.framework.SimpleObject;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 public class MchServiceTest extends BaseModuleContextSensitiveTest {
 
@@ -266,14 +272,41 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         Concept yes = Context.getConceptService().getConcept(7);
         Obs ancObs = generateObs(ultrasoundDone, yes);
         OpdDrugOrder drugOrder = generateDrugOrder();
+        OpdTestOrder testOrder = generateTestOrder(patient);
+        Location location = Context.getLocationService().getLocation(1);
+
         Assert.assertNull(drugOrder.getOpdDrugOrderId());
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, Arrays.asList(ancObs), Arrays.asList(drugOrder), MchMetadata._MchProgram.ANC_PROGRAM);
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, Arrays.asList(ancObs), Arrays.asList(drugOrder), Arrays.asList(testOrder), MchMetadata._MchProgram.ANC_PROGRAM, location);
 
         Assert.assertNotNull(encounter.getId());
+        Assert.assertThat(encounter.getLocation(), equalTo(location));
         Assert.assertThat(encounter.getAllObs().size(), is(1));
         Assert.assertThat(encounter.getEncounterType().getUuid(), is(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE));
         Assert.assertNotNull(drugOrder.getOpdDrugOrderId());
+        Assert.assertThat(drugOrder.getEncounter(), equalTo(encounter));
+        Assert.assertNotNull(testOrder.getOpdOrderId());
+        Assert.assertThat(testOrder.getEncounter(), equalTo(encounter));
     }
+
+	private OpdTestOrder generateTestOrder(Patient patient) {
+		Concept investigationQuestionConcept = Context.getConceptService()
+				.getConcept(9999);
+		Concept investigationConcept = Context.getConceptService().getConcept(
+				9996);
+		OpdTestOrder testOrder = new OpdTestOrder();
+		BillableService billableService = Context.getService(
+				BillingService.class).getServiceByConceptId(
+				investigationConcept.getConceptId());
+		testOrder.setPatient(patient);
+		testOrder.setConcept(investigationQuestionConcept);
+		testOrder.setTypeConcept(DepartmentConcept.TYPES[2]);
+		testOrder.setValueCoded(investigationConcept);
+		testOrder.setBillableService(billableService);
+		testOrder.setFromDept("MCH Clinic");
+		testOrder.setCreator(Context.getAuthenticatedUser());
+		testOrder.setCreatedOn(new Date());
+		return testOrder;
+	}
 
 	private Obs generateObs(Concept question, Concept answer) {
 		Obs ancObs = new Obs();

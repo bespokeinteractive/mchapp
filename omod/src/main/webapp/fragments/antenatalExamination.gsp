@@ -1,6 +1,7 @@
 <script>
     var drugOrders = new DisplayDrugOrders();
     var selectedInvestigationIds = [];
+    var investigationQuestionUuid = "ce960874-0bdb-458a-9bc4-94a9be561578";
     
     jq(function() {
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
@@ -123,7 +124,7 @@
                 ).success(function(data) {
                     var results = [];
                     for (var i in data) {
-                        var result = { label: data[i].name, value: data[i].id};
+                        var result = { label: data[i].name, value: data[i].uuid};
                         results.push(result);
                     }
                     response(results);
@@ -134,7 +135,8 @@
                 if (!selectedInvestigationIds.includes(ui.item.value)) {
                     var investigation = {};
                     investigation.label = ui.item.label;
-                    investigation.value = ui.item.value;
+                    investigation.questionUuid = investigationQuestionUuid;
+                    investigation.uuid = ui.item.value;
                     var investigationTemplate = _.template(jq("#investigation-template").html());
                     jq("div.selectdiv").append(investigationTemplate(investigation));
                     selectedInvestigationIds.push(ui.item.value);
@@ -235,7 +237,7 @@
 <script id="investigation-template" type="text/template">
   <div class="investigation">
     <p>{{=label}} <span class="icon-remove"></span></p>
-    <input type="hidden" name="concept.{{=value}}" value="{{=value}}">
+    <input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}">
   </div>
 </script>
 

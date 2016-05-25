@@ -46,4 +46,13 @@ public class ObsParserTest extends BaseModuleContextSensitiveTest {
 		observations = ObsParser.parse(observations, patient, "concept.NONEXISTANTUUID", new String[] { "Some value" });
 	}
 
+	@Test public void parse_shouldReturnAListOfObsWhenParamerHasTestOrder() throws Exception {
+		executeDataSet("mch-concepts.xml");
+		Patient patient = Context.getPatientService().getPatient(2);
+		
+		List<Obs> observations = new ArrayList<Obs>();
+		observations = ObsParser.parse(observations, patient, "test_order.122b36a4-9c07-4dfa-81ae-e6a4fe823077", new String[] { "17a83f95-49d9-473c-9aeb-c20c874fa5a1" });
+		
+		Assert.assertThat(observations.size(), Matchers.is(1));
+	}
 }
