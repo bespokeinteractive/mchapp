@@ -4,6 +4,8 @@ import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.fragment.FragmentConfiguration;
+import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +19,9 @@ public class ProgramSelectionFragmentController {
 
     protected Logger logger = LoggerFactory.getLogger(ProgramSelectionFragmentController.class);
 
-    public void controller() {
+    public void controller(FragmentConfiguration config, FragmentModel model) {
+        config.require("queueId");
+        model.addAttribute("queueId", config.get("queueId"));
     }
 
     ;

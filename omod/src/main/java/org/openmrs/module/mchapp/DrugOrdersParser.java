@@ -33,6 +33,8 @@ public class DrugOrdersParser {
 			opdDrugOrder.setPatient(patient);
 			//TODO externalise date
 			opdDrugOrder.setCreatedOn(new Date());
+			//TODO externalise creator
+			opdDrugOrder.setCreator(Context.getAuthenticatedUser());
 			opdDrugOrder.setReferralWardName(orderSource);
 			drugOrderList.add(opdDrugOrder);
 		}

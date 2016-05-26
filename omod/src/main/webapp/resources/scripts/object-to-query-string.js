@@ -9,13 +9,14 @@ var objectToQueryString = (function() {
 
     function toArray(obj, parentKey){
         var parts = [];
+        var exclude = ["drug_name", "drug_id", "remove", "dosage_unit_label", "formulation_label", "frequency_label"]
         if (parentKey) {
             parentKey = parentKey + "."
         } else {
             parentKey = "";
         }
         for (var i in obj) {
-            if (i !== "drug_name" && i !== "drug_id" && i !== "remove") {
+            if (!exclude.includes(i)) {
                 if (Array.isArray(obj[i])) {
                     obj[i].forEach(function (value){
                         parts = parts.concat(toArray(value, parentKey + i));

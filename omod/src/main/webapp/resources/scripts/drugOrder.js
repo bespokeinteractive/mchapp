@@ -6,9 +6,12 @@ function DrugOrder(
 		"drug_id" : id,
 		"drug_name" : name,
 		"dosage" : dosage,
-		"dosage_unit" : unit,
-		"formulation" : formulation,
-		"frequency" : frequency,
+		"dosage_unit" : unit.id,
+		"dosage_unit_label" : unit.text,
+		"formulation" : formulation.id,
+		"formulation_label" : formulation.text,
+		"frequency" : frequency.id,
+		"frequency_label" : frequency.text,
 		"number_of_days" : numberOfDays,
 		"comment" : comment
 	};

@@ -41,7 +41,7 @@
 			
 			handleEnrollInProgram(
 				"${ui.actionLink('mchapp', 'programSelection', '" + programme + "')}",
-				"${ui.pageLink('mchapp','triage',[patientId: patient])}"
+				successUrl
 			);
 			
 		});
@@ -51,7 +51,7 @@
 				postUrl,
 				{
 					patientId: ${patient.id},
-					dateEnrolled: moment(jq("#date-enrolled-field").val(), "YYYY-MM-DD").format("DD/MM/YYYY")
+					dateEnrolled: moment(jq("#date-enrolled-field").val(), "YYYY-MM-DD").format("DD/MM/YYYY"),
 				},
 				null,
 				'json'

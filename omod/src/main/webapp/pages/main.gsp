@@ -5,6 +5,7 @@
 	ui.includeJavascript("mchapp", "drugOrder.js")
 %>
 <script type="text/javascript">
+    var successUrl = "${ui.pageLink('mchapp','main',[patientId: patient, queueId: queueId])}";
     function isValidDate(str) {
         var d = moment(str, 'D/M/YYYY');
         var dt = moment(str, 'D MMMM YY');
@@ -321,5 +322,5 @@
 <% } else if (enrolledInCwc) { %>
 	${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId])}
 <% } else { %>
-	${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId])}
+	${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
 <% } %>

@@ -3,6 +3,7 @@
     ui.includeJavascript("billingui", "moment.js")
 %>
 <script type="text/javascript">
+    var successUrl = "${ui.pageLink('mchapp','triage',[patientId: patient, queueId: queueId])}";
     function isValidDate(str) {
         var d = moment(str, 'D/M/YYYY');
         var dt = moment(str, 'D MMMM YY');
@@ -275,5 +276,5 @@ ${ui.includeFragment("mchapp", "postnatalTriage", [patientId: patientId, queueId
 <% } else if (enrolledInCwc) { %>
 ${ui.includeFragment("mchapp", "cwcTriage", [patientId: patientId])}
 <% } else { %>
-${ui.includeFragment("mchapp", "programSelection", [patientId: patientId])}
+${ui.includeFragment("mchapp", "programSelection", [patientId: patientId, queueId: queueId])}
 <% } %>

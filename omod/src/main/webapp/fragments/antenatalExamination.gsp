@@ -14,7 +14,7 @@
 <script>
     var drugOrders = new DisplayDrugOrders();
     var selectedInvestigationIds = [];
-    var investigationQuestionUuid = "ce960874-0bdb-458a-9bc4-94a9be561578";
+    var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
 	var NavigatorController;
 	
 	var examinationArray = [];
@@ -99,19 +99,19 @@
                             }
                     ).success(function(data) {
                         var formulations = jq.map(data, function (formulation) {
-                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name+':'+formulation.dozage).attr('value', formulation.id));
+                            jq('#formulationsSelect').append(jq('<option>').attr('value', formulation.id).text(formulation.name+':'+formulation.dozage));
                         });
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFrequencies") }').success(function(data) {
                         var frequencies = jq.map(data, function (frequency) {
-                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.uuid));
+                            jq('#frequencysSelect').append(jq('<option>').attr('value', frequency.uuid).text(frequency.name));
                         });
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
                         var durgunits = jq.map(data, function (drugUnit) {
-                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.uuid));
+                            jq('#drugUnitsSelect').append(jq('<option>').val(drugUnit.uuid).text(drugUnit.label));
                         });
                     });
                 },
@@ -268,20 +268,19 @@
             event.preventDefault();
             var data = jq("form#antenatalExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
-			
-            /*
+
             jq.post(
               '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
               data,
               function (data) {
                   if (data.status === "success") {
                       window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                  } else if (data.status === "fail") {
+                  } else if (data.status === "error") {
                       jq().toastmessage('showErrorToast', data.message);
                   }
               },
               "json"
-            ); */
+            );
         });
 		
 		jq('#availableReferral').change(function(){
@@ -341,9 +340,15 @@
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
-        var dosageUnit = jq("#drugUnitsSelect option:selected").text();
-        var formulation = jq("#formulationsSelect option:selected").text();
-        var frequency = jq("#frequencysSelect option:selected").text();
+        var dosageUnit = {};
+        dosageUnit.id = jq("#drugUnitsSelect option:selected").val();
+        dosageUnit.text = jq("#drugUnitsSelect option:selected").text();
+        var formulation = {};
+        formulation.id = jq("#formulationsSelect option:selected").val();
+        formulation.text = jq("#formulationsSelect option:selected").text();
+        var frequency = {};
+        frequency.id = jq("#frequencysSelect option:selected").val();
+        frequency.text = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
 
@@ -533,9 +538,9 @@
 				<tbody data-bind="foreach: display_drug_orders">					
 					<tr>
 						<td data-bind="text: drug_name"></td>
-						<td data-bind="text: (dosage + ' ' + dosage_unit)"></td>
-						<td data-bind="text: formulation"></td>
-						<td data-bind="text: frequency"></td>
+						<td data-bind="text: (dosage + ' ' + dosage_unit_label)"></td>
+						<td data-bind="text: formulation_label"></td>
+						<td data-bind="text: frequency_label"></td>
 						<td data-bind="text: number_of_days"></td>
 						<td data-bind="text: comment"></td>
 						<td data-bind="click: \$parent.remove">

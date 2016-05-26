@@ -149,13 +149,13 @@
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFrequencies") }').success(function(data) {
                         var frequencies = jq.map(data, function (frequency) {
-                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.id));
+                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.uuid));
                         });
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
                         var durgunits = jq.map(data, function (drugUnit) {
-                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
+                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.uuid));
                         });
                     });
                 },
@@ -184,10 +184,10 @@
         });
 		
         //submit data
-        jq("#postnatalExaminationSubmitButton").on("click", function(event){
+        jq("#postnatal-examination-submit").on("click", function(event){
             event.preventDefault();
             var data = jq("form#postnatalExaminationsForm").serialize();
-            data = data + "&" + convert(drugOrders);
+            data = data + "&" + objectToQueryString.convert(drugOrders);
             console.log(data);
             jq.post(
                     '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
@@ -259,9 +259,15 @@
         var addDrugsTableBody = jq("#addDrugsTable tbody");
         var drugName = jq("#drugName").val();
         var drugDosage = jq("#drugDosage").val();
-        var dosageUnit = jq("#drugUnitsSelect option:selected").text();
-        var formulation = jq("#formulationsSelect option:selected").text();
-        var frequency = jq("#frequencysSelect option:selected").text();
+        var dosageUnit = {};
+        dosageUnit.id = jq("#drugUnitsSelect option:selected").val();
+        dosageUnit.text = jq("#drugUnitsSelect option:selected").text();
+        var formulation = {};
+        formulation.id = jq("#formulationsSelect option:selected").val();
+        formulation.text = jq("#formulationsSelect option:selected").text();
+        var frequency = {};
+        frequency.id = jq("#frequencysSelect option:selected").val();
+        frequency.text = jq("#frequencysSelect option:selected").text();
         var numberOfDays = jq("#numberOfDays").val();
         var comment = jq("#comment").val();
 
@@ -368,7 +374,7 @@
 
 <div class="patient-profile"></div>
 
-<form method="post" id="postnatalExaminationsForm" class="simple-form-ui">
+<form id="postnatalExaminationsForm" class="simple-form-ui">
 	<input type="hidden" name="patientId" value="${patient.patientId}" >
 	<input type="hidden" name="queueId" value="${queueId}" >
 	
@@ -415,13 +421,13 @@
 				<tbody data-bind="foreach: display_drug_orders">					
 					<tr>
 						<td data-bind="text: drug_name"></td>
-						<td data-bind="text: (dosage + ' ' + dosage_unit)"></td>
-						<td data-bind="text: formulation"></td>
-						<td data-bind="text: frequency"></td>
+						<td data-bind="text: (dosage + ' ' + dosage_unit_label)"></td>
+						<td data-bind="text: formulation_label"></td>
+						<td data-bind="text: frequency_label"></td>
 						<td data-bind="text: number_of_days"></td>
 						<td data-bind="text: comment"></td>
 						<td data-bind="click: \$parent.remove">
-							<i class="icon-remove small" style="cursor: pointer; color: #f00;"></i>							
+							<i class="icon-remove small" style="cursor: pointer; color: #f00;"></i>
 						</td>
 					</tr>
 				</tbody>
@@ -573,7 +579,7 @@
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>
 			
-			<input type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+			<input type="button" value="Submit" class="button submit confirm" id="postnatal-examination-submit">
 		</div>
 	</div>
 </form>
