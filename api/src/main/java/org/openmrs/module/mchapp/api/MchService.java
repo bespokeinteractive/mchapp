@@ -11,6 +11,7 @@ import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.ui.framework.SimpleObject;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,5 +33,8 @@ public interface MchService {
 	Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, List<OpdTestOrder> testOrders, String program, Location location);
 	
 	List<Obs> getPatientProfile(Patient patient, String program);
+	List<ListItem> getPossibleOutcomes(Integer programId);
+    public void updatePatientProgram(Integer patientProgramId, String enrollmentDateYmd, String completionDateYmd,
+                                     Integer locationId, Integer outcomeId) throws ParseException ;
 
 }
