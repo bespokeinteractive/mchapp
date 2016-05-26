@@ -271,7 +271,7 @@ form input[type="checkbox"], .form input[type="checkbox"] {
 <% if (enrolledInAnc) { %>
 ${ui.includeFragment("mchapp", "antenatalTriage", [patientId: patientId, queueId: queueId])}
 <% } else if (enrolledInPnc) { %>
-${ui.includeFragment("mchapp", "postnatalTriage", [patientId: patientId])}
+${ui.includeFragment("mchapp", "postnatalTriage", [patientId: patientId, queueId: queueId])}
 <% } else if (enrolledInCwc) { %>
 ${ui.includeFragment("mchapp", "cwcTriage", [patientId: patientId])}
 <% } else { %>

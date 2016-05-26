@@ -321,9 +321,9 @@
 </div>
 
 <% if (enrolledInAnc){ %>
-	${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId])}
+	${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
 <% } else if (enrolledInPnc) { %>
-	${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId])}
+	${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
 <% } else if (enrolledInCwc) { %>
 	${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId])}
 <% } else { %>
