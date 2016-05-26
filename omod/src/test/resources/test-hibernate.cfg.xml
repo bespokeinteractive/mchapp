@@ -10,7 +10,9 @@
         <mapping resource="InventoryDrugCategory.hbm.xml"/>
         <mapping resource="InventoryDrugUnit.hbm.xml"/>
         <mapping resource="OpdPatientQueue.hbm.xml"/>
+        <mapping resource="OpdPatientQueueLog.hbm.xml"/>
         <mapping resource="TriagePatientData.hbm.xml"/>
+        <mapping resource="TriagePatientQueue.hbm.xml"/>
         <mapping resource="TriagePatientQueueLog.hbm.xml"/>
         <mapping resource="BillableService.hbm.xml" />
     </session-factory>

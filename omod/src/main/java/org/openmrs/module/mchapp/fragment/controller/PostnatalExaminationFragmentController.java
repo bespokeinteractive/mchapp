@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -19,6 +20,7 @@ import org.openmrs.module.mchapp.DrugOrdersParser;
 import org.openmrs.module.mchapp.InvestigationParser;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
+import org.openmrs.module.mchapp.QueueLogs;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.module.patientdashboardapp.model.ReferralReasons;
@@ -34,11 +36,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PostnatalExaminationFragmentController {
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         config.require("patientId");
+        config.require("queueId");
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
+        model.addAttribute("patient", patient);
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id"));
+        model.addAttribute("queueId", config.get("queueId"));
     }
 
     @SuppressWarnings("unchecked")
@@ -47,7 +52,6 @@ public class PostnatalExaminationFragmentController {
             @RequestParam("queueId") Integer queueId,
             UiSessionContext session,
             HttpServletRequest request) {
-        SimpleObject saveStatus = null;
         OpdPatientQueue patientQueue = Context.getService(PatientQueueService.class).getOpdPatientQueueById(queueId);
         String location = "PNC Exam Room";
         if (patientQueue != null) {
@@ -62,13 +66,13 @@ public class PostnatalExaminationFragmentController {
                 drugOrders = DrugOrdersParser.parseDrugOrders(patient, drugOrders, postedParams.getKey(), postedParams.getValue(), location);
                 InvestigationParser.parse(patient, postedParams.getKey(), postedParams.getValue(), location, Context.getAuthenticatedUser(), new Date(), testOrders);
             } catch (Exception e) {
-                saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
+                return SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
 
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, null);
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, null);
+        QueueLogs.logOpdPatient(patientQueue, encounter);
 
-        saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
-        return saveStatus;
+        return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
     }
 }

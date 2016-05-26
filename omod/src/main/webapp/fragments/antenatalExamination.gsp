@@ -456,6 +456,8 @@
 <div class="patient-profile"></div>
 
 <form method="post" id="antenatalExaminationsForm" class="simple-form-ui">
+	<input type="hidden" name="patientId" value="${patient.patientId}" >
+	<input type="hidden" name="queueId" value="${queueId}" >
 	<section>
 		<span class="title">Clinical Notes</span>
 		<fieldset class="no-confirmation">
@@ -687,9 +689,6 @@
 		</div>
 	</div>
 </form>
-
-
-
 
 <div id="prescription-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">

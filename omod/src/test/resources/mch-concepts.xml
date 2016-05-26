@@ -16,5 +16,9 @@
   <inventory_drug_formulation id="1" name="TAB" dozage="250" created_on="2014-07-14 12:23:19" created_by="Super" />
   <inventory_drug id="1" name="AMOX" attribute="2" created_on="2014-07-14 12:55:15" created_by="Super" />
 
+  <triage_patient_queue id="14" user="1" patient_id="2" triage_concept_id="4000" created_on="2015-12-09 18:06:12" triage_concept_name="CASUALTY TRIAGE" patient_name="Test" sex="M" patient_identifier="MAKL515125347472831" birth_date="1992-12-05 00:00:00"/>
+  <opd_patient_queue id="14" user="1" patient_id="2" opd_concept_id="4000" created_on="2015-12-09 18:06:12" opd_concept_name="CASUALTY TRIAGE" patient_name="Test" sex="M" patient_identifier="MAKL515125347472831" birth_date="1992-12-05 00:00:00"/>
   <billing_billable_service service_id="3" concept_id="9996" name="Maralia Tests" short_name="" price="0" disable="false" category="9996" />
 </dataset>
+
+

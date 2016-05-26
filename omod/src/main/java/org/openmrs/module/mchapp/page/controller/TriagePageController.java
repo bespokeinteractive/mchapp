@@ -12,10 +12,13 @@ import java.util.Date;
 
 public class TriagePageController {
 
-	public void get(@RequestParam("patientId") Patient patient,
-					PageModel model) {
+	public void get(
+			@RequestParam("patientId") Patient patient,
+			@RequestParam("queueId") Integer queueId,
+			PageModel model) {
 		MchService mchService = Context.getService(MchService.class);
 		model.addAttribute("patient", patient);
+		model.addAttribute("queueId", queueId);
 
         if (patient.getGender().equals("M")){
             model.addAttribute("gender", "Male");
