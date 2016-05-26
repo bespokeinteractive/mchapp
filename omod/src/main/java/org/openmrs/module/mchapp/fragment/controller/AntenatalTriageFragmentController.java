@@ -1,11 +1,15 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
+import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
+import org.openmrs.module.mchapp.QueueLogs;
 import org.openmrs.module.mchapp.SendForExaminationParser;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.patientdashboardapp.model.Referral;
@@ -36,8 +40,12 @@ public class AntenatalTriageFragmentController {
     public SimpleObject saveAntenatalTriageInformation(
             @RequestParam("patientId") Patient patient,
             UiSessionContext session,
+            @RequestParam("queueId") Integer queueId,
             HttpServletRequest request) {
         SimpleObject saveStatus = null;
+        QueueLogs queueLogs = new QueueLogs();
+        PatientQueueService queueService = Context.getService(PatientQueueService.class);
+        TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
         List<Obs> observations = new ArrayList<Obs>();
         for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
             try {
@@ -48,8 +56,8 @@ public class AntenatalTriageFragmentController {
             }
         }
 
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, null);
-
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, null);
+        queueLogs.logTriagePatient(queueService, queue, encounter);
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;
     }

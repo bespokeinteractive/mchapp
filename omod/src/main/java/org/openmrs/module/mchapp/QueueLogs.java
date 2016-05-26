@@ -10,7 +10,7 @@ import org.openmrs.module.hospitalcore.model.TriagePatientQueueLog;
  * Created by qqnarf on 5/24/16.
  */
 public class QueueLogs {
-    private TriagePatientQueueLog logTriagePatient(PatientQueueService queueService,
+    public TriagePatientQueueLog logTriagePatient(PatientQueueService queueService,
                                                    TriagePatientQueue queue, Encounter encounter) {
         TriagePatientQueueLog queueLog = new TriagePatientQueueLog();
         queueLog.setTriageConcept(queue.getTriageConcept());
