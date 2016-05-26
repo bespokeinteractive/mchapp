@@ -11,9 +11,14 @@ import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.mchapp.FreeInvestigationProcessor;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.MchProfileConcepts;
+import org.openmrs.module.mchapp.api.ListItem;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.util.OpenmrsUtil;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.Math.max;
@@ -24,6 +29,7 @@ public class MchServiceImpl implements MchService {
     private static final int MAX_ANC_DURATION = 9;
     private static final int MAX_PNC_DURATION = 9;
     private static final int MAX_CWC_DURATION = 5;
+    DateFormat ymdDf = new SimpleDateFormat("yyyy-MM-dd");
 
     /********
      * ANC Operations
@@ -107,7 +113,7 @@ public class MchServiceImpl implements MchService {
     @Override
     public SimpleObject enrollInCWC(Patient patient, Date dateEnrolled, Map<String, String> cwcInitialStates) {
         if (patient.getAge() != null) {
-            if (patient.getAge() >  5){
+            if (patient.getAge() > 5) {
                 return SimpleObject.create("status", "error", "message", "CWC only allowed for Child under 5 Years");
             }
         }
@@ -169,53 +175,136 @@ public class MchServiceImpl implements MchService {
         return mchEncounter;
     }
 
-	@Override
-	public List<Obs> getPatientProfile(Patient patient, String programUuid) {
-		Program program = Context.getProgramWorkflowService().getProgramByUuid(programUuid);
-		Calendar minEnrollmentDate = Calendar.getInstance();
-		minEnrollmentDate.add(Calendar.MONTH, -max(max(MAX_CWC_DURATION, MAX_ANC_DURATION), MAX_PNC_DURATION));
-		List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
-		PatientProgram currentProgram = null;
-		for (PatientProgram patientProgram : patientPrograms) {
-			if (patientProgram.getActive()) {
-				currentProgram = patientProgram;
-				break;
-			}
-		}
-		List<Obs> currentProfileObs = new ArrayList<Obs>();
-		if (currentProgram != null) {
-			Date dateEnrolled = currentProgram.getDateEnrolled();
-			List<Concept> questions = getProfileConcepts(currentProgram);
-			List<Obs> allProfileObs = Context.getObsService().getObservations(Arrays.asList((Person)patient), null, questions, null, null, null, Arrays.asList("obsDatetime"), null, null, dateEnrolled, null, false);
-			getCurrentProfileInfo(currentProfileObs, allProfileObs);
-		}
-		return currentProfileObs;
-	}
+    @Override
+    public List<Obs> getPatientProfile(Patient patient, String programUuid) {
+        Program program = Context.getProgramWorkflowService().getProgramByUuid(programUuid);
+        Calendar minEnrollmentDate = Calendar.getInstance();
+        minEnrollmentDate.add(Calendar.MONTH, -max(max(MAX_CWC_DURATION, MAX_ANC_DURATION), MAX_PNC_DURATION));
+        List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
+        PatientProgram currentProgram = null;
+        for (PatientProgram patientProgram : patientPrograms) {
+            if (patientProgram.getActive()) {
+                currentProgram = patientProgram;
+                break;
+            }
+        }
+        List<Obs> currentProfileObs = new ArrayList<Obs>();
+        if (currentProgram != null) {
+            Date dateEnrolled = currentProgram.getDateEnrolled();
+            List<Concept> questions = getProfileConcepts(currentProgram);
+            List<Obs> allProfileObs = Context.getObsService().getObservations(Arrays.asList((Person) patient), null, questions, null, null, null, Arrays.asList("obsDatetime"), null, null, dateEnrolled, null, false);
+            getCurrentProfileInfo(currentProfileObs, allProfileObs);
+        }
+        return currentProfileObs;
+    }
 
-	private void getCurrentProfileInfo(List<Obs> currentProfileObs,
-			List<Obs> allProfileObs) {
-		List<Integer> addedProfileInfo = new ArrayList<Integer>();
-		for (Obs profileMatch : allProfileObs) {
-			if (!addedProfileInfo.contains(profileMatch.getConcept().getConceptId())) {
-				addedProfileInfo.add(profileMatch.getConcept().getConceptId());
-				currentProfileObs.add(profileMatch);
-			}
-		}
-	}
+    @Override
+    public List<ListItem> getPossibleOutcomes(Integer programId) {
+        List<ListItem> ret = new ArrayList<ListItem>();
+        List<Concept> possibleOutcomes = Context.getProgramWorkflowService().getPossibleOutcomes(programId);
+        for (Concept possibleOutcome : possibleOutcomes) {
+            ListItem li = new ListItem();
+            li.setName(possibleOutcome.getName().getName());
+            li.setId(possibleOutcome.getConceptId());
+            ret.add(li);
+        }
+        return ret;
+    }
 
-	private List<Concept> getProfileConcepts(PatientProgram currentProgram) {
-		List<Concept> questions = new ArrayList<Concept>();
-		if (StringUtils.equalsIgnoreCase(currentProgram.getProgram().getUuid(), MchMetadata._MchProgram.ANC_PROGRAM)) {
-			for (String conceptUuid : MchProfileConcepts.ANC_PROFILE_CONCEPTS) {
-				questions.add(Context.getConceptService().getConceptByUuid(conceptUuid));
-			}
-		}
-		if (StringUtils.equalsIgnoreCase(currentProgram.getProgram().getUuid(), MchMetadata._MchProgram.PNC_PROGRAM)) {
-			for (String conceptUuid : MchProfileConcepts.PNC_PROFILE_CONCEPTS) {
-				questions.add(Context.getConceptService().getConceptByUuid(conceptUuid));
-			}
-		}
-		return questions;
-	}
+    /**
+     * Updates enrollment date, completion date, and location for a PatientProgram. Compares @param
+     * enrollmentDateYmd with {@link PatientProgram#getDateEnrolled()} compares @param
+     * completionDateYmd with {@link PatientProgram#getDateCompleted()}, compares @param locationId
+     * with {@link PatientProgram#getLocation()}, compares @param outcomeId with {@link org.openmrs.PatientProgram#getOutcome()}.
+     * At least one of these comparisons must indicate a change in order to update the PatientProgram. In other words, if neither the @param
+     * enrollmentDateYmd, the @param completionDateYmd, or the @param locationId or the @param outcomeId
+     * match with the persisted object, then the PatientProgram will not be updated.
+     * <p>Also, if the enrollment date comes after the completion date, the PatientProgram will not be updated.</p>
+     *
+     * @param patientProgramId
+     * @param enrollmentDateYmd
+     * @param completionDateYmd
+     * @param locationId
+     * @param outcomeId
+     * @throws ParseException
+     */
+    @Override
+    public void updatePatientProgram(Integer patientProgramId, String enrollmentDateYmd, String completionDateYmd,
+                                     Integer locationId, Integer outcomeId) throws ParseException {
+        PatientProgram pp = Context.getProgramWorkflowService().getPatientProgram(patientProgramId);
+        Location loc = null;
+        if (locationId != null) {
+            loc = Context.getLocationService().getLocation(locationId);
+        }
+        Concept outcomeConcept = null;
+        if (outcomeId != null) {
+            outcomeConcept = Context.getConceptService().getConcept(outcomeId);
+        }
+        Date dateEnrolled = null;
+        Date dateCompleted = null;
+        Date ppDateEnrolled = null;
+        Date ppDateCompleted = null;
+        Location ppLocation = pp.getLocation();
+        Concept ppOutcome = pp.getOutcome();
+        // If persisted date enrolled is not null then parse to ymdDf format.
+        if (null != pp.getDateEnrolled()) {
+            String enrolled = ymdDf.format(pp.getDateEnrolled());
+            if (null != enrolled && enrolled.length() > 0)
+                ppDateEnrolled = ymdDf.parse(enrolled);
+        }
+        // If persisted date enrolled is not null then parse to ymdDf format.
+        if (null != pp.getDateCompleted()) {
+            String completed = ymdDf.format(pp.getDateCompleted());
+            if (null != completed && completed.length() > 0)
+                ppDateCompleted = ymdDf.parse(completed);
+        }
+        // Parse parameter dates to ymdDf format.
+        if (enrollmentDateYmd != null && enrollmentDateYmd.length() > 0)
+            dateEnrolled = ymdDf.parse(enrollmentDateYmd);
+        if (completionDateYmd != null && completionDateYmd.length() > 0)
+            dateCompleted = ymdDf.parse(completionDateYmd);
+        // If either either parameter and persisted instances
+        // of enrollment and completion dates are equal, then anyChange is true.
+        boolean anyChange = OpenmrsUtil.nullSafeEquals(dateEnrolled, ppDateEnrolled);
+        anyChange |= OpenmrsUtil.nullSafeEquals(dateCompleted, ppDateCompleted);
+        anyChange |= OpenmrsUtil.nullSafeEquals(loc, ppLocation);
+        anyChange |= OpenmrsUtil.nullSafeEquals(outcomeConcept, ppOutcome);
+        // Do not update if the enrollment date is after the completion date.
+        if (null != dateEnrolled && null != dateCompleted && dateCompleted.before(dateEnrolled)) {
+            anyChange = false;
+        }
+        if (anyChange) {
+            pp.setDateEnrolled(dateEnrolled);
+            pp.setDateCompleted(dateCompleted);
+            pp.setLocation(loc);
+            pp.setOutcome(outcomeConcept);
+            Context.getProgramWorkflowService().savePatientProgram(pp);
+        }
+    }
+
+    private void getCurrentProfileInfo(List<Obs> currentProfileObs, List<Obs> allProfileObs) {
+        List<Integer> addedProfileInfo = new ArrayList<Integer>();
+        for (Obs profileMatch : allProfileObs) {
+            if (!addedProfileInfo.contains(profileMatch.getConcept().getConceptId())) {
+                addedProfileInfo.add(profileMatch.getConcept().getConceptId());
+                currentProfileObs.add(profileMatch);
+            }
+        }
+    }
+
+    private List<Concept> getProfileConcepts(PatientProgram currentProgram) {
+        List<Concept> questions = new ArrayList<Concept>();
+        if (StringUtils.equalsIgnoreCase(currentProgram.getProgram().getUuid(), MchMetadata._MchProgram.ANC_PROGRAM)) {
+            for (String conceptUuid : MchProfileConcepts.ANC_PROFILE_CONCEPTS) {
+                questions.add(Context.getConceptService().getConceptByUuid(conceptUuid));
+            }
+        }
+        if (StringUtils.equalsIgnoreCase(currentProgram.getProgram().getUuid(), MchMetadata._MchProgram.PNC_PROGRAM)) {
+            for (String conceptUuid : MchProfileConcepts.PNC_PROFILE_CONCEPTS) {
+                questions.add(Context.getConceptService().getConceptByUuid(conceptUuid));
+            }
+        }
+        return questions;
+    }
 
 }
