@@ -45,7 +45,7 @@ public class MainPageController {
             model.addAttribute("title", "CWC Clinic");
         }
         else{
-            model.addAttribute("title", "Triage");
+            model.addAttribute("title", "MCH Clinic");
         }
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);

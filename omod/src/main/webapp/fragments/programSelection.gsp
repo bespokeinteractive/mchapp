@@ -35,7 +35,7 @@
 				return false;
 			}
 			else if (age > 5 && gender =='M'){
-				jq().toastmessage('showErrorToast', 'This programme is only valid for Women and Children upto 5yrs');
+				jq().toastmessage('showErrorToast', 'This programme is only valid for Women or Children upto 5yrs');
 				return false;
 			}
 			
@@ -72,11 +72,20 @@
 	});
 </script>
 
-<style>	
+<style>
+	input[type="text"], input[type="password"], select {
+		border: 1px solid #aaa !important;
+		border-radius: 2px !important;
+		box-shadow: none !important;
+		box-sizing: border-box !important;
+		height: 38px !important;
+		line-height: 18px !important;
+		padding: 0 10px !important;
+	}
 	span.date input {
 		display: inline-block;
 		padding: 5px 10px;
-		width: 200px;
+		width: 222px!important;
 	}
 </style>
 

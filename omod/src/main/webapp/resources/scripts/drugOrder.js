@@ -35,13 +35,32 @@ function DisplayDrugOrders() {
 		"addDrugOrder": function (drugId, drugOrder) {
 			displayDrugOrders["display_drug_orders"].push(drugOrder[drugId]);
 			displayDrugOrders["drug_orders"]["drug_orders"].push(drugOrder);
+			jq('#prescriptions-set').val('SET');
+			prescriptionSummary();
 		},
 		"remove": function (order) {
 			console.log(order);
 			var id = order.drug_id;
 			displayDrugOrders["drug_orders"].remove(id);
 			displayDrugOrders["display_drug_orders"].remove(order);
+			if (displayDrugOrders["display_drug_orders"]().length == 0){
+				jq('#prescriptions-set').val('');
+			}
+			prescriptionSummary();
 		}
 	}
 	return displayDrugOrders;
+}
+
+function prescriptionSummary(){
+	if (drugOrders.display_drug_orders().length == 0){
+		jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
+	}
+	else{
+		var prescription = '';
+		drugOrders.display_drug_orders().forEach(function(drug){
+			prescription += drug.drug_name + ' ' + drug.formulation +'<br/>'
+		});
+		jq('#summaryTable tr:eq(2) td:eq(1)').html(prescription);
+	}
 }
