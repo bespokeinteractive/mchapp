@@ -19,6 +19,7 @@ import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.mchapp.DrugOrdersParser;
+import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.InvestigationParser;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
@@ -82,10 +83,11 @@ public class AntenatalExaminationFragmentController {
 						e.getMessage());
 			}
 		}
-
+		InternalReferral internalReferral = new InternalReferral();
 		Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient,
 				observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
 		QueueLogs.logOpdPatient(patientQueue, encounter);
+		internalReferral.sendToRefferedRoom(patient,"uuid");
 		return SimpleObject.create("status", "success", "message",
 				"Triage information has been saved.");
 	}

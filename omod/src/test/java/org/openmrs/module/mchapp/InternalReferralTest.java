@@ -2,6 +2,7 @@ package org.openmrs.module.mchapp;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -12,6 +13,7 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
  * Created by qqnarf on 5/26/16.
  */
 public class InternalReferralTest extends BaseModuleContextSensitiveTest {
+    @Ignore
     @Test
     public void sendToRefferalRoom_shouldFetchPatientFromQueueAndAddToAnotherQueue() throws Exception {
         executeDataSet("mch-concepts.xml");
