@@ -19,7 +19,7 @@
 				jq(".button").removeClass("active");
 				jq('#cwc').addClass("active");
 				
-				jq().toastmessage('showErrorToast', 'This programme is only valid for children upto 5yrs');
+				jq().toastmessage('showErrorToast', 'This patient can only be registered for CWC');
 				return false;
 			}
 						
