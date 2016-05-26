@@ -49,13 +49,7 @@
                     response(data);
                 });
             },
-            select:function(event, ui){
-                /*var examination = _.find(examinations,function(exam){return exam.value === ui.item.value;});
-                var examTemplate = _.template(jq("#examination-detail-template").html());
-                jq("fieldset").append(examTemplate(examination));
-                jq("#searchExaminations").val("");
-                return false;*/
-				
+            select:function(event, ui){				
 				var examination = _.find(examinations,function(exam){return exam.value === ui.item.value;});
 				
 				if (!examinationArray.find(function(exam){
@@ -112,6 +106,7 @@
             }
 
         });
+		
         jq("#addDrugsButton").on("click", function(e){
             adddrugdialog.show();
         });
@@ -172,11 +167,22 @@
                 }
             });
         });
-
-        jq("fieldset").on("click", "#selectedExamination",function(){
-            console.log(jq(this).parent("div"));
+		
+		jq("#exams-holder").on("click", "#selectedExamination",function(){
+			var uid = jq(this).data('uid');
+			examinationArray = examinationArray.filter(function(examination){
+				return examination.value != uid;
+			});
+			
+			examinationSummary();
             jq(this).parent("div").remove();
+			
+			if (jq("#examination-detail-div").length == 0){
+				jq('#exams-set').val('');
+				jq('#task-exams').hide();
+			}
         });
+		
         //submit data
         jq("#postnatalExaminationSubmitButton").on("click", function(event){
             event.preventDefault();
@@ -266,6 +272,9 @@
 
         drugOrders.addDrugOrder(drugId, drugOrderDetail);
     }
+	function formatHispDate(HispDate){
+		return 'Date';
+	}
 </script>
 
 
@@ -321,6 +330,12 @@
 		border: 1px solid #eee;
 		margin: 5px 0;
 		padding: 7px 12px;
+	}	
+	.patient-profile small{
+		margin-left: 5.5%;
+	}
+	.patient-profile small:first-child{
+		margin-left: 15px;
 	}
 </style>
 
@@ -328,13 +343,10 @@
 	<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
     {{ _.each(details, function(profileDetail) { }}
 		{{if (isValidDate(profileDetail.value)) { }}
-			<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
+			<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small> {{=moment(profileDetail.value, 'D MMMM YYYY').format('DD/MM/YYYY')}}
 		{{ } else { }}
-			<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small>
+			<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small> {{=profileDetail.value}}
 		{{ } }}
-        
-		
-		{{=profileDetail.value}}
     {{ }); }}
 </script>
 

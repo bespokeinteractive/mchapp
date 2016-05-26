@@ -409,6 +409,12 @@
 		margin: 5px 0;
 		padding: 7px 12px;
 	}
+	.patient-profile small{
+		margin-left: 5.5%;
+	}
+	.patient-profile small:first-child{
+		margin-left: 15px;
+	}
 	
 
 </style>

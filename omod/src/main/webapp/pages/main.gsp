@@ -247,12 +247,6 @@
 		vertical-align: top;
 		width: 170px;
 	}
-	.patient-profile small{
-		margin-left: 5.5%;
-	}
-	.patient-profile small:first-child{
-		margin-left: 15px;
-	}	
 	#confirmation .confirm {
 		float: right;
 	}
