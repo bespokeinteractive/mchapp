@@ -22,6 +22,10 @@
 				jq().toastmessage('showErrorToast', 'This patient can only be registered for CWC');
 				return false;
 			}
+			else if (age > 5 && programme === 'enrollInCwc'){	
+				jq().toastmessage('showErrorToast', 'This programme is only valid for children upto 5yrs');
+				return false;
+			}
 						
 			jq(".button").removeClass("active");
 			jq(this).addClass("active");
