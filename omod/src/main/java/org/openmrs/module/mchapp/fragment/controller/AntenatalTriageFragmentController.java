@@ -48,9 +48,10 @@ public class AntenatalTriageFragmentController {
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
         List<Obs> observations = new ArrayList<Obs>();
+        ObsParser obsParser = new ObsParser();
         for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
             try {
-                observations = ObsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
+                observations = obsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
                 SendForExaminationParser.parse(postedParams.getKey(), postedParams.getValue(), patient);
             } catch (Exception e) {
                 saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());

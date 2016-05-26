@@ -43,10 +43,11 @@ public class CwcTriageFragmentController {
             UiSessionContext session,
             HttpServletRequest request) {
         List<Obs> observations = new ArrayList<Obs>();
+        ObsParser obsParser = new ObsParser();
         for (Map.Entry<String, String[]> postedParams :
                 ((Map<String, String[]>) request.getParameterMap()).entrySet()) {
             try {
-                observations = ObsParser.parse(
+                observations = obsParser.parse(
                         observations, patient, postedParams.getKey(),
                         postedParams.getValue());
                 SendForExaminationParser.parse(postedParams.getKey(), postedParams.getValue(), patient);

@@ -61,10 +61,11 @@ public class AntenatalExaminationFragmentController {
 		List<Obs> observations = new ArrayList<Obs>();
 		List<OpdDrugOrder> drugOrders = new ArrayList<OpdDrugOrder>();
 		List<OpdTestOrder> testOrders = new ArrayList<OpdTestOrder>();
+		ObsParser obsParser = new ObsParser();
 		for (Map.Entry<String, String[]> postedParams : ((Map<String, String[]>) 
 				request.getParameterMap()).entrySet()) {
 			try {
-				observations = ObsParser.parse(
+				observations = obsParser.parse(
 						observations, patient, postedParams.getKey(),
 						postedParams.getValue());
 				drugOrders = DrugOrdersParser.parseDrugOrders(patient,

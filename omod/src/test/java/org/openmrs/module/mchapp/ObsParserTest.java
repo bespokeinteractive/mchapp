@@ -23,7 +23,7 @@ public class ObsParserTest extends BaseModuleContextSensitiveTest {
 		Patient patient = Context.getPatientService().getPatient(2);
 		
 		List<Obs> observations = new ArrayList<Obs>();
-		observations = ObsParser.parse(observations, patient, "concept.96408258-000b-424e-af1a-403919332938", new String[] { "Mix", "Wazito", "Mlima" });
+		observations = new ObsParser().parse(observations, patient, "concept.96408258-000b-424e-af1a-403919332938", new String[] { "Mix", "Wazito", "Mlima" });
 		
 		Assert.assertThat(observations.size(), Matchers.is(3));
 	}
@@ -31,7 +31,7 @@ public class ObsParserTest extends BaseModuleContextSensitiveTest {
 	@Test public void parse_shouldReturnEmptyListWhenRequestParamerDoesNotHaveConcept() throws Exception {
 		Patient patient = Context.getPatientService().getPatient(2);
 		List<Obs> observations = new ArrayList<Obs>();
-		observations = ObsParser.parse(observations, patient, "some key", new String[] { "Some value" });
+		observations = new ObsParser().parse(observations, patient, "some key", new String[] { "Some value" });
 
 		Assert.assertThat(observations, Matchers.is(Matchers.empty()));
 	}
@@ -43,16 +43,31 @@ public class ObsParserTest extends BaseModuleContextSensitiveTest {
 		
 		expectedException.expect(NullPointerException.class);
 		expectedException.expectMessage("concept with uuid: NONEXISTANTUUID is not defined.");
-		observations = ObsParser.parse(observations, patient, "concept.NONEXISTANTUUID", new String[] { "Some value" });
+		observations = new ObsParser().parse(observations, patient, "concept.NONEXISTANTUUID", new String[] { "Some value" });
 	}
 
-	@Test public void parse_shouldReturnAListOfObsWhenParamerHasTestOrder() throws Exception {
+	@Test public void parse_shouldReturnAListOfObsWhenParameterHasTestOrder() throws Exception {
 		executeDataSet("mch-concepts.xml");
 		Patient patient = Context.getPatientService().getPatient(2);
 		
 		List<Obs> observations = new ArrayList<Obs>();
-		observations = ObsParser.parse(observations, patient, "test_order.122b36a4-9c07-4dfa-81ae-e6a4fe823077", new String[] { "17a83f95-49d9-473c-9aeb-c20c874fa5a1" });
+		observations = new ObsParser().parse(observations, patient, "test_order.122b36a4-9c07-4dfa-81ae-e6a4fe823077", new String[] { "17a83f95-49d9-473c-9aeb-c20c874fa5a1" });
 		
 		Assert.assertThat(observations.size(), Matchers.is(1));
+	}
+	
+	@Test public void parse_shouldReturnAnObsWithCommentWhenParameterHasComment() throws Exception {
+		Patient patient = Context.getPatientService().getPatient(2);
+		
+		List<Obs> observations = new ArrayList<Obs>();
+		ObsParser obsParser = new ObsParser();
+		observations = obsParser.parse(observations, patient, "comment.96408258-000b-424e-af1a-403919332938", new String[] { "Some comment" });
+		Assert.assertThat(observations.size(), Matchers.is(0));
+		
+		observations = obsParser.parse(observations, patient, "concept.96408258-000b-424e-af1a-403919332938", new String[] { "Mix" });
+		
+		Assert.assertThat(observations.size(), Matchers.is(1));
+		Assert.assertThat(observations.get(0).getValueText(), Matchers.equalTo("Mix"));
+		Assert.assertThat(observations.get(0).getComment(), Matchers.equalTo("Some comment"));
 	}
 }
