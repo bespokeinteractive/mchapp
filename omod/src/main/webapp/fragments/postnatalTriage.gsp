@@ -104,6 +104,8 @@
 	<div style="min-width: 78%" class="col16 dashboard">
 		<div class="info-section">
 			<form id="pnc-triage-form">
+				<input type="hidden" name="patientId" value="${patient.patientId}" >
+				<input type="hidden" name="queueId" value="${queueId}" >
 				<div class="profile-editor"></div>
 				
 				<div class="info-header">

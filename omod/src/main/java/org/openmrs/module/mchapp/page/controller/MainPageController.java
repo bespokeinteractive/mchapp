@@ -14,10 +14,13 @@ import java.util.Date;
  * Created by qqnarf on 4/27/16.
  */
 public class MainPageController {
-    public void get(@RequestParam("patientId") Patient patient,
-                    PageModel model) {
+    public void get(
+        @RequestParam("patientId") Patient patient,
+        @RequestParam("queueId") Integer queueId,
+        PageModel model) {
         MchService mchService = Context.getService(MchService.class);
         model.addAttribute("patient", patient);
+        model.addAttribute("queueId", queueId);
 
         if (patient.getGender().equals("M")){
             model.addAttribute("gender", "Male");

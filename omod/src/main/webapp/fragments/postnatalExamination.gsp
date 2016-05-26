@@ -175,6 +175,9 @@
         <p>{{=profileDetail.name}}: {{=profileDetail.value}}</p>
     {{ }); }}
 </script>
+
+<input type="hidden" name="patientId" value="${patient.patientId}" >
+<input type="hidden" name="queueId" value="${queueId}" >
 <div class="patient-profile"></div>
 <div>
     <label>Exam:</label><br>

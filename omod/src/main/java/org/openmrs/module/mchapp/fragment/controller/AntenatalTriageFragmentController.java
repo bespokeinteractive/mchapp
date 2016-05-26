@@ -32,18 +32,19 @@ import javax.servlet.http.HttpServletRequest;
 public class AntenatalTriageFragmentController {
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         config.require("patientId");
+        config.require("queueId");
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
+        model.addAttribute("queueId", config.get("queueId"));
     }
     @SuppressWarnings("unchecked")
     public SimpleObject saveAntenatalTriageInformation(
             @RequestParam("patientId") Patient patient,
-            UiSessionContext session,
             @RequestParam("queueId") Integer queueId,
+            UiSessionContext session,
             HttpServletRequest request) {
         SimpleObject saveStatus = null;
-        QueueLogs queueLogs = new QueueLogs();
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
         List<Obs> observations = new ArrayList<Obs>();
@@ -57,7 +58,7 @@ public class AntenatalTriageFragmentController {
         }
 
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, null);
-        queueLogs.logTriagePatient(queueService, queue, encounter);
+        QueueLogs.logTriagePatient(queue, encounter);
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;
     }

@@ -269,7 +269,7 @@ form input[type="checkbox"], .form input[type="checkbox"] {
 </div>
 
 <% if (enrolledInAnc) { %>
-${ui.includeFragment("mchapp", "antenatalTriage", [patientId: patientId])}
+${ui.includeFragment("mchapp", "antenatalTriage", [patientId: patientId, queueId: queueId])}
 <% } else if (enrolledInPnc) { %>
 ${ui.includeFragment("mchapp", "postnatalTriage", [patientId: patientId])}
 <% } else if (enrolledInCwc) { %>
