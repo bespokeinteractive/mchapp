@@ -70,7 +70,7 @@
                     ).success(function(data) {
                         var results = [];
                         for (var i in data) {
-                            var result = { label: data[i].name, value: data[i].id};
+                            var result = { label: data[i].name, value: data[i].uuid};
                             results.push(result);
                         }
                         response(results);
@@ -89,19 +89,19 @@
                             }
                     ).success(function(data) {
                         var formulations = jq.map(data, function (formulation) {
-                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name).attr('value', formulation.id));
+                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name).attr('value', formulation.uuid));
                         });
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getFrequencies") }').success(function(data) {
                         var frequencies = jq.map(data, function (frequency) {
-                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.id));
+                            jq('#frequencysSelect').append(jq('<option>').text(frequency.name).attr('value', frequency.uuid));
                         });
                     });
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
                         var durgunits = jq.map(data, function (drugUnit) {
-                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.id));
+                            jq('#drugUnitsSelect').append(jq('<option>').text(drugUnit.label).attr('value', drugUnit.uuid));
                         });
                     });
                 },
