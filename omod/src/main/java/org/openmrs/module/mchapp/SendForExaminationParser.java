@@ -17,7 +17,6 @@ public class SendForExaminationParser {
 	private static final String TRIAGE_ROOM_CONCEPT_UUID = "7f5cd7ad-ff69-4d60-b70c-799a98b046ef";
 	private static final String EXAM_ROOM_CONCEPT_UUID = "11303942-75cd-442a-aead-ae1d2ea9b3eb";
 
-	
 	public static OpdPatientQueue parse(String referParamKey, String[] referParamValue, Patient patient) {
 		Concept mchTriageConcept = Context.getConceptService().getConceptByUuid(TRIAGE_ROOM_CONCEPT_UUID);
 		Concept mchExamRoomConcept = Context.getConceptService().getConceptByUuid(EXAM_ROOM_CONCEPT_UUID);OpdPatientQueue opdPatient = new OpdPatientQueue();
@@ -32,6 +31,7 @@ public class SendForExaminationParser {
 					selectedCategory = pa.getValue();
 				}
 			}
+
 			OpdPatientQueue queue = new OpdPatientQueue();
 			queue.setPatient(patient);
 			queue.setCreatedOn(new Date());
@@ -47,6 +47,7 @@ public class SendForExaminationParser {
 				queue.setPatientName(patient.getGivenName() + " "
 						+ patient.getFamilyName());
 			}
+
 			queue.setReferralConcept(mchTriageConcept);
 			queue.setReferralConceptName(mchTriageConcept.getName().getName());
 			queue.setSex(patient.getGender());

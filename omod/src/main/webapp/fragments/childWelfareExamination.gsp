@@ -201,9 +201,7 @@
                 </div>
             </form>
         </div>
-
     </div>
-
 
     <span id="programExit" class="button cancel">Exit From Program</span>
 
@@ -215,7 +213,6 @@
 
         <h3>Exit From Program</h3>
     </div>
-
 
     <div class="dialog-content">
         <ul>
@@ -238,5 +235,4 @@
             <span class="button cancel">Cancel</span>
         </ul>
     </div>
-
 </div>
