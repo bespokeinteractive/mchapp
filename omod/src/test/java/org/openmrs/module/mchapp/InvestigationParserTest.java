@@ -37,6 +37,23 @@ public class InvestigationParserTest extends BaseModuleContextSensitiveTest {
 		Assert.assertThat(opdTestOrders.size(), Matchers.is(1));
 	}
 	
+	@Test
+	public void parse_shouldCreateMultipleTestOrderWhenMultipleInvestigationIsOrdered() throws Exception {
+		executeDataSet("mch-concepts.xml");
+		String testOrderKey = "test_order.122b36a4-9c07-4dfa-81ae-e6a4fe823077";
+		String[] testOrderValue =  new String[] { "17a83f95-49d9-473c-9aeb-c20c874fa5a1", "53a5e2de-b5c9-4c01-92fa-f3f8ad838e56" };
+		Patient patient = Context.getPatientService().getPatient(2);
+		String ordererLocation = "MCH CLINIC";
+		User orderer = Context.getAuthenticatedUser();
+		Date dateOrdered = new Date();
+		
+		List<OpdTestOrder> opdTestOrders = new ArrayList<OpdTestOrder>();
+		InvestigationParser.parse(patient, testOrderKey, testOrderValue, ordererLocation, orderer,
+				dateOrdered, opdTestOrders);
+		
+		Assert.assertThat(opdTestOrders.size(), Matchers.is(2));
+	}
+	
 	@Test public void parse_shouldThrowNullPointerExceptionWhenInvestigationQuestionConceptIsNotDefined() throws Exception {
 		executeDataSet("mch-concepts.xml");
 		String testOrderKey = "test_order.NonExistant";

@@ -7,6 +7,7 @@
   <concept_class concept_class_id="20" name="Frequency" description="Drug frequency" creator="1" date_created="2008-08-15 13:56:55.0" retired="false" uuid="0fd33d76-8b4b-445f-899e-161c5e85d36c"/><!-- B/S For Malaria -->
   <!-- B/S for Malaria -->
   <concept concept_id="9996" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="17a83f95-49d9-473c-9aeb-c20c874fa5a1"/>
+  <concept concept_id="9997" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="53a5e2de-b5c9-4c01-92fa-f3f8ad838e56"/>
   <concept concept_id="9999" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="122b36a4-9c07-4dfa-81ae-e6a4fe823077"/>
   <concept_name concept_id="9950" name="AMOX" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="4007" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="5951924c-23fc-43df-bf68-2f090c37984b"/>
   <concept_name concept_id="8989" name="MCH Triage" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="8989" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="80a0afa7-7887-4e93-81d7-f8a32d16e3e5"/>
@@ -19,6 +20,7 @@
   <triage_patient_queue id="14" user="1" patient_id="2" triage_concept_id="4000" created_on="2015-12-09 18:06:12" triage_concept_name="CASUALTY TRIAGE" patient_name="Test" sex="M" patient_identifier="MAKL515125347472831" birth_date="1992-12-05 00:00:00"/>
   <opd_patient_queue id="14" user="1" patient_id="2" opd_concept_id="4000" created_on="2015-12-09 18:06:12" opd_concept_name="CASUALTY TRIAGE" patient_name="Test" sex="M" patient_identifier="MAKL515125347472831" birth_date="1992-12-05 00:00:00"/>
   <billing_billable_service service_id="3" concept_id="9996" name="Maralia Tests" short_name="" price="0" disable="false" category="9996" />
+  <billing_billable_service service_id="4" concept_id="9997" name="Other Tests" short_name="" price="0" disable="false" category="9999" />
 </dataset>
 
 
