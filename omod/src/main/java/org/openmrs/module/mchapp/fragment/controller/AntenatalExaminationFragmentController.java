@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.Encounter;
+import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -15,6 +16,7 @@ import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.mchapp.DrugOrdersParser;
 import org.openmrs.module.mchapp.InvestigationParser;
@@ -86,5 +88,32 @@ public class AntenatalExaminationFragmentController {
 		QueueLogs.logOpdPatient(patientQueue, encounter);
 		return SimpleObject.create("status", "success", "message",
 				"Triage information has been saved.");
+	}
+	private void sendtoRefferedRoom(Patient patient, Integer refferedRoomConcept){
+		PatientQueueService queueService = Context.getService(PatientQueueService.class);
+		Concept referralConcept = Context.getConceptService().getConcept(refferedRoomConcept);
+		OpdPatientQueue opdPatientQueue = queueService.getOpdPatientQueue(
+				patient.getPatientIdentifier().getIdentifier(), refferedRoomConcept);
+		Concept selectedConcept = Context.getConceptService().getConcept(refferedRoomConcept);
+		opdPatientQueue = new OpdPatientQueue();
+		opdPatientQueue.setUser(Context.getAuthenticatedUser());
+		opdPatientQueue.setPatient(patient);
+		opdPatientQueue.setCreatedOn(new Date());
+		opdPatientQueue.setBirthDate(patient.getBirthdate());
+		opdPatientQueue.setPatientIdentifier(patient.getPatientIdentifier().getIdentifier());
+		opdPatientQueue.setOpdConcept(selectedConcept);
+		opdPatientQueue.setOpdConceptName(selectedConcept.getName().getName());
+		if(null!=patient.getMiddleName())
+		{
+			opdPatientQueue.setPatientName(patient.getGivenName() + " " + patient.getFamilyName() + " " + patient.getMiddleName());
+		}
+		else
+		{
+			opdPatientQueue.setPatientName(patient.getGivenName() + " " + patient.getFamilyName());
+		}
+
+		opdPatientQueue.setReferralConcept(referralConcept);
+		opdPatientQueue.setSex(patient.getGender());
+		queueService.saveOpdPatientQueue(opdPatientQueue);
 	}
 }
