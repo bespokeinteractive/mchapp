@@ -70,7 +70,7 @@
                     ).success(function(data) {
                         var results = [];
                         for (var i in data) {
-                            var result = { label: data[i].name, value: data[i].uuid};
+                            var result = { label: data[i].name, value: data[i].id};
                             results.push(result);
                         }
                         response(results);
@@ -89,7 +89,7 @@
                             }
                     ).success(function(data) {
                         var formulations = jq.map(data, function (formulation) {
-                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name).attr('value', formulation.uuid));
+                            jq('#formulationsSelect').append(jq('<option>').text(formulation.name).attr('value', formulation.id));
                         });
                     });
 
