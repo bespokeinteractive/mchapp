@@ -163,7 +163,7 @@ public class MchServiceImpl implements MchService {
         }
         for (OpdTestOrder testOrder : testOrders) {
             testOrder.setEncounter(mchEncounter);
-            Context.getService(PatientDashboardService.class).saveOrUpdateOpdOrder(testOrder);
+            testOrder = Context.getService(PatientDashboardService.class).saveOrUpdateOpdOrder(testOrder);
             FreeInvestigationProcessor.process(testOrder, location);
         }
         return mchEncounter;

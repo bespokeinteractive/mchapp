@@ -27,26 +27,29 @@ public class InvestigationParser {
 			if (investigationQuestionConcept == null){
 				throw new NullPointerException("No concept with uuid: " + investigationQuestionConceptUuid + ", found.");
 			}
-			if (investigationConcept == null){
-				throw new NullPointerException("No concept with uuid: " + testOrderValue[0] + ", found.");
+			for (int i = 0; i < testOrderValue.length; i++) {
+				if (investigationConcept == null){
+					throw new NullPointerException("No concept with uuid: " + testOrderValue[i] + ", found.");
+				}
+				BillableService billableService = Context.getService(BillingService.class).getServiceByConceptId(investigationConcept.getConceptId());
+				if (billableService == null){
+					throw new NullPointerException("Concept with uuid: " + testOrderValue[i] + ", is not a billable service.");
+				}
+				OpdTestOrder opdTestOrder = new OpdTestOrder();
+				opdTestOrder.setPatient(patient);
+				opdTestOrder.setConcept(investigationQuestionConcept);
+				opdTestOrder.setTypeConcept(DepartmentConcept.TYPES[2]);
+				opdTestOrder.setValueCoded(investigationConcept);
+				opdTestOrder.setBillableService(billableService);
+				opdTestOrder.setFromDept(ordererLocation);
+				opdTestOrder.setCreator(orderer);
+				opdTestOrder.setCreatedOn(dateOrdered);
+				opdTestOrder.setScheduleDate(dateOrdered);
+				if (billableService.getPrice().compareTo(BigDecimal.ZERO) == 0) {
+					opdTestOrder.setBillingStatus(1);
+				}
+				opdTestOrders.add(opdTestOrder);
 			}
-			BillableService billableService = Context.getService(BillingService.class).getServiceByConceptId(investigationConcept.getConceptId());
-			if (billableService == null){
-				throw new NullPointerException("Concept with uuid: " + testOrderValue[0] + ", is not a billable service.");
-			}
-			OpdTestOrder opdTestOrder = new OpdTestOrder();
-			opdTestOrder.setPatient(patient);
-			opdTestOrder.setConcept(investigationQuestionConcept);
-			opdTestOrder.setTypeConcept(DepartmentConcept.TYPES[2]);
-			opdTestOrder.setValueCoded(investigationConcept);
-			opdTestOrder.setBillableService(billableService);
-			opdTestOrder.setFromDept(ordererLocation);
-			opdTestOrder.setCreator(orderer);
-			opdTestOrder.setCreatedOn(dateOrdered);
-			if (billableService.getPrice().compareTo(BigDecimal.ZERO) == 0) {
-				opdTestOrder.setBillingStatus(1);
-			}
-			opdTestOrders.add(opdTestOrder);
 		}
 	}
 
