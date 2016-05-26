@@ -1,7 +1,6 @@
 <% 
 	ui.includeCss("patientdashboardapp", "patientdashboardapp.css");
-	
-	
+		
     ui.includeJavascript("uicommons", "handlebars/handlebars.min.js", Integer.MAX_VALUE - 1)
 	
 	ui.includeJavascript("uicommons", "navigator/validators.js", Integer.MAX_VALUE - 19)
@@ -33,6 +32,8 @@
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 		
         var patientProfile = JSON.parse('${patientProfile}');
+		
+		console.log(patientProfile);
 		
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -288,7 +289,7 @@
 				jq('#summaryTable tr:eq(3) td:eq(1)').text('Internal Referral');
 				jq('#referral-set').val('SET');
 			}
-			else if (jq(this).val() == "1"){
+			else if (jq(this).val() == "2"){
 				jq('#summaryTable tr:eq(3) td:eq(1)').text('External Referral');
 				jq('#referral-set').val('SET');
 			}
@@ -310,8 +311,6 @@
     });
 
     function selectReferrals(selectedReferral){
-        //1 = internal referral
-        //2 = external referral
         if(selectedReferral == 1){
             jq("#internalRefferalDiv").show();
             jq("#externalRefferalDiv").hide();
@@ -434,7 +433,7 @@
   <div class="investigation">
 	<span class="icon-remove selecticon"></span>
     <label style="margin-top: 2px; width: 95%;">{{=label}} 
-		<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid
+		<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}"/>
 	</label>
   </div>
 </script>
@@ -443,9 +442,9 @@
 	<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
     {{ _.each(details, function(profileDetail) { }}
 		{{if (isValidDate(profileDetail.value)) { }}
-			<small><i class="icon-calendar small"></i> {{=profileDetail.name}}:</small>
+			<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
 		{{ } else { }}
-			<small><i class="icon-info-sign small"></i> {{=profileDetail.name}}:</small>
+			<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small>
 		{{ } }}
         
 		
@@ -458,6 +457,7 @@
 <form method="post" id="antenatalExaminationsForm" class="simple-form-ui">
 	<input type="hidden" name="patientId" value="${patient.patientId}" >
 	<input type="hidden" name="queueId" value="${queueId}" >
+	
 	<section>
 		<span class="title">Clinical Notes</span>
 		<fieldset class="no-confirmation">
@@ -541,7 +541,7 @@
 				<tbody data-bind="visible: display_drug_orders().length==0">
 					<tr>
 						<td colspan="8">
-							<div style="padding: 5px; border-top: 1px solid #ddd; border-bottom: 3px solid #ddd; margin: -5px -10px;">No Drugs Added Yet</div>
+							<div style="padding: 6px 10px; border-top: 1px solid #ddd; border-bottom: 3px solid #ddd; margin: -5px -10px;">No Drugs Added Yet</div>
 						</td>
 					</tr>
 				</tbody>
