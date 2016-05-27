@@ -17,7 +17,8 @@ public class CodedObsProcessor implements ObsProcessor {
 		List<Obs> observations = new ArrayList<Obs>();
 		for (int i = 0; i < answers.length; i++) {
 			String answerConceptUuid = answers[i];
-			if (!StringUtils.equals(answerConceptUuid, "0")) {
+			if (!StringUtils.equals(answerConceptUuid, "0")
+					&& !StringUtils.isBlank(answerConceptUuid)) {
 				Concept answerConcept = Context.getConceptService().getConceptByUuid(answerConceptUuid);
 				if (answerConcept == null) {
 					throw new NullPointerException("Concept with uuid: '" + answerConceptUuid + "' is missing");
