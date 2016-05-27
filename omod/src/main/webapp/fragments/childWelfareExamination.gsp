@@ -64,6 +64,19 @@
         currentWorkflowBeingEdited = programWorkflowId;
         patientProgramForWorkflowEdited = patientProgramId;
     }
+
+    function handleChangeWorkflowState(c) {
+        var stateSelect = jq("#changeToState").val();
+        if (stateSelect == 0) {
+            jq().toastmessage('showErrorToast', "Select State!");
+            return;
+        }else if(isEmpty(jq("#datepicker_"+c+"").val())){
+            jq().toastmessage('showErrorToast', "Select Date!");
+        }else{
+            jq().toastmessage('showNoticeToast', "Saving State!");
+        }
+
+    }
     function hideLayer(divId) {
         jq("#" + divId).hide();
     }
@@ -148,9 +161,16 @@
                                         <div class="col2">Change to</div>
 
                                         <div class="col2">
-                                            <select id="changeToState">
-                                                <option value="">Select a State</option>
+                                            <select name="changeToState" id="changeToState">
+                                                <option value="0">Select a State</option>
+                                                <% if (workflow.states != null || workflow.states != "") { %>
+                                                <% workflow.states.each { state -> %>
+                                                <option id="${state.id}"
+                                                        value="${state.id}">${state.concept.name}</option>
+                                                <% } %>
+                                                <% } %>
                                             </select>
+
                                         </div>
 
                                         <div class="col2">on</div>
@@ -161,7 +181,7 @@
                                         </div>
 
                                         <div class="col2"><input type="button" value="Change"
-                                                                 onClick="handleChangeWorkflowState()"/></div>
+                                                                 onClick="handleChangeWorkflowState(${workflow.programWorkflowId})"/></div>
 
                                         <div class="col2 last">
                                             <input type="button" value="Cancel"

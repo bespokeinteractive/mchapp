@@ -26,7 +26,7 @@ public class MainPageController {
 
     public void get(
         @RequestParam("patientId") Patient patient,
-        @RequestParam("queueId") Integer queueId,
+        @RequestParam(value = "queueId",required = false) Integer queueId,
         PageModel model) {
 
         MchService mchService = Context.getService(MchService.class);
@@ -73,8 +73,14 @@ public class MainPageController {
 
 //        TODO modify code to ensure that the last program enrolled is pulled
         List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
-        PatientProgram patientProgram = patientPrograms.get(0);
-        model.addAttribute("patientProgram", patientProgram);
+
+        //handles case when patient is yet to enroll in a patient program
+        if(patientPrograms.size() > 0){
+            PatientProgram patientProgram = patientPrograms.get(0);
+            model.addAttribute("patientProgram", patientProgram);
+        }else{
+            model.addAttribute("patientProgram", new PatientProgram());
+        }
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
