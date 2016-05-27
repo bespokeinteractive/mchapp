@@ -266,10 +266,10 @@
 
         <div class="tad" id="lstdate">Last Visit: ${ui.formatDatePretty(previousVisit)}</div>
 
-        <div class="tad" id="enrollmentDate">Enrollment Date: ${ui.formatDatePretty(patientProgram.dateEnrolled)}</div>
+        <div class="tad" id="enrollmentDate">Enrollment Date: ${patientProgram?ui.formatDatePretty(patientProgram.dateEnrolled):"--"}</div>
 
         <div class="tad" id="completionDate">Completion Date:
-        <% if (patientProgram.dateCompleted != null) { %>
+        <% if (patientProgram && patientProgram.dateCompleted != null) { %>
         ${ui.formatDatePretty(patientProgram.dateCompleted)}
         <% } else { %>
             <em>Still Enrolled</em>
@@ -278,7 +278,7 @@
         </div>
 
         <div class="tad" id="outcome">Outcome:
-        <% if (patientProgram.outcome != null) { %>
+        <% if (patientProgram && patientProgram.outcome != null) { %>
         ${patientProgram.outcome.name}
         <% } else { %>
             <em>(none)</em>

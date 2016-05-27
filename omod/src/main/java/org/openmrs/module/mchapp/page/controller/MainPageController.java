@@ -75,12 +75,11 @@ public class MainPageController {
         List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
 
         //handles case when patient is yet to enroll in a patient program
+        PatientProgram patientProgram = null;
         if(patientPrograms.size() > 0){
-            PatientProgram patientProgram = patientPrograms.get(0);
-            model.addAttribute("patientProgram", patientProgram);
-        }else{
-            model.addAttribute("patientProgram", new PatientProgram());
+            patientProgram = patientPrograms.get(0);
         }
+        model.addAttribute("patientProgram", patientProgram);
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
