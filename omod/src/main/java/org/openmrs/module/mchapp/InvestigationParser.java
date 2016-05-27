@@ -23,11 +23,11 @@ public class InvestigationParser {
 				&& testOrderValue.length > 0) {
 			String investigationQuestionConceptUuid = testOrderKey.substring("test_order.".length());
 			Concept investigationQuestionConcept = Context.getConceptService().getConceptByUuid(investigationQuestionConceptUuid);
-			Concept investigationConcept = Context.getConceptService().getConceptByUuid(testOrderValue[0]);
 			if (investigationQuestionConcept == null){
 				throw new NullPointerException("No concept with uuid: " + investigationQuestionConceptUuid + ", found.");
 			}
 			for (int i = 0; i < testOrderValue.length; i++) {
+				Concept investigationConcept = Context.getConceptService().getConceptByUuid(testOrderValue[i]);
 				if (investigationConcept == null){
 					throw new NullPointerException("No concept with uuid: " + testOrderValue[i] + ", found.");
 				}
