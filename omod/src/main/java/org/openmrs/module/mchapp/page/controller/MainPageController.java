@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class MainPageController {
     private static final int MAX_CWC_DURATION = 5;
-    private static final int MAX_ANC_CWC_DURATION = 9;
+    private static final int MAX_ANC_PNC_DURATION = 9;
 
     public void get(
         @RequestParam("patientId") Patient patient,
@@ -54,12 +54,12 @@ public class MainPageController {
         List<ListItem> possibleProgramOutcomes = new ArrayList<ListItem>();
         if (enrolledInANC) {
             model.addAttribute("title", "ANC Clinic");
-            minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_CWC_DURATION);
+            minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_PNC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
         } else if (enrolledInPNC) {
             model.addAttribute("title", "PNC Clinic");
-            minEnrollmentDate.add(Calendar.YEAR, -MAX_ANC_CWC_DURATION);
+            minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_PNC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
         }
