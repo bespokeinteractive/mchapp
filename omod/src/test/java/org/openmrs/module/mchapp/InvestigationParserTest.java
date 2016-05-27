@@ -52,6 +52,12 @@ public class InvestigationParserTest extends BaseModuleContextSensitiveTest {
 				dateOrdered, opdTestOrders);
 		
 		Assert.assertThat(opdTestOrders.size(), Matchers.is(2));
+		Assert.assertThat(opdTestOrders, 
+			Matchers.contains(
+				Matchers.hasProperty("valueCoded", Matchers.hasProperty("uuid", Matchers.equalTo("17a83f95-49d9-473c-9aeb-c20c874fa5a1")))
+				,Matchers.hasProperty("valueCoded", Matchers.hasProperty("uuid", Matchers.equalTo("53a5e2de-b5c9-4c01-92fa-f3f8ad838e56")))
+			)
+		);
 	}
 	
 	@Test public void parse_shouldThrowNullPointerExceptionWhenInvestigationQuestionConceptIsNotDefined() throws Exception {
