@@ -1,6 +1,8 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.*;
@@ -19,16 +21,18 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by USER on 5/4/2016.
  */
 public class CwcTriageFragmentController {
+
+    protected final Log log = LogFactory.getLog(getClass());
+    DateFormat ymdDf = new SimpleDateFormat("yyyy-MM-dd");
 
     public void controller(FragmentModel model, UiUtils ui) {
         model.addAttribute("internalReferralSources", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
@@ -102,5 +106,27 @@ public class CwcTriageFragmentController {
             ret.add(li);
         }
         return SimpleObject.fromCollection(ret,uiUtils,"id","name","description");
+    }
+
+    public SimpleObject changeToState(HttpServletRequest request,UiUtils uiUtils) {
+        Integer patientProgramId = Integer.parseInt(request.getParameter("patientProgramId"));
+        Integer programWorkflowId = Integer.parseInt(request.getParameter("programWorkflowId"));
+        Integer programWorkflowStateId = Integer.parseInt(request.getParameter("programWorkflowStateId"));
+        String onDateDMY = request.getParameter("onDateDMY");
+        ProgramWorkflowService s = Context.getProgramWorkflowService();
+        PatientProgram pp = s.getPatientProgram(patientProgramId);
+        ProgramWorkflowState st = pp.getProgram().getWorkflow(programWorkflowId).getState(programWorkflowStateId);
+        Date onDate = null;
+        if (onDateDMY != null && onDateDMY.length() > 0){
+            try {
+                onDate = ymdDf.parse(onDateDMY);
+                pp.transitionToState(st, onDate);
+                s.savePatientProgram(pp);
+            } catch (ParseException e) {
+                return SimpleObject.create("status","error","message",e.getMessage());
+            }
+        }
+        return SimpleObject.create("status","success","message","Successfully");
+
     }
 }

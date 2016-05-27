@@ -5,6 +5,8 @@
 }
 </style>
 <script>
+    var currentWorkflowBeingEdited;
+    var patientProgramForWorkflowEdited;
 
     var outcomeId;
     jq(function () {
@@ -66,16 +68,41 @@
     }
 
     function handleChangeWorkflowState(c) {
-        var stateSelect = jq("#changeToState").val();
-        if (stateSelect == 0) {
+        var stateId = jq("#changeToState").val();
+        var onDate =jq("#datepicker_"+c+"").val()
+        if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
-        }else if(isEmpty(jq("#datepicker_"+c+"").val())){
+        }else if(isEmpty(onDate)){
             jq().toastmessage('showErrorToast', "Select Date!");
+            return;
         }else{
-            jq().toastmessage('showNoticeToast', "Saving State!");
+            jq().toastmessage('showNoticeToast', "Saving State...!");
+            processHandleChangeWorkflowState(stateId,onDate);
         }
 
+    }
+
+    function processHandleChangeWorkflowState(stateId,onDateDMY) {
+        var ppId = patientProgramForWorkflowEdited;
+        var wfId = currentWorkflowBeingEdited;
+        var lastStateStartDate = jq('#lastStateStartDate').val();
+        var lastStateEndDate = jq('#lastStateEndDate').val();
+        var lastState = jq('lastState').val();
+        var stateData={
+            patientProgramId:ppId,
+            programWorkflowId:wfId,
+            programWorkflowStateId:stateId,
+            onDateDMY:onDateDMY
+        }
+
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
+                .success(function (data) {
+                    jq().toastmessage('showNoticeToast', data.message);
+                    return data.status;
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
     }
     function hideLayer(divId) {
         jq("#" + divId).hide();
@@ -128,7 +155,7 @@
     <div style="min-width: 78%" class="col16 dashboard">
         <table width="100%">
             <% patientProgram.program.workflows.each { workflow -> %>
-            <% def stateId; def stateStart; %>
+            <% def stateId; def stateStart;def stateName; %>
             <tr>
                 <td style="" valign="top">
                     <div class="info-section">
@@ -145,6 +172,7 @@
                                 <% patientProgram.states.each { state -> %>
                                 <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
                                     stateId = state.state.concept.conceptId;
+                                    stateName = state.state.concept.name;
                                     stateStart = state.startDate;
                                 } %>
                                 <% } %>
@@ -194,7 +222,7 @@
                                 </div>
 
                                 <% if (stateId != null) { %>
-                                <b>${stateId}</b>
+                                <b>${stateName}</b>
                                 <em>(Date Given : ${stateStart})</em>
                                 <% } else { %>
                                 <em>(None)</em>
