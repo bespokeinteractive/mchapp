@@ -14,7 +14,7 @@ public class TriagePageController {
 
 	public void get(
 			@RequestParam("patientId") Patient patient,
-			@RequestParam(value = "queueId",required = false) Integer queueId,
+			@RequestParam(value = "queueId") Integer queueId,
 			PageModel model) {
 		MchService mchService = Context.getService(MchService.class);
 		model.addAttribute("patient", patient);
