@@ -50,6 +50,7 @@
     });//end of doc ready
 
     function showEditWorkflowPopup(wfName, patientProgramId, programWorkflowId) {
+        jq("#currentStateDetails").hide();
         var params = {
             patientProgramId: patientProgramId,
             programWorkflowId: programWorkflowId
@@ -69,31 +70,31 @@
 
     function handleChangeWorkflowState(c) {
         var stateId = jq("#changeToState").val();
-        var onDate =jq("#datepicker_"+c+"").val()
+        var onDate = jq("#datepicker_" + c + "").val()
         if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
-        }else if(isEmpty(onDate)){
+        } else if (isEmpty(onDate)) {
             jq().toastmessage('showErrorToast', "Select Date!");
             return;
-        }else{
+        } else {
             jq().toastmessage('showNoticeToast', "Saving State...!");
-            processHandleChangeWorkflowState(stateId,onDate);
+            processHandleChangeWorkflowState(stateId, onDate);
         }
 
     }
 
-    function processHandleChangeWorkflowState(stateId,onDateDMY) {
+    function processHandleChangeWorkflowState(stateId, onDateDMY) {
         var ppId = patientProgramForWorkflowEdited;
         var wfId = currentWorkflowBeingEdited;
         var lastStateStartDate = jq('#lastStateStartDate').val();
         var lastStateEndDate = jq('#lastStateEndDate').val();
         var lastState = jq('lastState').val();
-        var stateData={
-            patientProgramId:ppId,
-            programWorkflowId:wfId,
-            programWorkflowStateId:stateId,
-            onDateDMY:onDateDMY
+        var stateData = {
+            patientProgramId: ppId,
+            programWorkflowId: wfId,
+            programWorkflowStateId: stateId,
+            onDateDMY: onDateDMY
         }
 
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
@@ -106,6 +107,7 @@
     }
     function hideLayer(divId) {
         jq("#" + divId).hide();
+        jq("#currentStateDetails").show();
     }
 
     function isEmpty(o) {
@@ -155,7 +157,7 @@
     <div style="min-width: 78%" class="col16 dashboard">
         <table width="100%">
             <% patientProgram.program.workflows.each { workflow -> %>
-            <% def stateId; def stateStart;def stateName; %>
+            <% def stateId; def stateStart; def stateName; %>
             <tr>
                 <td style="" valign="top">
                     <div class="info-section">
@@ -209,7 +211,8 @@
                                         </div>
 
                                         <div class="col2"><input type="button" value="Change"
-                                                                 onClick="handleChangeWorkflowState(${workflow.programWorkflowId})"/></div>
+                                                                 onClick="handleChangeWorkflowState(${workflow.programWorkflowId})"/>
+                                        </div>
 
                                         <div class="col2 last">
                                             <input type="button" value="Cancel"
@@ -221,16 +224,19 @@
 
                                 </div>
 
-                                <% if (stateId != null) { %>
-                                <b>${stateName}</b>
-                                <em>(Date Given : ${stateStart})</em>
-                                <% } else { %>
-                                <em>(None)</em>
-                                <% } %>
+                                <div id="currentStateDetails">
+                                    <% if (stateId != null) { %>
+                                    <b>${stateName}</b>
+                                    <em>(Date Given : ${stateStart})</em>
+                                    <% } else { %>
+                                    <em>(None)</em>
+                                    <% } %>
 
-                                <a href="#"
-                                   onclick="showEditWorkflowPopup('${workflow.concept.name}', ${patientProgram.patientProgramId},
-                                           ${workflow.programWorkflowId})">[View/Edit]</a>
+                                    <a href="#"
+                                       onclick="showEditWorkflowPopup('${workflow.concept.name}', ${patientProgram.patientProgramId},
+                                               ${workflow.programWorkflowId})">[View/Edit]</a>
+
+                                </div>
 
                             </div>
                         </form>
