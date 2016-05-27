@@ -15,6 +15,18 @@ function DrugOrder(
 		"number_of_days" : numberOfDays,
 		"comment" : comment
 	};
+	if (unit.id == 0) {
+		orderDetail.dosage_unit = '';
+		orderDetail.dosage_unit_label = '--';
+	}
+	if (formulation.id == 0) {
+		orderDetail.formulation = '';
+		orderDetail.formulation_label = '--';
+	}
+	if (frequency.id == 0) {
+		orderDetail.frequency = '';
+		orderDetail.frequency_label = '--';
+	}
 	drugOrder[id] = orderDetail;
 	return drugOrder;
 }

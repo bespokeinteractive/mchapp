@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -45,52 +46,54 @@ public class DrugOrdersParser {
 			Matcher matcher = digitPattern.matcher(parameterKey);
 			if (parameterKey.contains("drug_order") && parameterValues.length > 0 && matcher.find()) {
 				String drugOrderValue = parameterValues[0];
-				if (parameterKey.contains("formulation")) {
-					Integer drugId = Integer.parseInt(matcher.group());
-					InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
-					OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
-					Integer formulationId = Integer.parseInt(drugOrderValue);
-					InventoryDrugFormulation drugFormulation = inventoryService.getDrugFormulationById(formulationId);
-					drugOrder.setInventoryDrugFormulation(drugFormulation);
-				}
-				if (parameterKey.contains("frequency")) {
-					Integer drugId = Integer.parseInt(matcher.group());
-					InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
-					OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
-					String frequencyUuid = drugOrderValue;
-					Concept drugFrequency = Context.getConceptService().getConceptByUuid(frequencyUuid);
-					drugOrder.setFrequency(drugFrequency);
-				}
-				if (parameterKey.contains("number_of_days")) {
-					Integer drugId = Integer.parseInt(matcher.group());
-					InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
-					OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
-					try {
-						Integer duration = Integer.parseInt(drugOrderValue);
-						drugOrder.setNoOfDays(duration);
-					} catch (NumberFormatException nfe) {
-						//TODO
+				if (!StringUtils.isBlank(drugOrderValue)) {
+					if (parameterKey.contains("formulation")) {
+						Integer drugId = Integer.parseInt(matcher.group());
+						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
+						Integer formulationId = Integer.parseInt(drugOrderValue);
+						InventoryDrugFormulation drugFormulation = inventoryService.getDrugFormulationById(formulationId);
+						drugOrder.setInventoryDrugFormulation(drugFormulation);
 					}
-				}
-				if (parameterKey.contains("dosage_unit")) {
-					Integer drugId = Integer.parseInt(matcher.group());
-					InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
-					OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
-					String dosageUnitId = drugOrderValue;
-					Concept drugDosageUnit = Context.getConceptService().getConcept(dosageUnitId);
-					drugOrder.setDosageUnit(drugDosageUnit);
-				}
-				if (parameterKey.contains("dosage")) {
-					Integer drugId = Integer.parseInt(matcher.group());
-					InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
-					OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
-					drugOrder.setDosage(drugOrderValue);
-				}
-				if (parameterKey.contains("comments")) {
-					Integer drugId = Integer.parseInt(matcher.group());
-					InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
-					OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
-					drugOrder.setComments(drugOrderValue);
+					if (parameterKey.contains("frequency")) {
+						Integer drugId = Integer.parseInt(matcher.group());
+						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
+						String frequencyUuid = drugOrderValue;
+						Concept drugFrequency = Context.getConceptService().getConceptByUuid(frequencyUuid);
+						drugOrder.setFrequency(drugFrequency);
+					}
+					if (parameterKey.contains("number_of_days")) {
+						Integer drugId = Integer.parseInt(matcher.group());
+						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
+						try {
+							Integer duration = Integer.parseInt(drugOrderValue);
+							drugOrder.setNoOfDays(duration);
+						} catch (NumberFormatException nfe) {
+							//TODO
+						}
+					}
+					if (parameterKey.contains("dosage_unit")) {
+						Integer drugId = Integer.parseInt(matcher.group());
+						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
+						String dosageUnitId = drugOrderValue;
+						Concept drugDosageUnit = Context.getConceptService().getConcept(dosageUnitId);
+						drugOrder.setDosageUnit(drugDosageUnit);
+					}
+					if (parameterKey.contains("dosage")) {
+						Integer drugId = Integer.parseInt(matcher.group());
+						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
+						drugOrder.setDosage(drugOrderValue);
+					}
+					if (parameterKey.contains("comments")) {
+						Integer drugId = Integer.parseInt(matcher.group());
+						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
+						drugOrder.setComments(drugOrderValue);
+					}
 				}
 		}
 		return drugOrders;
