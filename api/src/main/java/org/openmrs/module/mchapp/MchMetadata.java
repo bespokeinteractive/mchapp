@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp;
 
+import org.openmrs.Program;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 
@@ -46,14 +47,19 @@ public class MchMetadata extends AbstractMetadataBundle{
 
 	@Override
 	public void install() throws Exception {
-		// TODO Auto-generated method stub
 		install(encounterType("ANCENCOUNTER", "ANC encounter type", _MchEncounterType.ANC_ENCOUNTER_TYPE));
 		install(encounterType("PNCENCOUNTER", "PNC encounter type", _MchEncounterType.PNC_ENCOUNTER_TYPE));
 		install(encounterType("CWCENCOUNTER", "CWC encounter type", _MchEncounterType.CWC_ENCOUNTER_TYPE));
 		
-		install(program("Antenatal Care Program", "ANC Program", _MchProgram.ANC_PROGRAM_CONCEPT, _MchProgram.ANC_PROGRAM));
-		install(program("Postnatal Care Program", "PNC Program", _MchProgram.PNC_PROGRAM_CONCEPT, _MchProgram.PNC_PROGRAM));
-		install(program("Child Welfare Program", "CW Program", _MchProgram.CWC_PROGRAM_CONCEPT, _MchProgram.CWC_PROGRAM));
+		if (possible(Program.class, _MchProgram.ANC_PROGRAM) == null) {
+			install(program("Antenatal Care Program", "ANC Program", _MchProgram.ANC_PROGRAM_CONCEPT, _MchProgram.ANC_PROGRAM));
+		}
+		if (possible(Program.class, _MchProgram.PNC_PROGRAM) == null) {
+			install(program("Postnatal Care Program", "PNC Program", _MchProgram.PNC_PROGRAM_CONCEPT, _MchProgram.PNC_PROGRAM));
+		}
+		if (possible(Program.class, _MchProgram.CWC_PROGRAM) == null) {
+			install(program("Child Welfare Program", "CW Program", _MchProgram.CWC_PROGRAM_CONCEPT, _MchProgram.CWC_PROGRAM));
+		}
 	}
 
 }
