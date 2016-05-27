@@ -124,6 +124,8 @@ public class CwcTriageFragmentController {
                 s.savePatientProgram(pp);
             } catch (ParseException e) {
                 return SimpleObject.create("status","error","message",e.getMessage());
+            }catch (Exception e){
+                return SimpleObject.create("status","error","message",e.getMessage());
             }
         }
         return SimpleObject.create("status","success","message","Successfully");

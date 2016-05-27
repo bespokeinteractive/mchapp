@@ -49,8 +49,12 @@
         });
     });//end of doc ready
 
+    function refreshPage() {
+        window.location.reload();
+    }
+
     function showEditWorkflowPopup(wfName, patientProgramId, programWorkflowId) {
-        jq("#currentStateDetails").hide();
+        jq("#currentStateDetails_" + programWorkflowId).hide();
         var params = {
             patientProgramId: patientProgramId,
             programWorkflowId: programWorkflowId
@@ -69,8 +73,8 @@
     }
 
     function handleChangeWorkflowState(c) {
-        var stateId = jq("#changeToState").val();
-        var onDate = jq("#datepicker_" + c + "").val()
+        var stateId = jq("#changeToState_" + c).val();
+        var onDate = jq("#datepicker_" + c).val()
         if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
@@ -107,7 +111,8 @@
     }
     function hideLayer(divId) {
         jq("#" + divId).hide();
-        jq("#currentStateDetails").show();
+        jq("#currentStateDetails_" + divId).show();
+        refreshPage();
     }
 
     function isEmpty(o) {
@@ -191,7 +196,7 @@
                                         <div class="col2">Change to</div>
 
                                         <div class="col2">
-                                            <select name="changeToState" id="changeToState">
+                                            <select name="changeToState_${workflow.programWorkflowId}" id="changeToState_${workflow.programWorkflowId}">
                                                 <option value="0">Select a State</option>
                                                 <% if (workflow.states != null || workflow.states != "") { %>
                                                 <% workflow.states.each { state -> %>
@@ -224,7 +229,7 @@
 
                                 </div>
 
-                                <div id="currentStateDetails">
+                                <div id="currentStateDetails_${workflow.programWorkflowId}">
                                     <% if (stateId != null) { %>
                                     <b>${stateName}</b>
                                     <em>(Date Given : ${stateStart})</em>
