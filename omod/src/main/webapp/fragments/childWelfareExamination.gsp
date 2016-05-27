@@ -1,8 +1,14 @@
+<style>
+.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+    color: #555;
+    text-align: left;
+}
+</style>
 <script>
 
     var outcomeId;
     jq(function () {
-        jq("#datepicker").datepicker({
+        jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             dateFormat: 'yy-mm-dd'
@@ -36,14 +42,31 @@
                 }
             }
         });
-
         jq("#programExit").on("click", function (e) {
             exitcwcdialog.show();
-
-
         });
-
     });//end of doc ready
+
+    function showEditWorkflowPopup(wfName, patientProgramId, programWorkflowId) {
+        var params = {
+            patientProgramId: patientProgramId,
+            programWorkflowId: programWorkflowId
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "getPossibleNextStates") }', params)
+                .success(function (data) {
+                    //load drop down
+                    console.log(data);
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
+        jq("#" + programWorkflowId).show();
+        console.info(wfName + " - " + patientProgramId + " - " + programWorkflowId);
+        currentWorkflowBeingEdited = programWorkflowId;
+        patientProgramForWorkflowEdited = patientProgramId;
+    }
+    function hideLayer(divId) {
+        jq("#" + divId).hide();
+    }
 
     function isEmpty(o) {
         return o == null || o == '';
@@ -90,117 +113,85 @@
 
 
     <div style="min-width: 78%" class="col16 dashboard">
-        <div class="info-section">
-            <form id="bcg-form">
-                <div class="profile-editor"></div>
+        <table width="100%">
+            <% patientProgram.program.workflows.each { workflow -> %>
+            <% def stateId; def stateStart; %>
+            <tr>
+                <td style="" valign="top">
+                    <div class="info-section">
+                        <form id="bcg-form">
+                            <div class="profile-editor"></div>
 
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
+                            <div class="info-header">
+                                <i class="icon-diagnosis"></i>
 
-                    <h3>BCG Vaccine</h3>
-                </div>
+                                <h3><small>${workflow.concept.name}:</small></h3>
+                            </div>
 
-                <div class="info-body">
+                            <div class="info-body">
+                                <% patientProgram.states.each { state -> %>
+                                <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+                                    stateId = state.state.concept.conceptId;
+                                    stateStart = state.startDate;
+                                } %>
+                                <% } %>
 
-                </div>
-            </form>
-        </div>
+                                <div id="${workflow.programWorkflowId}" style="display: none;">
 
-        <div class="info-section">
-            <form id="polio-form">
-                <div class="profile-editor"></div>
+                                    <table id="workflowTable_${workflow.programWorkflowId}">
+                                    </table>
+                                    <input type="hidden" id="lastStateStartDate" value=""/>
+                                    <input type="hidden" id="lastStateEndDate" value=""/>
+                                    <input type="hidden" id="lastState" value=""/>
 
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
+                                    <div class="onerow">
+                                        <div class="col2">Change to</div>
 
-                    <h3>Oral Polio Vaccine</h3>
-                </div>
+                                        <div class="col2">
+                                            <select id="changeToState">
+                                                <option value="">Select a State</option>
+                                            </select>
+                                        </div>
 
-                <div class="info-body">
+                                        <div class="col2">on</div>
 
-                </div>
-            </form>
-        </div>
+                                        <div class="col2">
+                                            <input type="text" id="datepicker_${workflow.programWorkflowId}"
+                                                   class="datepicker">
+                                        </div>
 
-        <div class="info-section">
-            <form id="tdp-form">
-                <div class="profile-editor"></div>
+                                        <div class="col2"><input type="button" value="Change"
+                                                                 onClick="handleChangeWorkflowState()"/></div>
 
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
+                                        <div class="col2 last">
+                                            <input type="button" value="Cancel"
+                                                   onClick="currentWorkflowBeingEdited = null;
+                                                   hideLayer(${workflow.programWorkflowId})"/>
+                                        </div>
 
-                    <h3>Diphtheria Vaccine</h3>
-                </div>
+                                    </div>
 
-                <div class="info-body">
+                                </div>
 
-                </div>
-            </form>
-        </div>
+                                <% if (stateId != null) { %>
+                                <b>${stateId}</b>
+                                <em>(Date Given : ${stateStart})</em>
+                                <% } else { %>
+                                <em>(None)</em>
+                                <% } %>
 
-        <div class="info-section">
-            <form id="pneumococcal-form">
-                <div class="profile-editor"></div>
+                                <a href="#"
+                                   onclick="showEditWorkflowPopup('${workflow.concept.name}', ${patientProgram.patientProgramId},
+                                           ${workflow.programWorkflowId})">[View/Edit]</a>
 
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
+                            </div>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+        </table>
 
-                    <h3>Pneumococcal Vaccine</h3>
-                </div>
-
-                <div class="info-body">
-
-                </div>
-            </form>
-        </div>
-
-        <div class="info-section">
-            <form id="rotarix-form">
-                <div class="profile-editor"></div>
-
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
-
-                    <h3>Rota Virus Vaccine</h3>
-                </div>
-
-                <div class="info-body">
-
-                </div>
-            </form>
-        </div>
-
-        <div class="info-section">
-            <form id="measles-form">
-                <div class="profile-editor"></div>
-
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
-
-                    <h3>Measles Vaccine</h3>
-                </div>
-
-                <div class="info-body">
-
-                </div>
-            </form>
-        </div>
-
-        <div class="info-section">
-            <form id="yellowfever-form">
-                <div class="profile-editor"></div>
-
-                <div class="info-header">
-                    <i class="icon-diagnosis"></i>
-
-                    <h3>Yellow Fever Vaccine</h3>
-                </div>
-
-                <div class="info-body">
-
-                </div>
-            </form>
-        </div>
     </div>
 
     <span id="programExit" class="button cancel">Exit From Program</span>
@@ -218,7 +209,7 @@
         <ul>
             <li>
                 <label for="datepicker">Completion Date</label>
-                <input type="text" id="datepicker">
+                <input type="text" id="datepicker" class="datepicker">
             </li>
             <li>
                 <label for="programOutcome">Outcome</label>

@@ -3,6 +3,7 @@
     ui.includeJavascript("billingui", "moment.js")
     ui.includeJavascript("mchapp", "object-to-query-string.js")
     ui.includeJavascript("mchapp", "drugOrder.js")
+    ui.includeCss("registration", "onepcssgrid.css")
 %>
 <script type="text/javascript">
     var successUrl = "${ui.pageLink('mchapp','main',[patientId: patient, queueId: queueId])}";
@@ -263,13 +264,26 @@
 
         <br/>
 
-        <div id="stacont" class="status-container">
-            <span class="status active"></span>
-            Visit Status
+        <div class="tad" id="lstdate">Last Visit: ${ui.formatDatePretty(previousVisit)}</div>
+
+        <div class="tad" id="enrollmentDate">Enrollment Date: ${ui.formatDatePretty(patientProgram.dateEnrolled)}</div>
+
+        <div class="tad" id="completionDate">Completion Date:
+        <% if (patientProgram.dateCompleted != null) { %>
+        ${ui.formatDatePretty(patientProgram.dateCompleted)}
+        <% } else { %>
+            <em>Still Enrolled</em>
+            <% } %>
+
         </div>
 
-        <div class="tag">Outpatient</div>
-        <div class="tad" id="lstdate">Last Visit: ${ui.formatDatePretty(previousVisit)}</div>
+        <div class="tad" id="outcome">Outcome:
+        <% if (patientProgram.outcome != null) { %>
+        ${patientProgram.outcome.name}
+        <% } else { %>
+            <em>(none)</em>
+            <% } %>
+        </div>
     </div>
 
     <div class="identifiers">

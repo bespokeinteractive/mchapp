@@ -28,6 +28,7 @@ public class MainPageController {
         @RequestParam("patientId") Patient patient,
         @RequestParam("queueId") Integer queueId,
         PageModel model) {
+
         MchService mchService = Context.getService(MchService.class);
         model.addAttribute("patient", patient);
         model.addAttribute("queueId", queueId);
@@ -50,22 +51,22 @@ public class MainPageController {
 
         Program program = null;
         Calendar minEnrollmentDate = Calendar.getInstance();
-        List<ListItem> possibleProgramOutcomes=new ArrayList<ListItem>();
+        List<ListItem> possibleProgramOutcomes = new ArrayList<ListItem>();
         if (enrolledInANC) {
             model.addAttribute("title", "ANC Clinic");
-            minEnrollmentDate.add(Calendar.MONTH,-MAX_ANC_CWC_DURATION );
+            minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_CWC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
         } else if (enrolledInPNC) {
             model.addAttribute("title", "PNC Clinic");
-            minEnrollmentDate.add(Calendar.YEAR,-MAX_ANC_CWC_DURATION );
+            minEnrollmentDate.add(Calendar.YEAR, -MAX_ANC_CWC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
         }
         else{
             model.addAttribute("title", "MCH Clinic");
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
-            minEnrollmentDate.add(Calendar.YEAR,-MAX_CWC_DURATION );
+            minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
 
         }
@@ -74,8 +75,6 @@ public class MainPageController {
         List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
         PatientProgram patientProgram = patientPrograms.get(0);
         model.addAttribute("patientProgram", patientProgram);
-        System.out.println(possibleProgramOutcomes);
-
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
