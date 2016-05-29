@@ -9,8 +9,11 @@ import org.openmrs.*;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
+import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
+import org.openmrs.module.mchapp.QueueLogs;
 import org.openmrs.module.mchapp.SendForExaminationParser;
 import org.openmrs.module.mchapp.api.ListItem;
 import org.openmrs.module.mchapp.api.MchService;
@@ -20,6 +23,7 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,9 +45,10 @@ public class CwcTriageFragmentController {
     @SuppressWarnings("unchecked")
 
     public SimpleObject saveCwcTriageInfo(
-            @RequestParam("patientId") Patient patient,
-            UiSessionContext session,
+            @RequestParam("patientId") Patient patient, @RequestParam("queueId") Integer queueId,
             HttpServletRequest request) {
+        PatientQueueService queueService = Context.getService(PatientQueueService.class);
+        TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
         List<Obs> observations = new ArrayList<Obs>();
         ObsParser obsParser = new ObsParser();
         for (Map.Entry<String, String[]> postedParams :
@@ -58,8 +63,9 @@ public class CwcTriageFragmentController {
             }
         }
 
-        Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
                 Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, null);
+        QueueLogs.logTriagePatient(queue, encounter);
         return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
     }
 
@@ -78,21 +84,21 @@ public class CwcTriageFragmentController {
         return SimpleObject.create("status", "success", "message", "Patient Program Updated Successfully");
     }
 
-    public List<SimpleObject> getPatientStates(HttpServletRequest request,UiUtils uiUtils){
+    public List<SimpleObject> getPatientStates(HttpServletRequest request, UiUtils uiUtils) {
         Integer patientProgramId = Integer.parseInt(request.getParameter("patientProgramId"));
         Integer programWorkflowId = Integer.parseInt(request.getParameter("programWorkflowId"));
         List<PatientStateItem> ret = new ArrayList<PatientStateItem>();
         ProgramWorkflowService s = Context.getProgramWorkflowService();
         PatientProgram p = s.getPatientProgram(patientProgramId);
         ProgramWorkflow wf = p.getProgram().getWorkflow(programWorkflowId);
-        for (PatientState st : p.statesInWorkflow(wf, false)){
+        for (PatientState st : p.statesInWorkflow(wf, false)) {
             ret.add(new PatientStateItem(st));
         }
-        return SimpleObject.fromCollection(ret,uiUtils,"patientStateId","programWorkflowId","stateName","workflowName",
-                "startDate","endDate");
+        return SimpleObject.fromCollection(ret, uiUtils, "patientStateId", "programWorkflowId", "stateName", "workflowName",
+                "startDate", "endDate");
     }
 
-    public List<SimpleObject> getPossibleNextStates(HttpServletRequest request,UiUtils uiUtils){
+    public List<SimpleObject> getPossibleNextStates(HttpServletRequest request, UiUtils uiUtils) {
         Integer patientProgramId = Integer.parseInt(request.getParameter("patientProgramId"));
         Integer programWorkflowId = Integer.parseInt(request.getParameter("programWorkflowId"));
         List<ListItem> ret = new ArrayList<ListItem>();
@@ -105,10 +111,10 @@ public class CwcTriageFragmentController {
             li.setName(state.getConcept().getName(Context.getLocale(), false).getName());
             ret.add(li);
         }
-        return SimpleObject.fromCollection(ret,uiUtils,"id","name","description");
+        return SimpleObject.fromCollection(ret, uiUtils, "id", "name", "description");
     }
 
-    public SimpleObject changeToState(HttpServletRequest request,UiUtils uiUtils) {
+    public SimpleObject changeToState(HttpServletRequest request, UiUtils uiUtils) {
         Integer patientProgramId = Integer.parseInt(request.getParameter("patientProgramId"));
         Integer programWorkflowId = Integer.parseInt(request.getParameter("programWorkflowId"));
         Integer programWorkflowStateId = Integer.parseInt(request.getParameter("programWorkflowStateId"));
@@ -117,18 +123,18 @@ public class CwcTriageFragmentController {
         PatientProgram pp = s.getPatientProgram(patientProgramId);
         ProgramWorkflowState st = pp.getProgram().getWorkflow(programWorkflowId).getState(programWorkflowStateId);
         Date onDate = null;
-        if (onDateDMY != null && onDateDMY.length() > 0){
+        if (onDateDMY != null && onDateDMY.length() > 0) {
             try {
                 onDate = ymdDf.parse(onDateDMY);
                 pp.transitionToState(st, onDate);
                 s.savePatientProgram(pp);
             } catch (ParseException e) {
-                return SimpleObject.create("status","error","message",e.getMessage());
-            }catch (Exception e){
-                return SimpleObject.create("status","error","message",e.getMessage());
+                return SimpleObject.create("status", "error", "message", e.getMessage());
+            } catch (Exception e) {
+                return SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
-        return SimpleObject.create("status","success","message","Successfully");
+        return SimpleObject.create("status", "success", "message", "Successfully");
 
     }
 }
