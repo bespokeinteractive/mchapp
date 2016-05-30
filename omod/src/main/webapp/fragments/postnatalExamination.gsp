@@ -182,7 +182,84 @@
 				jq('#task-exams').hide();
 			}
         });
+
+        //investigations autocomplete functionality
+        jq("#investigation").autocomplete({
+            source: function( request, response ) {
+                jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getInvestigations") }',
+                        {
+                            q: request.term
+                        }
+                ).success(function(data) {
+                    var results = [];
+                    for (var i in data) {
+                        var result = { label: data[i].name, value: data[i].uuid};
+                        results.push(result);
+                    }
+                    response(results);
+                });
+            },
+            minLength: 3,
+            select: function( event, ui ) {
+                if (!selectedInvestigationIds.includes(ui.item.value)) {
+                    var investigation = {};
+                    investigation.label = ui.item.label;
+                    investigation.questionUuid = investigationQuestionUuid;
+                    investigation.uuid = ui.item.value;
+                    investigation.value = ui.item.value;
+					
+					investigationArray.push(ui.item);
+					investigationSummary();
+                    var investigationTemplate = _.template(jq("#investigation-template").html());
+                    jq("#investigations-holder").append(investigationTemplate(investigation));
+					jq('#investigations-set').val('SET');
+					jq('#task-investigations').show();
+					
+                    selectedInvestigationIds.push(ui.item.value);
+                } else {
+                    jq().toastmessage('showErrorToast', ui.item.label + ' has already been added.');
+                }
+                jq(this).val('');
+                return false;
+            },
+            open: function() {
+                jq( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+                jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });
+
+        jq("#investigations-holder").on("click", ".icon-remove",function(){
+            var investigationId = parseInt(jq(this).parents('div.investigation').find('input[type="hidden"]').attr("value"));
+            selectedInvestigationIds.splice(selectedInvestigationIds.indexOf(investigationId));
+			
+			investigationArray = investigationArray.filter(function(investigation){
+				return investigation.value != investigationId;
+			});
+			
+			investigationSummary();
+			
+            jq(this).parents('div.investigation').remove();
+			if (jq(".investigation").length == 0){
+				jq('#investigations-set').val('');
+				jq('#task-investigations').hide();
+			}
+        });
 		
+		function investigationSummary(){
+			if (investigationArray.length == 0){
+				jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+			}
+			else{
+				var exams = '';
+				investigationArray.forEach(function(investigation){
+				  exams += investigation.label +'<br/>'
+				});
+				jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
+			}
+		}
+
         //submit data
         jq("#postnatal-examination-submit").on("click", function(event){
             event.preventDefault();
@@ -356,6 +433,15 @@
     {{ }); }}
 </script>
 
+<script id="investigation-template" type="text/template">
+  <div class="investigation">
+	<span class="icon-remove selecticon"></span>
+    <label style="margin-top: 2px; width: 95%;">{{=label}} 
+		<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}"/>
+	</label>
+  </div>
+</script>
+
 <script id="examination-detail-template" type="text/template">
     <div id="examination-detail-div">
         <span id="selectedExamination" data-uid="{{=value}}" class="icon-remove selecticon"></span>
@@ -396,11 +482,63 @@
 						<a class="tasks-lists"></a>
 					</header>
 					
-					<div id="exams-holder"></div>						
+					<div id="exams-holder"></div>
 				</div>
-			</div>				
+			</div>
 		</fieldset>
-		
+
+		<fieldset class="no-confirmation">
+			<legend>Investigations</legend>
+			<div>
+				<label for="investigation" class="label title-label">Investigations <span class="important"></span></label>
+				<input type="text" style="width: 450px" id="investigation" name="investigation" placeholder="Enter Investigations" >
+				
+				<field>
+					<input type="hidden" id="investigations-set" class=""/>
+					<span id="investigations-lbl" class="field-error" style="display: none"></span>
+				</field>
+				
+				<div class="tasks" id="task-investigations" style="display:none;">
+					<header class="tasks-header">
+						<span id="title-symptom" class="tasks-title">PATIENT'S INVESTIGATIONS</span>
+						<a class="tasks-lists"></a>
+					</header>
+					
+					<div id="investigations-holder"></div>
+				</div>
+				
+				<select style="display: none" id="selectedInvestigationList"></select>
+				
+				<div class="selectdiv" id="selected-investigations"></div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>HIV Info</legend>
+			<p>
+				<span>Prior Known Status:</span>
+				<input id="prior-status-positive" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f"><label for="prior-status-positive">Positive</label>
+				<input id="prior-status-negative" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0"><label for="prior-status-negative">Negative</label>
+				<input id="prior-status-unknown" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af"><label for="prior-status-unknow">Unknown</label>
+			</p>
+			<p>
+				<span>Couple Counselled?</span>
+				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Patner Tested?</span>
+				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Patner Results</span>
+				<input id="prior-status-positive" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f"><label for="prior-status-positive">Positive</label>
+				<input id="prior-status-negative" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0"><label for="prior-status-negative">Negative</label>
+				<input id="prior-status-unknown" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af"><label for="prior-status-unknow">Unknown</label>
+			</p>
+		</fieldset>
+
 		<fieldset class="no-confirmation">
 			<legend>Prescription</legend>
 			<label class="label title-label">Prescription <span class="important"></span></label>
@@ -418,7 +556,7 @@
 					</tr>
 				</thead>
 				
-				<tbody data-bind="foreach: display_drug_orders">					
+				<tbody data-bind="foreach: display_drug_orders">
 					<tr>
 						<td data-bind="text: drug_name"></td>
 						<td data-bind="text: (dosage + ' ' + dosage_unit_label)"></td>
@@ -453,7 +591,31 @@
 				</span>
 			</div>
 		</fieldset>
-		
+
+		<fieldset>
+			<legend>Misc</legend>
+			<p>
+				<span>PNC Exercise given?</span>
+				<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Vitamin A supplementation</span>
+				<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Multi-vitamin</span>
+				<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Haematinics</span>
+				<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+		</fieldset>
+
 		<fieldset>
 			<legend>Referral</legend>
 			
@@ -469,7 +631,7 @@
 						<option value="0">Select Option</option>
 						<option value="1">Internal Referral</option>
 						<option value="2">External Referral</option>
-					</select>				
+					</select>
 				</div>
 				
 				<div class="col4">
