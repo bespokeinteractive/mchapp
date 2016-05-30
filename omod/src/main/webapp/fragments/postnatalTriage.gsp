@@ -180,7 +180,12 @@
 			
 			<div>
 				<label for="deliveryMode">Mode of Delivery</label>
-				<input type="text" name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130" >
+				<select name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130" >
+					<option value="0"></option>
+					<% modesOfDelivery.each { %>
+						<option value="${it.uuid}">${it.label}</option>
+					<% } %>
+				</select>
 			</div>
 			<div>
 				<label for="babyState">State of Baby</label>
