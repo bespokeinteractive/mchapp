@@ -39,7 +39,7 @@
 		jq(".submit").on("click", function(event){
 			event.preventDefault();
 			
-			if (jq('#deliveryMode').val() == ""){
+			if (jq('#deliveryMode').val() == "0"){
 				jq().toastmessage('showErrorToast', 'Please select the mode of delivery.');
 				return false;
 			}
