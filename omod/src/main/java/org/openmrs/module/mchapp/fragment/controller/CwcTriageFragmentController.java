@@ -19,6 +19,7 @@ import org.openmrs.module.mchapp.api.PatientStateItem;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
+import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,7 +38,7 @@ public class CwcTriageFragmentController {
     protected final Log log = LogFactory.getLog(getClass());
     DateFormat ymdDf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public void controller(FragmentModel model, UiUtils ui) {
+    public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         model.addAttribute("internalReferralSources", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
     }
 
@@ -136,7 +137,7 @@ public class CwcTriageFragmentController {
                 return SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
-        return SimpleObject.create("status", "success", "message", "Successfully");
+        return SimpleObject.create("status", "success", "message", "State changed Successfully");
 
     }
 }

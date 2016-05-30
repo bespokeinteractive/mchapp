@@ -307,7 +307,7 @@
 <% } else if (enrolledInPnc) { %>
 	${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
 <% } else if (enrolledInCwc) { %>
-	${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId])}
+	${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
 <% } else { %>
 	${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
 <% } %>
