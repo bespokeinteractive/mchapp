@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.mchapp.MchMetadata;
@@ -22,6 +23,7 @@ import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +44,9 @@ public class CwcTriageFragmentController {
     @SuppressWarnings("unchecked")
 
     public SimpleObject saveCwcTriageInfo(
-            @RequestParam("patientId") Patient patient, @RequestParam("queueId") Integer queueId,
+            @RequestParam("patientId") Patient patient, 
+            @RequestParam("queueId") Integer queueId,
+            UiSessionContext session,
             HttpServletRequest request) {
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
@@ -54,14 +58,13 @@ public class CwcTriageFragmentController {
                 observations = obsParser.parse(
                         observations, patient, postedParams.getKey(),
                         postedParams.getValue());
-                SendForExaminationParser.parse(postedParams.getKey(), postedParams.getValue(), patient);
             } catch (Exception e) {
                 return SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
-
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, null);
+                Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, session.getSessionLocation());
+        SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
         QueueLogs.logTriagePatient(queue, encounter);
         return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
     }

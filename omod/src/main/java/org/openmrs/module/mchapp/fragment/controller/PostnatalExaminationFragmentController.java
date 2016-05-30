@@ -71,7 +71,7 @@ public class PostnatalExaminationFragmentController {
             }
         }
 
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, null);
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
         QueueLogs.logOpdPatient(patientQueue, encounter);
 
         return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
