@@ -616,6 +616,17 @@
 			</p>
 		</fieldset>
 
+			<legend>Family planning</legend>
+			<select>
+				<option >Select Family Planning Option</option>
+				<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
+				<% familyPlanningOptions.each { familyPlanningOption -> %>
+				<option value="${familyPlanningOption.id}">${familyPlanningOption.label}</option>
+				<% } %>
+				<% } %>
+			</select>
+		</fieldset>
+		
 		<fieldset>
 			<legend>Referral</legend>
 			
