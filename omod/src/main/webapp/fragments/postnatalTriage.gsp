@@ -187,7 +187,7 @@
 			<div>
 				<label for="deliveryMode">Mode of Delivery</label>
 				<select id="deliveryMode" name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130">
-					<option value="">Select Option</option>					
+					<option value="0">Select Option</option>					
 					<% deliveryMode.each { modes -> %>
  						<option value="${modes.uuid}">${modes.label}</option>
  					<% } %>
