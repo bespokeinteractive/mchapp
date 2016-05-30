@@ -62,12 +62,40 @@
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "getPossibleNextStates") }', params)
                 .success(function (data) {
                     //load drop down
-                    console.log(data);
                 }).error(function (xhr, status, err) {
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);
                 });
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "getPatientStates") }', params)
+                .success(function (data) {
+                    //load list of previous vaccines
+                    var tableId = "workflowTable_" + programWorkflowId;
+                    jq('#' + tableId + ' > tbody > tr').remove();
+                    var tbody = jq('#' + tableId + ' > tbody');
+
+                    if (data.length == 0) {
+                        tbody.append('<tr align="center"><td colspan="5">No Previous Vaccinations found for ' + wfName + '</td></tr>');
+                    } else {
+                        for (index in data) {
+                            var item = data[index];
+                            console.log(item);
+                            var row = '<tr>';
+                            row += '<td>'+ item.stateName+'</td>';
+                            row += '<td>'+ item.startDate+'</td>';
+                            row += '<td>'+ item.endDate+'</td>';
+                            row += '<td>'+ item.dateCreated+'</td>';
+                            row += '<td>'+ item.creator+'</td>';
+                            row += '</tr>';
+                            tbody.append(row);
+                        }
+
+                    }
+
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
+
+
         jq("#" + programWorkflowId).show();
-        console.info(wfName + " - " + patientProgramId + " - " + programWorkflowId);
         currentWorkflowBeingEdited = programWorkflowId;
         patientProgramForWorkflowEdited = patientProgramId;
     }
@@ -187,6 +215,18 @@
                                 <div id="${workflow.programWorkflowId}" style="display: none;">
 
                                     <table id="workflowTable_${workflow.programWorkflowId}">
+                                        <thead>
+                                        <tr align="center">
+                                            <th>Vaccine</th>
+                                            <th>Date Given</th>
+                                            <th>Date of Next Visit</th>
+                                            <th>Date Recorded</th>
+                                            <th>Provider</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
                                     </table>
                                     <input type="hidden" id="lastStateStartDate" value=""/>
                                     <input type="hidden" id="lastStateEndDate" value=""/>
@@ -196,7 +236,8 @@
                                         <div class="col2">Change to</div>
 
                                         <div class="col2">
-                                            <select name="changeToState_${workflow.programWorkflowId}" id="changeToState_${workflow.programWorkflowId}">
+                                            <select name="changeToState_${workflow.programWorkflowId}"
+                                                    id="changeToState_${workflow.programWorkflowId}">
                                                 <option value="0">Select a State</option>
                                                 <% if (workflow.states != null || workflow.states != "") { %>
                                                 <% workflow.states.each { state -> %>

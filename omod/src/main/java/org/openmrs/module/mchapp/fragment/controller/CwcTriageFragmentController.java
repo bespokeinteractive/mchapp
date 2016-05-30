@@ -3,12 +3,9 @@ package org.openmrs.module.mchapp.fragment.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
 import org.openmrs.*;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.mchapp.MchMetadata;
@@ -95,7 +92,7 @@ public class CwcTriageFragmentController {
             ret.add(new PatientStateItem(st));
         }
         return SimpleObject.fromCollection(ret, uiUtils, "patientStateId", "programWorkflowId", "stateName", "workflowName",
-                "startDate", "endDate");
+                "startDate", "endDate","dateCreated","creator");
     }
 
     public List<SimpleObject> getPossibleNextStates(HttpServletRequest request, UiUtils uiUtils) {
