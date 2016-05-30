@@ -19,6 +19,11 @@
                 || str.indexOf(dt.format('DD MMMM YY')) >= 0;
         return result;
     }
+	
+	jq(function() {
+		var birthdate = moment('${patient.birthdate}').fromNow().toString().replace('ago','') + '(' +moment().format('DD/MM/YYYY')+')';
+		jq('#agename').text(birthdate);		
+	});
 </script>
 
 <style>
@@ -241,8 +246,7 @@ form input[type="checkbox"], .form input[type="checkbox"] {
                 <span>
                     ${gender}
                 </span>
-                <span id="agename">${patient.age} years (${ui.formatDatePretty(patient.birthdate)})</span>
-
+                <span id="agename"></span>
             </span>
         </h1>
 
