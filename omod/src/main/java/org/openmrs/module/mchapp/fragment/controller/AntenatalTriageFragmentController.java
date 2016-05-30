@@ -52,13 +52,12 @@ public class AntenatalTriageFragmentController {
         for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
             try {
                 observations = obsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
-                SendForExaminationParser.parse(postedParams.getKey(), postedParams.getValue(), patient);
             } catch (Exception e) {
                 saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
-
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, null);
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
+        SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
         QueueLogs.logTriagePatient(queue, encounter);
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;
