@@ -1,6 +1,5 @@
 <script>
     jq(function () {
-
         //submit data
         jq(".submit").on("click", function (event) {
             event.preventDefault();
@@ -72,7 +71,6 @@
                         <label for="weightCategories">Weight Categories</label>
                         <select id="weightCategories">
                             <option value="normal">Normal Growth</option>
-                            <option value="stunted">Stunted Growth</option>
                             <option value="Over Weight">Over Weight</option>
                             <option value="Under Weight">Under Weight</option>
                         </select>

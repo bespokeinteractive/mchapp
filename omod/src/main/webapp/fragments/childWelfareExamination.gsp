@@ -44,6 +44,7 @@
                 }
             }
         });
+		
         jq("#programExit").on("click", function (e) {
             exitcwcdialog.show();
         });
