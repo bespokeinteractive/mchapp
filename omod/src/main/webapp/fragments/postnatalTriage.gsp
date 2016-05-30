@@ -1,8 +1,5 @@
 <script>
     jq(function(){
-		console.log('${deliveryMode}');
-		
-		
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -42,7 +39,7 @@
 		jq(".submit").on("click", function(event){
 			event.preventDefault();
 			
-			if (jq('#deliveryMode').val() == 0){
+			if (jq('#deliveryMode').val() == ""){
 				jq().toastmessage('showErrorToast', 'Please select the mode of delivery.');
 				return false;
 			}
@@ -190,12 +187,10 @@
 			<div>
 				<label for="deliveryMode">Mode of Delivery</label>
 				<select id="deliveryMode" name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130">
-					<option value="0">Select Option</option>					
-					<% if (deliveryMode != null || deliveryMode != "") { %>
-						<% deliveryMode.each { modes -> %>
-							<option value="${modes.answerConcept.conceptId}">${modes.answerConcept.name}</option>
-						<% } %>
-					<% } %>
+					<option value="">Select Option</option>					
+					<% deliveryMode.each { modes -> %>
+ 						<option value="${modes.uuid}">${modes.label}</option>
+ 					<% } %>
 				</select>
 			</div>
 			<div>

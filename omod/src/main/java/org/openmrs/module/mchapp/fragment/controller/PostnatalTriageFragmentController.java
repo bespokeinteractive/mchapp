@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -29,13 +30,16 @@ public class PostnatalTriageFragmentController {
 		config.require("queueId");
 		Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
 
+        Concept modeOfDelivery = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.PNC_DELIVERY_MODES);
+        		List<SimpleObject> modesOfDelivery = new ArrayList<SimpleObject>();
+        		for (ConceptAnswer answer : modeOfDelivery.getAnswers()) {
+            			modesOfDelivery.add(SimpleObject.create("uuid", answer.getAnswerConcept().getUuid(), "label", answer.getAnswerConcept().getDisplayString()));
+            		}
+
 		model.addAttribute("patient", patient);
 		model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.PNC_PROGRAM));
 		model.addAttribute("queueId", config.get("queueId"));
-
-		Collection<ConceptAnswer> answers = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.PNC_DELIVERY_MODES).getAnswers();
-
-		model.addAttribute("deliveryMode", SimpleObject.fromCollection(answers, ui, "answerConcept.name", "answerConcept.conceptId"));
+        model.addAttribute("deliveryMode", modesOfDelivery);
 	}
 	
 	@SuppressWarnings("unchecked")
