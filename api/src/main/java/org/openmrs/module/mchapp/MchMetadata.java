@@ -43,6 +43,7 @@ public class MchMetadata extends AbstractMetadataBundle{
 		public static final String CWC_POLIO_WORKFLOW_STATE  = "PENDING";
 		public static final String CWC_MEASLES_WORKFLOW_STATE  = "PENDING";
 
+		public static final String PNC_DELIVERY_MODES = "a875ae0b-893c-47f8-9ebe-f721c8d0b130";
 	}
 
 	@Override

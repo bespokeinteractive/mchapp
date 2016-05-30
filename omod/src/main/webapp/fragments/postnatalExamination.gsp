@@ -479,7 +479,7 @@
 							<option value="0">Select Option</option>
 							<% if (internalReferrals != null || internalReferrals != "") { %>
 							<% internalReferrals.each { internalReferral -> %>
-							<option ${internalReferral.id} >${internalReferral.label}</option>
+							<option value="${internalReferral.id}">${internalReferral.label}</option>
 							<% } %>
 							<% } %>
 						</select>

@@ -1,6 +1,5 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
-import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -22,27 +21,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PostnatalTriageFragmentController {
-	private static final String MODE_OF_DELIVERY_UUID = "a875ae0b-893c-47f8-9ebe-f721c8d0b130";
-
 	public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
 		config.require("patientId");
 		config.require("queueId");
 		Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
-		Concept modeOfDelivery = Context.getConceptService().getConceptByUuid(MODE_OF_DELIVERY_UUID);
-		List<SimpleObject> modesOfDelivery = new ArrayList<SimpleObject>();
-		for (ConceptAnswer answer : modeOfDelivery.getAnswers()) {
-			modesOfDelivery.add(SimpleObject.create("uuid", answer.getAnswerConcept().getUuid(), "label", answer.getAnswerConcept().getDisplayString()));
-		}
+
 		model.addAttribute("patient", patient);
 		model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.PNC_PROGRAM));
 		model.addAttribute("queueId", config.get("queueId"));
-		model.addAttribute("modesOfDelivery", modesOfDelivery);
+
+		Collection<ConceptAnswer> answers = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.PNC_DELIVERY_MODES).getAnswers();
+
+		model.addAttribute("deliveryMode", SimpleObject.fromCollection(answers, ui, "answerConcept.name", "answerConcept.conceptId"));
 	}
 	
 	@SuppressWarnings("unchecked")
