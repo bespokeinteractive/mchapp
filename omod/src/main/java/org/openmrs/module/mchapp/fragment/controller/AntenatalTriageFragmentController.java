@@ -57,7 +57,9 @@ public class AntenatalTriageFragmentController {
             }
         }
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
-        SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
+        if (request.getParameter("send_for_examination") != null) {
+            SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
+        }
         QueueLogs.logTriagePatient(queue, encounter);
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;
