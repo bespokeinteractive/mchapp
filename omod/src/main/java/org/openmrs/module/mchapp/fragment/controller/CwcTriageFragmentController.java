@@ -40,6 +40,25 @@ public class CwcTriageFragmentController {
 
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         model.addAttribute("internalReferralSources", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
+
+        Concept  growthCategory= Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.MCH_GROWTH_MONITOR);
+        List<SimpleObject> growthCategories = new ArrayList<SimpleObject>();
+        for (ConceptAnswer answer : growthCategory.getAnswers()) {
+            growthCategories.add(SimpleObject.create("uuid", answer.getAnswerConcept().getUuid(),
+                    "label", answer.getAnswerConcept().getDisplayString()));
+        }
+        model.addAttribute("growthCategories", growthCategories);
+
+        Concept weightCategory = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.MCH_WEIGHT_CATEGORIES);
+        List<SimpleObject> weightCategories = new ArrayList<SimpleObject>();
+        for (ConceptAnswer answer : weightCategory.getAnswers()) {
+            weightCategories.add(SimpleObject.create("uuid", answer.getAnswerConcept().getUuid(),
+                    "label", answer.getAnswerConcept().getDisplayString()));
+        }
+        model.addAttribute("weightCategories", weightCategories);
+
+
+
     }
 
     @SuppressWarnings("unchecked")

@@ -2,6 +2,15 @@
     jq(function () {
         //submit data
         jq(".submit").on("click", function (event) {
+            if(jq("#weightCategories").val()=="0"){
+                jq().toastmessage('showErrorToast', "Select a Weight Category!");
+                return;
+            }
+
+            if(jq("#growthMonitor").val()=="0"){
+                jq().toastmessage('showErrorToast', "Select Growth Status!");
+                return;
+            }
             event.preventDefault();
             var data = jq("form#cwc-triage-form").serialize();
 
@@ -69,10 +78,21 @@
 
                     <div>
                         <label for="weightCategories">Weight Categories</label>
-                        <select id="weightCategories">
-                            <option value="normal">Normal Growth</option>
-                            <option value="Over Weight">Over Weight</option>
-                            <option value="Under Weight">Under Weight</option>
+                        <select id="weightCategories" name="concept.403e252e-e131-42bc-83df-e55503d248d8">
+                            <option value="0">Select Category</option>
+                            <% weightCategories.each { category -> %>
+                            <option value="${category.uuid}">${category.label}</option>
+                            <% } %>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="growthMonitor">Growth Status</label>
+                        <select id="growthMonitor" name="concept.c438b759-f08d-40ef-a59b-47a11b053647">
+                            <option value="0">Select Category</option>
+                            <% growthCategories.each { category -> %>
+                            <option value="${category.uuid}">${category.label}</option>
+                            <% } %>
                         </select>
                     </div>
 
