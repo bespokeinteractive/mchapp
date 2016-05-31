@@ -420,6 +420,9 @@
 	.patient-profile small:first-child{
 		margin-left: 15px;
 	}
+	.floating-controls input{
+		float: none!important;
+	}
 </style>
 
 <script id="patient-profile-template" type="text/template">
@@ -515,28 +518,78 @@
 
 		<fieldset>
 			<legend>HIV Info</legend>
-			<p>
-				<span>Prior Known Status:</span>
-				<input id="prior-status-positive" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f"><label for="prior-status-positive">Positive</label>
-				<input id="prior-status-negative" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0"><label for="prior-status-negative">Negative</label>
-				<input id="prior-status-unknown" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af"><label for="prior-status-unknow">Unknown</label>
-			</p>
-			<p>
-				<span>Couple Counselled?</span>
-				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Patner Tested?</span>
-				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Patner Results</span>
-				<input id="prior-status-positive" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f"><label for="prior-status-positive">Positive</label>
-				<input id="prior-status-negative" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0"><label for="prior-status-negative">Negative</label>
-				<input id="prior-status-unknown" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af"><label for="prior-status-unknow">Unknown</label>
-			</p>
+			<div>
+				<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+				<field>
+					<input type="hidden" id="hiv-info-set" class=""/>
+					<span id="hiv-info-lbl" class="field-error" style="display: none"></span>
+				</field>
+				
+				<div class="floating-controls">
+					<span>Prior Known Status:</span><br/>
+					<label>
+						<input id="prior-status-positive" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+						Positive
+					</label><br/>
+					
+					<label>
+						<input id="prior-status-negative" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+						Negative
+					</label><br/>
+					
+					<label>
+						<input id="prior-status-unknown" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+						Unknown
+					</label>				
+				</div>
+				
+				
+			</div>
+			
+			<div>
+				<span>Couple Counselled?</span><br/>
+				
+				<label>
+					<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+					Yes
+				</label><br/>
+				
+				<label>
+					<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+					No
+				</label>
+			</div>
+			
+			<div>
+				<span>Patner Tested?</span><br/>
+				<label>
+					<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+					Yes
+				</label><br/>
+				
+				<label>
+					<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+					No
+				</label>
+			</div>
+			
+			<div>
+				<span>Patner Results</span><br/>
+				<label>
+					<input id="prior-status-positive" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+					Positive
+				</label><br/>
+				
+				<label>
+					<input id="prior-status-negative" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+					Negative
+				</label><br/>
+				
+				<label>
+					<input id="prior-status-unknown" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+					Unknown
+				</label>
+			</div>
 		</fieldset>
 
 		<fieldset class="no-confirmation">
@@ -594,26 +647,56 @@
 
 		<fieldset>
 			<legend>Misc</legend>
-			<p>
-				<span>PNC Exercise given?</span>
-				<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Vitamin A supplementation</span>
-				<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Multi-vitamin</span>
-				<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Haematinics</span>
-				<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
+			
+			<div>
+				<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+				<field>
+					<input type="hidden" id="misc-info-set" class=""/>
+					<span id="misc-info-lbl" class="field-error" style="display: none"></span>
+				</field>
+				
+				<div>
+					<span>PNC Exercise given?</span><br/>
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+						Yes
+					</label><br/>
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+						No
+					</label>
+				</div>
+				
+				<div>
+					<span>Vitamin A supplementation</span><br/>
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+						Yes
+					</label><br/>
+					
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+						No
+					</label>
+				</div>
+				
+				<div>
+					<span>Multi-vitamin</span>
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+						Yes
+					</label>
+					<label>
+					<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">No</label>
+				</div>
+				
+				<div>
+					<span>Haematinics</span>
+					<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+					<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+				</div>				
+			</div>
+			
 		</fieldset>
 		<fieldset>
 

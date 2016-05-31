@@ -623,11 +623,11 @@
 		margin: 5px 0;
 		padding: 7px 12px;
 	}
-	.patient-profile small{
+	#profile-items small{
 		margin-left: 5.5%;
 	}
-	.patient-profile small:first-child{
-		margin-left: 15px;
+	#profile-items small:first-child{
+		margin-left: 2px;
 	}
 	table[id*='workflowTable_'] th:first-child{
 		width: 5px;
@@ -685,21 +685,24 @@
 </script>
 
 <script id="patient-profile-template" type="text/template">
-	<div style="padding-left: 51px; font-size: 141%; font-weight: bold;">
+	<div style="padding-left: 0px; font-size: 141%; font-weight: bold;">
 		<i class='icon-quote-left small'></i>ANC PROFILE<br/>	
 	</div>
 	
-	<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
-    {{ _.each(details, function(profileDetail) { }}
-		{{if (isValidDate(profileDetail.value)) { }}
-			<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
-		{{ } else { }}
-			<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small>
-		{{ } }}
-        
-		
-		{{=profileDetail.value}}
-    {{ }); }}
+	<div id="profile-items">
+		<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
+		{{ _.each(details, function(profileDetail) { }}
+			{{if (isValidDate(profileDetail.value)) { }}
+				<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
+			{{ } else { }}
+				<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small>
+			{{ } }}
+			
+			
+			{{=profileDetail.value}}
+		{{ }); }}	
+	</div>
+	
 </script>
 
 <div class="patient-profile"></div>
