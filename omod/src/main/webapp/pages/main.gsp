@@ -250,6 +250,15 @@
 	}
 	#confirmation .confirm {
 		float: right;
+	}	
+	.add-on {
+		color: #f26522;
+		cursor: pointer;
+		float: right;
+		left: auto;
+		margin-left: -31px;
+		margin-top: 10px;
+		position: absolute;
 	}
 </style>
 
@@ -281,7 +290,7 @@
     <div class="demographics">
         <h1 class="name">
             <span id="surname">${patient.familyName},<em>surname</em></span>
-            <span id="othname">${patient.givenName} ${patient.middleName ? patient.middleName : ''} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em>
+            <span id="othname">${patient.givenName} ${patient.middleName ? patient.middleName : ''} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <em>other names</em>
             </span>
 
             <span class="gender-age">
@@ -294,27 +303,17 @@
         </h1>
 
         <br/>
+		
+		<div id="stacont" class="status-container">
+				<span class="status active"></span>
+				Visit Status
+			</div>
+		<div class="tag">Outpatient</div>
+		<div class="tad">Last Visit: ${ui.formatDatePretty(previousVisit)}</div>
 
-        <div class="tad" id="lstdate">Last Visit: ${ui.formatDatePretty(previousVisit)}</div>
+        <div class="tad" id="enrollmentDate">Enrolled: ${patientProgram?ui.formatDatePretty(patientProgram.dateEnrolled):"--"}</div>
 
-        <div class="tad" id="enrollmentDate">Enrollment Date: ${patientProgram?ui.formatDatePretty(patientProgram.dateEnrolled):"--"}</div>
-
-        <div class="tad" id="completionDate">Completion Date:
-        <% if (patientProgram && patientProgram.dateCompleted != null) { %>
-        ${ui.formatDatePretty(patientProgram.dateCompleted)}
-        <% } else { %>
-            <em>Still Enrolled</em>
-            <% } %>
-
-        </div>
-
-        <div class="tad" id="outcome">Outcome:
-        <% if (patientProgram && patientProgram.outcome != null) { %>
-			${patientProgram.outcome.name}
-        <% } else { %>
-            <em>(none)</em>
-        <% } %>
-        </div>
+        
     </div>
 
     <div class="identifiers">

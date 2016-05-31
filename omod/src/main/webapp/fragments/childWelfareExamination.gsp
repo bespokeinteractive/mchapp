@@ -16,8 +16,6 @@
     var selectedInvestigationIds = [];
     var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
     var NavigatorController;
-	
-	var stateIdnt = 0;
 
     var examinationArray = [];
     var investigationArray = [];
@@ -75,20 +73,64 @@
             selector: '#vaccinations-dialog',
             actions: {
                 confirm: function () {
-                    vaccinationDialog.close();
+					if (jq('#vaccine-state').val() == 0) {
+						jq().toastmessage('showErrorToast', "Kindly select a vaccine state!");
+						return false;
+					}
+					
+					var idnt = jq('#vaccine-idnt').val();
+					var prog = jq('#vaccine-prog').val();
+					var name = jq('#vaccine-name').val();
+					
+					var state = jq('#vaccine-state').val();
+					
+					var stateData = {
+						patientProgramId: prog,
+						programWorkflowId: idnt,
+						programWorkflowStateId: jq('#vaccine-state').val(),
+						onDateDMY: jq('#vaccine-date-field').val()
+					}
+
+					jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
+					.success(function (data) {
+						jq().toastmessage('showNoticeToast', data.message);
+						
+						showEditWorkflowPopup(name, prog, idnt);
+						
+						jq('#state_name_'+idnt).text(jq('#vaccine-state option:selected').text());
+						jq('#state_date_'+idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
+						
+						jq('#main-show-'+idnt).show();
+						jq('#no-show-'+idnt).hide();
+						
+						jq('#immunizations-set').val('SET');
+						
+						vaccinationDialog.close();
+						return false;
+						
+					}).error(function (xhr, status, err) {
+						jq().toastmessage('showErrorToast', "AJAX error!" + err);
+						return false;
+					});
+				
                 },
                 cancel: function () {
                     vaccinationDialog.close();
+					return false;
                 }
             }
         });
 		
 		jq('.update-vaccine a').click(function(){
 			var idnt = jq(this).data('idnt');
-			var html = jq('#dialog_content_'+idnt).html();
+			var name = jq(this).data('name');
+			var prog = jq(this).data('prog');
 			
-			jq('#vaccinations-dialog .dialog-content').empty();
-			jq('#vaccinations-dialog .dialog-content').append(jq('#dialog_content_'+idnt));
+			jq('#vaccine-idnt').val(idnt);
+			jq('#vaccine-name').val(name);
+			jq('#vaccine-prog').val(prog);
+			
+			jq('#vaccine-state').html(jq('#changeToState_'+idnt).html());			
 		
 			vaccinationDialog.show();		
 		});		
@@ -468,6 +510,7 @@
 
 
         jq("#" + programWorkflowId).show();
+		
         currentWorkflowBeingEdited = programWorkflowId;
         patientProgramForWorkflowEdited = patientProgramId;
     }
@@ -475,6 +518,7 @@
     function handleChangeWorkflowState(c) {
         var stateId = jq("#changeToState_" + c).val();
         var onDate = jq("#datepicker_" + c).val()
+		
         if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
@@ -490,11 +534,9 @@
 
     function processHandleChangeWorkflowState(stateId, onDateDMY) {
         var ppId = patientProgramForWorkflowEdited;
-        var wfId = currentWorkflowBeingEdited;
-        var lastStateStartDate = jq('#lastStateStartDate').val();
-        var lastStateEndDate = jq('#lastStateEndDate').val();
-        var lastState = jq('lastState').val();
-        var stateData = {
+        var wfId = currentWorkflowBeingEdited;     
+		
+		var stateData = {
             patientProgramId: ppId,
             programWorkflowId: wfId,
             programWorkflowStateId: stateId,
@@ -727,124 +769,103 @@
 
             <div style="padding: 0 4px">
                 <field>
-
+                    <input type="hidden" id="immunizations-set" class=""/>
+                    <span id="immunizations-lbl" class="field-error" style="display: none"></span>
                 </field>
 				
                 <div style="min-width: 78%" class="col16 dashboard">
 					<% patientProgram.program.workflows.each { workflow -> %>
 					<% def stateId; def stateStart; def stateName; %>
-					<div id="data-holder">
-						<div style="" valign="top">
-							<div class="info-section">
-									<% patientProgram.states.each { state -> %>
-									<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-										stateId = state.state.concept.conceptId;
-										stateName = state.state.concept.name;
-										stateStart = state.startDate;
-									} %>
-									<% } %>
-							
-									<div class="info-header">
-										<i class="icon-medicine"></i>
-
-										<h3>${workflow.concept.name}</h3>
-										<a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
-									</div>
-
-									<div class="info-body">
-										<div id="${workflow.programWorkflowId}" style="display: none;">
-											<table id="workflowTable_${workflow.programWorkflowId}">
-												<thead>
-													<tr>
-														<thead>
-															<th>#</th>
-															<th>VACCINE</th>
-															<th>GIVEN ON</th>
-															<th>RECORDED</th>
-															<th>PROVIDER</th>												
-														</thead>
-													</tr>
-												</thead>
-												
-												<tbody>
-
-												</tbody>
-											</table>
-											
-											<div class="update-vaccine">
-												<a data-idnt="${workflow.programWorkflowId}">
-													<i class="icon-pencil small"></i>
-													Update Vaccine
-												</a>											
-											</div>
-											
-											<div class="">&nbsp;</div>
-											
-											<input type="hidden" id="lastStateStartDate" value=""/>
-											<input type="hidden" id="lastStateEndDate" value=""/>
-											<input type="hidden" id="lastState" value=""/>
-
-											
-											<div style="display: none">
-												<div id="dialog_content_${workflow.programWorkflowId}">
-													<ul>
-														<li>
-															<label for="datepicker">Change to</label>
-															<select name="changeToState_${workflow.programWorkflowId}"
-																	id="changeToState_${workflow.programWorkflowId}">
-																<option value="0">Select a State</option>
-																<% if (workflow.states != null || workflow.states != "") { %>
-																<% workflow.states.each { state -> %>
-																<option id="${state.id}"
-																		value="${state.id}">${state.concept.name}</option>
-																<% } %>
-																<% } %>
-															</select>
-														</li>
-														
-														<li>
-															<label for="programOutcome">Date</label>
-															<input type="text" id="datepicker_${workflow.programWorkflowId}"
-															   class="datepicker">
-														</li>
-														
-														<button class="button confirm right" id="processProgramExit" onClick="handleChangeWorkflowState(${workflow.programWorkflowId})">Save</button>
-														<span class="button cancel" onClick="currentWorkflowBeingEdited = null;
-															   hideLayer(${workflow.programWorkflowId})">Cancel</span>
-													</ul>
-												</div>											
-											</div>
-
-										</div>
-
-										<div id="currentStateDetails_${workflow.programWorkflowId}">
-											<% if (stateId != null) { %>
-												<span class="status active"></span>
-													${stateName}
-												
-													<small style="font-size: 77%; margin-left: 10px;">
-														( <span class="icon-time"></span>
-														Date: ${ui.formatDatePretty(stateStart)} )
-													</small>
-												
-											
-											<% } else { %>
-												<div style="margin-left: 20px">
-													<em>(No Previous Vaccinations Found)</em>												
-												</div>
-											<% } %>
-
-										</div>
-
-									</div>
+						<div class="info-section">
+							<% patientProgram.states.each { state -> %>
+							<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+								stateId = state.state.concept.conceptId;
+								stateName = state.state.concept.name;
+								stateStart = state.startDate;
+							} %>
+							<% } %>
+					
+							<div class="info-header">
+								<i class="icon-medicine"></i>
+								<h3>${workflow.concept.name}</h3>
+								<a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
 							</div>
-						</td>
-					</div>
+
+							<div class="info-body">
+								<div id="${workflow.programWorkflowId}" style="display: none;">
+									<table id="workflowTable_${workflow.programWorkflowId}">
+										<thead>
+											<tr>
+												<thead>
+													<th>#</th>
+													<th>VACCINE</th>
+													<th>GIVEN ON</th>
+													<th>RECORDED</th>
+													<th>PROVIDER</th>												
+												</thead>
+											</tr>
+										</thead>
+										
+										<tbody>
+
+										</tbody>
+									</table>
+									
+									<div class="update-vaccine">
+										<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}">
+											<i class="icon-pencil small"></i>
+											Update Vaccine
+										</a>											
+									</div>
+									
+									<div class="">&nbsp;</div>
+									
+									<div style="display: none">
+										<select name="changeToState_${workflow.programWorkflowId}" id="changeToState_${workflow.programWorkflowId}">
+											<option value="0">Select a State</option>
+											<% if (workflow.states != null || workflow.states != "") { %>
+											<% workflow.states.each { state -> %>
+											<option id="${state.id}"
+													value="${state.id}">${state.concept.name}</option>
+											<% } %>
+											<% } %>
+										</select>
+									</div>
+								</div>
+
+								<div id="currentStateDetails_${workflow.programWorkflowId}">
+									<% if (stateId != null) { %>
+										<div id='main-show-${workflow.programWorkflowId}'>
+											<span class="status active"></span>
+											<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
+											
+											<small style="font-size: 77%; margin-left: 10px;">
+												( <span class="icon-time"></span>
+												Date: <span id="state_date_${workflow.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
+											</small>												
+										</div>											
+									<% } else { %>
+										<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
+											<em>(No Previous Vaccinations Found)</em>												
+										</div>
+										
+										<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+											<span class="status active"></span>
+											<span id="state_name_${workflow.programWorkflowId}"></span>
+											
+											<small style="font-size: 77%; margin-left: 10px;">
+												( <span class="icon-time"></span>
+												Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
+											</small>												
+										</div>
+									<% } %>
+
+								</div>
+							</div>
+						</div>
 					<% } %>
 
-                </div>
-
-                <span id="programExit" class="button cancel">Exit From Program</span>
+                
 
             </div>
             </div>
@@ -1084,7 +1105,11 @@
                 <button class="button submit confirm" style="display: none;"></button>
             </field>
 
-            <input type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+            <span type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+				<i class="icon-save small"></i>
+				Save & Close
+			</span>
+			<span id="programExit" class="button cancel">Save & Exit Program</span>
         </div>
     </div>
 </form>
@@ -1173,29 +1198,35 @@
 <div id="vaccinations-dialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-
-        <h3>Exit From Program</h3>
+        <h3>UPDATE VACCINE</h3>
     </div>
 
     <div class="dialog-content">
         <ul>
-            <li>
-                <label for="datepicker">Completion Date</label>
-                <input type="text" id="datepicker" class="datepicker">
-            </li>
-            <li>
-                <label for="programOutcome">Outcome</label>
-                <select name="programOutcome" id="programOutcome">
-                    <option value="0">Choose Outcome</option>
-                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
-                    <% possibleProgramOutcomes.each { outcome -> %>
-                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
-                    <% } %>
-                    <% } %>
-                </select>
-            </li>
-            <button class="button confirm right" id="processProgramExit">Save</button>
-            <span class="button cancel">Cancel</span>
-        </ul>
+			<li>
+				<label for="vaccine-name">Vaccine Name:</label>
+				<input type="text"   id="vaccine-name" readonly="">
+				<input type="hidden" id="vaccine-idnt" readonly="">
+				<input type="hidden" id="vaccine-prog" readonly="">
+			</li>
+			
+			<li>
+				<label for="vaccine-state">Change State:</label>
+				<select id="vaccine-state">
+					<option value="0">Select a State</option>
+				</select>
+			</li>
+			
+			<li>				
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true, endDate: new Date()])}
+			</li>
+			
+			<span class="button confirm" style="float: right; margin-right: 17px;">
+				<i class="icon-save small"></i>
+				Save
+			</span>
+			
+			<span class="button cancel">Cancel</span>
+		</ul>
     </div>
 </div>
