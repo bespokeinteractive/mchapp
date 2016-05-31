@@ -12,6 +12,12 @@
   <concept concept_id="1747" retired="false" datatype_id="6" class_id="7" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="0.1" changed_by="1" date_changed="2006-06-09 14:57:33.0" uuid="1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
   <concept concept_id="9996" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="17a83f95-49d9-473c-9aeb-c20c874fa5a1"/>
   <concept concept_id="9999" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="122b36a4-9c07-4dfa-81ae-e6a4fe823077"/>
+  <concept concept_id="10000" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="7033ef37-461c-4953-a757-34722b6d9e38"/>
+  <concept concept_id="10001" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="2b7fa59c-4f2c-4ba3-a201-ec8a04e64e7a"/>
+  <concept concept_id="10002" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="a6ffaa06-19c4-4791-ac35-f9b89db41beb"/>
+  <concept concept_id="10003" retired="false" datatype_id="10" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="33abf797-5ff9-4268-a6d8-372ef711fc5f"/>
+  <concept concept_id="10004" retired="false" datatype_id="10" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="6df53864-de99-450d-82de-cd14ebc587b2"/>
+  <concept concept_id="10005" retired="false" datatype_id="10" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="de81c7ed-b12a-45f4-97e4-15dd8d2d1d32"/>
   <concept_description concept_description_id="1" concept_id="1738" description="this is a description" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" uuid="8ea631ad-2ac4-4a60-afa1-9e1e6530ba59"/>
 
   <concept_name concept_id="1738" name="ANC" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1738" voided="false" uuid="a1d78a88-06c1-4386-a47b-72c19b0dbf8c" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
@@ -24,6 +30,12 @@
   <concept_name concept_id="1745" name="Parity" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1745" voided="false" uuid="62169241-782b-48f6-98f1-4b1075852e56" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
   <concept_name concept_id="1746" name="Gravida" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1746" voided="false" uuid="f135e775-d418-4246-95f8-f0611524493f" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
   <concept_name concept_id="1747" name="LMP" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="f18da223-85f0-4504-90d2-ad67f79333cd" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="10000" name="Final Diagnosis" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="ca2d1862-7b74-4772-8b0b-6cc380e2f7aa" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="10001" name="Diabetes" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="2e25838b-0f96-4a62-a6d9-ef3dd5b3b3da" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="10002" name="Diabetes Treatment Status" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="e9883dff-e223-46b6-bb95-b6f40e77bb6e" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="10003" name="On Treatment for disease" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="d53c4cfe-7d67-4abb-a128-28d5730963cf" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="10004" name="Malaria During Pregnancy" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="a2221a87-d48d-42dd-b657-17cae6e4adea" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
+  <concept_name concept_id="10005" name="Malaria Treatment Status" locale="en" creator="1" date_created="2005-01-01 00:00:00.0" concept_name_id="1747" voided="false" uuid="a213f395-f23f-4bc0-a362-3dc74f893f07" concept_name_type="FULLY_SPECIFIED" locale_preferred="0"/>
 <!-- PARASITOLOGY -->
   <concept concept_id="10009" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="f9e3d048-0628-11e6-9301-34e6d77c15d6"/>
 

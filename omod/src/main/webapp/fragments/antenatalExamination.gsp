@@ -875,47 +875,59 @@
 		</fieldset>
 		
 		<fieldset>
-			<legend>Conditions</lengend>
+			<legend>Conditions</legend>
+			<div>
 			<p>
-				<label for="hypertension">Hypertension</label>
-				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
-					<!-- <% if (previousConditions.contains("")) { %>
-						checked="checked"
-					<% } %> -->
-				>
+				<label for="hypertension">
+					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
+						<% if (preExisitingConditions.contains("a8390549-394c-44c7-a0c3-404c1799b1b9")) { %>
+							checked="checked"
+						<% } %>
+					>
+					Hypertension
+				</label>
 			</p>
 			<p>
-				<label for="diabetes">Diabetes</label>
-				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-					<% if (previousConditions.contains("")) { %>
-						checked="checked"
-					<% } %>
-				>
+				<label for="diabetes">
+					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+						<% if (preExisitingConditions.contains("119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")) { %>
+							checked="checked"
+						<% } %>
+					>
+					Diabetes
+				</label>
 			</p>
 			<p>
-				<label for="epilepsy">Epilepsy</label>
-				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
-					<% if (previousConditions.contains("")) { %>
-						checked="checked"
-					<% } %>
-				>
+				<label for="epilepsy">
+					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
+						<% if (preExisitingConditions.contains("4e896673-d822-458e-bbfe-604747e0afe8")) { %>
+							checked="checked"
+						<% } %>
+					>
+					Epilepsy
+				</label>
 			</p>
 			<p>
-				<label for="malaria-in-pregnancy">Malaria in Pregnancy</label>
-				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
-					<% if (previousConditions.contains("")) { %>
-						checked="checked"
-					<% } %>
-				>
+				<label for="malaria-in-pregnancy">
+					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
+						<% if (preExisitingConditions.contains("0731fc60-1c30-464b-93e9-e4adc8537e42")) { %>
+							checked="checked"
+						<% } %>
+					>
+					Malaria in Pregnancy
+				</label>
 			</p>
 			<p>
-				<label for="stis-rti">STIs/RTI</label>
-				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
-					<% if (previousConditions.contains("")) { %>
-						checked="checked"
-					<% } %>
-				>
+				<label for="stis-rti">
+					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
+						<% if (preExisitingConditions.contains("4c9b4d7d-7cb0-4d49-a833-2a13490b4632")) { %>
+							checked="checked"
+						<% } %>
+					>
+					STIs/RTI
+				</label>
 			</p>
+			</div>
 		</fieldset>
 		
 		<fieldset>
@@ -1005,7 +1017,7 @@
 			</p>
 			<p>
 				<span>ANC Exercise given?</span>
-				<input id="couple-counselled" type="radio" name="no-uuid value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="no-uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
 				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
 			</p>
 		</fieldset>

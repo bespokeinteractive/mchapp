@@ -21,6 +21,9 @@
 	<bean id="mchService"
 			class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.MchServiceImpl">
 	</bean>
+	<bean id="mchEncounterService"
+			class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.MchEncounterServiceImpl">
+	</bean>
 	
 	<!-- Services accessible via Context.getService() -->
 	<bean parent="serviceContext">
@@ -28,6 +31,14 @@
 			<list>
 				<value>${project.parent.groupId}.${project.parent.artifactId}.api.MchService</value>
 				<ref local="mchService" />
+			</list>
+		</property>
+	</bean>
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>${project.parent.groupId}.${project.parent.artifactId}.api.MchEncounterService</value>
+				<ref local="mchEncounterService" />
 			</list>
 		</property>
 	</bean>
