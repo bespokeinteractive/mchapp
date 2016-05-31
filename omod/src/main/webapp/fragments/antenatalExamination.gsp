@@ -878,7 +878,7 @@
 			<legend>Conditions</lengend>
 			<p>
 				<label for="hypertension">Hypertension</label>
-				<input type="checkbox" name="" value=""
+				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
 					<% if (previousConditions.contains("")) { %>
 						checked="checked"
 					<% } %>
@@ -886,7 +886,7 @@
 			</p>
 			<p>
 				<label for="diabetes">Diabetes</label>
-				<input type="checkbox" name="" value=""
+				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 					<% if (previousConditions.contains("")) { %>
 						checked="checked"
 					<% } %>
@@ -894,7 +894,7 @@
 			</p>
 			<p>
 				<label for="epilepsy">Epilepsy</label>
-				<input type="checkbox" name="" value=""
+				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
 					<% if (previousConditions.contains("")) { %>
 						checked="checked"
 					<% } %>
@@ -902,7 +902,7 @@
 			</p>
 			<p>
 				<label for="malaria-in-pregnancy">Malaria in Pregnancy</label>
-				<input type="checkbox" name="" value=""
+				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
 					<% if (previousConditions.contains("")) { %>
 						checked="checked"
 					<% } %>
@@ -910,7 +910,7 @@
 			</p>
 			<p>
 				<label for="stis-rti">STIs/RTI</label>
-				<input type="checkbox" name="" value=""
+				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
 					<% if (previousConditions.contains("")) { %>
 						checked="checked"
 					<% } %>
