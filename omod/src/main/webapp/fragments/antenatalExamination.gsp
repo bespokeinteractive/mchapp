@@ -26,8 +26,60 @@
 	emrMessages["numericRangeLow"] = "value should be more than {0}";
 	emrMessages["requiredField"] = "Mandatory Field. Kindly provide details";
 	emrMessages["numberField"] = "Value not a number";
-    
+    var currentWorkflowBeingEdited;
+    var patientProgramForWorkflowEdited;
     jq(function() {
+        jq(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd'
+        });
+
+        var vaccinationDialog = emr.setupConfirmationDialog({
+            selector: '#vaccinations-dialog',
+            actions: {
+                confirm: function () {
+                    vaccinationDialog.close();
+                },
+                cancel: function () {
+                    vaccinationDialog.close();
+                }
+            }
+        });
+
+        jq('.update-vaccine a').click(function(){
+            var idnt = jq(this).data('idnt');
+            var html = jq('#dialog_content_'+idnt).html();
+
+            jq('#vaccinations-dialog .dialog-content').empty();
+            jq('#vaccinations-dialog .dialog-content').append(jq('#dialog_content_'+idnt));
+
+            vaccinationDialog.show();
+        });
+
+        jq("#programExit").on("click", function (e) {
+            exitcwcdialog.show();
+        });
+
+        jq('.chevron').click(function (){
+            var idnt = jq(this).data('idnt');
+            var name = jq(this).data('name');
+            var prog = jq(this).data('prog');
+
+            if (jq(this).hasClass('icon-chevron-right')){
+                jq(this).removeClass('icon-chevron-right');
+                jq(this).addClass('icon-chevron-down');
+
+                showEditWorkflowPopup(name, prog, idnt);
+            }
+            else{
+                jq(this).removeClass('icon-chevron-down');
+                jq(this).addClass('icon-chevron-right');
+
+                jq("#currentStateDetails_" + idnt).show();
+                jq("#" + idnt).hide();
+            }
+        });
 		NavigatorController = new KeyboardController();
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 		
@@ -359,6 +411,121 @@
 
         drugOrders.addDrugOrder(drugId, drugOrderDetail);
     }
+    function isEmpty(o) {
+        return o == null || o == '';
+    }
+
+    function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+        var updateData = {
+            programId: programId,
+            enrollmentDateYmd: enrollmentDateYmd,
+            completionDateYmd: completionDateYmd,
+            outcomeId: outcomeId
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+                .success(function (data) {
+                    jq().toastmessage('showNoticeToast', data.message);
+                    refreshPage();
+                    jq("#programExit").hide();
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
+    }
+
+    function refreshPage() {
+        window.location.reload();
+    }
+
+    function showEditWorkflowPopup(wfName, patientProgramId, programWorkflowId) {
+        jq("#currentStateDetails_" + programWorkflowId).hide();
+        var params = {
+            patientProgramId: patientProgramId,
+            programWorkflowId: programWorkflowId
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "getPossibleNextStates") }', params)
+                .success(function (data) {
+                    //load drop down
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "getPatientStates") }', params)
+                .success(function (data) {
+                    //load list of previous vaccines
+                    var tableId = "workflowTable_" + programWorkflowId;
+                    jq('#' + tableId + ' > tbody > tr').remove();
+                    var tbody = jq('#' + tableId + ' > tbody');
+
+                    if (data.length == 0) {
+                        tbody.append('<tr align="center"><td colspan="5">No Previous Vaccinations found for ' + wfName + '</td></tr>');
+                    } else {
+                        for (index in data) {
+                            var item = data[index];
+                            console.log(item);
+                            var row = '<tr>';
+                            row += '<td>' + (parseInt(index)+1) + '</td>';
+                            row += '<td>' + item.stateName + '</td>';
+                            row += '<td>' + moment(item.startDate, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
+                            row += '<td>' + moment(item.dateCreated, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
+                            row += '<td>' + item.creator + '</td>';
+                            row += '</tr>';
+                            tbody.append(row);
+                        }
+
+                    }
+
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
+
+
+        jq("#" + programWorkflowId).show();
+        currentWorkflowBeingEdited = programWorkflowId;
+        patientProgramForWorkflowEdited = patientProgramId;
+    }
+
+    function handleChangeWorkflowState(c) {
+        var stateId = jq("#changeToState_" + c).val();
+        var onDate = jq("#datepicker_" + c).val()
+        if (stateId == 0) {
+            jq().toastmessage('showErrorToast', "Select State!");
+            return;
+        } else if (isEmpty(onDate)) {
+            jq().toastmessage('showErrorToast', "Select Date!");
+            return;
+        } else {
+            jq().toastmessage('showNoticeToast', "Saving State...!");
+            processHandleChangeWorkflowState(stateId, onDate);
+        }
+
+    }
+
+    function processHandleChangeWorkflowState(stateId, onDateDMY) {
+        var ppId = patientProgramForWorkflowEdited;
+        var wfId = currentWorkflowBeingEdited;
+        var lastStateStartDate = jq('#lastStateStartDate').val();
+        var lastStateEndDate = jq('#lastStateEndDate').val();
+        var lastState = jq('lastState').val();
+        var stateData = {
+            patientProgramId: ppId,
+            programWorkflowId: wfId,
+            programWorkflowStateId: stateId,
+            onDateDMY: onDateDMY
+        }
+
+        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
+                .success(function (data) {
+                    jq().toastmessage('showNoticeToast', data.message);
+                    return data.status;
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                });
+    }
+
+    function hideLayer(divId) {
+        jq("#" + divId).hide();
+        jq("#currentStateDetails_" + divId).show();
+        refreshPage();
+    }
 </script>
 
 <style>
@@ -475,6 +642,132 @@
 	
 	<section>
 		<span class="title">Clinical Notes</span>
+
+        <fieldset class="no-confirmation">
+            <legend>Immunizations</legend>
+
+            <div style="padding: 0 4px">
+                <field>
+
+                </field>
+
+                <div style="min-width: 78%" class="col16 dashboard">
+                    <% patientProgram.program.workflows.each { workflow -> %>
+                    <% def stateId; def stateStart; def stateName; %>
+                    <div id="data-holder">
+                        <div style="" valign="top">
+                            <div class="info-section">
+                                <% patientProgram.states.each { state -> %>
+                                <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+                                    stateId = state.state.concept.conceptId;
+                                    stateName = state.state.concept.name;
+                                    stateStart = state.startDate;
+                                } %>
+                                <% } %>
+
+                                <div class="info-header">
+                                    <i class="icon-medicine"></i>
+
+                                    <h3>${workflow.concept.name}</h3>
+                                    <a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+                                </div>
+
+                                <div class="info-body">
+                                    <div id="${workflow.programWorkflowId}" style="display: none;">
+                                        <table id="workflowTable_${workflow.programWorkflowId}">
+                                            <thead>
+                                            <tr>
+                                            <thead>
+                                            <th>#</th>
+                                            <th>VACCINE</th>
+                                            <th>GIVEN ON</th>
+                                            <th>RECORDED</th>
+                                            <th>PROVIDER</th>
+                                            </thead>
+                                        </tr>
+                                        </thead>
+
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+
+                                        <div class="update-vaccine">
+                                            <a data-idnt="${workflow.programWorkflowId}">
+                                                <i class="icon-pencil small"></i>
+                                                Update Vaccine
+                                            </a>
+                                        </div>
+
+                                        <div class="">&nbsp;</div>
+
+                                        <input type="hidden" id="lastStateStartDate" value=""/>
+                                        <input type="hidden" id="lastStateEndDate" value=""/>
+                                        <input type="hidden" id="lastState" value=""/>
+
+
+                                        <div style="display: none">
+                                            <div id="dialog_content_${workflow.programWorkflowId}">
+                                                <ul>
+                                                    <li>
+                                                        <label for="datepicker">Change to</label>
+                                                        <select name="changeToState_${workflow.programWorkflowId}"
+                                                                id="changeToState_${workflow.programWorkflowId}">
+                                                            <option value="0">Select a State</option>
+                                                            <% if (workflow.states != null || workflow.states != "") { %>
+                                                            <% workflow.states.each { state -> %>
+                                                            <option id="${state.id}"
+                                                                    value="${state.id}">${state.concept.name}</option>
+                                                            <% } %>
+                                                            <% } %>
+                                                        </select>
+                                                    </li>
+
+                                                    <li>
+                                                        <label for="programOutcome">Date</label>
+                                                        <input type="text" id="datepicker_${workflow.programWorkflowId}"
+                                                               class="datepicker">
+                                                    </li>
+
+                                                    <button class="button confirm right" id="processProgramExit" onClick="handleChangeWorkflowState(${workflow.programWorkflowId})">Save</button>
+                                                    <span class="button cancel" onClick="currentWorkflowBeingEdited = null;
+                                                    hideLayer(${workflow.programWorkflowId})">Cancel</span>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="currentStateDetails_${workflow.programWorkflowId}">
+                                        <% if (stateId != null) { %>
+                                        <span class="status active"></span>
+                                        ${stateName}
+
+                                        <small style="font-size: 77%; margin-left: 10px;">
+                                            ( <span class="icon-time"></span>
+                                            Date: ${ui.formatDatePretty(stateStart)} )
+                                        </small>
+
+
+                                        <% } else { %>
+                                        <div style="margin-left: 20px">
+                                            <em>(No Previous Vaccinations Found)</em>
+                                        </div>
+                                        <% } %>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                        </div>
+                        <% } %>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
 		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>
 			<div style="padding: 0 4px">
@@ -754,3 +1047,4 @@
         </form>
     </div>
 </div>
+

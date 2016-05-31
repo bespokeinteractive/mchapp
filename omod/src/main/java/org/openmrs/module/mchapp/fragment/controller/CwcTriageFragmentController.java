@@ -56,9 +56,6 @@ public class CwcTriageFragmentController {
                     "label", answer.getAnswerConcept().getDisplayString()));
         }
         model.addAttribute("weightCategories", weightCategories);
-
-
-
     }
 
     @SuppressWarnings("unchecked")
