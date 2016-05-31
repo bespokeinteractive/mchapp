@@ -33,8 +33,8 @@ public class MchMetadata extends AbstractMetadataBundle {
 
 
         public static final String PNC_DELIVERY_MODES = "a875ae0b-893c-47f8-9ebe-f721c8d0b130";
-        public static final String MCH_WEIGHT_CATEGORIES = "403e252e-e131-42bc-83df-e55503d248d8";
-        public static final String MCH_GROWTH_MONITOR = "c438b759-f08d-40ef-a59b-47a11b053647";
+        public static final String MCH_WEIGHT_CATEGORIES = "1854AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        public static final String MCH_GROWTH_MONITOR = "562a6c3e-519b-4a50-81be-76ca67b5d5ec";
     }
 
     @Override
