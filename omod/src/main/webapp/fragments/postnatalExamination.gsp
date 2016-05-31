@@ -615,16 +615,21 @@
 				<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
 			</p>
 		</fieldset>
+		<fieldset>
 
 			<legend>Family planning</legend>
-			<select>
+			<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
 				<option >Select Family Planning Option</option>
 				<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
 				<% familyPlanningOptions.each { familyPlanningOption -> %>
-				<option value="${familyPlanningOption.id}">${familyPlanningOption.label}</option>
+				<option value="concept.${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
 				<% } %>
 				<% } %>
 			</select>
+			<div style="width: 95%">
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			</div>
+			<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: 95%">Comment</textarea>
 		</fieldset>
 		
 		<fieldset>
