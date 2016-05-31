@@ -16,6 +16,8 @@
     var selectedInvestigationIds = [];
     var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
     var NavigatorController;
+	
+	var stateIdnt = 0;
 
     var examinationArray = [];
     var investigationArray = [];
@@ -38,6 +40,7 @@
             changeYear: true,
             dateFormat: 'yy-mm-dd'
         });
+		
         var exitcwcdialog = emr.setupConfirmationDialog({
             selector: '#exitCwcDialog',
             actions: {
@@ -68,12 +71,52 @@
             }
         });
 		
+		var vaccinationDialog = emr.setupConfirmationDialog({
+            selector: '#vaccinations-dialog',
+            actions: {
+                confirm: function () {
+                    vaccinationDialog.close();
+                },
+                cancel: function () {
+                    vaccinationDialog.close();
+                }
+            }
+        });
+		
+		jq('.update-vaccine a').click(function(){
+			var idnt = jq(this).data('idnt');
+			var html = jq('#dialog_content_'+idnt).html();
+			
+			jq('#vaccinations-dialog .dialog-content').empty();
+			jq('#vaccinations-dialog .dialog-content').append(jq('#dialog_content_'+idnt));
+		
+			vaccinationDialog.show();		
+		});		
+		
         jq("#programExit").on("click", function (e) {
             exitcwcdialog.show();
         });
-
-
-
+		
+		jq('.chevron').click(function (){
+			var idnt = jq(this).data('idnt');
+			var name = jq(this).data('name');
+			var prog = jq(this).data('prog');
+			
+			if (jq(this).hasClass('icon-chevron-right')){
+				jq(this).removeClass('icon-chevron-right');
+				jq(this).addClass('icon-chevron-down');
+				
+				showEditWorkflowPopup(name, prog, idnt);
+			}
+			else{
+				jq(this).removeClass('icon-chevron-down');
+				jq(this).addClass('icon-chevron-right');
+				
+				jq("#currentStateDetails_" + idnt).show();
+				jq("#" + idnt).hide();
+			}
+		});
+		
         NavigatorController = new KeyboardController();
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 
@@ -103,7 +146,6 @@
                     adddrugdialog.close();
                 }
             }
-
         });
 
         jq("#availableReferral").on("change", function () {
@@ -356,13 +398,13 @@
             }
         }).change();
 
-    });
+    });//End of Document Ready
+	
     function isEmpty(o) {
         return o == null || o == '';
     }
 
     function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
-
         var updateData = {
             programId: programId,
             enrollmentDateYmd: enrollmentDateYmd,
@@ -409,10 +451,10 @@
                             var item = data[index];
                             console.log(item);
                             var row = '<tr>';
+                            row += '<td>' + (parseInt(index)+1) + '</td>';
                             row += '<td>' + item.stateName + '</td>';
-                            row += '<td>' + item.startDate + '</td>';
-                            row += '<td>' + item.endDate + '</td>';
-                            row += '<td>' + item.dateCreated + '</td>';
+                            row += '<td>' + moment(item.startDate, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
+                            row += '<td>' + moment(item.dateCreated, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
                             row += '<td>' + item.creator + '</td>';
                             row += '</tr>';
                             tbody.append(row);
@@ -527,82 +569,108 @@
 </script>
 
 <style>
-.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
-    color: #555;
-    text-align: left;
-}
+	.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+		color: #555;
+		text-align: left;
+	}
 
-.title-label {
-    color: #009384;
-    cursor: pointer;
-    font-size: 1.3em;
-    font-weight: normal;
-}
+	.title-label {
+		color: #009384;
+		cursor: pointer;
+		font-size: 1.3em;
+		font-weight: normal;
+	}
 
-#exams-holder input[type="radio"] {
-    float: none;
-}
+	#exams-holder input[type="radio"] {
+		float: none;
+	}
 
-.investigation .selecticon,
-#examination-detail-div .selecticon {
-    color: #f00;
-    cursor: pointer;
-    float: right;
-    margin: 7px 7px 0 0;
-}
+	.investigation .selecticon,
+	#examination-detail-div .selecticon {
+		color: #f00;
+		cursor: pointer;
+		float: right;
+		margin: 7px 7px 0 0;
+	}
 
-.tasks {
-    margin: 10px 0 0;
-    padding-bottom: 10px;
-    width: 100%;
-}
+	.tasks {
+		margin: 10px 0 0;
+		padding-bottom: 10px;
+		width: 100%;
+	}
 
-.investigation {
-    border-top: 1px dotted #ccc;
-    margin: 0 0 5px;
-}
+	.investigation {
+		border-top: 1px dotted #ccc;
+		margin: 0 0 5px;
+	}
 
-.investigation:first-child {
-    border-top: 1px none #ccc;
-    margin: 5px 0 5px;
-}
+	.investigation:first-child {
+		border-top: 1px none #ccc;
+		margin: 5px 0 5px;
+	}
 
-#examination-detail-div {
-    border-top: 1px dotted #ccc;
-    margin: 0 0 10px;
-}
+	#examination-detail-div {
+		border-top: 1px dotted #ccc;
+		margin: 0 0 10px;
+	}
 
-#examination-detail-div:first-child {
-    border-top: 1px none #ccc;
-    margin: 10px 0 10px;
-}
+	#examination-detail-div:first-child {
+		border-top: 1px none #ccc;
+		margin: 10px 0 10px;
+	}
 
-section {
-    min-height: 300px;
-}
+	section {
+		min-height: 300px;
+	}
 
-.dialog-content input[type="text"], .dialog-content select {
-    display: inline-block !important;
-    width: 238px !important;
-}
+	.dialog-content input[type="text"], .dialog-content select {
+		display: inline-block !important;
+		width: 238px !important;
+	}
 
-.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
-    outline: 1px none #f00
-}
+	.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
+		outline: 1px none #f00
+	}
 
-.patient-profile {
-    border: 1px solid #eee;
-    margin: 5px 0;
-    padding: 7px 12px;
-}
+	.patient-profile {
+		border: 1px solid #eee;
+		margin: 5px 0;
+		padding: 7px 12px;
+	}
 
-.patient-profile small {
-    margin-left: 5.5%;
-}
+	.patient-profile small {
+		margin-left: 5.5%;
+	}
 
-.patient-profile small:first-child {
-    margin-left: 15px;
-}
+	.patient-profile small:first-child {
+		margin-left: 15px;
+	}
+	table[id*='workflowTable_'] th:first-child{
+		width: 5px;
+	}
+	table[id*='workflowTable_'] th:nth-child(3),
+	table[id*='workflowTable_'] th:nth-child(4){
+		width: 80px;
+	}
+	.update-vaccine{
+		float: right;
+	}
+	.update-vaccine a{
+		cursor: pointer;
+	}
+	.update-vaccine a:hover{
+		text-decoration: none;
+	}
+	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
+		background: #fff none repeat scroll 0 0;
+	}
+	.chevron{
+		color: #4a80ff !important;
+		cursor: pointer;
+		font-size: 100% !important;
+		margin: 5px;
+		text-decoration: none;
+	}
 
 
 </style>
@@ -658,121 +726,127 @@ section {
             <legend>Immunizations</legend>
 
             <div style="padding: 0 4px">
-                <label for="searchExaminations" class="label title-label">Immunizations <span class="important"></span>
-                </label>
-
                 <field>
 
                 </field>
+				
                 <div style="min-width: 78%" class="col16 dashboard">
-                    <table width="100%">
-                        <% patientProgram.program.workflows.each { workflow -> %>
-                        <% def stateId; def stateStart; def stateName; %>
-                        <tr>
-                            <td style="" valign="top">
-                                <div class="info-section">
-                                    <form id="bcg-form">
-                                        <div class="profile-editor"></div>
+					<% patientProgram.program.workflows.each { workflow -> %>
+					<% def stateId; def stateStart; def stateName; %>
+					<div id="data-holder">
+						<div style="" valign="top">
+							<div class="info-section">
+									<% patientProgram.states.each { state -> %>
+									<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+										stateId = state.state.concept.conceptId;
+										stateName = state.state.concept.name;
+										stateStart = state.startDate;
+									} %>
+									<% } %>
+							
+									<div class="info-header">
+										<i class="icon-medicine"></i>
 
-                                        <div class="info-header">
-                                            <i class="icon-diagnosis"></i>
+										<h3>${workflow.concept.name}</h3>
+										<a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+									</div>
 
-                                            <h3><small>${workflow.concept.name}:</small></h3>
-                                        </div>
+									<div class="info-body">
+										<div id="${workflow.programWorkflowId}" style="display: none;">
+											<table id="workflowTable_${workflow.programWorkflowId}">
+												<thead>
+													<tr>
+														<thead>
+															<th>#</th>
+															<th>VACCINE</th>
+															<th>GIVEN ON</th>
+															<th>RECORDED</th>
+															<th>PROVIDER</th>												
+														</thead>
+													</tr>
+												</thead>
+												
+												<tbody>
 
-                                        <div class="info-body">
-                                            <% patientProgram.states.each { state -> %>
-                                            <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-                                                stateId = state.state.concept.conceptId;
-                                                stateName = state.state.concept.name;
-                                                stateStart = state.startDate;
-                                            } %>
-                                            <% } %>
+												</tbody>
+											</table>
+											
+											<div class="update-vaccine">
+												<a data-idnt="${workflow.programWorkflowId}">
+													<i class="icon-pencil small"></i>
+													Update Vaccine
+												</a>											
+											</div>
+											
+											<div class="">&nbsp;</div>
+											
+											<input type="hidden" id="lastStateStartDate" value=""/>
+											<input type="hidden" id="lastStateEndDate" value=""/>
+											<input type="hidden" id="lastState" value=""/>
 
-                                            <div id="${workflow.programWorkflowId}" style="display: none;">
+											
+											<div style="display: none">
+												<div id="dialog_content_${workflow.programWorkflowId}">
+													<ul>
+														<li>
+															<label for="datepicker">Change to</label>
+															<select name="changeToState_${workflow.programWorkflowId}"
+																	id="changeToState_${workflow.programWorkflowId}">
+																<option value="0">Select a State</option>
+																<% if (workflow.states != null || workflow.states != "") { %>
+																<% workflow.states.each { state -> %>
+																<option id="${state.id}"
+																		value="${state.id}">${state.concept.name}</option>
+																<% } %>
+																<% } %>
+															</select>
+														</li>
+														
+														<li>
+															<label for="programOutcome">Date</label>
+															<input type="text" id="datepicker_${workflow.programWorkflowId}"
+															   class="datepicker">
+														</li>
+														
+														<button class="button confirm right" id="processProgramExit" onClick="handleChangeWorkflowState(${workflow.programWorkflowId})">Save</button>
+														<span class="button cancel" onClick="currentWorkflowBeingEdited = null;
+															   hideLayer(${workflow.programWorkflowId})">Cancel</span>
+													</ul>
+												</div>											
+											</div>
 
-                                                <table id="workflowTable_${workflow.programWorkflowId}">
-                                                    <thead>
-                                                    <tr align="center">
-                                                        <th>Vaccine</th>
-                                                        <th>Date Given</th>
-                                                        <th>Date of Next Visit</th>
-                                                        <th>Date Recorded</th>
-                                                        <th>Provider</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
+										</div>
 
-                                                    </tbody>
-                                                </table>
-                                                <input type="hidden" id="lastStateStartDate" value=""/>
-                                                <input type="hidden" id="lastStateEndDate" value=""/>
-                                                <input type="hidden" id="lastState" value=""/>
+										<div id="currentStateDetails_${workflow.programWorkflowId}">
+											<% if (stateId != null) { %>
+												<span class="status active"></span>
+													${stateName}
+												
+													<small style="font-size: 77%; margin-left: 10px;">
+														( <span class="icon-time"></span>
+														Date: ${ui.formatDatePretty(stateStart)} )
+													</small>
+												
+											
+											<% } else { %>
+												<div style="margin-left: 20px">
+													<em>(No Previous Vaccinations Found)</em>												
+												</div>
+											<% } %>
 
-                                                <div class="onerow">
-                                                    <div class="col2">Change to</div>
+										</div>
 
-                                                    <div class="col2">
-                                                        <select name="changeToState_${workflow.programWorkflowId}"
-                                                                id="changeToState_${workflow.programWorkflowId}">
-                                                            <option value="0">Select a State</option>
-                                                            <% if (workflow.states != null || workflow.states != "") { %>
-                                                            <% workflow.states.each { state -> %>
-                                                            <option id="${state.id}"
-                                                                    value="${state.id}">${state.concept.name}</option>
-                                                            <% } %>
-                                                            <% } %>
-                                                        </select>
-
-                                                    </div>
-
-                                                    <div class="col2">on</div>
-
-                                                    <div class="col2">
-                                                        <input type="text" id="datepicker_${workflow.programWorkflowId}"
-                                                               class="datepicker">
-                                                    </div>
-
-                                                    <div class="col2"><input type="button" value="Change"
-                                                                             onClick="handleChangeWorkflowState(${workflow.programWorkflowId})"/>
-                                                    </div>
-
-                                                    <div class="col2 last">
-                                                        <input type="button" value="Cancel"
-                                                               onClick="currentWorkflowBeingEdited = null;
-                                                               hideLayer(${workflow.programWorkflowId})"/>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-                                            <div id="currentStateDetails_${workflow.programWorkflowId}">
-                                                <% if (stateId != null) { %>
-                                                <b>${stateName}</b>
-                                                <em>(Date Given : ${stateStart})</em>
-                                                <% } else { %>
-                                                <em>(None)</em>
-                                                <% } %>
-
-                                                <a href="#"
-                                                   onclick="showEditWorkflowPopup('${workflow.concept.name}', ${patientProgram.patientProgramId},
-                                                           ${workflow.programWorkflowId})">[View/Edit]</a>
-
-                                            </div>
-
-                                        </div>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        <% } %>
-                    </table>
+									</div>
+							</div>
+						</td>
+					</div>
+					<% } %>
 
                 </div>
 
                 <span id="programExit" class="button cancel">Exit From Program</span>
 
+            </div>
             </div>
         </fieldset>
 
@@ -1064,7 +1138,39 @@ section {
         </form>
     </div>
 </div>
+
+
 <div id="exitCwcDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Exit From Program</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+            <li>
+                <label for="datepicker">Completion Date</label>
+                <input type="text" id="datepicker" class="datepicker">
+            </li>
+            <li>
+                <label for="programOutcome">Outcome</label>
+                <select name="programOutcome" id="programOutcome">
+                    <option value="0">Choose Outcome</option>
+                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
+                    <% possibleProgramOutcomes.each { outcome -> %>
+                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </li>
+            <button class="button confirm right" id="processProgramExit">Save</button>
+            <span class="button cancel">Cancel</span>
+        </ul>
+    </div>
+</div>
+
+<div id="vaccinations-dialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
 

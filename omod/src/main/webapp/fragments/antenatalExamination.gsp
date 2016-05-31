@@ -450,6 +450,10 @@
 </script>
 
 <script id="patient-profile-template" type="text/template">
+	<div style="padding-left: 51px; font-size: 141%; font-weight: bold;">
+		<i class='icon-quote-left small'></i>ANC PROFILE<br/>	
+	</div>
+	
 	<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
     {{ _.each(details, function(profileDetail) { }}
 		{{if (isValidDate(profileDetail.value)) { }}

@@ -24,8 +24,34 @@
     }
 	
 	jq(function() {
-		var birthdate = moment('${patient.birthdate}').fromNow().toString().replace('ago','') + '(' +moment().format('DD/MM/YYYY')+')';
-		jq('#agename').text(birthdate);		
+		var age;
+		var desc;
+		
+		if (${patient.age} == 0){
+			age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asMonths());
+			desc = ' months';
+			if (age <= 0) {
+				age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asWeeks());
+				desc = ' weeks';
+				
+				if (age <= 0) {
+					age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asDays());
+					desc = ' days';
+					
+					if (age <= 0) {
+						age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asHours());
+						desc = ' hours';
+					}
+				}
+			}
+			
+			age += desc;
+		}
+		else{
+			age = moment('${patient.birthdate}').fromNow().toString().replace('ago','').replace('a year','1 year') + '(' +moment('${patient.birthdate}').format('DD/MM/YYYY')+')';		
+		}
+		
+		jq('#agename').text(age);
 	});
 </script>
 
@@ -284,10 +310,10 @@
 
         <div class="tad" id="outcome">Outcome:
         <% if (patientProgram && patientProgram.outcome != null) { %>
-        ${patientProgram.outcome.name}
+			${patientProgram.outcome.name}
         <% } else { %>
             <em>(none)</em>
-            <% } %>
+        <% } %>
         </div>
     </div>
 
