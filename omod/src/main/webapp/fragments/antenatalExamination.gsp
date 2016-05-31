@@ -874,6 +874,70 @@
 			</div>
 		</fieldset>
 		
+		<fieldset>
+			<legend>Conditions</lengend>
+			<p>
+				<label for="hypertension">Hypertension</label>
+				<input type="checkbox" name="" value=""
+					<% if (previousConditions.contains("")) { %>
+						checked="checked"
+					<% } %>
+				>
+			</p>
+			<p>
+				<label for="diabetes">Diabetes</label>
+				<input type="checkbox" name="" value=""
+					<% if (previousConditions.contains("")) { %>
+						checked="checked"
+					<% } %>
+				>
+			</p>
+			<p>
+				<label for="epilepsy">Epilepsy</label>
+				<input type="checkbox" name="" value=""
+					<% if (previousConditions.contains("")) { %>
+						checked="checked"
+					<% } %>
+				>
+			</p>
+			<p>
+				<label for="malaria-in-pregnancy">Malaria in Pregnancy</label>
+				<input type="checkbox" name="" value=""
+					<% if (previousConditions.contains("")) { %>
+						checked="checked"
+					<% } %>
+				>
+			</p>
+			<p>
+				<label for="stis-rti">STIs/RTI</label>
+				<input type="checkbox" name="" value=""
+					<% if (previousConditions.contains("")) { %>
+						checked="checked"
+					<% } %>
+				>
+			</p>
+		</fieldset>
+		
+		<fieldset>
+			<legend>HIV Info</legend>
+			<p>
+				<span>Couple Counselled?</span>
+				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Patner Tested?</span>
+				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Patner Results</span>
+				<input id="prior-status-positive" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f"><label for="prior-status-positive">Positive</label>
+				<input id="prior-status-negative" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0"><label for="prior-status-negative">Negative</label>
+				<input id="prior-status-unknown" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af"><label for="prior-status-unknow">Unknown</label>
+			</p>
+		</fieldset>
+		
 		<fieldset class="no-confirmation">
 			<legend>Prescription</legend>
 			<label class="label title-label">Prescription <span class="important"></span></label>
@@ -926,7 +990,26 @@
 				</span>
 			</div>
 		</fieldset>
-		
+
+		<fieldset>
+			<legend>Treatment</legend>
+			<p>
+				<span>Deworming</span>
+				<input id="couple-counselled" type="radio" name="no-uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>Received LLITN</span>
+				<input id="couple-counselled" type="radio" name="no-uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+			<p>
+				<span>ANC Exercise given?</span>
+				<input id="couple-counselled" type="radio" name="no-uuid value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
+				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
+			</p>
+		</fieldset>
+
 		<fieldset>
 			<legend>Referral</legend>
 			
