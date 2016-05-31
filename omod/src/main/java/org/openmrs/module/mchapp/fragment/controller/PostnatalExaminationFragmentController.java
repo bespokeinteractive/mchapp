@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -39,7 +41,11 @@ public class PostnatalExaminationFragmentController {
         config.require("patientId");
         config.require("queueId");
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
-        Collection<ConceptAnswer> familyPlanningOptions = Context.getConceptService().getConceptByUuid("374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").getAnswers();
+        Concept familyPlanningConcept = Context.getConceptService().getConceptByUuid("374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		Collection<ConceptAnswer> familyPlanningOptions = new ArrayList<ConceptAnswer>();
+		if (familyPlanningConcept != null) {
+			familyPlanningOptions = familyPlanningConcept.getAnswers();
+		}
         model.addAttribute("familyPlanningOptions",familyPlanningOptions);
         model.addAttribute("patient", patient);
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.PNC_PROGRAM));

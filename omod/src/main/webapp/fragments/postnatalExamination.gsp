@@ -264,7 +264,7 @@
         jq("#postnatal-examination-submit").on("click", function(event){
             event.preventDefault();
             var data = jq("form#postnatalExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders);
+            data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
             console.log(data);
             jq.post(
                     '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
@@ -272,7 +272,7 @@
                     function (data) {
                         if (data.status === "success") {
                             window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                        } else if (data.status === "fail") {
+                        } else if (data.status === "error") {
                             jq().toastmessage('showErrorToast', data.message);
                         }
                     },
@@ -701,18 +701,24 @@
 		<fieldset>
 
 			<legend>Family planning</legend>
-			<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-				<option >Select Family Planning Option</option>
-				<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
-				<% familyPlanningOptions.each { familyPlanningOption -> %>
-				<option value="concept.${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
-				<% } %>
-				<% } %>
-			</select>
-			<div style="width: 95%">
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-			</div>
-			<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: 95%">Comment</textarea>
+			<field>
+				<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+					<option value="0" >Select Family Planning Option</option>
+					<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
+					<% familyPlanningOptions.each { familyPlanningOption -> %>
+					<option value="${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
+					<% } %>
+					<% } %>
+				</select>
+			</field>
+			<field>
+				<div style="width: 95%">
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+				</div>
+			</field>
+			<field>
+				<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: 95%">Comment</textarea>
+			</field>
 		</fieldset>
 		
 		<fieldset>
