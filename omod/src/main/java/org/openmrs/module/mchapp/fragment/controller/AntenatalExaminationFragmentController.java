@@ -21,6 +21,7 @@ import org.openmrs.module.mchapp.InvestigationParser;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.QueueLogs;
+import org.openmrs.module.mchapp.api.MchEncounterService;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.module.patientdashboardapp.model.ReferralReasons;
@@ -44,6 +45,7 @@ public class AntenatalExaminationFragmentController {
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("queueId", config.get("queueId"));
+        model.addAttribute("preExisitingConditions", Context.getService(MchEncounterService.class).getConditions(patient));
     }
 
 	@SuppressWarnings("unchecked")
