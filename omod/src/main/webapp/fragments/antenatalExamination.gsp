@@ -879,9 +879,9 @@
 			<p>
 				<label for="hypertension">Hypertension</label>
 				<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
-					<% if (previousConditions.contains("")) { %>
+					<!-- <% if (previousConditions.contains("")) { %>
 						checked="checked"
-					<% } %>
+					<% } %> -->
 				>
 			</p>
 			<p>
