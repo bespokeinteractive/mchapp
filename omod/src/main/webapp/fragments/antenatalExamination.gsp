@@ -328,7 +328,7 @@
         });
 
         jq("#investigations-holder").on("click", ".icon-remove",function(){
-            var investigationId = parseInt(jq(this).parents('div.investigation').find('input[type="hidden"]').attr("value"));
+            var investigationId = jq(this).parents('div.investigation').find('input[type="hidden"]').attr("value");
             selectedInvestigationIds.splice(selectedInvestigationIds.indexOf(investigationId));
 			
 			investigationArray = investigationArray.filter(function(investigation){

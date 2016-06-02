@@ -17,6 +17,9 @@
 	var examinationArray = [];
 	var NavigatorController;
 	
+	var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
+	var investigationArray = [];
+	
 	var emrMessages = {};
 
 	emrMessages["numericRangeHigh"] = "value should be less than {0}";
@@ -229,9 +232,9 @@
                 jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
             }
         });
-
-        jq("#investigations-holder").on("click", ".icon-remove",function(){
-            var investigationId = parseInt(jq(this).parents('div.investigation').find('input[type="hidden"]').attr("value"));
+		
+		jq("#investigations-holder").on("click", ".icon-remove",function(){
+            var investigationId = jq(this).parents('div.investigation').find('input[type="hidden"]').attr("value");
             selectedInvestigationIds.splice(selectedInvestigationIds.indexOf(investigationId));
 			
 			investigationArray = investigationArray.filter(function(investigation){
@@ -281,15 +284,15 @@
 		
 		jq('#availableReferral').change(function(){
 			if (jq(this).val() == "1"){
-				jq('#summaryTable tr:eq(3) td:eq(1)').text('Internal Referral');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('Internal Referral');
 				jq('#referral-set').val('SET');
 			}
 			else if (jq(this).val() == "2"){
-				jq('#summaryTable tr:eq(3) td:eq(1)').text('External Referral');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('External Referral');
 				jq('#referral-set').val('SET');
 			}
 			else {
-				jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('N/A');
 				jq('#referral-set').val('');
 			}
 		});
@@ -302,6 +305,74 @@
 				jq('#externalRefferalSpc').hide();
 			}
 		}).change();
+		
+		jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA').change(function(){
+			if (jq(this).val() == "0"){
+				jq('#summaryTable tr:eq(5) td:eq(1)').text('N/A');
+				jq('#family-planning-set').val('');
+			}
+			else {
+				jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :selected').text());
+				jq('#family-planning-set').val('SET');
+			}
+		});
+		
+		jq('.hiv-info input').change(function(){
+			jq('#hiv-info-set').val('SET');
+			
+			var output = '';
+
+			if (!jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").val()) {}
+			else {
+				output += 'Prior Known Status: ' + jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").val()) {}
+			else {
+				output += 'Couple Counselled: ' + jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.93366255-8903-44af-8370-3b68c0400930']:checked").val()) {}
+			else {
+				output += 'Patner Tested: ' + jq("input[name='concept.93366255-8903-44af-8370-3b68c0400930']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").val()) {}
+			else {
+				output += 'Patner Results: ' + jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").data('value') + '<br/>';
+			}
+			
+			jq('#summaryTable tr:eq(3) td:eq(1)').html(output);
+		});
+		
+		jq('.misc-info input').change(function(){
+			jq('#misc-info-set').val('SET');
+			
+			var output = '';
+
+			if (!jq("input[name='concept.ba18b0c3-8208-465a-9c95-2f85047e2939']:checked").val()) {}
+			else {
+				output += 'PNC Exercise: ' + jq("input[name='concept.ba18b0c3-8208-465a-9c95-2f85047e2939']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.5712097d-a478-4ff4-a2aa-bd827a6833ed']:checked").val()) {}
+			else {
+				output += 'Multi-vitamin: ' + jq("input[name='concept.5712097d-a478-4ff4-a2aa-bd827a6833ed']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.5d935a14-9c53-4171-bda7-51da05fbb9eb']:checked").val()) {}
+			else {
+				output += 'Haematinics: ' + jq("input[name='concept.5d935a14-9c53-4171-bda7-51da05fbb9eb']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.c764e84f-cfb2-424a-acec-20e4fb8531b7']:checked").val()) {}
+			else {
+				output += 'Vitamin A Suppliments: ' + jq("input[name='concept.c764e84f-cfb2-424a-acec-20e4fb8531b7']:checked").data('value') + '<br/>';
+			}
+			
+			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			
+		});
 
     });
 	
@@ -420,8 +491,21 @@
 	.patient-profile small:first-child{
 		margin-left: 15px;
 	}
+	.floating-controls{
+		margin-top: 5px;
+	}
 	.floating-controls input{
+		cursor: pointer;
 		float: none!important;
+	}
+	.floating-controls label{
+		cursor: pointer;
+	}
+	.floating-controls span{
+		color: #f26522;
+	}
+	.floating-controls textarea{
+		resize: none;
 	}
 </style>
 
@@ -517,79 +601,86 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>HIV Info</legend>
-			<div>
-				<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
-				<field>
-					<input type="hidden" id="hiv-info-set" class=""/>
-					<span id="hiv-info-lbl" class="field-error" style="display: none"></span>
-				</field>
-				
-				<div class="floating-controls">
-					<span>Prior Known Status:</span><br/>
-					<label>
-						<input id="prior-status-positive" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
-						Positive
-					</label><br/>
+			<legend>HIV Information</legend>
+			<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+			
+			<field>
+				<input type="hidden" id="hiv-info-set" class=""/>
+				<span id="hiv-info-lbl" class="field-error" style="display: none"></span>
+			</field>
+			
+			<div class="onerow floating-controls hiv-info">
+				<div class="col4" style="width: 42%;">
+					<div>
+						<span>Prior Known Status:</span><br/>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>				
+					</div>
 					
-					<label>
-						<input id="prior-status-negative" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
-						Negative
-					</label><br/>
-					
-					<label>
-						<input id="prior-status-unknown" type="radio" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
-						Unknown
-					</label>				
+					<div style="margin-top: 20px;">
+						<span>Patner Tested?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
 				</div>
 				
-				
-			</div>
-			
-			<div>
-				<span>Couple Counselled?</span><br/>
-				
-				<label>
-					<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-					Yes
-				</label><br/>
-				
-				<label>
-					<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-					No
-				</label>
-			</div>
-			
-			<div>
-				<span>Patner Tested?</span><br/>
-				<label>
-					<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-					Yes
-				</label><br/>
-				
-				<label>
-					<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-					No
-				</label>
-			</div>
-			
-			<div>
-				<span>Patner Results</span><br/>
-				<label>
-					<input id="prior-status-positive" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
-					Positive
-				</label><br/>
-				
-				<label>
-					<input id="prior-status-negative" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
-					Negative
-				</label><br/>
-				
-				<label>
-					<input id="prior-status-unknown" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
-					Unknown
-				</label>
-			</div>
+				<div class="col4 last" style="width: 42%;">
+					<div>
+						<span>Couple Counselled?</span><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+						
+						<label>
+							&nbsp;
+						</label>
+					</div>
+					 
+					<div style="margin-top: 20px;">
+						<span>Patner Results</span><br/>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>
+					</div>				
+				</div>
+			</div>			
 		</fieldset>
 
 		<fieldset class="no-confirmation">
@@ -646,83 +737,114 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>Misc</legend>
+			<legend>Suppliments</legend>
+			<label for="investigation" class="label title-label" style="width: auto;">Suppliments & Exercise Information<span class="important"></span></label>
 			
-			<div>
-				<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
-				<field>
-					<input type="hidden" id="misc-info-set" class=""/>
-					<span id="misc-info-lbl" class="field-error" style="display: none"></span>
-				</field>
-				
-				<div>
-					<span>PNC Exercise given?</span><br/>
-					<label>
-						<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-						Yes
-					</label><br/>
-					<label>
-						<input id="couple-counselled" type="radio" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-						No
-					</label>
-				</div>
-				
-				<div>
-					<span>Vitamin A supplementation</span><br/>
-					<label>
-						<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-						Yes
-					</label><br/>
+			<field>
+				<input type="hidden" id="misc-info-set" class=""/>
+				<span id="misc-info-lbl" class="field-error" style="display: none"></span>
+			</field>
+			
+			<div class="onerow floating-controls misc-info">
+				<div class="col4" style="width: 42%;">
+					<div>
+						<span>PNC Exercise given?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes 
+						</label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
 					
-					<label>
-						<input id="couple-counselled" type="radio" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-						No
-					</label>
+					<div style="margin-top: 20px;">
+						<span>Vitamin A supplementation</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>				
 				</div>
 				
-				<div>
-					<span>Multi-vitamin</span>
-					<label>
-						<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-						Yes
-					</label>
-					<label>
-					<input id="couple-counselled" type="radio" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">No</label>
+				<div class="col4 last" style="width: 42%;">
+					<div>
+						<span>Multi-vitamin</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
+					
+					<div style="margin-top: 20px;">
+						<span>Haematinics</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>				
 				</div>
-				
-				<div>
-					<span>Haematinics</span>
-					<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-					<input id="couple-counselled" type="radio" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-				</div>				
 			</div>
 			
 		</fieldset>
+		
 		<fieldset>
-
-			<legend>Family planning</legend>
+			<legend>Family Planning</legend>			
+			<label for="investigation" class="label title-label" style="width: auto;">Family Planning<span class="important"></span></label>
+			
 			<field>
-				<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-					<option value="0" >Select Family Planning Option</option>
-					<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
-					<% familyPlanningOptions.each { familyPlanningOption -> %>
-					<option value="${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
-					<% } %>
-					<% } %>
-				</select>
+				<input type="hidden" id="family-planning-set" class=""/>
+				<span id="family-planning-lbl" class="field-error" style="display: none"></span>
 			</field>
-			<field>
-				<div style="width: 95%">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			
+			<div class="onerow floating-controls misc-info">
+				<div class="col4" style="width: 48%;">
+					<span>
+						<label for="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: auto;">Family Planning Option </label>
+					</span>
+					<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+						<option value="0" >Select Option</option>
+						<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
+						<% familyPlanningOptions.each { familyPlanningOption -> %>
+						<option value="${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
+						<% } %>
+						<% } %>
+					</select>				
 				</div>
-			</field>
-			<field>
-				<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: 95%">Comment</textarea>
-			</field>
+				
+				<div class="col4 last" style="width: 49%;">
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, endDate: new Date(), class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+				</div>
+				
+				<div class="col4 last" style="width: 100%; margin-top: 10px;">
+					<span>
+						<label for="fp-comment" style="width: auto;">Comments</label>
+					</span>
+					<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="fp-comment" style="width: 97%"></textarea>
+				</div>
+			</div>
+			
+		
+		
+			
 		</fieldset>
 		
 		<fieldset>
-			<legend>Referral</legend>
+			<legend>Referral Options</legend>
 			
 			<field>
 				<input type="hidden" id="referral-set" class=""/>
@@ -822,13 +944,28 @@
 							<td>N/A</td>
 						</tr>
 						
-						<tr style="display: none;">
+						<tr>
 							<td><span class="status active"></span>Investigations</td>
 							<td>N/A</td>
 						</tr>
 						
 						<tr>
 							<td><span class="status active"></span>Prescriptions</td>
+							<td>N/A</td>
+						</tr>
+						
+						<tr>
+							<td><span class="status active"></span>HIV Information</td>
+							<td>N/A</td>
+						</tr>
+						
+						<tr>
+							<td><span class="status active"></span>Suppliments</td>
+							<td>N/A</td>
+						</tr>
+						
+						<tr>
+							<td><span class="status active"></span>Family Planning</td>
 							<td>N/A</td>
 						</tr>
 						

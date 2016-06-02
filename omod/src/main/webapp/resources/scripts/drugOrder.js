@@ -74,7 +74,7 @@ function prescriptionSummary(){
 	else{
 		var prescription = '';
 		drugOrders.display_drug_orders().forEach(function(drug){
-			prescription += drug.drug_name + ' ' + drug.formulation +'<br/>'
+			prescription += drug.drug_name + ' ' + drug.formulation_label +'<br/>'
 		});
 		jq('#summaryTable tr:eq(2) td:eq(1)').html(prescription);
 	}
