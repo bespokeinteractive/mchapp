@@ -377,17 +377,100 @@
             );
         });
 		
+		jq('.conditions-info input').change(function(){
+			jq('#conditions-info-set').val('SET');
+			var output = '';
+
+			if (jq('input[value="a8390549-394c-44c7-a0c3-404c1799b1b9"]:checked').length > 0) {
+				output += 'Hypertension<br/>';
+			}
+			
+			if (jq('input[value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"]:checked').length > 0) {
+				output += 'Diabetes<br/>';
+			}
+			
+			if (jq('input[value="4e896673-d822-458e-bbfe-604747e0afe8"]:checked').length > 0) {
+				output += 'Epilepsy<br/>';
+			}
+			
+			if (jq('input[value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"]:checked').length > 0) {
+				output += 'STIs / RTI<br/>';
+			}
+			
+			if (jq('input[value="0731fc60-1c30-464b-93e9-e4adc8537e42"]:checked').length > 0) {
+				output += 'Malaria in Pregnancy<br/>';
+			}
+						
+			if (output == ''){
+				output = 'N/A';
+				jq('#conditions-info-set').val('');
+			}
+			
+			jq('#summaryTable tr:eq(3) td:eq(1)').html(output);
+		});
+		
+		jq('.hiv-info input').change(function(){
+			jq('#hiv-info-set').val('SET');
+			
+			var output = '';
+
+			if (!jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").val()) {}
+			else {
+				output += 'Prior Known Status: ' + jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").val()) {}
+			else {
+				output += 'Couple Counselled: ' + jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.93366255-8903-44af-8370-3b68c0400930']:checked").val()) {}
+			else {
+				output += 'Patner Tested: ' + jq("input[name='concept.93366255-8903-44af-8370-3b68c0400930']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").val()) {}
+			else {
+				output += 'Patner Results: ' + jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").data('value') + '<br/>';
+			}
+			
+			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+		});
+		
+		jq('.treatment-info input').change(function(){
+			jq('#treatment-info-set').val('SET');
+			
+			var output = '';
+
+			if (!jq("input[name='concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").val()) {}
+			else {
+				output += 'Deworming: ' + jq("input[name='concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").val()) {}
+			else {
+				output += 'Received LLITN: ' + jq("input[name='concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c']:checked").val()) {}
+			else {
+				output += 'ANC Exercise Given: ' + jq("input[name='concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c']:checked").data('value') + '<br/>';
+			}
+			
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
+		});
+		
 		jq('#availableReferral').change(function(){
 			if (jq(this).val() == "1"){
-				jq('#summaryTable tr:eq(3) td:eq(1)').text('Internal Referral');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('Internal Referral');
 				jq('#referral-set').val('SET');
 			}
 			else if (jq(this).val() == "2"){
-				jq('#summaryTable tr:eq(3) td:eq(1)').text('External Referral');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('External Referral');
 				jq('#referral-set').val('SET');
 			}
 			else {
-				jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('N/A');
 				jq('#referral-set').val('');
 			}
 		});
@@ -655,8 +738,26 @@
 		margin: 5px;
 		text-decoration: none;
 	}
-	
-
+	.floating-controls{
+		margin-top: 5px;
+	}
+	.floating-controls input{
+		cursor: pointer;
+		float: none!important;
+	}
+	.floating-controls label{
+		cursor: pointer;
+	}
+	.floating-controls span{
+		color: #f26522;
+	}
+	.floating-controls textarea{
+		resize: none;
+	}
+	.conditions-info label{
+		color: #f26522;
+		width: auto;
+	}
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -876,78 +977,146 @@
 		
 		<fieldset>
 			<legend>Conditions</legend>
-			<div>
-			<p>
-				<label for="hypertension">
-					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
-						<% if (preExisitingConditions.contains("a8390549-394c-44c7-a0c3-404c1799b1b9")) { %>
-							checked="checked"
-						<% } %>
-					>
-					Hypertension
-				</label>
-			</p>
-			<p>
-				<label for="diabetes">
-					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-						<% if (preExisitingConditions.contains("119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")) { %>
-							checked="checked"
-						<% } %>
-					>
-					Diabetes
-				</label>
-			</p>
-			<p>
-				<label for="epilepsy">
-					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
-						<% if (preExisitingConditions.contains("4e896673-d822-458e-bbfe-604747e0afe8")) { %>
-							checked="checked"
-						<% } %>
-					>
-					Epilepsy
-				</label>
-			</p>
-			<p>
-				<label for="malaria-in-pregnancy">
-					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
-						<% if (preExisitingConditions.contains("0731fc60-1c30-464b-93e9-e4adc8537e42")) { %>
-							checked="checked"
-						<% } %>
-					>
-					Malaria in Pregnancy
-				</label>
-			</p>
-			<p>
-				<label for="stis-rti">
-					<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
-						<% if (preExisitingConditions.contains("4c9b4d7d-7cb0-4d49-a833-2a13490b4632")) { %>
-							checked="checked"
-						<% } %>
-					>
-					STIs/RTI
-				</label>
-			</p>
+			<label class="label title-label">Conditions <span class="important"></span></label>
+			<field>
+				<input type="hidden" id="conditions-info-set" class=""/>
+				<span id="conditions-info-lbl" class="field-error" style="display: none"></span>
+			</field>
+				
+			<div class="onerow floating-controls conditions-info">
+				<div class="col4" style="width: 48%;">
+					<label>
+						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
+							<% if (preExisitingConditions.contains("a8390549-394c-44c7-a0c3-404c1799b1b9")) { %>
+								checked="checked"
+							<% } %>
+						>
+						Hypertension
+					</label><br/>
+				
+					<label>
+						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+							<% if (preExisitingConditions.contains("119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")) { %>
+								checked="checked"
+							<% } %>
+						>
+						Diabetes
+					</label><br/>
+					
+					<label>
+						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
+							<% if (preExisitingConditions.contains("4e896673-d822-458e-bbfe-604747e0afe8")) { %>
+								checked="checked"
+							<% } %>
+						>
+						Epilepsy
+					</label>
+				
+				</div>
+				
+				<div class="col4 last" style="width: 49%;">
+					<label>
+						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
+							<% if (preExisitingConditions.contains("0731fc60-1c30-464b-93e9-e4adc8537e42")) { %>
+								checked="checked"
+							<% } %>
+						>
+						Malaria in Pregnancy
+					</label><br/>
+					
+					<label>
+						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
+							<% if (preExisitingConditions.contains("4c9b4d7d-7cb0-4d49-a833-2a13490b4632")) { %>
+								checked="checked"
+							<% } %>
+						>
+						STIs/RTI
+					</label>				
+				</div>				
 			</div>
 		</fieldset>
 		
 		<fieldset>
-			<legend>HIV Info</legend>
-			<p>
-				<span>Couple Counselled?</span>
-				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Patner Tested?</span>
-				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Patner Results</span>
-				<input id="prior-status-positive" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f"><label for="prior-status-positive">Positive</label>
-				<input id="prior-status-negative" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0"><label for="prior-status-negative">Negative</label>
-				<input id="prior-status-unknown" type="radio" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af"><label for="prior-status-unknow">Unknown</label>
-			</p>
+			<legend>HIV Information</legend>
+			<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+			
+			<field>
+				<input type="hidden" id="hiv-info-set" class=""/>
+				<span id="hiv-info-lbl" class="field-error" style="display: none"></span>
+			</field>
+			
+			<div class="onerow floating-controls hiv-info">
+				<div class="col4" style="width: 48%;">
+					<div>
+						<span>Prior Known Status:</span><br/>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>				
+					</div>
+					
+					<div style="margin-top: 20px;">
+						<span>Patner Tested?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
+				</div>
+				
+				<div class="col4 last" style="width: 49%;">
+					<div>
+						<span>Couple Counselled?</span><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+						
+						<label>
+							&nbsp;
+						</label>
+					</div>
+					 
+					<div style="margin-top: 20px;">
+						<span>Patner Results</span><br/>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>
+					</div>				
+				</div>
+			</div>
 		</fieldset>
 		
 		<fieldset class="no-confirmation">
@@ -1005,21 +1174,56 @@
 
 		<fieldset>
 			<legend>Treatment</legend>
-			<p>
-				<span>Deworming</span>
-				<input id="couple-counselled" type="radio" name="no-uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>Received LLITN</span>
-				<input id="couple-counselled" type="radio" name="no-uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
-			<p>
-				<span>ANC Exercise given?</span>
-				<input id="couple-counselled" type="radio" name="no-uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><label for="prior-status-positive">Yes</label>
-				<input id="couple-counselled" type="radio" name="no-uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><label for="prior-status-positive">No</label>
-			</p>
+			<label class="label title-label" style="width: auto;">Treatment<span class="important"></span></label>
+			
+			<field>
+				<input type="hidden" id="treatment-info-set" class=""/>
+				<span id="treatment-info-lbl" class="field-error" style="display: none"></span>
+			</field>
+			
+			<div class="onerow floating-controls treatment-info">
+				<div class="col4" style="width: 48%;">
+					<div>
+						<span>Deworming</span><br/>
+						<label>
+							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" data-value="No" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
+					</div>
+					
+					<div style="margin-top: 20px;">
+						<span>Received LLITN</span><br/>
+						<label>
+							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" data-value="No" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>					
+				</div>
+				
+				<div class="col4 last" style="width: 49%;">
+					<div>
+						<span>ANC Exercise given?</span><br/>
+						<label>
+							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						<label>
+							<input id="couple-counselled" data-value="No" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>				
+				</div>
+			</div>
 		</fieldset>
 
 		<fieldset>
@@ -1118,26 +1322,43 @@
 				
 				<div class="info-body">
 					<table id="summaryTable">
-						<tbody><tr>
-							<td><span class="status active"></span>Examinations</td>
-							<td>N/A</td>
-						</tr>
-						
-						<tr>
-							<td><span class="status active"></span>Investigations</td>
-							<td>N/A</td>
-						</tr>
-						
-						<tr>
-							<td><span class="status active"></span>Prescriptions</td>
-							<td>N/A</td>
-						</tr>
-						
-						<tr>
-							<td><span class="status active"></span>Outcome</td>
-							<td>N/A</td>
-						</tr>
-					</tbody></table>
+						<tbody>
+							<tr>
+								<td><span class="status active"></span>Examinations</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Investigations</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Prescriptions</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Conditions</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>HIV Information</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Treatment</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Outcome</td>
+								<td>N/A</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>				
 		</div>

@@ -610,7 +610,7 @@
 			</field>
 			
 			<div class="onerow floating-controls hiv-info">
-				<div class="col4" style="width: 42%;">
+				<div class="col4" style="width: 48%;">
 					<div>
 						<span>Prior Known Status:</span><br/>
 						<label>
@@ -643,7 +643,7 @@
 					</div>
 				</div>
 				
-				<div class="col4 last" style="width: 42%;">
+				<div class="col4 last" style="width: 49%;">
 					<div>
 						<span>Couple Counselled?</span><br/>
 						
@@ -680,7 +680,7 @@
 						</label>
 					</div>				
 				</div>
-			</div>			
+			</div>
 		</fieldset>
 
 		<fieldset class="no-confirmation">
