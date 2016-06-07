@@ -93,6 +93,10 @@
         });
 
         var adddrugdialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
             selector: '#prescription-dialog',
             actions: {
                 confirm: function() {

@@ -36,6 +36,10 @@
         });
 
         var vaccinationDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
             selector: '#vaccinations-dialog',
             actions: {
                 confirm: function () {
@@ -137,6 +141,10 @@
         var examinations = [];        
 		
         var adddrugdialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
             selector: '#prescription-dialog',
             actions: {
                 confirm: function() {
