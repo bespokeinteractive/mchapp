@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -87,7 +88,10 @@ public class AntenatalExaminationFragmentController {
 		Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient,
 				observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
 		QueueLogs.logOpdPatient(patientQueue, encounter);
-		internalReferral.sendToRefferedRoom(patient,"uuid");
+		String refferedRoomUuid = request.getParameter("internalRefferal");
+		if(refferedRoomUuid!="" && refferedRoomUuid != null) {
+			internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
+		}
 		return SimpleObject.create("status", "success", "message",
 				"Triage information has been saved.");
 	}
