@@ -868,11 +868,11 @@
 				<div class="col4">
 					<div id="internalRefferalDiv" style="display: none">
 						<label for="internalRefferal">Internal Referral</label>
-						<select id="internalRefferal" name="">
+						<select id="internalRefferal" name="internalRefferal">
 							<option value="0">Select Option</option>
 							<% if (internalReferrals != null || internalReferrals != "") { %>
 							<% internalReferrals.each { internalReferral -> %>
-							<option value="${internalReferral.id}">${internalReferral.label}</option>
+							<option value="${internalReferral.uuid}" >${internalReferral.label}</option>
 							<% } %>
 							<% } %>
 						</select>
