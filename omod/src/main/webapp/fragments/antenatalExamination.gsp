@@ -103,6 +103,40 @@
 			vaccinationDialog.show();		
 		});
 
+        var exit_anc_dialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#exitAncDialog',
+            actions: {
+                confirm: function () {
+                    var endDate = jq("#datepicker").val();
+                    outcomeId = jq("#programOutcome").val();
+                    var startDate = "${patientProgram.dateEnrolled}";
+
+                    if (outcomeId == '' || outcomeId == "0") {
+                        alert("Outcome Required");
+                        return;
+                    }
+                    //&& startDate > endDate run test to ensure end date is not earlier than start start date
+
+                    else if (!isEmpty(startDate) && !isEmpty(endDate)) {
+                        var result = handleExitProgram(${patientProgram.patientProgramId}, "${patientProgram.dateEnrolled}",
+                                endDate, outcomeId);
+
+                    } else {
+                        alert("invalid end date");
+                        return;
+                    }
+                    exitcwcdialog.close();
+                },
+                cancel: function () {
+                    exitcwcdialog.close();
+                }
+            }
+        });
+
         jq("#programExit").on("click", function (e) {
             exitcwcdialog.show();
         });
@@ -273,6 +307,10 @@
 				jq('#exams-set').val('');
 				jq('#task-exams').hide();
 			}
+        });
+
+        jq("#ancProgramExit").on("click", function (e) {
+            exit_anc_dialog.show();
         });
 		
 		function examinationSummary(){
@@ -1375,8 +1413,8 @@
 			<field style="display: inline"> 
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>
-			
-			<input type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+            <span id="ancProgramExit" class="button cancel">Save & Exit Program</span>
+            <input type="button" value="Save & Close" class="button submit confirm" id="antenatalExaminationSubmitButton">
 		</div>
 	</div>
 </form>
@@ -1428,6 +1466,36 @@
             <label class="button confirm" style="float: right; width: auto!important;">Confirm</label>
             <label class="button cancel" style="width: auto!important;">Cancel</label>
         </form>
+    </div>
+</div>
+
+<div id="exitAncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Exit From Program</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+            <li>
+                <label for="datepicker">Completion Date</label>
+                <input type="text" id="datepicker" class="datepicker">
+            </li>
+            <li>
+                <label for="programOutcome">Outcome</label>
+                <select name="programOutcome" id="programOutcome">
+                    <option value="0">Choose Outcome</option>
+                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
+                    <% possibleProgramOutcomes.each { outcome -> %>
+                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </li>
+            <button class="button confirm right" id="processProgramExit">Save</button>
+            <span class="button cancel">Cancel</span>
+        </ul>
     </div>
 </div>
 
