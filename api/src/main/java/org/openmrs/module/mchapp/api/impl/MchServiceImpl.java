@@ -4,13 +4,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.hospitalcore.PatientDashboardService;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.mchapp.FreeInvestigationProcessor;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.MchProfileConcepts;
+import org.openmrs.module.mchapp.VisitListItem;
 import org.openmrs.module.mchapp.api.ListItem;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.ui.framework.SimpleObject;
@@ -141,7 +144,24 @@ public class MchServiceImpl implements MchService {
     }
 
     @Override
-    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders, List<OpdTestOrder> testOrders, String program, Location location) {
+    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
+                                      List<OpdTestOrder> testOrders, String program, Location location,Integer visitTypeId) {
+        Encounter mchEncounter = saveMchEncounter(patient,encounterObservations,drugOrders,testOrders,program,location);
+        Visit visit=new Visit();
+        visit.setLocation(location);
+        visit.setPatient(patient);
+        visit.setDateCreated(new Date());
+        visit.setStartDatetime(new Date());
+        VisitType visitType=Context.getVisitService().getVisitType(visitTypeId);
+        visit.setVisitType(visitType);
+        mchEncounter.setVisit(visit);
+        return mchEncounter;
+    }
+
+
+    @Override
+    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
+                                      List<OpdTestOrder> testOrders, String program, Location location) {
         Encounter mchEncounter = new Encounter();
         mchEncounter.setPatient(patient);
         mchEncounter.setLocation(location);
@@ -305,6 +325,39 @@ public class MchServiceImpl implements MchService {
             }
         }
         return questions;
+    }
+
+
+
+    @Override
+    public List<Object> findVisitsByPatient(Patient patient, boolean includeInactive, boolean includeVoided, Date dateEnrolled)
+            throws APIException {
+        // List to return
+        List<Object> objectList = new ArrayList<Object>();
+        MessageSourceService mss = Context.getMessageSourceService();
+        try {
+            List<Visit> visits = new ArrayList<Visit>();
+            if (patient != null) {
+                visits = Context.getVisitService().getVisitsByPatient(patient, includeInactive, includeVoided);
+            } else {
+                throw new APIException(mss.getMessage("Patient can not be null", null, "Patient cannot be null",
+                        Context.getLocale()));
+            }
+
+            if (visits.size() > 0) {
+                objectList = new ArrayList<Object>();
+                for (Visit v : visits){
+                    if(v.getStartDatetime().after(dateEnrolled) ){
+                        objectList.add(new VisitListItem(v));
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            log.error("Error while searching for visits", e);
+            objectList.add(mss.getMessage("Visit Search Error"));
+        }
+        return objectList;
     }
 
 }

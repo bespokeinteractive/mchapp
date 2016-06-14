@@ -1,5 +1,7 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
@@ -19,17 +21,18 @@ import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Created by qqnarf on 4/27/16.
  */
 public class AntenatalTriageFragmentController {
+    private static final Log log = LogFactory.getLog(AntenatalTriageFragmentController.class);
+
+
+    private int visitTypeId;
+
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         config.require("patientId");
         config.require("queueId");
@@ -38,10 +41,12 @@ public class AntenatalTriageFragmentController {
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("queueId", config.get("queueId"));
     }
+
     @SuppressWarnings("unchecked")
     public SimpleObject saveAntenatalTriageInformation(
             @RequestParam("patientId") Patient patient,
             @RequestParam("queueId") Integer queueId,
+            @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
             UiSessionContext session,
             HttpServletRequest request) {
         SimpleObject saveStatus = null;
@@ -49,14 +54,21 @@ public class AntenatalTriageFragmentController {
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
         List<Obs> observations = new ArrayList<Obs>();
         ObsParser obsParser = new ObsParser();
-        for (Map.Entry<String, String[]> postedParams: ((Map<String,String[]>)request.getParameterMap()).entrySet()) {
+        for (Map.Entry<String, String[]> postedParams : ((Map<String, String[]>) request.getParameterMap()).entrySet()) {
             try {
                 observations = obsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
             } catch (Exception e) {
                 saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
+        List<Object> previousVisitsByPatient = Context.getService(MchService.class).findVisitsByPatient(patient, true, true, patientEnrollmentDate);
+        if (previousVisitsByPatient.size() == 0) {
+            visitTypeId = MchMetadata._MchProgram.INITIAL_MCH_CLINIC_VISIT;
+        } else {
+            visitTypeId = MchMetadata._MchProgram.RETURN_ANC_CLINIC_VISIT;
+        }
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation(), visitTypeId);
         if (request.getParameter("send_for_examination") != null) {
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
         }
@@ -64,4 +76,5 @@ public class AntenatalTriageFragmentController {
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         return saveStatus;
     }
+
 }

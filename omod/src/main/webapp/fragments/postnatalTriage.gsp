@@ -112,6 +112,7 @@
 			<form id="pnc-triage-form">
 				<input type="hidden" name="patientId" value="${patient.patientId}" >
 				<input type="hidden" name="queueId" value="${queueId}" >
+				<input type="hidden" name="patientEnrollmentDate" value="${patientProgram?patientProgram.dateEnrolled:"--"}">
 				<div class="profile-editor"></div>
 				
 				<div class="info-header">

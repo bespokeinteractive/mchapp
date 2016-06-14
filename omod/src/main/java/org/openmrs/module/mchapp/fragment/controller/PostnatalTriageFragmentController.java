@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 public class PostnatalTriageFragmentController {
+	private int visitTypeId;
 	public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
 		config.require("patientId");
 		config.require("queueId");
@@ -45,6 +46,7 @@ public class PostnatalTriageFragmentController {
 	@SuppressWarnings("unchecked")
 	public SimpleObject savePostnatalTriageInformation(
 			@RequestParam("patientId") Patient patient,
+			@RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
 			@RequestParam("queueId") Integer queueId,
 			UiSessionContext session,
 			HttpServletRequest request) {
@@ -62,7 +64,14 @@ public class PostnatalTriageFragmentController {
 				return SimpleObject.create("status", "error", "message", e.getMessage());
 			}
 		}
-		Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.PNC_PROGRAM, session.getSessionLocation());
+		List<Object> previousVisitsByPatient = Context.getService(MchService.class).findVisitsByPatient(patient, true, true, patientEnrollmentDate);
+		if (previousVisitsByPatient.size() == 0) {
+			visitTypeId = MchMetadata._MchProgram.INITIAL_MCH_CLINIC_VISIT;
+		} else {
+			visitTypeId = MchMetadata._MchProgram.RETURN_PNC_CLINIC_VISIT;
+		}
+		Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
+				Collections.EMPTY_LIST, MchMetadata._MchProgram.PNC_PROGRAM, session.getSessionLocation(),visitTypeId);
 		if (request.getParameter("send_for_examination") != null) {
 			SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
 		}

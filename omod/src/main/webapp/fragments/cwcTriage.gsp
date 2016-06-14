@@ -69,6 +69,7 @@
                 <div class="info-body">
                     <input type="hidden" name="patientId" value="${patientId}">
                     <input type="hidden" name="queueId" value="${queueId}">
+                    <input type="hidden" name="patientEnrollmentDate" value="${patientProgram?patientProgram.dateEnrolled:"--"}">
 
                     <div>
                         <label for="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Weight</label>

@@ -35,6 +35,7 @@ import java.util.*;
  */
 public class CwcTriageFragmentController {
 
+    private int visitTypeId;
     protected final Log log = LogFactory.getLog(getClass());
     DateFormat ymdDf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -71,6 +72,7 @@ public class CwcTriageFragmentController {
     public SimpleObject saveCwcTriageInfo(
             @RequestParam("patientId") Patient patient, 
             @RequestParam("queueId") Integer queueId,
+            @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
             UiSessionContext session,
             HttpServletRequest request) {
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
@@ -87,8 +89,14 @@ public class CwcTriageFragmentController {
                 return SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
+        List<Object> previousVisitsByPatient = Context.getService(MchService.class).findVisitsByPatient(patient, true, true, patientEnrollmentDate);
+        if (previousVisitsByPatient.size() == 0) {
+            visitTypeId = MchMetadata._MchProgram.INITIAL_MCH_CLINIC_VISIT;
+        } else {
+            visitTypeId = MchMetadata._MchProgram.RETURN_CWC_CLINIC_VISIT;
+        }
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, session.getSessionLocation());
+                Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, session.getSessionLocation(),visitTypeId);
         if (request.getParameter("send_for_examination") != null) {
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
         }

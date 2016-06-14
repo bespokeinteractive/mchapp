@@ -47,6 +47,7 @@ public class MainPageController {
         model.addAttribute("enrolledInPnc", enrolledInPNC);
         model.addAttribute("enrolledInCwc", enrolledInCWC);
 
+//        TODO pull the correct enrollment Date
         model.addAttribute("enrollmentDate", new Date());
 
         Program program = null;
