@@ -129,16 +129,16 @@
                         alert("invalid end date");
                         return;
                     }
-                    exitcwcdialog.close();
+                    exit_anc_dialog.close();
                 },
                 cancel: function () {
-                    exitcwcdialog.close();
+                    exit_anc_dialog.close();
                 }
             }
         });
 
         jq("#programExit").on("click", function (e) {
-            exitcwcdialog.show();
+            exit_anc_dialog.show();
         });
 
         jq('.chevron').click(function (){
@@ -1483,8 +1483,8 @@
                 <input type="text" id="datepicker" class="datepicker">
             </li>
             <li>
-                <label for="programOutcome">Outcome</label>
-                <select name="programOutcome" id="programOutcome">
+                <label for="ancProgramOutcome">Outcome</label>
+                <select name="ancProgramOutcome" id="ancProgramOutcome">
                     <option value="0">Choose Outcome</option>
                     <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
                     <% possibleProgramOutcomes.each { outcome -> %>
