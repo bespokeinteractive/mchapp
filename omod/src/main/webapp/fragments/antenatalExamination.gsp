@@ -213,7 +213,7 @@
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function(data) {
                         var durgunits = jq.map(data, function (drugUnit) {
-                            jq('#drugUnitsSelect').append(jq('<option>').val(drugUnit.uuid).text(drugUnit.label));
+                            jq('#drugUnitsSelect').append(jq('<option>').val(drugUnit.id).text(drugUnit.label));
                         });
                     });
                 },
