@@ -82,7 +82,7 @@ public class DrugOrdersParser {
 						Concept drugDosageUnit = Context.getConceptService().getConcept(dosageUnitId);
 						drugOrder.setDosageUnit(drugDosageUnit);
 					}
-					if (parameterKey.contains("dosage")) {
+					if (parameterKey.contains("dosage") && !parameterKey.contains("dosage_unit")) {
 						Integer drugId = Integer.parseInt(matcher.group());
 						InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
 						OpdDrugOrder drugOrder = getOpdDrugOrder(inventoryDrug, patient, drugOrders, orderSource);
