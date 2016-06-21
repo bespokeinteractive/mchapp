@@ -152,7 +152,8 @@
 			var name = jq(this).data('name');
 			var prog = jq(this).data('prog');
 			
-			if (jq(this).hasClass('icon-chevron-right')){
+			
+			if (jq(this).hasClass('icon-chevron-right')){				
 				jq(this).removeClass('icon-chevron-right');
 				jq(this).addClass('icon-chevron-down');
 				
@@ -163,7 +164,7 @@
 				jq(this).addClass('icon-chevron-right');
 				
 				jq("#currentStateDetails_" + idnt).show();
-				jq("#" + idnt).hide();
+				jq("#currentStateVaccine_" + idnt).hide();
 			}
 		});
 		
@@ -522,7 +523,7 @@
                 });
 
 
-        jq("#" + programWorkflowId).show();
+        jq("#currentStateVaccine_" + programWorkflowId).show();
 		
         currentWorkflowBeingEdited = programWorkflowId;
         patientProgramForWorkflowEdited = patientProgramId;
@@ -566,7 +567,7 @@
     }
 
     function hideLayer(divId) {
-        jq("#" + divId).hide();
+        jq("#currentStateVaccine_" + divId).hide();
         jq("#currentStateDetails_" + divId).show();
         refreshPage();
     }
@@ -805,7 +806,7 @@
 							</div>
 
 							<div class="info-body">
-								<div id="${workflow.programWorkflowId}" style="display: none;">
+								<div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
 									<table id="workflowTable_${workflow.programWorkflowId}">
 										<thead>
 											<tr>
