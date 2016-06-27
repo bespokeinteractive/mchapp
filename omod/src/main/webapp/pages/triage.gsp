@@ -254,7 +254,7 @@
 
             <li>
                 <i class="icon-chevron-right link"></i>
-                <a href="${ui.pageLink('mchapp', 'triage')}">Mother Child Health</a>
+                <a href="${ui.pageLink('patientqueueapp', 'mchTriageQueue')}">Mother Child Health</a>
             </li>
 
             <li>
