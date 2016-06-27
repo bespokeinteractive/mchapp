@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.page.controller;
 
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
@@ -9,13 +10,11 @@ import org.openmrs.module.hospitalcore.model.PatientSearch;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.ListItem;
 import org.openmrs.module.mchapp.api.MchService;
+import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by qqnarf on 4/27/16.
@@ -27,7 +26,7 @@ public class MainPageController {
     public void get(
         @RequestParam("patientId") Patient patient,
         @RequestParam(value = "queueId") Integer queueId,
-        PageModel model) {
+        PageModel model, UiUtils uiUtils) {
 
         MchService mchService = Context.getService(MchService.class);
         model.addAttribute("patient", patient);
@@ -47,12 +46,12 @@ public class MainPageController {
         model.addAttribute("enrolledInPnc", enrolledInPNC);
         model.addAttribute("enrolledInCwc", enrolledInCWC);
 
-//        TODO pull the correct enrollment Date
-        model.addAttribute("enrollmentDate", new Date());
+
 
         Program program = null;
         Calendar minEnrollmentDate = Calendar.getInstance();
         List<ListItem> possibleProgramOutcomes = new ArrayList<ListItem>();
+        Collection<ConceptAnswer> cwcFollowUps = new ArrayList<ConceptAnswer>();
         if (enrolledInANC) {
             model.addAttribute("title", "ANC Clinic");
             minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_PNC_DURATION);
@@ -65,10 +64,12 @@ public class MainPageController {
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
         }
         else{
-            model.addAttribute("title", "MCH Clinic");
+            model.addAttribute("title", "CWC Clinic");
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
             minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
+            cwcFollowUps=Context.getConceptService().getConceptByName("CWC Follow Up").getAnswers();
+            model.addAttribute("cwcFollowUpList", cwcFollowUps);
 
         }
 
@@ -79,8 +80,14 @@ public class MainPageController {
         PatientProgram patientProgram = null;
         if(patientPrograms.size() > 0){
             patientProgram = patientPrograms.get(0);
+            //        TODO pull the correct enrollment Date
+            model.addAttribute("enrollmentDate", patientProgram.getDateEnrolled());
+        }else{
+            patientProgram = new PatientProgram();
+            model.addAttribute("enrollmentDate", new Date());
         }
         model.addAttribute("patientProgram", patientProgram);
+
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);

@@ -38,12 +38,12 @@
             changeYear: true,
             dateFormat: 'yy-mm-dd'
         });
-		
+
         var exitcwcdialog = emr.setupConfirmationDialog({
-			dialogOpts: {
-				overlayClose: false,
-				close: true
-			},
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
             selector: '#exitCwcDialog',
             actions: {
                 confirm: function () {
@@ -72,77 +72,77 @@
                 }
             }
         });
-		
-		var vaccinationDialog = emr.setupConfirmationDialog({
-			dialogOpts: {
-				overlayClose: false,
-				close: true
-			},
+
+        var vaccinationDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
             selector: '#vaccinations-dialog',
             actions: {
                 confirm: function () {
-					if (jq('#vaccine-state').val() == 0) {
-						jq().toastmessage('showErrorToast', "Kindly select a vaccine state!");
-						return false;
-					}
-					
-					var idnt = jq('#vaccine-idnt').val();
-					var prog = jq('#vaccine-prog').val();
-					var name = jq('#vaccine-name').val();
-					
-					var state = jq('#vaccine-state').val();
-					
-					var stateData = {
-						patientProgramId: prog,
-						programWorkflowId: idnt,
-						programWorkflowStateId: jq('#vaccine-state').val(),
-						onDateDMY: jq('#vaccine-date-field').val()
-					}
+                    if (jq('#vaccine-state').val() == 0) {
+                        jq().toastmessage('showErrorToast', "Kindly select a vaccine state!");
+                        return false;
+                    }
 
-					jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-					.success(function (data) {
-						jq().toastmessage('showNoticeToast', data.message);
-						
-						showEditWorkflowPopup(name, prog, idnt);
-						
-						jq('#state_name_'+idnt).text(jq('#vaccine-state option:selected').text());
-						jq('#state_date_'+idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
-						
-						jq('#main-show-'+idnt).show();
-						jq('#no-show-'+idnt).hide();
-						
-						jq('#immunizations-set').val('SET');
-						
-						vaccinationDialog.close();
-						return false;
-						
-					}).error(function (xhr, status, err) {
-						jq().toastmessage('showErrorToast', "AJAX error!" + err);
-						return false;
-					});
-				
+                    var idnt = jq('#vaccine-idnt').val();
+                    var prog = jq('#vaccine-prog').val();
+                    var name = jq('#vaccine-name').val();
+
+                    var state = jq('#vaccine-state').val();
+
+                    var stateData = {
+                        patientProgramId: prog,
+                        programWorkflowId: idnt,
+                        programWorkflowStateId: jq('#vaccine-state').val(),
+                        onDateDMY: jq('#vaccine-date-field').val()
+                    }
+
+                    jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
+                            .success(function (data) {
+                                jq().toastmessage('showNoticeToast', data.message);
+
+                                showEditWorkflowPopup(name, prog, idnt);
+
+                                jq('#state_name_' + idnt).text(jq('#vaccine-state option:selected').text());
+                                jq('#state_date_' + idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
+
+                                jq('#main-show-' + idnt).show();
+                                jq('#no-show-' + idnt).hide();
+
+                                jq('#immunizations-set').val('SET');
+
+                                vaccinationDialog.close();
+                                return false;
+
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                                return false;
+                            });
+
                 },
                 cancel: function () {
                     vaccinationDialog.close();
-					return false;
+                    return false;
                 }
             }
         });
-		
-		jq('.update-vaccine a').click(function(){
-			var idnt = jq(this).data('idnt');
-			var name = jq(this).data('name');
-			var prog = jq(this).data('prog');
-			
-			jq('#vaccine-idnt').val(idnt);
-			jq('#vaccine-name').val(name);
-			jq('#vaccine-prog').val(prog);
-			
-			jq('#vaccine-state').html(jq('#changeToState_'+idnt).html());			
-		
-			vaccinationDialog.show();		
-		});		
-		
+
+        jq('.update-vaccine a').click(function () {
+            var idnt = jq(this).data('idnt');
+            var name = jq(this).data('name');
+            var prog = jq(this).data('prog');
+
+            jq('#vaccine-idnt').val(idnt);
+            jq('#vaccine-name').val(name);
+            jq('#vaccine-prog').val(prog);
+
+            jq('#vaccine-state').html(jq('#changeToState_' + idnt).html());
+
+            vaccinationDialog.show();
+        });
+
         jq("#programExit").on("click", function (e) {
             exitcwcdialog.show();
         });
@@ -167,7 +167,7 @@
 				jq("#currentStateVaccine_" + idnt).hide();
 			}
 		});
-		
+
         NavigatorController = new KeyboardController();
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 
@@ -183,10 +183,10 @@
         var examinations = [];
 
         var adddrugdialog = emr.setupConfirmationDialog({
-			dialogOpts: {
-				overlayClose: false,
-				close: true
-			},
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
             selector: '#prescription-dialog',
             actions: {
                 confirm: function () {
@@ -320,6 +320,15 @@
             }
         });
 
+        jq("#cwcFollowUps").on('change', function () {
+            var txt = jq(this).val();
+            if (txt == '7cdc2d69-31b9-4592-9a3f-4bc167d5780b') {
+                jq('#otherFollowUpSpec').show();
+            }else{
+                jq('#otherFollowUpSpec').hide();
+            }
+        });
+
         function examinationSummary() {
             if (examinationArray.length == 0) {
                 jq('#summaryTable tr:eq(0) td:eq(1)').text('N/A');
@@ -417,7 +426,7 @@
             data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
 
             jq.post(
-                    '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
+                    '${ui.actionLink("mchapp", "childWelfareExamination", "saveCwcExaminationInformation")}',
                     data,
                     function (data) {
                         if (data.status === "success") {
@@ -455,7 +464,7 @@
         }).change();
 
     });//End of Document Ready
-	
+
     function isEmpty(o) {
         return o == null || o == '';
     }
@@ -507,7 +516,7 @@
                             var item = data[index];
                             console.log(item);
                             var row = '<tr>';
-                            row += '<td>' + (parseInt(index)+1) + '</td>';
+                            row += '<td>' + (parseInt(index) + 1) + '</td>';
                             row += '<td>' + item.stateName + '</td>';
                             row += '<td>' + moment(item.startDate, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
                             row += '<td>' + moment(item.dateCreated, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
@@ -522,9 +531,7 @@
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);
                 });
 
-
         jq("#currentStateVaccine_" + programWorkflowId).show();
-		
         currentWorkflowBeingEdited = programWorkflowId;
         patientProgramForWorkflowEdited = patientProgramId;
     }
@@ -532,7 +539,7 @@
     function handleChangeWorkflowState(c) {
         var stateId = jq("#changeToState_" + c).val();
         var onDate = jq("#datepicker_" + c).val()
-		
+
         if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
@@ -548,9 +555,9 @@
 
     function processHandleChangeWorkflowState(stateId, onDateDMY) {
         var ppId = patientProgramForWorkflowEdited;
-        var wfId = currentWorkflowBeingEdited;     
-		
-		var stateData = {
+        var wfId = currentWorkflowBeingEdited;
+
+        var stateData = {
             patientProgramId: ppId,
             programWorkflowId: wfId,
             programWorkflowStateId: stateId,
@@ -625,108 +632,115 @@
 </script>
 
 <style>
-	.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
-		color: #555;
-		text-align: left;
-	}
+.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+    color: #555;
+    text-align: left;
+}
 
-	.title-label {
-		color: #009384;
-		cursor: pointer;
-		font-size: 1.3em;
-		font-weight: normal;
-	}
+.title-label {
+    color: #009384;
+    cursor: pointer;
+    font-size: 1.3em;
+    font-weight: normal;
+}
 
-	#exams-holder input[type="radio"] {
-		float: none;
-	}
+#exams-holder input[type="radio"] {
+    float: none;
+}
 
-	.investigation .selecticon,
-	#examination-detail-div .selecticon {
-		color: #f00;
-		cursor: pointer;
-		float: right;
-		margin: 7px 7px 0 0;
-	}
+.investigation .selecticon,
+#examination-detail-div .selecticon {
+    color: #f00;
+    cursor: pointer;
+    float: right;
+    margin: 7px 7px 0 0;
+}
 
-	.tasks {
-		margin: 10px 0 0;
-		padding-bottom: 10px;
-		width: 100%;
-	}
+.tasks {
+    margin: 10px 0 0;
+    padding-bottom: 10px;
+    width: 100%;
+}
 
-	.investigation {
-		border-top: 1px dotted #ccc;
-		margin: 0 0 5px;
-	}
+.investigation {
+    border-top: 1px dotted #ccc;
+    margin: 0 0 5px;
+}
 
-	.investigation:first-child {
-		border-top: 1px none #ccc;
-		margin: 5px 0 5px;
-	}
+.investigation:first-child {
+    border-top: 1px none #ccc;
+    margin: 5px 0 5px;
+}
 
-	#examination-detail-div {
-		border-top: 1px dotted #ccc;
-		margin: 0 0 10px;
-	}
+#examination-detail-div {
+    border-top: 1px dotted #ccc;
+    margin: 0 0 10px;
+}
 
-	#examination-detail-div:first-child {
-		border-top: 1px none #ccc;
-		margin: 10px 0 10px;
-	}
+#examination-detail-div:first-child {
+    border-top: 1px none #ccc;
+    margin: 10px 0 10px;
+}
 
-	section {
-		min-height: 300px;
-	}
+section {
+    min-height: 300px;
+}
 
-	.dialog-content input[type="text"], .dialog-content select {
-		display: inline-block !important;
-		width: 238px !important;
-	}
+.dialog-content input[type="text"], .dialog-content select {
+    display: inline-block !important;
+    width: 238px !important;
+}
 
-	.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
-		outline: 1px none #f00
-	}
+.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
+    outline: 1px none #f00
+}
 
-	.patient-profile {
-		border: 1px solid #eee;
-		margin: 5px 0;
-		padding: 7px 12px;
-	}
+.patient-profile {
+    border: 1px solid #eee;
+    margin: 5px 0;
+    padding: 7px 12px;
+}
 
-	.patient-profile small {
-		margin-left: 5.5%;
-	}
+.patient-profile small {
+    margin-left: 5.5%;
+}
 
-	.patient-profile small:first-child {
-		margin-left: 15px;
-	}
-	table[id*='workflowTable_'] th:first-child{
-		width: 5px;
-	}
-	table[id*='workflowTable_'] th:nth-child(3),
-	table[id*='workflowTable_'] th:nth-child(4){
-		width: 80px;
-	}
-	.update-vaccine{
-		float: right;
-	}
-	.update-vaccine a{
-		cursor: pointer;
-	}
-	.update-vaccine a:hover{
-		text-decoration: none;
-	}
-	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
-		background: #fff none repeat scroll 0 0;
-	}
-	.chevron{
-		color: #4a80ff !important;
-		cursor: pointer;
-		font-size: 100% !important;
-		margin: 5px;
-		text-decoration: none;
-	}
+.patient-profile small:first-child {
+    margin-left: 15px;
+}
+
+table[id*='workflowTable_'] th:first-child {
+    width: 5px;
+}
+
+table[id*='workflowTable_'] th:nth-child(3),
+table[id*='workflowTable_'] th:nth-child(4) {
+    width: 80px;
+}
+
+.update-vaccine {
+    float: right;
+}
+
+.update-vaccine a {
+    cursor: pointer;
+}
+
+.update-vaccine a:hover {
+    text-decoration: none;
+}
+
+.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
+    background: #fff none repeat scroll 0 0;
+}
+
+.chevron {
+    color: #4a80ff !important;
+    cursor: pointer;
+    font-size: 100% !important;
+    margin: 5px;
+    text-decoration: none;
+}
 
 
 </style>
@@ -786,7 +800,7 @@
                     <input type="hidden" id="immunizations-set" class=""/>
                     <span id="immunizations-lbl" class="field-error" style="display: none"></span>
                 </field>
-				
+
                 <div style="min-width: 78%" class="col16 dashboard">
 					<% patientProgram.program.workflows.each { workflow -> %>
 					<% def stateId; def stateStart; def stateName; %>
@@ -879,9 +893,7 @@
 						</div>
 					<% } %>
 
-                
-
-            </div>
+                </div>
             </div>
         </fieldset>
 
@@ -991,12 +1003,35 @@
         </fieldset>
 
         <fieldset>
-            <legend>Referral</legend>
+            <legend>Referral/Follow Up</legend>
 
             <field>
                 <input type="hidden" id="referral-set" class=""/>
                 <span id="referral-lbl" class="field-error" style="display: none"></span>
             </field>
+
+            <div class="onerow">
+                <div class="col4">
+                    <div id="cwcFollowUp">
+                        <label for="cwcFollowUps">Follow Up</label>
+                        <select id="cwcFollowUps" name="concept.848a1c01-d275-401b-add7-d81f3fcd8d17">
+                            <option value="0">Select Option</option>
+                            <% if (cwcFollowUpList != null || cwcFollowUpList != "") { %>
+                            <% cwcFollowUpList.each { followUp -> %>
+                            <option value="${followUp.answerConcept.uuid}">${followUp.answerConcept.name}</option>
+                            <% } %>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col4 last" id="otherFollowUpSpec" style="display: none">
+                    <div>
+                        <label for="specifyOther" style="width: 200px">If Other, Please Specify</label>
+                        <input id="specifyOther" type="text" name="concept.7cdc2d69-31b9-4592-9a3f-4bc167d5780b" placeholder="Please Specify" style="display: inline;">
+                    </div>
+                </div>
+            </div>
 
             <div class="onerow">
                 <div class="col4">
@@ -1120,10 +1155,10 @@
             </field>
 
             <span type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
-				<i class="icon-save small"></i>
-				Save & Close
-			</span>
-			<span id="programExit" class="button cancel">Save & Exit Program</span>
+                <i class="icon-save small"></i>
+                Save & Close
+            </span>
+            <span id="programExit" class="button cancel">Save & Exit Program</span>
         </div>
     </div>
 </form>
@@ -1212,35 +1247,36 @@
 <div id="vaccinations-dialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
+
         <h3>UPDATE VACCINE</h3>
     </div>
 
     <div class="dialog-content">
         <ul>
-			<li>
-				<label for="vaccine-name">Vaccine Name:</label>
-				<input type="text"   id="vaccine-name" readonly="">
-				<input type="hidden" id="vaccine-idnt" readonly="">
-				<input type="hidden" id="vaccine-prog" readonly="">
-			</li>
-			
-			<li>
-				<label for="vaccine-state">Change State:</label>
-				<select id="vaccine-state">
-					<option value="0">Select a State</option>
-				</select>
-			</li>
-			
-			<li>				
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true, endDate: new Date()])}
-			</li>
-			
-			<span class="button confirm" style="float: right; margin-right: 17px;">
-				<i class="icon-save small"></i>
-				Save
-			</span>
-			
-			<span class="button cancel">Cancel</span>
-		</ul>
+            <li>
+                <label for="vaccine-name">Vaccine Name:</label>
+                <input type="text" id="vaccine-name" readonly="">
+                <input type="hidden" id="vaccine-idnt" readonly="">
+                <input type="hidden" id="vaccine-prog" readonly="">
+            </li>
+
+            <li>
+                <label for="vaccine-state">Change State:</label>
+                <select id="vaccine-state">
+                    <option value="0">Select a State</option>
+                </select>
+            </li>
+
+            <li>
+                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true, endDate: new Date()])}
+            </li>
+
+            <span class="button confirm" style="float: right; margin-right: 17px;">
+                <i class="icon-save small"></i>
+                Save
+            </span>
+
+            <span class="button cancel">Cancel</span>
+        </ul>
     </div>
 </div>

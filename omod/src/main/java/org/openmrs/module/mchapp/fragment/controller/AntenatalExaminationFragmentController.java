@@ -1,15 +1,7 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.openmrs.Encounter;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -17,14 +9,8 @@ import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
-import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
-import org.openmrs.module.mchapp.DrugOrdersParser;
-import org.openmrs.module.mchapp.InternalReferral;
-import org.openmrs.module.mchapp.InvestigationParser;
-import org.openmrs.module.mchapp.MchMetadata;
-import org.openmrs.module.mchapp.ObsParser;
-import org.openmrs.module.mchapp.QueueLogs;
+import org.openmrs.module.mchapp.*;
 import org.openmrs.module.mchapp.api.MchEncounterService;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.patientdashboardapp.model.Referral;
@@ -34,6 +20,13 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by qqnarf on 5/18/16.
@@ -60,7 +53,7 @@ public class AntenatalExaminationFragmentController {
 			HttpServletRequest request) {
 		OpdPatientQueue patientQueue = Context.getService(
 				PatientQueueService.class).getOpdPatientQueueById(queueId);
-		String location = "PNC Exam Room";
+		String location = "ANC Exam Room";
 		if (patientQueue != null) {
 			location = patientQueue.getOpdConceptName();
 		}
