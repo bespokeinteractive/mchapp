@@ -33,8 +33,6 @@
 		
 		var patientProfile = JSON.parse('${patientProfile}');
 		
-		console.log(patientProfile);
-		
 		if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
             jq(".patient-profile").append(patientProfileTemplate(patientProfile));
@@ -272,7 +270,6 @@
             event.preventDefault();
             var data = jq("form#postnatalExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
-            console.log(data);
             jq.post(
                     '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
                     data,
@@ -347,6 +344,16 @@
 			}
 			
 			jq('#summaryTable tr:eq(3) td:eq(1)').html(output);
+			
+			if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
+				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+					jq('#partner-result').show(300);
+				}
+				else{
+					jq('#partner-result').hide(300);
+					jq('#partner-result input').removeAttr('checked');
+				}
+			};
 		});
 		
 		jq('.misc-info input').change(function(){
@@ -511,6 +518,9 @@
 	.floating-controls textarea{
 		resize: none;
 	}
+	#partner-result{
+		display: none;
+	}
 </style>
 
 <script id="patient-profile-template" type="text/template">
@@ -659,14 +669,14 @@
 						<label>
 							<input id="couple-counselled" type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
-						</label>
+						</label><br/>
 						
 						<label>
 							&nbsp;
 						</label>
 					</div>
 					 
-					<div style="margin-top: 20px;">
+					<div style="margin-top: 20px;" id="partner-result">
 						<span>Patner Results</span><br/>
 						<label>
 							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
@@ -682,7 +692,7 @@
 							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
 							Unknown
 						</label>
-					</div>				
+					</div>
 				</div>
 			</div>
 		</fieldset>
