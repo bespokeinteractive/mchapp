@@ -191,7 +191,7 @@
         });
 
 		//Diagnosis autocomplete functionality
-		jq("#diagnosis").autocomplete({
+		jq("#diagnoses").autocomplete({
 			source: function( request, response ) {
 				jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDiagnosis") }',
 						{
@@ -617,10 +617,10 @@
 </script>
 
 <script id="diagnosis-template" type="text/template">
-  <div class="investigation">
+  <div class="investigation diagnosis">
 	<span class="icon-remove selecticon"></span>
     <label style="margin-top: 2px; width: 95%;">{{=label}}
-		<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}"/>
+		<input type="hidden" name="diagnosis.{{=questionUuid}}" value="{{=uuid}}"/>
 	</label>
   </div>
 </script>
@@ -682,8 +682,8 @@
 		<fieldset class="no-confirmation">
 			<legend>Diagnosis</legend>
 			<div>
-				<label for="diagnosis" class="label title-label">Diagnosis <span class="important"></span></label>
-				<input type="text" style="width: 450px" id="diagnosis" name="investigation" placeholder="Enter Diagnosis" >
+				<label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
+				<input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
 
 				<field>
 					<input type="hidden" id="diagnosis-set" class=""/>
