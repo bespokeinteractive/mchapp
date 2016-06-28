@@ -1014,7 +1014,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
                 <div class="col4">
                     <div id="cwcFollowUp">
                         <label for="cwcFollowUps">Follow Up</label>
-                        <select id="cwcFollowUps" name="concept.848a1c01-d275-401b-add7-d81f3fcd8d17">
+                        <select id="cwcFollowUps" name="concept.6f7b4285-a04b-4f8b-be85-81c325289539">
                             <option value="0">Select Option</option>
                             <% if (cwcFollowUpList != null || cwcFollowUpList != "") { %>
                             <% cwcFollowUpList.each { followUp -> %>

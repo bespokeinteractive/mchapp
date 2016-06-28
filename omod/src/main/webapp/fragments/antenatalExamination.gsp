@@ -1053,6 +1053,74 @@
 				</div>				
 			</div>
 		</fieldset>
+
+        <fieldset>
+            <legend>Infant Feeding</legend>
+            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding<span class="important"></span></label>
+
+            <div class="onerow floating-controls hiv-info">
+                <div class="col4" style="width: 48%;">
+                    <div>
+                        <span>Infant feeding counseling done?</span><br/>
+                        <label>
+                            <input id="infant-feeding-counseled" type="radio" data-value="Yes" name="concept.fb5a5471-e912-4288-8c25-750f7f88281f" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="infant-feeding-counseled" type="radio" data-value="No" name="concept.fb5a5471-e912-4288-8c25-750f7f88281f" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <span>Infant feeding options for HIV infected discussed?</span><br/>
+                        <label>
+                            <input id="hiv-feeding-counseled" type="radio" data-value="Yes" name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="hiv-feeding-counseled" type="radio" data-value="No" name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col4 last" style="width: 49%;">
+                    <div>
+                        <span>Counseling on exclusive breastfeeding done?</span><br/>
+                        <label>
+                        <input id="exclusive-counseled" type="radio" data-value="Yes" name="concept.42197783-8b24-49b0-b290-cbb368fa0113" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                        Yes
+                    </label><br/>
+
+                        <label>
+                            <input id="exclusive-counseled" type="radio" data-value="No" name="concept.42197783-8b24-49b0-b290-cbb368fa0113" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <span>Mother's Breastfeeding decision?</span><br/>
+                        <label>
+                            <input id="breastfeeding-decision" type="radio" data-value="Positive" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="a082375c-bfe4-4395-9ed5-d58e9ab0edd3">
+                            Exclusive
+                        </label><br/>
+
+                        <label>
+                            <input id="breastfeeding-decision" type="radio" data-value="Negative" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="6225dd6f-f491-4c2b-ad88-b81eb5763650">
+                            Replacement
+                        </label><br/>
+
+                        <label>
+                            <input id="breastfeeding-decision" type="radio" data-value="Unknown" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="8b8e1133-9fe1-49c9-9365-fdd49c95ee42">
+                            Not Decided
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
 		
 		<fieldset>
 			<legend>HIV Information</legend>
@@ -1060,7 +1128,7 @@
 			
 			<field>
 				<input type="hidden" id="hiv-info-set" class=""/>
-				<span id="hiv-info-lbl" class="field-error" style="display: none"></span>
+				<span id="hiv-info-lbl" class="field-error"></span>
 			</field>
 			
 			<div class="onerow floating-controls hiv-info">
