@@ -499,6 +499,16 @@
 				jq('#externalRefferalSpc').hide();
 			}
 		}).change();
+		
+		jq(".cervical-cancer-screening").on("click", function() {
+			if (jq("#cervical-cancer-screening-yes").is(":checked")) {
+				jq(".cervical-cancer-screening-method").show();
+			} else {
+				jq(".cervical-cancer-screening-method").hide();
+			}
+		});
+		
+		jq(".cervical-cancer-screening-method").hide();
 
     });
 
@@ -1255,6 +1265,49 @@
 					<i class="icon-plus-sign"></i>
 					Add Drugs
 				</span>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Screening</legend>
+			<div>
+				<div>
+					<span>Screened for TB?</span><br/>
+					<label>
+						<input type="radio" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+						Yes
+					</label><br/>
+					<label>
+						<input type="radio" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+						No
+					</label>
+				</div>				
+			</div>
+			<div class="col4 last" style="width: 49%;">
+				<div class="cervical-cancer-screening">
+					<span>Screened for Cervical Cancer?</span><br/>
+					<label>
+						<input id="cervical-cancer-screening-yes" type="radio" name="concept.4ad55473-b281-4857-939f-dccd9e1e4e9a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+						Yes
+					</label><br/>
+					<label>
+						<input id="cervical-cancer-screening-no" type="radio" name="concept.4ad55473-b281-4857-939f-dccd9e1e4e9a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+						No
+					</label>
+				</div>				
+			</div>
+			<div class="col4 last cervical-cancer-screening-method">
+				<div>
+					<span>Method used:</span><br/>
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.50c026c3-f2bc-44b9-a9dd-e972ffcbb774" value="fc60e89d-68c8-4844-bd5a-efb43b203c18">
+						PAP
+					</label><br/>
+					<label>
+						<input id="couple-counselled" type="radio" name="concept.50c026c3-f2bc-44b9-a9dd-e972ffcbb774" value="556f371e-d980-4adb-adfc-93dc31973b98">
+						VIA
+					</label>
+				</div>				
 			</div>
 		</fieldset>
 
