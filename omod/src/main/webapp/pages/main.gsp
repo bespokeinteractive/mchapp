@@ -27,6 +27,8 @@
 		var age;
 		var desc;
 		
+		jq(".mch-tabs").tabs();
+		
 		if (${patient.age} == 0){
 			age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asMonths());
 			desc = ' months';
@@ -331,12 +333,44 @@
     </div>
 </div>
 
-<% if (enrolledInAnc){ %>
-	${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
-<% } else if (enrolledInPnc) { %>
-	${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
-<% } else if (enrolledInCwc) { %>
-	${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
-<% } else { %>
-	${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
-<% } %>
+${ui.includeFragment("mchapp","mchProfile")}
+
+<div class="mch-tabs" style="margin-top:5px!important;">
+	<ul>
+		<li id="cn"><a href="#clinical-notes">Clinical Notes</a></li>
+		<li id="ti"><a href="#triage-info">Triage Information</a></li>
+		<li id="cs"><a href="#clinical-summary">Clinical History</a></li>
+		<li id="lr"><a href="#investigations">Lab Reports</a></li>
+	</ul>
+	
+	<div id="clinical-notes">
+		
+	</div>
+
+	<div id="triage-info">
+		To-do
+	</div>
+	
+	<div id="clinical-summary">
+		To-do
+	</div>
+	
+	<div id="investigations">
+		${ ui.includeFragment("patientdashboardapp", "investigations", [patientId: patientId]) }
+	</div>
+</div>
+
+
+<script>
+	jq('.mch-prof').prepend(jq('.patient-profile').html());
+</script>
+
+		<% if (enrolledInAnc){ %>
+			${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else if (enrolledInPnc) { %>
+			${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else if (enrolledInCwc) { %>
+			${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else { %>
+			${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
+		<% } %>

@@ -523,17 +523,6 @@
 	}
 </style>
 
-<script id="patient-profile-template" type="text/template">
-	<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
-    {{ _.each(details, function(profileDetail) { }}
-		{{if (isValidDate(profileDetail.value)) { }}
-			<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small> {{=moment(profileDetail.value, 'D MMMM YYYY').format('DD/MM/YYYY')}}
-		{{ } else { }}
-			<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small> {{=profileDetail.value}}
-		{{ } }}
-    {{ }); }}
-</script>
-
 <script id="investigation-template" type="text/template">
   <div class="investigation">
 	<span class="icon-remove selecticon"></span>
@@ -558,8 +547,6 @@
         {{ }); }}
     </div>
 </script>
-
-<div class="patient-profile"></div>
 
 <form id="postnatalExaminationsForm" class="simple-form-ui">
 	<input type="hidden" name="patientId" value="${patient.patientId}" >
