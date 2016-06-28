@@ -33,10 +33,20 @@
     var outcomeId;
 
     jq(function () {
+
         jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             dateFormat: 'yy-mm-dd'
+        });
+
+        jq('input[type=radio][name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded"]').change(function() {
+            if (this.value == 'Yes') {
+                jq('#specific-disability').show();
+            }
+            else if (this.value == 'No') {
+                jq('#specific-disability').hide();
+            }
         });
 
         var exitcwcdialog = emr.setupConfirmationDialog({
@@ -146,27 +156,27 @@
         jq("#programExit").on("click", function (e) {
             exitcwcdialog.show();
         });
-		
-		jq('.chevron').click(function (){
-			var idnt = jq(this).data('idnt');
-			var name = jq(this).data('name');
-			var prog = jq(this).data('prog');
-			
-			
-			if (jq(this).hasClass('icon-chevron-right')){				
-				jq(this).removeClass('icon-chevron-right');
-				jq(this).addClass('icon-chevron-down');
-				
-				showEditWorkflowPopup(name, prog, idnt);
-			}
-			else{
-				jq(this).removeClass('icon-chevron-down');
-				jq(this).addClass('icon-chevron-right');
-				
-				jq("#currentStateDetails_" + idnt).show();
-				jq("#currentStateVaccine_" + idnt).hide();
-			}
-		});
+
+        jq('.chevron').click(function () {
+            var idnt = jq(this).data('idnt');
+            var name = jq(this).data('name');
+            var prog = jq(this).data('prog');
+
+
+            if (jq(this).hasClass('icon-chevron-right')) {
+                jq(this).removeClass('icon-chevron-right');
+                jq(this).addClass('icon-chevron-down');
+
+                showEditWorkflowPopup(name, prog, idnt);
+            }
+            else {
+                jq(this).removeClass('icon-chevron-down');
+                jq(this).addClass('icon-chevron-right');
+
+                jq("#currentStateDetails_" + idnt).show();
+                jq("#currentStateVaccine_" + idnt).hide();
+            }
+        });
 
         NavigatorController = new KeyboardController();
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
@@ -324,7 +334,7 @@
             var txt = jq(this).val();
             if (txt == '7cdc2d69-31b9-4592-9a3f-4bc167d5780b') {
                 jq('#otherFollowUpSpec').show();
-            }else{
+            } else {
                 jq('#otherFollowUpSpec').hide();
             }
         });
@@ -802,96 +812,103 @@ table[id*='workflowTable_'] th:nth-child(4) {
                 </field>
 
                 <div style="min-width: 78%" class="col16 dashboard">
-					<% patientProgram.program.workflows.each { workflow -> %>
-					<% def stateId; def stateStart; def stateName; %>
-						<div class="info-section">
-							<% patientProgram.states.each { state -> %>
-							<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-								stateId = state.state.concept.conceptId;
-								stateName = state.state.concept.name;
-								stateStart = state.startDate;
-							} %>
-							<% } %>
-					
-							<div class="info-header">
-								<i class="icon-medicine"></i>
-								<h3>${workflow.concept.name}</h3>
-								<a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
-							</div>
+                    <% patientProgram.program.workflows.each { workflow -> %>
+                    <% def stateId; def stateStart; def stateName; %>
+                    <div class="info-section">
+                        <% patientProgram.states.each { state -> %>
+                        <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+                            stateId = state.state.concept.conceptId;
+                            stateName = state.state.concept.name;
+                            stateStart = state.startDate;
+                        } %>
+                        <% } %>
 
-							<div class="info-body">
-								<div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
-									<table id="workflowTable_${workflow.programWorkflowId}">
-										<thead>
-											<tr>
-												<thead>
-													<th>#</th>
-													<th>VACCINE</th>
-													<th>GIVEN ON</th>
-													<th>RECORDED</th>
-													<th>PROVIDER</th>												
-												</thead>
-											</tr>
-										</thead>
-										
-										<tbody>
+                        <div class="info-header">
+                            <i class="icon-medicine"></i>
 
-										</tbody>
-									</table>
-									
-									<div class="update-vaccine">
-										<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}">
-											<i class="icon-pencil small"></i>
-											Update Vaccine
-										</a>											
-									</div>
-									
-									<div class="">&nbsp;</div>
-									
-									<div style="display: none">
-										<select name="changeToState_${workflow.programWorkflowId}" id="changeToState_${workflow.programWorkflowId}">
-											<option value="0">Select a State</option>
-											<% if (workflow.states != null || workflow.states != "") { %>
-											<% workflow.states.each { state -> %>
-											<option id="${state.id}"
-													value="${state.id}">${state.concept.name}</option>
-											<% } %>
-											<% } %>
-										</select>
-									</div>
-								</div>
+                            <h3>${workflow.concept.name}</h3>
+                            <a><i class="icon-chevron-right small right chevron"
+                                  data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
+                                  data-prog="${patientProgram.patientProgramId}"></i></a>
+                        </div>
 
-								<div id="currentStateDetails_${workflow.programWorkflowId}">
-									<% if (stateId != null) { %>
-										<div id='main-show-${workflow.programWorkflowId}'>
-											<span class="status active"></span>
-											<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
-											
-											<small style="font-size: 77%; margin-left: 10px;">
-												( <span class="icon-time"></span>
-												Date: <span id="state_date_${workflow.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
-											</small>												
-										</div>											
-									<% } else { %>
-										<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
-											<em>(No Previous Vaccinations Found)</em>												
-										</div>
-										
-										<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
-											<span class="status active"></span>
-											<span id="state_name_${workflow.programWorkflowId}"></span>
-											
-											<small style="font-size: 77%; margin-left: 10px;">
-												( <span class="icon-time"></span>
-												Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
-											</small>												
-										</div>
-									<% } %>
+                        <div class="info-body">
+                            <div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
+                                <table id="workflowTable_${workflow.programWorkflowId}">
+                                    <thead>
+                                    <tr>
+                                    <thead>
+                                    <th>#</th>
+                                    <th>VACCINE</th>
+                                    <th>GIVEN ON</th>
+                                    <th>RECORDED</th>
+                                    <th>PROVIDER</th>
+                                    </thead>
+                                </tr>
+                                </thead>
 
-								</div>
-							</div>
-						</div>
-					<% } %>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                                <div class="update-vaccine">
+                                    <a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
+                                       data-prog="${patientProgram.patientProgramId}">
+                                        <i class="icon-pencil small"></i>
+                                        Update Vaccine
+                                    </a>
+                                </div>
+
+                                <div class="">&nbsp;</div>
+
+                                <div style="display: none">
+                                    <select name="changeToState_${workflow.programWorkflowId}"
+                                            id="changeToState_${workflow.programWorkflowId}">
+                                        <option value="0">Select a State</option>
+                                        <% if (workflow.states != null || workflow.states != "") { %>
+                                        <% workflow.states.each { state -> %>
+                                        <option id="${state.id}"
+                                                value="${state.id}">${state.concept.name}</option>
+                                        <% } %>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="currentStateDetails_${workflow.programWorkflowId}">
+                                <% if (stateId != null) { %>
+                                <div id='main-show-${workflow.programWorkflowId}'>
+                                    <span class="status active"></span>
+                                    <span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
+
+                                    <small style="font-size: 77%; margin-left: 10px;">
+                                        ( <span class="icon-time"></span>
+                                        Date: <span id="state_date_${workflow.programWorkflowId}">${
+                                            ui.formatDatePretty(stateStart)}</span> )
+                                    </small>
+                                </div>
+                                <% } else { %>
+                                <div id="no-show-${workflow.programWorkflowId}"
+                                     style="margin-left: 20px; color: rgb(153, 153, 153);">
+                                    <em>(No Previous Vaccinations Found)</em>
+                                </div>
+
+                                <div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+                                    <span class="status active"></span>
+                                    <span id="state_name_${workflow.programWorkflowId}"></span>
+
+                                    <small style="font-size: 77%; margin-left: 10px;">
+                                        ( <span class="icon-time"></span>
+                                        Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
+                                    </small>
+                                </div>
+                                <% } %>
+
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
 
                 </div>
             </div>
@@ -946,6 +963,90 @@ table[id*='workflowTable_'] th:nth-child(4) {
                 <select style="display: none" id="selectedInvestigationList"></select>
 
                 <div class="selectdiv" id="selected-investigations"></div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Findings**</legend>
+            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding<span
+                    class="important"></span></label>
+
+            <div class="onerow floating-controls hiv-info">
+                <div class="col4" style="width: 48%;">
+                    <div>
+                        <span>Exclusive Breast feeding (0- 6 months)</span><br/>
+                        <label>
+                            <input id="exclusive-breast-feeding" type="radio" data-value="Yes"
+                                   name="concept.a082375c-bfe4-4395-9ed5-d58e9ab0edd3"
+                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="exclusive-breast-feeding" type="radio" data-value="No"
+                                   name="concept.a082375c-bfe4-4395-9ed5-d58e9ab0edd3"
+                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <span>Counseled on HIV?</span><br/>
+                        <label>
+                            <input id="hiv-counseled" type="radio" data-value="Yes"
+                                   name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72"
+                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="hiv-counseled" type="radio" data-value="No"
+                                   name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72"
+                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col4 last" style="width: 49%;">
+                    <div>
+                        <span>Counseled on Nutrition?</span><br/>
+                        <label>
+                            <input id="counseled-nutrition" type="radio" data-value="Yes"
+                                   name="concept.42197783-8b24-49b0-b290-cbb368fa0113"
+                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="counseled-nutrition" type="radio" data-value="No"
+                                   name="concept.42197783-8b24-49b0-b290-cbb368fa0113"
+                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <span>Any Disability?</span><br/>
+                        <label>
+                            <input  type="radio" value="Yes"
+                                   name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded"
+                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input type="radio" value="No"
+                                   name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded"
+                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                        <div id="specify-disability">
+                            <input id="specific-disability" type="text" placeholder="Specify Disability" style="display: none"
+                                   name="concept.bfa43093-bc99-4273-8c3f-5232f631f6aa">
+                        </div>
+                    </div>
+                </div>
             </div>
         </fieldset>
 
@@ -1028,7 +1129,8 @@ table[id*='workflowTable_'] th:nth-child(4) {
                 <div class="col4 last" id="otherFollowUpSpec" style="display: none">
                     <div>
                         <label for="specifyOther" style="width: 200px">If Other, Please Specify</label>
-                        <input id="specifyOther" type="text" name="concept.7cdc2d69-31b9-4592-9a3f-4bc167d5780b" placeholder="Please Specify" style="display: inline;">
+                        <input id="specifyOther" type="text" name="concept.7cdc2d69-31b9-4592-9a3f-4bc167d5780b"
+                               placeholder="Please Specify" style="display: inline;">
                     </div>
                 </div>
             </div>
