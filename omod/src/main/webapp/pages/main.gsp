@@ -374,7 +374,7 @@ ${ui.includeFragment("mchapp","mchProfile")}
 			${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
 		<% } else { %>
 			${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
-		<% } %>		
+		<% } %>
 	</div>
 
 	<div id="triage-info">

@@ -2,7 +2,7 @@
 	<script id="patient-profile-template" type="text/template">
 		<div class="header-template" style="padding-left: 0px; font-size: 141%; font-weight: bold;">
 			<i class='icon-quote-left small'></i>
-			<span>ANC PROFILE</span><br/>	
+			<span>ANC PROFILE</span><br/>
 		</div>
 		
 		<div id="profile-items">
