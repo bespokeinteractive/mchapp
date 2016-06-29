@@ -495,13 +495,26 @@
 		border: 1px solid #eee;
 		margin: 5px 0;
 		padding: 7px 12px;
+	}
+	.thirty-three-perc{
+		border-left: 1px solid #363463;
+		display: inline-block;
+		float: left;
+		font-size: 15px !important;
+		padding-left: 1%;
+		width: 32%;
+	}
+	.thirty-three-perc small{
+		float: left;
+		font-size: 85% !important;
+		min-width: 120px;
+		margin-right: 4px;
+	}
+	.thirty-three-perc span{
+		color: #555;
+		float: left;
+		font-size: 90%;
 	}	
-	.patient-profile small{
-		margin-left: 5.5%;
-	}
-	.patient-profile small:first-child{
-		margin-left: 15px;
-	}
 	.floating-controls{
 		margin-top: 5px;
 	}
