@@ -178,7 +178,7 @@
             }
         });
 
-        NavigatorController = new KeyboardController();
+        NavigatorController = new KeyboardController(jq('#cwcExaminationsForm'));
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 
         var patientProfile = JSON.parse('${patientProfile}');
@@ -432,7 +432,7 @@
         //submit data
         jq("#antenatalExaminationSubmitButton").on("click", function (event) {
             event.preventDefault();
-            var data = jq("form#antenatalExaminationsForm").serialize();
+            var data = jq("form#cwcExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
 
             jq.post(
@@ -796,7 +796,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
 
 <div class="patient-profile"></div>
 
-<form method="post" id="antenatalExaminationsForm" class="simple-form-ui">
+<form method="post" id="cwcExaminationsForm" class="simple-form-ui">
     <input type="hidden" name="patientId" value="${patient.patientId}">
     <input type="hidden" name="queueId" value="${queueId}">
 

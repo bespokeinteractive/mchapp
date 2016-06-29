@@ -28,7 +28,7 @@
 	emrMessages["numberField"] = "Value not a number";
 	
     jq(function(){
-		NavigatorController = new KeyboardController();
+		NavigatorController = new KeyboardController(jq('#postnatalExaminationsForm'));
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 		
 		var patientProfile = JSON.parse('${patientProfile}');
