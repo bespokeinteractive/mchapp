@@ -265,6 +265,9 @@
 	#modal-overlay {
 		background: #000 none repeat scroll 0 0;
 		opacity: 0.4 !important;
+	}	
+	.ui-tabs .ui-tabs-panel {
+		padding: 0 1px;
 	}
 </style>
 
@@ -344,7 +347,15 @@ ${ui.includeFragment("mchapp","mchProfile")}
 	</ul>
 	
 	<div id="clinical-notes">
-		
+		<% if (enrolledInAnc){ %>
+			${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else if (enrolledInPnc) { %>
+			${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else if (enrolledInCwc) { %>
+			${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else { %>
+			${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
+		<% } %>		
 	</div>
 
 	<div id="triage-info">
@@ -364,13 +375,3 @@ ${ui.includeFragment("mchapp","mchProfile")}
 <script>
 	jq('.mch-prof').prepend(jq('.patient-profile').html());
 </script>
-
-		<% if (enrolledInAnc){ %>
-			${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
-		<% } else if (enrolledInPnc) { %>
-			${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
-		<% } else if (enrolledInCwc) { %>
-			${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
-		<% } else { %>
-			${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
-		<% } %>

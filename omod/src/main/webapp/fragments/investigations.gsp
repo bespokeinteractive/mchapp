@@ -37,7 +37,6 @@ ui.includeJavascript("patientqueueapp", "jquery.dataTables.min.js")
                 <td>${labOrder.orderer}</td>
             </tr>
         <% } %>
-
     </tbody>
 </table>
 
