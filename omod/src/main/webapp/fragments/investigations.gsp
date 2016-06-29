@@ -19,7 +19,7 @@ ui.includeJavascript("patientqueueapp", "jquery.dataTables.min.js")
 	}
 </style>
 
-<table id="investigations-table">
+<table id="investigations-table" style="margin-top: 5px;">
     <thead>
         <tr>
             <th></th>
