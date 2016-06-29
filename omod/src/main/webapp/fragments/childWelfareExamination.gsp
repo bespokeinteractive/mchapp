@@ -780,22 +780,6 @@ table[id*='workflowTable_'] th:nth-child(4) {
 </div>
 </script>
 
-<script id="patient-profile-template" type="text/template">
-<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}
-{{ _.each(details, function(profileDetail) { }}
-{{if (isValidDate(profileDetail.value)) { }}
-<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
-{{ } else { }}
-<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small>
-{{ } }}
-
-
-{{=profileDetail.value}}
-{{ }); }}
-</script>
-
-<div class="patient-profile"></div>
-
 <form method="post" id="cwcExaminationsForm" class="simple-form-ui">
     <input type="hidden" name="patientId" value="${patient.patientId}">
     <input type="hidden" name="queueId" value="${queueId}">
