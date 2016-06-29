@@ -1370,7 +1370,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
             </li>
 
             <li>
-                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true, endDate: new Date()])}
+                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true,startDate: patient.birthdate, endDate: new Date()])}
             </li>
 
             <span class="button confirm" style="float: right; margin-right: 17px;">
