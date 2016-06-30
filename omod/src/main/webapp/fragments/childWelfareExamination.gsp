@@ -520,7 +520,7 @@
                     var tbody = jq('#' + tableId + ' > tbody');
 
                     if (data.length == 0) {
-                        tbody.append('<tr align="center"><td colspan="5">No Previous Vaccinations found for ' + wfName + '</td></tr>');
+                        tbody.append('<tr align="center"><td colspan="6">No Previous Vaccinations found for ' + wfName + '</td></tr>');
                     } else {
                         for (index in data) {
                             var item = data[index];
@@ -529,6 +529,7 @@
                             row += '<td>' + (parseInt(index) + 1) + '</td>';
                             row += '<td>' + item.stateName + '</td>';
                             row += '<td>' + moment(item.startDate, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
+                            row += '<td>' + getReadableAge('${patient.birthdate}',  moment(item.startDate, 'DD.MMM.YYYY').format('DD/MM/YYYY')) + '</td>';
                             row += '<td>' + moment(item.dateCreated, 'DD.MMM.YYYY').format('DD/MM/YYYY') + '</td>';
                             row += '<td>' + item.creator + '</td>';
                             row += '</tr>';
@@ -841,6 +842,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
                                     <th>#</th>
                                     <th>VACCINE</th>
                                     <th>GIVEN ON</th>
+                                    <th>AT AGE</th>
                                     <th>RECORDED</th>
                                     <th>PROVIDER</th>
                                     </thead>
