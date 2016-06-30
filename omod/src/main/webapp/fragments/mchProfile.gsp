@@ -63,8 +63,7 @@
 				</div>				
 			{{ }); }}	
 		</div>		
-		<div class="clear"></div>
-		
+		<div class="clear"></div>		
 	</script>
 <% } else if (enrolledInCwc) { %>
 	<script id="patient-profile-template" type="text/template">
@@ -108,7 +107,6 @@
 			{{ }); }}	
 		</div>		
 		<div class="clear"></div>
-		
 	</script>
 <% } %>
 

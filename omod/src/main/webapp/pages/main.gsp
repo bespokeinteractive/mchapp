@@ -5,6 +5,7 @@
     ui.includeJavascript("mchapp", "drugOrder.js")
     ui.includeCss("registration", "onepcssgrid.css")
 %>
+
 <script type="text/javascript">
     var successUrl = "${ui.pageLink('mchapp','main',[patientId: patient, queueId: queueId])}";
     function isValidDate(str) {
@@ -374,7 +375,7 @@ ${ui.includeFragment("mchapp","mchProfile")}
 			${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
 		<% } else { %>
 			${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
-		<% } %>		
+		<% } %>	
 	</div>
 
 	<div id="triage-info">
