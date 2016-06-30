@@ -333,14 +333,14 @@
 
 		function investigationSummary(){
 			if (investigationArray.length == 0){
-				jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
 			}
 			else{
 				var exams = '';
 				investigationArray.forEach(function(investigation){
 				  exams += investigation.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
+				jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
 			}
 		}
 

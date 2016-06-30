@@ -434,14 +434,14 @@
 		
 		function investigationSummary(){
 			if (investigationArray.length == 0){
-				jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
 			}
 			else{
 				var exams = '';
 				investigationArray.forEach(function(investigation){
 				  exams += investigation.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
+				jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
 			}
 		}
 
@@ -892,11 +892,7 @@
 		<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}"/>
 	</label>
   </div>
-</script> <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>
-
+</script>
 <script id="patient-profile-template" type="text/template">
 	<div style="padding-left: 0px; font-size: 141%; font-weight: bold;">
 		<i class='icon-quote-left small'></i>ANC PROFILE<br/>	
@@ -1015,11 +1011,7 @@
 											<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
 												<em>(No Previous Vaccinations Found)</em>												
 											</div>
-											
-									 <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>		<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+									 		<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
 												<span class="status active"></span>
 												<span id="state_name_${workflow.programWorkflowId}"></span>
 												
@@ -1271,10 +1263,6 @@
 							Unknown
 						</label>				
 					</div>
-					 <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>
 					<div style="margin-top: 20px;">
 						<span>Patner Tested?</span><br/>
 						<label>
@@ -1292,10 +1280,6 @@
 				<div class="col4 last" style="width: 49%;">
 					<div>
 						<span>Couple Counselled?</span><br/>
-						 <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>
 						<label>
 							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -1331,10 +1315,6 @@
 				</div>
 			</div>
 		</fieldset>
-		 <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>
 		<fieldset class="no-confirmation">
 			<legend>Prescription</legend>
 			<label class="label title-label">Prescription <span class="important"></span></label>
@@ -1403,10 +1383,7 @@
 						<span>Deworming</span><br/>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>
+							Yes
 						</label><br/>
 						
 						<label>
@@ -1421,10 +1398,6 @@
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
-						 <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>
 						<label>
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
@@ -1479,10 +1452,7 @@
 						</select>
 					</div>
 					
-					<div id="exte <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
-                            <td>N/A</td>
-                        </tr>rnalRefferalDiv" style="display: none">
+					<div id="externalRefferalDiv" style="display: none">
 						<label> External Referral</label>
 						<select id="externalRefferal" name="concept.18b2b617-1631-457f-a36b-e593d948707f">
 							<option value="0">Select Option</option>
