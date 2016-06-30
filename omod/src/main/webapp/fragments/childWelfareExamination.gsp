@@ -178,7 +178,7 @@
             }
         });
 
-        NavigatorController = new KeyboardController();
+        NavigatorController = new KeyboardController(jq('#cwcExaminationsForm'));
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 
         var patientProfile = JSON.parse('${patientProfile}');
@@ -432,7 +432,7 @@
         //submit data
         jq("#antenatalExaminationSubmitButton").on("click", function (event) {
             event.preventDefault();
-            var data = jq("form#antenatalExaminationsForm").serialize();
+            var data = jq("form#cwcExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
 
             jq.post(
@@ -642,117 +642,108 @@
 </script>
 
 <style>
-.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
-    color: #555;
-    text-align: left;
-}
+	.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+		color: #555;
+		text-align: left;
+	}
+	.title-label {
+		color: #009384;
+		cursor: pointer;
+		font-size: 1.3em;
+		font-weight: normal;
+	}
+	#exams-holder input[type="radio"] {
+		float: none;
+	}
+	.investigation .selecticon,
+	#examination-detail-div .selecticon {
+		color: #f00;
+		cursor: pointer;
+		float: right;
+		margin: 7px 7px 0 0;
+	}
+	.tasks {
+		margin: 10px 0 0;
+		padding-bottom: 10px;
+		width: 100%;
+	}
+	.investigation {
+		border-top: 1px dotted #ccc;
+		margin: 0 0 5px;
+	}
+	.investigation:first-child {
+		border-top: 1px none #ccc;
+		margin: 5px 0 5px;
+	}
+	#examination-detail-div {
+		border-top: 1px dotted #ccc;
+		margin: 0 0 10px;
+	}
+	#examination-detail-div:first-child {
+		border-top: 1px none #ccc;
+		margin: 10px 0 10px;
+	}
 
-.title-label {
-    color: #009384;
-    cursor: pointer;
-    font-size: 1.3em;
-    font-weight: normal;
-}
-
-#exams-holder input[type="radio"] {
-    float: none;
-}
-
-.investigation .selecticon,
-#examination-detail-div .selecticon {
-    color: #f00;
-    cursor: pointer;
-    float: right;
-    margin: 7px 7px 0 0;
-}
-
-.tasks {
-    margin: 10px 0 0;
-    padding-bottom: 10px;
-    width: 100%;
-}
-
-.investigation {
-    border-top: 1px dotted #ccc;
-    margin: 0 0 5px;
-}
-
-.investigation:first-child {
-    border-top: 1px none #ccc;
-    margin: 5px 0 5px;
-}
-
-#examination-detail-div {
-    border-top: 1px dotted #ccc;
-    margin: 0 0 10px;
-}
-
-#examination-detail-div:first-child {
-    border-top: 1px none #ccc;
-    margin: 10px 0 10px;
-}
-
-section {
-    min-height: 300px;
-}
-
-.dialog-content input[type="text"], .dialog-content select {
-    display: inline-block !important;
-    width: 238px !important;
-}
-
-.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
-    outline: 1px none #f00
-}
-
-.patient-profile {
-    border: 1px solid #eee;
-    margin: 5px 0;
-    padding: 7px 12px;
-}
-
-.patient-profile small {
-    margin-left: 5.5%;
-}
-
-.patient-profile small:first-child {
-    margin-left: 15px;
-}
-
-table[id*='workflowTable_'] th:first-child {
-    width: 5px;
-}
-
-table[id*='workflowTable_'] th:nth-child(3),
-table[id*='workflowTable_'] th:nth-child(4) {
-    width: 80px;
-}
-
-.update-vaccine {
-    float: right;
-}
-
-.update-vaccine a {
-    cursor: pointer;
-}
-
-.update-vaccine a:hover {
-    text-decoration: none;
-}
-
-.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
-    background: #fff none repeat scroll 0 0;
-}
-
-.chevron {
-    color: #4a80ff !important;
-    cursor: pointer;
-    font-size: 100% !important;
-    margin: 5px;
-    text-decoration: none;
-}
-
-
+	section {
+		min-height: 300px;
+	}
+	.dialog-content input[type="text"], .dialog-content select {
+		display: inline-block !important;
+		width: 238px !important;
+	}
+	.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus {
+		outline: 1px none #f00
+	}
+	.patient-profile {
+		border: 1px solid #eee;
+		margin: 5px 0;
+		padding: 7px 12px;
+	}
+	.thirty-three-perc{
+		border-left: 1px solid #363463;
+		display: inline-block;
+		float: left;
+		font-size: 15px !important;
+		padding-left: 1%;
+		width: 32%;
+	}
+	.thirty-three-perc small{
+		float: left;
+		font-size: 85% !important;
+		min-width: 180px;
+		margin-right: 4px;
+	}
+	.thirty-three-perc span{
+		color: #555;
+		float: left;
+		font-size: 90%;
+	}
+	table[id*='workflowTable_'] th:first-child {
+		width: 5px;
+	}
+	table[id*='workflowTable_'] th:nth-child(3),
+	table[id*='workflowTable_'] th:nth-child(4) {
+		width: 80px;
+	}
+	.update-vaccine {
+		float: right;
+	}
+	.update-vaccine a {
+		cursor: pointer;
+	}
+	.update-vaccine a:hover {
+		text-decoration: none;
+	}
+	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
+		background: #fff none repeat scroll 0 0;
+	}
+	.chevron {
+		color: #4a80ff !important;
+		cursor: pointer;
+		font-size: 100% !important;
+		margin: 5px;
+		text-decoration: none;
+	}
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -780,23 +771,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
 </div>
 </script>
 
-<script id="patient-profile-template" type="text/template">
-<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}
-{{ _.each(details, function(profileDetail) { }}
-{{if (isValidDate(profileDetail.value)) { }}
-<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
-{{ } else { }}
-<small><i class="icon-user small"></i> {{=profileDetail.name}}:</small>
-{{ } }}
-
-
-{{=profileDetail.value}}
-{{ }); }}
-</script>
-
-<div class="patient-profile"></div>
-
-<form method="post" id="antenatalExaminationsForm" class="simple-form-ui">
+<form method="post" id="cwcExaminationsForm" class="simple-form-ui">
     <input type="hidden" name="patientId" value="${patient.patientId}">
     <input type="hidden" name="queueId" value="${queueId}">
 

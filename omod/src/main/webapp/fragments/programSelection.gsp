@@ -65,6 +65,7 @@
 				if (data.status === "success") {
 					jq().toastmessage('showSuccessToast', data.message);
 					//redirect to triage page
+					alert(successUrl)
 					window.location = successUrl;
 				} else if (data.status === "error") {
 					//display error message
