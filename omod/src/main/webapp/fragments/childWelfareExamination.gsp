@@ -14,11 +14,16 @@
 <script>
     var drugOrders = new DisplayDrugOrders();
     var selectedInvestigationIds = [];
+    var selectedDiagnosisIds = [];
     var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
+    var provisionalDiagnosisQuestionUuid = "b8bc4c9f-7ccb-4435-bc4e-646d4cf83f0a";
     var NavigatorController;
 
     var examinationArray = [];
     var investigationArray = [];
+    var diagnosisArray = [];
+
+
 
     var emrMessages = {};
 
@@ -352,6 +357,83 @@
             }
         }
 
+        //Diagnosis autocomplete functionality
+        jq("#diagnoses").autocomplete({
+            source: function( request, response ) {
+                jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDiagnosis") }',
+                        {
+                            q: request.term
+                        }
+                ).success(function(data) {
+                    var results = [];
+                    for (var i in data) {
+                        var result = { label: data[i].name, value: data[i].uuid};
+                        results.push(result);
+                    }
+                    response(results);
+                });
+            },
+            minLength: 3,
+            select: function( event, ui ) {
+                if (!selectedDiagnosisIds.includes(ui.item.value)) {
+                    var diagnosis = {};
+                    diagnosis.label = ui.item.label;
+                    diagnosis.questionUuid = provisionalDiagnosisQuestionUuid;
+                    diagnosis.uuid = ui.item.value;
+                    diagnosis.value = ui.item.value;
+
+                    diagnosisArray.push(ui.item);
+                    diagnosisSummary();
+                    var diagnosisTemplate = _.template(jq("#diagnosis-template").html());
+                    jq("#diagnosis-holder").append(diagnosisTemplate(diagnosis));
+                    jq('#diagnosis-set').val('SET');
+                    jq('#task-diagnosis').show();
+
+                    selectedDiagnosisIds.push(ui.item.value);
+                } else {
+                    jq().toastmessage('showErrorToast', ui.item.label + ' has already been added.');
+                }
+                jq(this).val('');
+                return false;
+            },
+            open: function() {
+                jq( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+                jq( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        });
+
+        function diagnosisSummary(){
+            if (diagnosisArray.length == 0){
+                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+            }
+            else{
+                var diagnoses = '';
+                diagnosisArray.forEach(function(diagnosis){
+                    diagnoses += diagnosis.label +'<br/>'
+                });
+                jq('#summaryTable tr:eq(1) td:eq(1)').html(diagnoses);
+            }
+        }
+
+        jq("#diagnosis-holder").on("click", ".icon-remove",function(){
+            var diagnosisId = jq(this).parents('div.diagnosis').find('input[type="hidden"]').attr("value");
+            selectedDiagnosisIds.splice(selectedDiagnosisIds.indexOf(diagnosisId));
+
+            diagnosisArray = diagnosisArray.filter(function(diagnosis){
+                return diagnosis.value != diagnosisId;
+            });
+
+            diagnosisSummary();
+
+            jq(this).parents('div.diagnosis').remove();
+            if (jq(".diagnosis").length == 0){
+                jq('#diagnosis-set').val('');
+                jq('#task-diagnosis').hide();
+            }
+        });
+
         //investigations autocomplete functionality
         jq("#investigation").autocomplete({
             source: function (request, response) {
@@ -418,14 +500,14 @@
 
         function investigationSummary() {
             if (investigationArray.length == 0) {
-                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
             }
             else {
                 var exams = '';
                 investigationArray.forEach(function (investigation) {
                     exams += investigation.label + '<br/>'
                 });
-                jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
+                jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
             }
         }
 
@@ -771,6 +853,16 @@ table[id*='workflowTable_'] th:nth-child(4) {
 </div>
 </script>
 
+<script id="diagnosis-template" type="text/template">
+<div class="investigation diagnosis">
+    <span class="icon-remove selecticon"></span>
+    <label style="margin-top: 2px; width: 95%;">{{=label}}
+        <input type="hidden" name="diagnosis.{{=questionUuid}}" value="{{=uuid}}"/>
+    </label>
+</div>
+</script>
+
+
 <script id="investigation-template" type="text/template">
 <div class="investigation">
     <span class="icon-remove selecticon"></span>
@@ -934,6 +1026,30 @@ table[id*='workflowTable_'] th:nth-child(4) {
 
                     <div id="exams-holder"></div>
                 </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="no-confirmation">
+            <legend>Diagnosis</legend>
+            <div>
+                <label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
+                <input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
+
+                <field>
+                    <input type="hidden" id="diagnosis-set" class=""/>
+                    <span id="diagnosis-lbl" class="field-error" style="display: none"></span>
+                </field>
+
+                <div class="tasks" id="task-diagnosis" style="display:none;">
+                    <header class="tasks-header">
+                        <span id="title-diagnosis" class="tasks-title">PATIENT'S DIAGNOSIS</span>
+                        <a class="tasks-lists"></a>
+                    </header>
+
+                    <div id="diagnosis-holder"></div>
+                </div>
+                <select style="display: none" id="selectedDiagnosisList"></select>
+                <div class="selectdiv" id="selected-diagnosis"></div>
             </div>
         </fieldset>
 
@@ -1228,6 +1344,11 @@ table[id*='workflowTable_'] th:nth-child(4) {
                         <tbody>
                         <tr>
                             <td><span class="status active"></span>Examinations</td>
+                            <td>N/A</td>
+                        </tr>
+
+                        <tr>
+                            <td><span class="status active"></span>Diagnosis</td>
                             <td>N/A</td>
                         </tr>
 
