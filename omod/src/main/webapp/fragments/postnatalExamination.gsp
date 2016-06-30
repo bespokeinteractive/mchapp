@@ -534,6 +534,9 @@
 	#partner-result{
 		display: none;
 	}
+	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
+		background: #fff none repeat scroll 0 0;
+	}
 </style>
 
 <script id="investigation-template" type="text/template">
