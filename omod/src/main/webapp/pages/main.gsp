@@ -7,6 +7,40 @@
 %>
 <script type="text/javascript">
     var successUrl = "${ui.pageLink('mchapp','main',[patientId: patient, queueId: queueId])}";
+    function getReadableAge(dateOfBirth, fromDate) {
+        var referenceDate;
+        if (!fromDate) {
+            referenceDate = moment();
+        } else {
+            referenceDate = moment(fromDate, 'DD/MM/YYYY');
+        }
+        var age = Math.floor(moment.duration(referenceDate.diff(moment(dateOfBirth))).asYears());
+        var readableAge;
+        if (age == 0){
+            desc = (age === 1?' month':' months');
+            if (age <= 0) {
+                age = Math.floor(moment.duration(referenceDate.diff(moment(dateOfBirth))).asWeeks());
+                desc = (age === 1?' week':' weeks');
+
+                if (age <= 0) {
+                    age = Math.floor(moment.duration(referenceDate.diff(moment(dateOfBirth))).asDays());
+                    desc = (age === 1?' day':' days');
+
+                    if (age <= 0) {
+                        age = Math.floor(moment.duration(referenceDate.diff(moment(dateOfBirth))).asHours());
+                        desc = (age === 1?' hour':' hours');
+                    }
+                }
+            }
+	
+            readableAge = age + desc;
+        } else {
+            desc = (age === 1?' year':' years');
+            readableAge = age + desc;
+        }
+        return readableAge;
+    }
+
     function isValidDate(str) {
         var d = moment(str, 'D/M/YYYY');
         var dt = moment(str, 'D MMMM YY');
@@ -23,35 +57,8 @@
         return result;
     }
 	
-	jq(function() {
-		var age;
-		var desc;
-		
-		if (${patient.age} == 0){
-			age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asMonths());
-			desc = ' months';
-			if (age <= 0) {
-				age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asWeeks());
-				desc = ' weeks';
-				
-				if (age <= 0) {
-					age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asDays());
-					desc = ' days';
-					
-					if (age <= 0) {
-						age = Math.floor(moment.duration(moment().diff(moment('${patient.birthdate}'))).asHours());
-						desc = ' hours';
-					}
-				}
-			}
-			
-			age += desc;
-		}
-		else{
-			age = moment('${patient.birthdate}').fromNow().toString().replace('ago','').replace('a year','1 year') + '(' +moment('${patient.birthdate}').format('DD/MM/YYYY')+')';		
-		}
-		
-		jq('#agename').text(age);
+	jq(function() {		
+		jq('#agename').text(getReadableAge('${patient.birthdate}') + ' (' +moment('${patient.birthdate}').format('DD/MM/YYYY')+')');
 	});
 </script>
 
