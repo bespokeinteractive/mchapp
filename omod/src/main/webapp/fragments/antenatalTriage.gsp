@@ -58,6 +58,11 @@
 
         //submit data
         jq(".submit").on("click", function(event){
+			var selectedLmp = jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field').val();
+			if(!isValidDate(selectedLmp)){
+				jq().toastmessage('showErrorToast', "Check that the L.M.P has been provided!");
+				return;
+			}
             event.preventDefault();
             var data = jq("form#antenatal-triage-form").serialize();
 
