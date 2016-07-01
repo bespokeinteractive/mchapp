@@ -33,6 +33,28 @@
     var currentWorkflowBeingEdited;
     var patientProgramForWorkflowEdited;
     jq(function() {
+
+		jq(".infant-feeding").hide();
+		jq(".decision-feeding").hide();
+
+        jq('input[type=radio][name="concept.fb5a5471-e912-4288-8c25-750f7f88281f"]').change(function() {
+            if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
+                jq(".infant-feeding").show();
+            }
+            else if (this.value == '606720bb-4a7a-4c4c-b3b5-9a8e910758c9') {
+                jq(".infant-feeding").hide();
+                jq(".decision-feeding").hide();
+            }
+        });
+        jq('input[type=radio][name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72"]').change(function() {
+            if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
+                jq(".decision-feeding").show();
+            }
+            else if (this.value == '606720bb-4a7a-4c4c-b3b5-9a8e910758c9') {
+                jq(".decision-feeding").hide();
+            }
+        });
+
         jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -1186,7 +1208,7 @@
                         </label>
                     </div>
 
-                    <div style="margin-top: 20px;">
+                    <div style="margin-top: 20px;" class="infant-feeding">
                         <span>Infant feeding options for HIV infected discussed?</span><br/>
                         <label>
                             <input id="hiv-feeding-counseled" type="radio" data-value="Yes" name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
@@ -1200,7 +1222,7 @@
                     </div>
                 </div>
 
-                <div class="col4 last" style="width: 49%;">
+                <div class="col4 last infant-feeding" style="width: 49%;">
                     <div>
                         <span>Counseling on exclusive breastfeeding done?</span><br/>
                         <label>
@@ -1214,7 +1236,7 @@
                         </label>
                     </div>
 
-                    <div style="margin-top: 20px;">
+                    <div style="margin-top: 20px;" class="decision-feeding">
                         <span>Mother's Breastfeeding decision?</span><br/>
                         <label>
                             <input id="breastfeeding-decision" type="radio" data-value="Positive" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="a082375c-bfe4-4395-9ed5-d58e9ab0edd3">
