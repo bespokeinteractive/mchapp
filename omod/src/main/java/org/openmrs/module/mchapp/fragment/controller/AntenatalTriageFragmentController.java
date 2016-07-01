@@ -8,7 +8,9 @@ import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
+import org.openmrs.module.hospitalcore.model.TriagePatientQueueLog;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.QueueLogs;
@@ -69,8 +71,10 @@ public class AntenatalTriageFragmentController {
         }
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
                 Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation(), visitTypeId);
+
         if (request.getParameter("send_for_examination") != null) {
-            SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient);
+            String visitStatus = queue.getVisitStatus();
+            SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient, visitStatus);
         }
         QueueLogs.logTriagePatient(queue, encounter);
         saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
