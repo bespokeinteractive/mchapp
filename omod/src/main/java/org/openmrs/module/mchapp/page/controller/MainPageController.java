@@ -46,8 +46,6 @@ public class MainPageController {
         model.addAttribute("enrolledInPnc", enrolledInPNC);
         model.addAttribute("enrolledInCwc", enrolledInCWC);
 
-
-
         Program program = null;
         Calendar minEnrollmentDate = Calendar.getInstance();
         List<ListItem> possibleProgramOutcomes = new ArrayList<ListItem>();
@@ -87,7 +85,6 @@ public class MainPageController {
             model.addAttribute("enrollmentDate", new Date());
         }
         model.addAttribute("patientProgram", patientProgram);
-
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
