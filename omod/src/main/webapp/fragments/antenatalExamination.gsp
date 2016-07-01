@@ -130,7 +130,8 @@
                 jq("#" + idnt).hide();
             }
         });
-		NavigatorController = new KeyboardController();
+		
+		NavigatorController = new KeyboardController(jq('#antenatalExaminationsForm'));
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 		
         var patientProfile = JSON.parse('${patientProfile}');

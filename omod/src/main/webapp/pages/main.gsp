@@ -57,7 +57,8 @@
         return result;
     }
 	
-	jq(function() {		
+	jq(function() {
+		jq(".mch-tabs").tabs();
 		jq('#agename').text(getReadableAge('${patient.birthdate}') + ' (' +moment('${patient.birthdate}').format('DD/MM/YYYY')+')');
 	});
 </script>
@@ -270,7 +271,29 @@
 	#modal-overlay {
 		background: #000 none repeat scroll 0 0;
 		opacity: 0.4 !important;
+	}	
+	.ui-tabs .ui-tabs-panel {
+		padding: 0 1px;
+	}	
+	.simple-form-ui section.focused, .simple-form-ui #confirmation.focused, .simple-form-ui form section.focused, .simple-form-ui form #confirmation.focused {
+		min-height: 400px;
 	}
+	.header-template{
+		 border-bottom: 1px solid #eee;
+	}
+	.header-template span{
+		color: #f26522;
+	}
+	.header-template i{
+		color: #666;
+	}	
+	#profile-items{
+		margin-top: 10px;
+	}
+	#investigations-table{
+		margin-top: 1px;
+	}
+	
 </style>
 
 
@@ -338,12 +361,35 @@
     </div>
 </div>
 
-<% if (enrolledInAnc){ %>
-	${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
-<% } else if (enrolledInPnc) { %>
-	${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
-<% } else if (enrolledInCwc) { %>
-	${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
-<% } else { %>
-	${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
-<% } %>
+<div class="mch-tabs" style="margin-top:5px!important;">
+	<ul>
+		<li id="cn"><a href="#clinical-notes">Clinical Notes</a></li>
+		<li id="ti"><a href="#triage-info">Triage Information</a></li>
+		<li id="cs"><a href="#clinical-summary">Clinical History</a></li>
+		<li id="lr"><a href="#investigations">Lab Reports</a></li>
+	</ul>
+	
+	<div id="clinical-notes">
+		<% if (enrolledInAnc){ %>
+			${ui.includeFragment("mchapp","antenatalExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else if (enrolledInPnc) { %>
+			${ui.includeFragment("mchapp","postnatalExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else if (enrolledInCwc) { %>
+			${ui.includeFragment("mchapp","childWelfareExamination", [patientId: patient.patientId, queueId: queueId])}
+		<% } else { %>
+			${ui.includeFragment("mchapp","programSelection", [patientId: patient.patientId, queueId: queueId])}
+		<% } %>
+	</div>
+
+	<div id="triage-info">
+		To-do
+	</div>
+	
+	<div id="clinical-summary">
+		To-do
+	</div>
+	
+	<div id="investigations">
+		To-do
+	</div>
+</div>

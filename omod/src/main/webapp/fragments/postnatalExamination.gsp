@@ -31,7 +31,7 @@
 	emrMessages["numberField"] = "Value not a number";
 
     jq(function(){
-		NavigatorController = new KeyboardController();
+		NavigatorController = new KeyboardController(jq('#postnatalExaminationsForm'));
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 
 		var patientProfile = JSON.parse('${patientProfile}');
@@ -581,9 +581,25 @@
 	.patient-profile small{
 		margin-left: 5.5%;
 	}
-	.patient-profile small:first-child{
-		margin-left: 15px;
+	.thirty-three-perc{
+		border-left: 1px solid #363463;
+		display: inline-block;
+		float: left;
+		font-size: 15px !important;
+		padding-left: 1%;
+		width: 32%;
 	}
+	.thirty-three-perc small{
+		float: left;
+		font-size: 85% !important;
+		min-width: 120px;
+		margin-right: 4px;
+	}
+	.thirty-three-perc span{
+		color: #555;
+		float: left;
+		font-size: 90%;
+	}	
 	.floating-controls{
 		margin-top: 5px;
 	}
@@ -602,6 +618,9 @@
 	}
 	#partner-result{
 		display: none;
+	}
+	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
+		background: #fff none repeat scroll 0 0;
 	}
 </style>
 
