@@ -23,7 +23,7 @@ public class MainPageController {
     private static final int MAX_CWC_DURATION = 5;
     private static final int MAX_ANC_PNC_DURATION = 9;
 
-    public void get(
+    public String get(
         @RequestParam("patientId") Patient patient,
         @RequestParam(value = "queueId") Integer queueId,
         PageModel model, UiUtils uiUtils) {
@@ -46,8 +46,6 @@ public class MainPageController {
         model.addAttribute("enrolledInPnc", enrolledInPNC);
         model.addAttribute("enrolledInCwc", enrolledInCWC);
 
-
-
         Program program = null;
         Calendar minEnrollmentDate = Calendar.getInstance();
         List<ListItem> possibleProgramOutcomes = new ArrayList<ListItem>();
@@ -62,15 +60,15 @@ public class MainPageController {
             minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_PNC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
-        }
-        else{
+        } else if (enrolledInCWC) {
             model.addAttribute("title", "CWC Clinic");
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
             minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
             cwcFollowUps=Context.getConceptService().getConceptByName("CWC FOLLOW UP").getAnswers();
             model.addAttribute("cwcFollowUpList", cwcFollowUps);
-
+        } else{
+            return "redirect:" + uiUtils.pageLink("mchapp", "enroll") + "?patientId=" + patient.getPatientId() + "&queueId=" + queueId;
         }
 
 //        TODO modify code to ensure that the last program enrolled is pulled
@@ -86,8 +84,8 @@ public class MainPageController {
             patientProgram = new PatientProgram();
             model.addAttribute("enrollmentDate", new Date());
         }
-        model.addAttribute("patientProgram", patientProgram);
 
+        model.addAttribute("patientProgram", patientProgram);
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
         HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
@@ -102,5 +100,7 @@ public class MainPageController {
         //model.addAttribute("serviceOrderSize", serviceOrderList.size());
         model.addAttribute("patientId", patient.getPatientId());
         model.addAttribute("date", new Date());
+
+        return null;
     }
 }
