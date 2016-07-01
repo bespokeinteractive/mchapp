@@ -15,8 +15,9 @@ public class SendForExaminationParserTest extends BaseModuleContextSensitiveTest
 		String[] referParamValue = new String[] { "yes" };
 		Patient patient = Context.getPatientService().getPatient(2);
 		OpdPatientQueue opdPatient =  null;
+		String visitStatus = "REVISIT";
 		
-		opdPatient = SendForExaminationParser.parse(referParamKey, referParamValue, patient);
+		opdPatient = SendForExaminationParser.parse(referParamKey, referParamValue, patient, visitStatus);
 		
 		Assert.assertNotNull(opdPatient);
 		Assert.assertNotNull(opdPatient.getId());
