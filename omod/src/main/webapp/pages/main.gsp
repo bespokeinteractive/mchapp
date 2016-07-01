@@ -392,6 +392,6 @@ ${ui.includeFragment("mchapp","mchProfile")}
 	</div>
 	
 	<div id="investigations">
-		To-do
+		${ ui.includeFragment("patientdashboardapp", "investigations", [patientId: patientId]) }
 	</div>
 </div>
