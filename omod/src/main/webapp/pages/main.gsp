@@ -361,6 +361,8 @@
     </div>
 </div>
 
+${ui.includeFragment("mchapp","mchProfile")}
+
 <div class="mch-tabs" style="margin-top:5px!important;">
 	<ul>
 		<li id="cn"><a href="#clinical-notes">Clinical Notes</a></li>

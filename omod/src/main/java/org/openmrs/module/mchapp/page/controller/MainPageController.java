@@ -84,6 +84,7 @@ public class MainPageController {
             patientProgram = new PatientProgram();
             model.addAttribute("enrollmentDate", new Date());
         }
+
         model.addAttribute("patientProgram", patientProgram);
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);
 
