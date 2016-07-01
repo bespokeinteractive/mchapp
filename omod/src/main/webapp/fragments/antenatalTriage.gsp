@@ -59,9 +59,10 @@
         //submit data
         jq(".submit").on("click", function(event){
 			var selectedLmp = jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field').val();
-			if(!isValidDate(selectedLmp)){
+			
+			if(jq('form #1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field').length > 0 && !isValidDate(selectedLmp)){
 				jq().toastmessage('showErrorToast', "Check that the L.M.P has been provided!");
-				return;
+				return false;
 			}
             event.preventDefault();
             var data = jq("form#antenatal-triage-form").serialize();
@@ -78,7 +79,8 @@
                         jq().toastmessage('showErrorToast', data.message);
                     }
                 }, 
-                "json");
+                "json"
+			);
         });
     });
 </script>

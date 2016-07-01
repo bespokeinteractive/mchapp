@@ -2,31 +2,32 @@
     jq(function () {
         //submit data
         jq(".submit").on("click", function (event) {
-            if (jq("#weightCategories").val() == "0") {
+            if (jq("form #weightCategories").val() == "0") {
                 jq().toastmessage('showErrorToast', "Select a Weight Category!");
-                return;
+                return false;
             }
-
             
-            if (jq("#growthMonitor").val() == "0") {
+            if (jq("form #growthMonitor").val() == "0") {
                 jq().toastmessage('showErrorToast', "Select Growth Status!");
-                return;
+                return false;
             }
+			
             event.preventDefault();
             var data = jq("form#cwc-triage-form").serialize();
 
             jq.post(
-                    '${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
-                    data,
-                    function (data) {
-                        if (data.status === "success") {
-                            window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
-                        } else if (data.status === "error") {
-                            //show error message;
-                            jq().toastmessage('showErrorToast', data.message);
-                        }
-                    },
-                    "json");
+				'${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
+					} else if (data.status === "error") {
+						//show error message;
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
+			);
         });
     });
 
