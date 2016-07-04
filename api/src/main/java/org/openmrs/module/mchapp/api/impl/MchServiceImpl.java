@@ -145,14 +145,14 @@ public class MchServiceImpl implements MchService {
 
     @Override
     public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-                                      List<OpdTestOrder> testOrders, String program, Location location,Integer visitTypeId) {
-        Encounter mchEncounter = saveMchEncounter(patient,encounterObservations,drugOrders,testOrders,program,location);
-        Visit visit=new Visit();
+                                      List<OpdTestOrder> testOrders, String program, Location location, Integer visitTypeId) {
+        Encounter mchEncounter = saveMchEncounter(patient, encounterObservations, drugOrders, testOrders, program, location);
+        Visit visit = new Visit();
         visit.setLocation(location);
         visit.setPatient(patient);
         visit.setDateCreated(new Date());
         visit.setStartDatetime(new Date());
-        VisitType visitType=Context.getVisitService().getVisitType(visitTypeId);
+        VisitType visitType = Context.getVisitService().getVisitType(visitTypeId);
         visit.setVisitType(visitType);
         mchEncounter.setVisit(visit);
         return mchEncounter;
@@ -216,6 +216,28 @@ public class MchServiceImpl implements MchService {
             getCurrentProfileInfo(currentProfileObs, allProfileObs);
         }
         return currentProfileObs;
+    }
+
+    @Override
+    public List<Obs> getHistoricalPatientProfile(Patient patient, String programUuid) {
+        List<Obs> allProfileObs = new ArrayList<Obs>();
+        Program program = Context.getProgramWorkflowService().getProgramByUuid(programUuid);
+        Calendar minEnrollmentDate = Calendar.getInstance();
+        minEnrollmentDate.add(Calendar.MONTH, -max(max(MAX_CWC_DURATION, MAX_ANC_DURATION), MAX_PNC_DURATION));
+        List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, null, null, false);
+        PatientProgram currentProgram = null;
+        for (PatientProgram patientProgram : patientPrograms) {
+            if (patientProgram.getActive()) {
+                currentProgram = patientProgram;
+                break;
+            }
+        }
+        if (currentProgram != null) {
+            Date dateEnrolled = currentProgram.getDateEnrolled();
+            List<Concept> questions = getProfileConcepts(currentProgram);
+            allProfileObs = Context.getObsService().getObservations(Arrays.asList((Person) patient), null, questions, null, null, null, Arrays.asList("obsDatetime"), null, null, dateEnrolled, null, false);
+        }
+        return allProfileObs;
     }
 
     @Override
@@ -328,7 +350,6 @@ public class MchServiceImpl implements MchService {
     }
 
 
-
     @Override
     public List<Object> findVisitsByPatient(Patient patient, boolean includeInactive, boolean includeVoided, Date dateEnrolled)
             throws APIException {
@@ -346,14 +367,13 @@ public class MchServiceImpl implements MchService {
 
             if (visits.size() > 0) {
                 objectList = new ArrayList<Object>();
-                for (Visit v : visits){
-                    if(v.getStartDatetime().after(dateEnrolled) ){
+                for (Visit v : visits) {
+                    if (v.getStartDatetime().after(dateEnrolled)) {
                         objectList.add(new VisitListItem(v));
                     }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error while searching for visits", e);
             objectList.add(mss.getMessage("Visit Search Error"));
         }

@@ -37,6 +37,9 @@ public interface MchService {
 							   List<OpdTestOrder> testOrders, String program, Location location);
 	
 	List<Obs> getPatientProfile(Patient patient, String program);
+
+	List<Obs> getHistoricalPatientProfile(Patient patient, String programUuid);
+
 	List<ListItem> getPossibleOutcomes(Integer programId);
 	public void updatePatientProgram(Integer patientProgramId, String enrollmentDateYmd, String completionDateYmd,
 									 Integer locationId, Integer outcomeId) throws ParseException ;
