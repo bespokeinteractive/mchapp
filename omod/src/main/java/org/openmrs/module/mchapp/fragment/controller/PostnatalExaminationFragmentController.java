@@ -72,7 +72,7 @@ public class PostnatalExaminationFragmentController {
         QueueLogs.logOpdPatient(patientQueue, encounter);
         InternalReferral internalReferral = new InternalReferral();
         String refferedRoomUuid = request.getParameter("internalRefferal");
-        if(refferedRoomUuid!="" && refferedRoomUuid != null) {
+        if(refferedRoomUuid!="" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
             internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
         }
         return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
