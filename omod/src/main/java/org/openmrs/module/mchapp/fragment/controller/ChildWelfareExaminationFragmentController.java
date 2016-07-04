@@ -76,7 +76,7 @@ public class ChildWelfareExaminationFragmentController {
         }
 
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient,
-                observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
+                observations, drugOrders, testOrders, MchMetadata._MchProgram.CWC_PROGRAM, session.getSessionLocation());
         QueueLogs.logOpdPatient(patientQueue, encounter);
         return SimpleObject.create("status", "success", "message",
                 "Examination information has been saved.");

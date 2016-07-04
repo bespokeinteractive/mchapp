@@ -81,31 +81,7 @@
 				</span>
 			</div>
 			
-			{{ _.each(details, function(profileDetail) { }}
-				<div class="thirty-three-perc">
-					{{if (isValidDate(profileDetail.value)) { }}
-						<small>
-							<i class="icon-time small"></i>
-							{{=profileDetail.name}}:
-						</small>
-						
-						<span>
-							{{=moment(profileDetail.value,"DD MMMM YYYY").format("DD/YY/YYYY")}}
-						</span>
-						
-					{{ } else { }}
-						<small>
-							<i class="icon-user small"></i>
-							{{=profileDetail.name}}:
-						</small>
-						
-						<span>
-							{{=profileDetail.value}}
-						</span>
-					{{ } }}					
-					
-				</div>				
-			{{ }); }}	
+			
 		</div>		
 		<div class="clear"></div>
 		

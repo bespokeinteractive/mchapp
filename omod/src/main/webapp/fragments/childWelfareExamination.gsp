@@ -791,10 +791,10 @@
 		width: 32%;
 	}
 	.thirty-three-perc small{
-		float: left;
-		font-size: 85% !important;
-		min-width: 180px;
-		margin-right: 4px;
+		float: 			left;
+		font-size: 		85% !important;
+		min-width: 		80px;
+		margin-right: 	4px;
 	}
 	.thirty-three-perc span{
 		color: #555;
