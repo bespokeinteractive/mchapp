@@ -17,6 +17,8 @@
     var selectedDiagnosisIds = [];
     var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
     var provisionalDiagnosisQuestionUuid = "b8bc4c9f-7ccb-4435-bc4e-646d4cf83f0a";
+    var finalDiagnosisQuestionUuid = "7033ef37-461c-4953-a757-34722b6d9e38"
+    var diagnosisQuestionUuid = "";
     var NavigatorController;
 	
 	var examinationArray = [];
@@ -314,6 +316,14 @@
 			}
 		}
 
+        //select whether diagnosis is provisional or final
+        jq("#provisional-diagnosis").on("click", function(){
+            diagnosisQuestionUuid = provisionalDiagnosisQuestionUuid;
+        })
+        jq("#final-diagnosis").on("click", function(){
+            diagnosisQuestionUuid = finalDiagnosisQuestionUuid;
+        })
+
         //Diagnosis autocomplete functionality
         jq("#diagnoses").autocomplete({
             source: function( request, response ) {
@@ -335,7 +345,7 @@
                 if (!selectedDiagnosisIds.includes(ui.item.value)) {
                     var diagnosis = {};
                     diagnosis.label = ui.item.label;
-                    diagnosis.questionUuid = provisionalDiagnosisQuestionUuid;
+                    diagnosis.questionUuid = diagnosisQuestionUuid;
                     diagnosis.uuid = ui.item.value;
                     diagnosis.value = ui.item.value;
 
@@ -768,7 +778,7 @@
     }
 
     function hideLayer(divId) {
-        jq("#" + divId).hide();
+        jq("#" + ddiagnosisivId).hide();
         jq("#currentStateDetails_" + divId).show();
         refreshPage();
     }
@@ -822,7 +832,7 @@
 	.simple-form-ui section fieldset select:focus, .simple-form-ui section fieldset input:focus, .simple-form-ui section #confirmationQuestion select:focus, .simple-form-ui section #confirmationQuestion input:focus, .simple-form-ui #confirmation fieldset select:focus, .simple-form-ui #confirmation fieldset input:focus, .simple-form-ui #confirmation #confirmationQuestion select:focus, .simple-form-ui #confirmation #confirmationQuestion input:focus, .simple-form-ui form section fieldset select:focus, .simple-form-ui form section fieldset input:focus, .simple-form-ui form section #confirmationQuestion select:focus, .simple-form-ui form section #confirmationQuestion input:focus, .simple-form-ui form #confirmation fieldset select:focus, .simple-form-ui form #confirmation fieldset input:focus, .simple-form-ui form #confirmation #confirmationQuestion select:focus, .simple-form-ui form #confirmation #confirmationQuestion input:focus{
 		outline: 1px none #f00
 	}
-	.patient-profile{
+	.patient-profdiagnosisile{
 		border: 1px solid #eee;
 		margin: 5px 0;
 		padding: 7px 12px;
@@ -1060,6 +1070,26 @@
 
         <fieldset class="no-confirmation">
             <legend>Diagnosis</legend>
+            <div class="tasks-list">
+                <div class="left">
+                    <label id="ts01" class="tasks-list-item" for="provisional-diagnosis">
+
+                        <input type="radio" name="diagnosis_type" id="provisional-diagnosis" value="true" data-bind="checked: diagnosisProvisional" class="tasks-list-cb focused"/>
+
+                        <span class="tasks-list-mark"></span>
+                        <span class="tasks-list-desc">Provisional</span>
+                    </label>
+                </div>
+
+                <div class="left">
+                    <label class="tasks-list-item" for="final-diagnosis">
+                        <input type="radio" name="diagnosis_type" id="final-diagnosis" value="false" data-bind="checked: diagnosisProvisional" class="tasks-list-cb"/>
+                        <span class="tasks-list-mark"></span>
+                        <span class="tasks-list-desc">Final</span>
+                    </label>
+                </div>
+            </div>
+            <br><br><br>
             <div>
                 <label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
                 <input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
