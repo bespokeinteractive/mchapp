@@ -145,8 +145,10 @@ public class MchServiceImpl implements MchService {
 
     @Override
     public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-                                      List<OpdTestOrder> testOrders, String program, Location location, Integer visitTypeId) {
-        Encounter mchEncounter = saveMchEncounter(patient, encounterObservations, drugOrders, testOrders, program, location);
+                                      List<OpdTestOrder> testOrders, String program, String encounterType, Location location, Integer visitTypeId) {
+        Encounter mchEncounter = saveMchEncounter(patient, encounterObservations,
+                drugOrders, testOrders, program, 
+                encounterType, location);
         Visit visit = new Visit();
         visit.setLocation(location);
         visit.setPatient(patient);
@@ -161,7 +163,7 @@ public class MchServiceImpl implements MchService {
 
     @Override
     public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-                                      List<OpdTestOrder> testOrders, String program, Location location) {
+                                      List<OpdTestOrder> testOrders, String program, String encounterType, Location location) {
         Encounter mchEncounter = new Encounter();
         mchEncounter.setPatient(patient);
         mchEncounter.setLocation(location);
@@ -170,14 +172,7 @@ public class MchServiceImpl implements MchService {
             encounterDateTime = encounterObservations.get(0).getObsDatetime();
         }
         mchEncounter.setEncounterDatetime(encounterDateTime);
-        EncounterType mchEncounterType = null;
-        if (StringUtils.equalsIgnoreCase(MchMetadata._MchProgram.ANC_PROGRAM, program)) {
-            mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE);
-        } else if (StringUtils.equalsIgnoreCase(MchMetadata._MchProgram.PNC_PROGRAM, program)) {
-            mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.PNC_ENCOUNTER_TYPE);
-        } else if (StringUtils.equalsIgnoreCase(MchMetadata._MchProgram.CWC_PROGRAM, program)) {
-            mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.CWC_ENCOUNTER_TYPE);
-        }
+        EncounterType mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(encounterType);
         mchEncounter.setEncounterType(mchEncounterType);
         for (Obs obs : encounterObservations) {
             mchEncounter.addObs(obs);

@@ -17,8 +17,11 @@ public class MchMetadata extends AbstractMetadataBundle {
 
     public static final class _MchEncounterType {
         public static final String ANC_ENCOUNTER_TYPE = "40629059-f621-42bd-a7c4-bd22e2636e47";
+        public static final String ANC_TRIAGE_ENCOUNTER_TYPE = "2540f75d-7af5-472e-92d7-546d1add0759";
         public static final String PNC_ENCOUNTER_TYPE = "c87a3883-90f9-43a1-a972-7f615ed44e03";
+        public static final String PNC_TRIAGE_ENCOUNTER_TYPE = "91a5f5c0-858d-496e-a83e-e826af5205eb";
         public static final String CWC_ENCOUNTER_TYPE = "3aa0a23d-6f0e-43b3-ae8a-912ac0bbf129";
+        public static final String CWC_TRIAGE_ENCOUNTER_TYPE = "e341b3ba-186c-4638-a5d1-32a7a373b62a";
     }
 
     public static final class _MchProgram {
@@ -46,8 +49,11 @@ public class MchMetadata extends AbstractMetadataBundle {
     @Override
     public void install() throws Exception {
         install(encounterType("ANCENCOUNTER", "ANC encounter type", _MchEncounterType.ANC_ENCOUNTER_TYPE));
+        install(encounterType("ANCTRIAGEENCOUNTER", "ANC triage encounter type", _MchEncounterType.ANC_TRIAGE_ENCOUNTER_TYPE));
         install(encounterType("PNCENCOUNTER", "PNC encounter type", _MchEncounterType.PNC_ENCOUNTER_TYPE));
+        install(encounterType("PNCTRIAGEENCOUNTER", "PNC triage encounter type", _MchEncounterType.PNC_TRIAGE_ENCOUNTER_TYPE));
         install(encounterType("CWCENCOUNTER", "CWC encounter type", _MchEncounterType.CWC_ENCOUNTER_TYPE));
+        install(encounterType("CWCTRIAGEENCOUNTER", "CWC triage encounter type", _MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE));
 
         if (possible(Program.class, _MchProgram.ANC_PROGRAM) == null) {
             install(program("Antenatal Care Program", "ANC Program", _MchProgram.ANC_PROGRAM_CONCEPT, _MchProgram.ANC_PROGRAM));

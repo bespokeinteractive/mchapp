@@ -9,7 +9,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
-import org.openmrs.module.hospitalcore.model.TriagePatientQueueLog;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.QueueLogs;
@@ -97,7 +96,8 @@ public class CwcTriageFragmentController {
             visitTypeId = MchMetadata._MchProgram.RETURN_CWC_CLINIC_VISIT;
         }
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM, session.getSessionLocation(),visitTypeId);
+                Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM,
+                MchMetadata._MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
         if (request.getParameter("send_for_examination") != null) {
             String visitStatus = queue.getVisitStatus();
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient, visitStatus);
