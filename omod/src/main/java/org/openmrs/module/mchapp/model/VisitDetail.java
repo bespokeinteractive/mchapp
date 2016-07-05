@@ -9,18 +9,128 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.util.PatientDashboardConstants;
+import org.openmrs.module.mchapp.MchMetadata;
 
 public class VisitDetail {
 	private static final String FINAL_DIAGNOSIS_CONCEPT_NAME = "FINAL DIAGNOSIS";
-	private String history = "No History";
-	private String symptoms = "No Symptoms";
-	private String diagnosis = "No Diagnosis";
-	private String investigations = "No Investigations";
-	private String procedures = "No Procedures";
-	private String examinations = "No Examination";
-    private String visitOutcome = "No Outcome Of Visit";
-    private String internalReferral = "No Internal Referral";
-    private String externalReferral = "No External Referral";
+	private String history = "Not Specified";
+	private String symptoms = "Not Specified";
+	private String diagnosis = "Not Specified";
+	private String investigations = "Not Specified";
+	private String procedures = "Not Specified";
+	private String examinations = "Not Specified";
+    private String visitOutcome = "Not Specified";
+	private String internalReferral = "Not Specified";
+    private String externalReferral = "Not Specified";
+
+	private String cwcFollowUp = "Not Specified";
+	private String cwcBreastFeedingInfected = "Not Specified";
+	private String cwcBreastFeedingExclussive = "Not Specified";
+	private String cwcBreastFeedingCouncelling = "Not Specified";
+
+	private String hivPriorStatus = "Not Specified";
+	private String hivPartnerStatus = "Not Specified";
+	private String hivPartnerTested = "Not Specified";
+	private String hivCoupleCouncelled = "Not Specified";
+
+	private String pncExcercise = "Not Specified";
+	private String pncMultivitamin = "Not Specified";
+	private String pncVitaminA = "Not Specified";
+	private String pncHaematinics = "Not Specified";
+
+	public String getPncExcercise() {
+		return pncExcercise;
+	}
+
+	public void setPncExcercise(String pncExcercise) {
+		this.pncExcercise = pncExcercise;
+	}
+
+	public String getPncMultivitamin() {
+		return pncMultivitamin;
+	}
+
+	public void setPncMultivitamin(String pncMultivitamin) {
+		this.pncMultivitamin = pncMultivitamin;
+	}
+
+	public String getPncVitaminA() {
+		return pncVitaminA;
+	}
+
+	public void setPncVitaminA(String pncVitaminA) {
+		this.pncVitaminA = pncVitaminA;
+	}
+
+	public String getPncHaematinics() {
+		return pncHaematinics;
+	}
+
+	public void setPncHaematinics(String pncHaematinics) {
+		this.pncHaematinics = pncHaematinics;
+	}
+
+	public String getHivCoupleCouncelled() {
+		return hivCoupleCouncelled;
+	}
+
+	public void setHivCoupleCouncelled(String hivCoupleCouncelled) {
+		this.hivCoupleCouncelled = hivCoupleCouncelled;
+	}
+
+	public String getHivPriorStatus() {
+		return hivPriorStatus;
+	}
+	public void setHivPriorStatus(String hivPriorStatus) {
+		this.hivPriorStatus = hivPriorStatus;
+	}
+	public String getHivPartnerStatus() {
+		return hivPartnerStatus;
+	}
+
+	public void setHivPartnerStatus(String hivPartnerStatus) {
+		this.hivPartnerStatus = hivPartnerStatus;
+	}
+
+	public String getHivPartnerTested() {
+		return hivPartnerTested;
+	}
+
+	public void setHivPartnerTested(String hivPartnerTested) {
+		this.hivPartnerTested = hivPartnerTested;
+	}
+
+	public String getCwcBreastFeedingCouncelling() {
+		return cwcBreastFeedingCouncelling;
+	}
+
+	public void setCwcBreastFeedingCouncelling(String cwcBreastFeedingCouncelling) {
+		this.cwcBreastFeedingCouncelling = cwcBreastFeedingCouncelling;
+	}
+
+	public String getCwcBreastFeedingExclussive() {
+		return cwcBreastFeedingExclussive;
+	}
+
+	public void setCwcBreastFeedingExclussive(String cwcBreastFeedingExclussive) {
+		this.cwcBreastFeedingExclussive = cwcBreastFeedingExclussive;
+	}
+
+	public String getCwcBreastFeedingInfected() {
+		return cwcBreastFeedingInfected;
+	}
+
+	public void setCwcBreastFeedingInfected(String cwcBreastFeedingInfected) {
+		this.cwcBreastFeedingInfected = cwcBreastFeedingInfected;
+	}
+
+	public String getCwcFollowUp() {
+		return cwcFollowUp;
+	}
+
+	public void setCwcFollowUp(String cwcFollowUp) {
+		this.cwcFollowUp = cwcFollowUp;
+	}
 
     public String getExternalReferral() {
         return externalReferral;
@@ -114,7 +224,17 @@ public class VisitDetail {
         String visitOutcomeName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_VISIT_OUTCOME);
         String internalReferralConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_INTERNAL_REFERRAL);
         String externalReferralConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_EXTERNAL_REFERRAL);
-		
+
+        String cwcFollowUpConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_FOLLOW_UP).getDisplayString();
+		String cwcBreastFeedingInfectedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_BREASTFEEDING_FOR_INFECTED).getDisplayString();
+		String cwcBreastFeedingExclussiveConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_BREASTFEEDING_EXCLUSSIVE).getDisplayString();
+
+		String hivPriorStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PRIOR_STATUS).getDisplayString();
+		String hivPartnerStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_STATUS).getDisplayString();
+		String hivPartnerTestedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_TESTED).getDisplayString();
+		String hivCoupleCouncelledConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_TESTED).getDisplayString();
+
+		//Concepts
 		Concept symptomConcept = Context.getConceptService().getConcept(symptomConceptName);
 		Concept provisionalDiagnosisConcept = Context.getConceptService().getConcept(provisionalDiagnosisConceptName);
 		Concept finalDiagnosisConcept = Context.getConceptService().getConcept(FINAL_DIAGNOSIS_CONCEPT_NAME);
@@ -125,7 +245,17 @@ public class VisitDetail {
         Concept visitOutcomeConcept = Context.getConceptService().getConcept(visitOutcomeName);
         Concept internalReferralConcept = Context.getConceptService().getConcept(internalReferralConceptName);
         Concept externalReferralConcept = Context.getConceptService().getConcept(externalReferralConceptName);
-		
+
+        Concept cwcFollowUpConcept = Context.getConceptService().getConcept(cwcFollowUpConceptName);
+		Concept cwcBreastFeedingInfectedConcept = Context.getConceptService().getConcept(cwcBreastFeedingInfectedConceptName);
+		Concept cwcBreastFeedingExclussiveConcept = Context.getConceptService().getConcept(cwcBreastFeedingExclussiveConceptName);
+
+		Concept hivPriorStatusConcept = Context.getConceptService().getConcept(hivPriorStatusConceptName);
+		Concept hivPartnerStatusConcept = Context.getConceptService().getConcept(hivPartnerStatusConceptName);
+		Concept hivPartnerTestedConcept = Context.getConceptService().getConcept(hivPartnerTestedConceptName);
+		Concept hivCoupleCouncelledConcept = Context.getConceptService().getConcept(hivCoupleCouncelledConceptName);
+
+		//String Buffers
 		StringBuffer symptomList = new StringBuffer();
 		StringBuffer provisionalDiagnosisList = new StringBuffer();
 		StringBuffer finalDiagnosisList = new StringBuffer();
@@ -136,70 +266,126 @@ public class VisitDetail {
         StringBuffer visitOutcome = new StringBuffer();
         StringBuffer internalReferral = new StringBuffer();
         StringBuffer externalReferral = new StringBuffer();
+
+        StringBuffer cwcFollowUp = new StringBuffer();
+		StringBuffer cwcBreastFeedingInfected = new StringBuffer();
+		StringBuffer cwcBreastFeedingExclussive = new StringBuffer();
+
+		StringBuffer hivPriorStatus = new StringBuffer();
+		StringBuffer hivPartnerStatus = new StringBuffer();
+		StringBuffer hivPartnerTested = new StringBuffer();
+		StringBuffer hivCoupleCouncelled = new StringBuffer();
+
 		for (Obs obs : encounter.getAllObs()) {
 			if (obs.getConcept().equals(symptomConcept)) {
-				symptomList.append(obs.getValueCoded().getDisplayString()).append(", ");
+				symptomList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if (obs.getConcept().equals(provisionalDiagnosisConcept)) {
-				provisionalDiagnosisList.append("(Provisional)").append(obs.getValueCoded().getDisplayString()).append(", ");
+				provisionalDiagnosisList.append("(Provisional)").append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if (obs.getConcept().equals(finalDiagnosisConcept)) {
-				finalDiagnosisList.append(obs.getValueCoded().getDisplayString()).append(", ");
+				finalDiagnosisList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if (obs.getConcept().equals(investigationConcept)) {
 				String investigationName = Context.getConceptService().getConceptByUuid(obs.getValueText()).getDisplayString();
-				investigationList.append(investigationName).append(", ");
+				investigationList.append(investigationName).append("<br/>");
 			}
 			if (obs.getConcept().equals(procedureConcept)) {
-				procedureList.append(obs.getValueCoded().getDisplayString()).append(", ");
+				procedureList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
-			if (obs.getConcept().equals(physicalExaminationConcept)){
-				examination.append(obs.getValueText()).append(", ");
+			if (obs.getConcept().getConceptClass().getUuid().equals(MchMetadata.MchAppConstants.CWC_EXAMINATION_CLASS) && obs.getConcept().getDatatype().getUuid().equals(MchMetadata.MchAppConstants.CWC_EXAMINATION_DATATYPE)){
+				String testName = obs.getConcept().getDisplayString();
+				String testAnswer = obs.getValueCoded().getDisplayString();
+				examination.append(testName + " : "+ testAnswer).append("<br/>");
 			}
 			if (obs.getConcept().equals(historyConcept)){
-				history.append(obs.getValueText()).append(", ");
+				history.append(obs.getValueText()).append("<br/>");
 			}
             if (obs.getConcept().equals(visitOutcomeConcept)){
-                visitOutcome.append(obs.getValueText()).append(",");
+                visitOutcome.append(obs.getValueText()).append("<br/>");
             }
             if (obs.getConcept().equals(internalReferralConcept)){
 				if (obs.getValueCoded() != null){
-					internalReferral.append(obs.getValueCoded().getDisplayString()).append(",");
+					internalReferral.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 				}
             }
             if(obs.getConcept().equals(externalReferralConcept)){
-                externalReferral.append(obs.getValueCoded().getDisplayString()).append(",");
+                externalReferral.append(obs.getValueCoded().getDisplayString()).append("<br/>");
             }
+			if(obs.getConcept().equals(cwcFollowUpConcept)){
+				cwcFollowUp.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(cwcBreastFeedingExclussiveConcept)){
+				cwcBreastFeedingExclussive.append(obs.getValueCoded().getDisplayString()).append(" (0-6mnths)<br/>");
+			}
+			if(obs.getConcept().equals(cwcBreastFeedingInfectedConcept)){
+				cwcBreastFeedingInfected.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(hivPriorStatusConcept)){
+				hivPriorStatus.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(hivPartnerStatusConcept)){
+				hivPartnerStatus.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(hivPartnerTestedConcept)){
+				hivPartnerTested.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(hivCoupleCouncelledConcept)){
+				hivCoupleCouncelled.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
 		}
 		
 		VisitDetail visitDetail = new VisitDetail();
+
 		if (provisionalDiagnosisList.length() > 0) {
-			visitDetail.setDiagnosis(provisionalDiagnosisList.append(finalDiagnosisList).substring(0, provisionalDiagnosisList.length() - ", ".length()));
+			visitDetail.setDiagnosis(provisionalDiagnosisList.toString());
 		}
 		if (symptomList.length() > 0) {
-			visitDetail.setSymptoms(symptomList.substring(0, symptomList.length() - ", ".length()));
+			visitDetail.setSymptoms(symptomList.toString());
 		}
 		if (procedureList.length() > 0) {
-			visitDetail.setProcedures(procedureList.substring(0, procedureList.length() - ", ".length()));
+			visitDetail.setProcedures(procedureList.toString());
 		}
 		if (investigationList.length() > 0) {
-			visitDetail.setInvestigations(investigationList.substring(0, investigationList.length() - ", ".length()));
+			visitDetail.setInvestigations(investigationList.toString());
 		}
         if (examination.length()>0){
-            visitDetail.setExaminations(examination.substring(0,examination.length()-",".length()));
+            visitDetail.setExaminations(examination.toString());
         }
         if (history.length()>0){
-            visitDetail.setHistory(history.substring(0,history.length()-",".length()));
+            visitDetail.setHistory(history.toString());
         }
         if (visitOutcome.length()>0){
-            visitDetail.setVisitOutcome(visitOutcome.substring(0,visitOutcome.length()-",".length()));
+            visitDetail.setVisitOutcome(visitOutcome.toString());
         }
         if (internalReferral.length()>0){
-            visitDetail.setInternalReferral(internalReferral.substring(0, internalReferral.length() - ",".length()));
+            visitDetail.setInternalReferral(internalReferral.toString());
         }
         if (externalReferral.length()>0){
-            visitDetail.setExternalReferral(externalReferral.substring(0,externalReferral.length()- ",".length()));
+            visitDetail.setExternalReferral(externalReferral.toString());
         }
+		if (cwcFollowUp.length()>0){
+			visitDetail.setCwcFollowUp(cwcFollowUp.toString());
+		}
+		if (cwcBreastFeedingExclussive.length()>0){
+			visitDetail.setCwcBreastFeedingExclussive(cwcBreastFeedingExclussive.toString());
+		}
+		if (cwcBreastFeedingInfected.length()>0){
+			visitDetail.setCwcBreastFeedingInfected(cwcBreastFeedingInfected.toString());
+		}
+		if (hivPriorStatus.length()>0){
+			visitDetail.setHivPriorStatus(hivPriorStatus.toString());
+		}
+		if (hivPartnerStatus.length()>0){
+			visitDetail.setHivPartnerStatus(hivPartnerStatus.toString());
+		}
+		if (hivPartnerTested.length()>0){
+			visitDetail.setHivPartnerTested(hivPartnerTested.toString());
+		}
+		if (hivCoupleCouncelled.length()>0){
+			visitDetail.setHivCoupleCouncelled(hivCoupleCouncelled.toString());
+		}
+
 		return visitDetail;
 	}
 }

@@ -80,7 +80,7 @@ public class VisitSummaryFragmentController {
 		Encounter encounter = Context.getEncounterService().getEncounter(encounterId);
 		VisitDetail visitDetail = VisitDetail.create(encounter);
 		
-		SimpleObject detail = SimpleObject.fromObject(visitDetail, ui, "diagnosis", "symptoms", "procedures", "investigations", "examinations", "visitOutcome", "internalReferral", "externalReferral");
+		SimpleObject detail = SimpleObject.fromObject(visitDetail, ui, "diagnosis", "symptoms", "cwcFollowUp", "cwcBreastFeedingExclussive","cwcBreastFeedingInfected", "procedures", "investigations", "examinations", "hivPriorStatus", "hivPartnerStatus", "hivPartnerTested", "hivCoupleCouncelled", "visitOutcome", "internalReferral", "externalReferral");
 		
 		List<OpdDrugOrder> opdDrugs = Context.getService(PatientDashboardService.class).getOpdDrugOrder(encounter);
 		List<SimpleObject> drugs = SimpleObject.fromCollection(opdDrugs, ui, "inventoryDrug.name",

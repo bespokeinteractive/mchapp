@@ -1059,7 +1059,7 @@
         </fieldset>
 
         <fieldset>
-            <legend>Findings**</legend>
+            <legend>Findings</legend>
             <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding<span
                     class="important"></span></label>
 
