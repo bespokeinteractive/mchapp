@@ -222,7 +222,7 @@
 				if (!selectedDiagnosisIds.includes(ui.item.value)) {
 					var diagnosis = {};
 					diagnosis.label = ui.item.label;
-					diagnosis.questionUuid = provisionalDiagnosisQuestionUuid;
+					diagnosis.questionUuid = diagnosisQuestionUuid;
 					diagnosis.uuid = ui.item.value;
 					diagnosis.value = ui.item.value;
 
@@ -639,7 +639,7 @@
   <div class="investigation diagnosis">
 	<span class="icon-remove selecticon"></span>
     <label style="margin-top: 2px; width: 95%;">{{=label}}
-		<input type="hidden" name="diagnosis.{{=questionUuid}}" value="{{=uuid}}"/>
+		<input type="hidden" name="concept.{{=questionUuid}}" value="{{=uuid}}"/>
 	</label>
   </div>
 </script>
