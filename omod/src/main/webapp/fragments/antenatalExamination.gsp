@@ -913,7 +913,7 @@
 <div class="investigation diagnosis">
     <span class="icon-remove selecticon"></span>
     <label style="margin-top: 2px; width: 95%;">{{=label}}
-        <input type="hidden" name="diagnosis.{{=questionUuid}}" value="{{=uuid}}"/>
+        <input type="hidden" name="concept.{{=questionUuid}}" value="{{=uuid}}"/>
     </label>
 </div>
 </script>

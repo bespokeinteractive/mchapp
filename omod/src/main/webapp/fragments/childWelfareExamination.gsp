@@ -306,8 +306,6 @@
                 if (!examinationArray.find(function (exam) {
                             return exam.value == examination.value;
                         })) {    var provisionalDiagnosisQuestionUuid = "b8bc4c9f-7ccb-4435-bc4e-646d4cf83f0a";
-    var finalDiagnosisQuestionUuid = "7033ef37-461c-4953-a757-34722b6d9e38"
-    var diagnosisQuestionUuid = "";
 
                     var examTemplate = _.template(jq("#examination-detail-template").html());
                     jq("#exams-holder").append(examTemplate(examination));
@@ -392,7 +390,7 @@
                 if (!selectedDiagnosisIds.includes(ui.item.value)) {
                     var diagnosis = {};
                     diagnosis.label = ui.item.label;
-                    diagnosis.questionUuid = provisionalDiagnosisQuestionUuid;
+                    diagnosis.questionUuid = diagnosisQuestionUuid;
                     diagnosis.uuid = ui.item.value;
                     diagnosis.value = ui.item.value;
 
@@ -863,7 +861,7 @@
 <div class="investigation diagnosis">
     <span class="icon-remove selecticon"></span>
     <label style="margin-top: 2px; width: 95%;">{{=label}}
-        <input type="hidden" name="diagnosis.{{=questionUuid}}" value="{{=uuid}}"/>
+        <input type="hidden" name="concept.{{=questionUuid}}" value="{{=uuid}}"/>
     </label>
 </div>
 </script>
