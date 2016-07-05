@@ -15,6 +15,26 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String LAST_MENSTRUAL_PERIOD = "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     }
 
+    public static final class MchAppConstants {
+        public static final String CWC_FOLLOW_UP = "6f7b4285-a04b-4f8b-be85-81c325289539";
+        public static final String CWC_BREASTFEEDING_COUNCELLING = "42197783-8b24-49b0-b290-cbb368fa0113";
+        public static final String CWC_BREASTFEEDING_EXCLUSSIVE = "42197783-8b24-49b0-b290-cbb368fa0113";
+        public static final String CWC_BREASTFEEDING_FOR_INFECTED = "8a3c420e-b4ff-4710-81fd-90c7bfa6de72";
+
+        public static final String CWC_EXAMINATION_CLASS = "8d491a9a-c2cc-11de-8d13-0010c6dffd0f";
+        public static final String CWC_EXAMINATION_DATATYPE = "8d4a48b6-c2cc-11de-8d13-0010c6dffd0f";
+
+        public static final String MCH_HIV_PRIOR_STATUS = "1406dbf3-05da-4264-9659-fb688cea5809";
+        public static final String MCH_HIV_PARTNER_TESTED = "93366255-8903-44af-8370-3b68c0400930";
+        public static final String MCH_HIV_PARTNER_STATUS = "df68a879-70c4-40d5-becc-a2679b174036";
+        public static final String MCH_HIV_COUPLE_COUNCELLED = "27b96311-bc00-4839-b7c9-31401b44cd3a";
+
+        public static final String PNC_EXCERCISE = "ba18b0c3-8208-465a-9c95-2f85047e2939";
+        public static final String PNC_MULTIVITAMIN = "5712097d-a478-4ff4-a2aa-bd827a6833ed";
+        public static final String PNC_VITAMIN_A = "c764e84f-cfb2-424a-acec-20e4fb8531b7";
+        public static final String PNC_HAEMATINICS = "5d935a14-9c53-4171-bda7-51da05fbb9eb";
+    }
+
     public static final class _MchEncounterType {
         public static final String ANC_ENCOUNTER_TYPE = "40629059-f621-42bd-a7c4-bd22e2636e47";
         public static final String ANC_TRIAGE_ENCOUNTER_TYPE = "2540f75d-7af5-472e-92d7-546d1add0759";

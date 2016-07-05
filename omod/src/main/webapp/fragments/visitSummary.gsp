@@ -78,6 +78,24 @@
 	#person-detail {
 		display: none;
 	}
+	.dashboard .info-body label {
+		display: inline-block;
+		font-size: 90%;
+		font-weight: bold;
+		margin-bottom: 5px;
+		width: 190px;
+	}
+	.clinical-history label{
+		float: left;
+	}
+	.clinical-history span{
+		float: 	left;
+		display: inline-block;
+	}
+	.status.active {
+		margin-right: 10px;
+		margin-top: 7px;
+	}
 </style>
 
 <div class="onerow">
@@ -171,35 +189,170 @@
 		<h3>CLINICAL HISTORY SUMMARY INFORMATION</h3>
 	</div>
 
-	<div class="info-body">
-		<label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>Examination:</label>
-		<span>{{-examinations}}</span>
-		<br>
+	<div class="info-body clinical-history">
+		<% if (enrolledInAnc){ %>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Examination:</label>
+				<span>{{=examinations}}</span>			
+				<div class="clear"></div>
+			</div>
 
-		<label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>Diagnosis:</label>
-		<span>{{-diagnosis}}</span>
-		<br>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Diagnosis:</label>
+				<span>{{=diagnosis}}</span>
+				<div class="clear"></div>
+			</div>
 
-		<label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>Investigations:</label>
-		<span>{{-investigations}}</span>
-		<br>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Investigations:</label>
+				<span>{{=investigations}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>HIV Prior Status:</label>
+				<span>{{=hivPriorStatus}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Partner Tested:</label>
+				<span>{{=hivPartnerTested}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Partner Result:</label>
+				<span>{{=hivPartnerStatus}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Couple Concelled:</label>
+				<span>{{=hivCoupleCouncelled}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Internal Referral:</label>
+				<span>{{=internalReferral}}</span>
+				<div class="clear"></div>
+			</div>
 
-		<label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>Procedures:</label>
-		<span>{{-procedures}}</span>
-		<br>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>External Referral:</label>
+				<span>{{-externalReferral}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			
+		<% } else if (enrolledInPnc) { %>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Examination:</label>
+				<span>{{=examinations}}</span>			
+				<div class="clear"></div>
+			</div>
 
-		<label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>Internal Referral:</label>
-		<span>{{-internalReferral}}</span>
-		<br>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Diagnosis:</label>
+				<span>{{=diagnosis}}</span>
+				<div class="clear"></div>
+			</div>
 
-		<label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>External Referral:</label>
-		<span>{{-externalReferral}}</span>
-		<br>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Investigations:</label>
+				<span>{{=investigations}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>HIV Prior Status:</label>
+				<span>{{=hivPriorStatus}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Partner Tested:</label>
+				<span>{{=hivPartnerTested}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Partner Result:</label>
+				<span>{{=hivPartnerStatus}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Couple Concelled:</label>
+				<span>{{=hivCoupleCouncelled}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Internal Referral:</label>
+				<span>{{=internalReferral}}</span>
+				<div class="clear"></div>
+			</div>
 
-        <label style="display: inline-block; font-weight: bold; width: 190px"><span class="status active"></span>Visit Outcome:</label>
-        <span>{{-visitOutcome}}</span>
-        <br>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>External Referral:</label>
+				<span>{{-externalReferral}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			
+		<% } else { %>		
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Examination:</label>
+				<span>{{=examinations}}</span>			
+				<div class="clear"></div>
+			</div>
 
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Diagnosis:</label>
+				<span>{{=diagnosis}}</span>
+				<div class="clear"></div>
+			</div>
+
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Investigations:</label>
+				<span>{{=investigations}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>CWC Followup:</label>
+				<span>{{=cwcFollowUp}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Exclussive Breastfeeding:</label>
+				<span>{{=cwcBreastFeedingExclussive}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Breastfeeding & Infected:</label>
+				<span>{{=cwcBreastFeedingInfected}}</span>
+				<div class="clear"></div>
+			</div>
+
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Internal Referral:</label>
+				<span>{{=internalReferral}}</span>
+				<div class="clear"></div>
+			</div>
+
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>External Referral:</label>
+				<span>{{-externalReferral}}</span>
+				<div class="clear"></div>
+			</div>
+		<% } %>
 	</div>
 </script>
 
