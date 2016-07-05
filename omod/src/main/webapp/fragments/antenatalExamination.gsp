@@ -159,8 +159,7 @@
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 		
         var patientProfile = JSON.parse('${patientProfile}');
-        var patientHistoricalProfile = JSON.parse('${patientHistoricalProfile}');
-		
+
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
             jq(".patient-profile").append(patientProfileTemplate(patientProfile));
