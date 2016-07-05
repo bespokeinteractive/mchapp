@@ -17,6 +17,8 @@
     var selectedDiagnosisIds = [];
     var investigationQuestionUuid = "1ad6f4a5-13fd-47fc-a975-f5a1aa61f757";
     var provisionalDiagnosisQuestionUuid = "b8bc4c9f-7ccb-4435-bc4e-646d4cf83f0a";
+    var finalDiagnosisQuestionUuid = "7033ef37-461c-4953-a757-34722b6d9e38"
+    var diagnosisQuestionUuid = "";
     var NavigatorController;
 
     var examinationArray = [];
@@ -303,7 +305,9 @@
 
                 if (!examinationArray.find(function (exam) {
                             return exam.value == examination.value;
-                        })) {
+                        })) {    var provisionalDiagnosisQuestionUuid = "b8bc4c9f-7ccb-4435-bc4e-646d4cf83f0a";
+    var finalDiagnosisQuestionUuid = "7033ef37-461c-4953-a757-34722b6d9e38"
+    var diagnosisQuestionUuid = "";
 
                     var examTemplate = _.template(jq("#examination-detail-template").html());
                     jq("#exams-holder").append(examTemplate(examination));
@@ -358,6 +362,14 @@
                 jq('#summaryTable tr:eq(0) td:eq(1)').html(exams);
             }
         }
+
+        //select whether diagnosis is provisional or final
+        jq("#provisional-diagnosis").on("click", function(){
+            diagnosisQuestionUuid = provisionalDiagnosisQuestionUuid;
+        })
+        jq("#final-diagnosis").on("click", function(){
+            diagnosisQuestionUuid = finalDiagnosisQuestionUuid;
+        })
 
         //Diagnosis autocomplete functionality
         jq("#diagnoses").autocomplete({
@@ -1009,6 +1021,26 @@
 
         <fieldset class="no-confirmation">
             <legend>Diagnosis</legend>
+            <div class="tasks-list">
+                <div class="left">
+                    <label id="ts01" class="tasks-list-item" for="provisional-diagnosis">
+
+                        <input type="radio" name="diagnosis_type" id="provisional-diagnosis" value="true" data-bind="checked: diagnosisProvisional" class="tasks-list-cb focused"/>
+
+                        <span class="tasks-list-mark"></span>
+                        <span class="tasks-list-desc">Provisional</span>
+                    </label>
+                </div>
+
+                <div class="left">
+                    <label class="tasks-list-item" for="final-diagnosis">
+                        <input type="radio" name="diagnosis_type" id="final-diagnosis" value="false" data-bind="checked: diagnosisProvisional" class="tasks-list-cb"/>
+                        <span class="tasks-list-mark"></span>
+                        <span class="tasks-list-desc">Final</span>
+                    </label>
+                </div>
+            </div>
+            <br><br><br>
             <div>
                 <label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
                 <input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
