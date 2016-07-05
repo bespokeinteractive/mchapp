@@ -68,7 +68,8 @@ public class PostnatalExaminationFragmentController {
             }
         }
 
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.PNC_PROGRAM, session.getSessionLocation());
+        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations, drugOrders, testOrders, MchMetadata._MchProgram.PNC_PROGRAM,
+                MchMetadata._MchEncounterType.PNC_ENCOUNTER_TYPE, session.getSessionLocation());
         QueueLogs.logOpdPatient(patientQueue, encounter);
         InternalReferral internalReferral = new InternalReferral();
         String refferedRoomUuid = request.getParameter("internalRefferal");

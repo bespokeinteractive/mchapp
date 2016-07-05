@@ -276,7 +276,10 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         Location location = Context.getLocationService().getLocation(1);
 
         Assert.assertNull(drugOrder.getOpdDrugOrderId());
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, Arrays.asList(ancObs), Arrays.asList(drugOrder), Arrays.asList(testOrder), MchMetadata._MchProgram.ANC_PROGRAM, location);
+        Encounter encounter = Context.getService(MchService.class)
+                .saveMchEncounter(patient, Arrays.asList(ancObs), Arrays.asList(drugOrder), 
+                    Arrays.asList(testOrder), MchMetadata._MchProgram.ANC_PROGRAM,
+                    MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, location);
 
         Assert.assertNotNull(encounter.getId());
         Assert.assertThat(encounter.getLocation(), equalTo(location));

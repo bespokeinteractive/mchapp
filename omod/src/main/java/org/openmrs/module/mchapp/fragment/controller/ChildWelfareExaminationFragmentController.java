@@ -78,12 +78,12 @@ public class ChildWelfareExaminationFragmentController {
         }
         InternalReferral internalReferral = new InternalReferral();
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient,
-                observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, session.getSessionLocation());
+                observations, drugOrders, testOrders, MchMetadata._MchProgram.ANC_PROGRAM, 
+                MchMetadata._MchEncounterType.CWC_ENCOUNTER_TYPE, session.getSessionLocation());
         String refferedRoomUuid = request.getParameter("internalRefferal");
         if(refferedRoomUuid!="" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
             internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
         }
-
         QueueLogs.logOpdPatient(patientQueue, encounter);
         return SimpleObject.create("status", "success", "message",
                 "Examination information has been saved.");
