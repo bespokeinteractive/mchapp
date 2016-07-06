@@ -37,6 +37,80 @@ public class VisitDetail {
 	private String pncMultivitamin = "Not Specified";
 	private String pncVitaminA = "Not Specified";
 	private String pncHaematinics = "Not Specified";
+	private String pncFamilyPlanning = "Not Specified";
+
+	private String ancCouncelling = "Not Specified";
+	private String ancExlussiveBF = "Not Specified";
+	private String ancForInfected = "Not Specified";
+	private String ancDecisionOnBF = "Not Specified";
+
+	private String ancDeworming = "Not Specified";
+	private String ancExcercise = "Not Specified";
+	private String ancLLITN = "Not Specified";
+
+	public String getAncDeworming() {
+		return ancDeworming;
+	}
+
+	public void setAncDeworming(String ancDeworming) {
+		this.ancDeworming = ancDeworming;
+	}
+
+	public String getAncExcercise() {
+		return ancExcercise;
+	}
+
+	public void setAncExcercise(String ancExcercise) {
+		this.ancExcercise = ancExcercise;
+	}
+
+	public String getAncLLITN() {
+		return ancLLITN;
+	}
+
+	public void setAncLLITN(String ancLLITN) {
+		this.ancLLITN = ancLLITN;
+	}
+
+	public String getAncCouncelling() {
+		return ancCouncelling;
+	}
+
+	public void setAncCouncelling(String ancCouncelling) {
+		this.ancCouncelling = ancCouncelling;
+	}
+
+	public String getAncExlussiveBF() {
+		return ancExlussiveBF;
+	}
+
+	public void setAncExlussiveBF(String ancExlussiveBF) {
+		this.ancExlussiveBF = ancExlussiveBF;
+	}
+
+	public String getAncForInfected() {
+		return ancForInfected;
+	}
+
+	public void setAncForInfected(String ancForInfected) {
+		this.ancForInfected = ancForInfected;
+	}
+
+	public String getAncDecisionOnBF() {
+		return ancDecisionOnBF;
+	}
+
+	public void setAncDecisionOnBF(String ancDecisionOnBF) {
+		this.ancDecisionOnBF = ancDecisionOnBF;
+	}
+
+	public String getPncFamilyPlanning() {
+		return pncFamilyPlanning;
+	}
+
+	public void setPncFamilyPlanning(String pncFamilyPlanning) {
+		this.pncFamilyPlanning = pncFamilyPlanning;
+	}
 
 	public String getPncExcercise() {
 		return pncExcercise;
@@ -238,7 +312,17 @@ public class VisitDetail {
 		String pncMultivitaminConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_MULTIVITAMIN).getDisplayString();
 		String pncVitaminAConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_VITAMIN_A).getDisplayString();
 		String pncHaematinicsConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_HAEMATINICS).getDisplayString();
-
+		String pncFamilyPlanningConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_FAMILY_PLANNING).getDisplayString();
+		
+		String ancCouncellingConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_FEEDING_COUNCELLING).getDisplayString();
+		String ancExlussiveBFConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_FEEDING_EXCLUSSIVE).getDisplayString();
+		String ancForInfectedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_FEEDING_INFECTED).getDisplayString();
+		String ancDecisionOnBFConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_FEEDING_DECISION).getDisplayString();
+		
+		String ancDewormingConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_DEWORMING).getDisplayString();
+		String ancExcerciseConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_EXCERCISE).getDisplayString();
+		String ancLLITNConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.ANC_LLITN).getDisplayString();
+		
 		//Concepts
 		Concept symptomConcept = Context.getConceptService().getConcept(symptomConceptName);
 		Concept provisionalDiagnosisConcept = Context.getConceptService().getConcept(provisionalDiagnosisConceptName);
@@ -264,6 +348,16 @@ public class VisitDetail {
 		Concept pncMultivitaminConcept = Context.getConceptService().getConcept(pncMultivitaminConceptName);
 		Concept pncVitaminAConcept = Context.getConceptService().getConcept(pncVitaminAConceptName);
 		Concept pncHaematinicsConcept = Context.getConceptService().getConcept(pncHaematinicsConceptName);
+		Concept pncFamilyPlanningConcept = Context.getConceptService().getConcept(pncFamilyPlanningConceptName);
+		
+		Concept ancCouncellingConcept = Context.getConceptService().getConcept(ancCouncellingConceptName);
+		Concept ancExlussiveBFConcept = Context.getConceptService().getConcept(ancExlussiveBFConceptName);
+		Concept ancForInfectedConcept = Context.getConceptService().getConcept(ancForInfectedConceptName);
+		Concept ancDecisionOnBFConcept = Context.getConceptService().getConcept(ancDecisionOnBFConceptName);
+		
+		Concept ancDewormingConcept = Context.getConceptService().getConcept(ancDewormingConceptName);
+		Concept ancExcerciseConcept = Context.getConceptService().getConcept(ancExcerciseConceptName);
+		Concept ancLLITNConcept = Context.getConceptService().getConcept(ancLLITNConceptName);
 
 		//String Buffers
 		StringBuffer symptomList = new StringBuffer();
@@ -290,13 +384,23 @@ public class VisitDetail {
 		StringBuffer pncMultivitamin = new StringBuffer();
 		StringBuffer pncVitaminA = new StringBuffer();
 		StringBuffer pncHaematinics = new StringBuffer();
+		StringBuffer pncFamilyPlanning = new StringBuffer();
+		
+		StringBuffer ancCouncelling = new StringBuffer();
+		StringBuffer ancExlussiveBF = new StringBuffer();
+		StringBuffer ancForInfected = new StringBuffer();
+		StringBuffer ancDecisionOnBF = new StringBuffer();
+		
+		StringBuffer ancDeworming = new StringBuffer();
+		StringBuffer ancExcercise = new StringBuffer();
+		StringBuffer ancLLITN = new StringBuffer();
 
 		for (Obs obs : encounter.getAllObs()) {
 			if (obs.getConcept().equals(symptomConcept)) {
 				symptomList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if (obs.getConcept().equals(provisionalDiagnosisConcept)) {
-				provisionalDiagnosisList.append("(Provisional)").append(obs.getValueCoded().getDisplayString()).append("<br/>");
+				provisionalDiagnosisList.append(obs.getValueCoded().getDisplayString()).append(" (Provisional)<br/>");
 			}
 			if (obs.getConcept().equals(finalDiagnosisConcept)) {
 				finalDiagnosisList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
@@ -359,6 +463,30 @@ public class VisitDetail {
 			}
 			if(obs.getConcept().equals(pncHaematinicsConcept)){
 				pncHaematinics.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(pncFamilyPlanningConcept)){
+				pncFamilyPlanning.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}			
+			if(obs.getConcept().equals(ancCouncellingConcept)){
+				ancCouncelling.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(ancExlussiveBFConcept)){
+				ancExlussiveBF.append(obs.getValueCoded().getDisplayString()).append(" (Councelling)<br/>");
+			}
+			if(obs.getConcept().equals(ancForInfectedConcept)){
+				ancForInfected.append(obs.getValueCoded().getDisplayString()).append(" (For Infected)<br/>");
+			}
+			if(obs.getConcept().equals(ancDecisionOnBFConcept)){
+				ancDecisionOnBF.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}			
+			if(obs.getConcept().equals(ancDewormingConcept)){
+				ancDeworming.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(ancExcerciseConcept)){
+				ancExcercise.append(Context.getConceptService().getConceptByUuid(obs.getValueText()).getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(ancLLITNConcept)){
+				ancLLITN.append(Context.getConceptService().getConceptByUuid(obs.getValueText()).getDisplayString()).append("<br/>");
 			}
 		}
 		
@@ -423,6 +551,31 @@ public class VisitDetail {
 		}	
 		if (pncHaematinics.length()>0){
 			visitDetail.setPncHaematinics(pncHaematinics.toString());
+		}
+		if (pncFamilyPlanning.length()>0){
+			visitDetail.setPncFamilyPlanning(pncFamilyPlanning.toString());
+		}		
+		if (ancCouncelling.length()>0){
+			visitDetail.setAncCouncelling(ancCouncelling.toString());
+		}
+		if (ancExlussiveBF.length()>0){
+			visitDetail.setAncExlussiveBF(ancExlussiveBF.toString());
+		}
+		if (ancForInfected.length()>0){
+			visitDetail.setAncForInfected(ancForInfected.toString());
+		}
+		if (ancDecisionOnBF.length()>0){
+			visitDetail.setAncDecisionOnBF(ancDecisionOnBF.toString());
+		}
+		
+		if (ancDeworming.length()>0){
+			visitDetail.setAncDeworming(ancDeworming.toString());
+		}
+		if (ancExcercise.length()>0){
+			visitDetail.setAncExcercise(ancExcercise.toString());
+		}
+		if (ancLLITN.length()>0){
+			visitDetail.setAncLLITN(ancLLITN.toString());
 		}
 
 		return visitDetail;

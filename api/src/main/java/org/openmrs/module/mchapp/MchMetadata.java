@@ -33,6 +33,16 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String PNC_MULTIVITAMIN = "5712097d-a478-4ff4-a2aa-bd827a6833ed";
         public static final String PNC_VITAMIN_A = "c764e84f-cfb2-424a-acec-20e4fb8531b7";
         public static final String PNC_HAEMATINICS = "5d935a14-9c53-4171-bda7-51da05fbb9eb";
+        public static final String PNC_FAMILY_PLANNING = "374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+        public static final String ANC_FEEDING_COUNCELLING = "fb5a5471-e912-4288-8c25-750f7f88281f";
+        public static final String ANC_FEEDING_EXCLUSSIVE = "42197783-8b24-49b0-b290-cbb368fa0113";
+        public static final String ANC_FEEDING_INFECTED = "8a3c420e-b4ff-4710-81fd-90c7bfa6de72";
+        public static final String ANC_FEEDING_DECISION = "a0bf86bb-b50e-4be4-a54c-32518bfb843f";
+
+        public static final String ANC_EXCERCISE = "0a92efcc-51b3-448d-b4e3-a743ea5aa18c";
+        public static final String ANC_DEWORMING = "159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        public static final String ANC_LLITN = "160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     }
 
     public static final class _MchEncounterType {

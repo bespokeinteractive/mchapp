@@ -228,10 +228,53 @@
 			</div>
 			
 			<div>
-				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Couple Concelled:</label>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Couple Councelled:</label>
 				<span>{{=hivCoupleCouncelled}}</span>
 				<div class="clear"></div>
 			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Feeding Councelling:</label>
+				<span>{{=ancCouncelling}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Exclusive Breastfeeding:</label>
+				<span>{{=ancExlussiveBF}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Infant Feeding:</label>
+				<span>{{=ancForInfected}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Breastfeeding Decision:</label>
+				<span>{{=ancDecisionOnBF}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Deworming:</label>
+				<span>{{=ancDeworming}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>ANC Exercise:</label>
+				<span>{{=ancExcercise}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Treated Net:</label>
+				<span>{{=ancLLITN}}</span>
+				<div class="clear"></div>
+			</div>			
 			
 			<div>
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Internal Referral:</label>
@@ -310,6 +353,12 @@
 			<div>
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Haematinics Given:</label>
 				<span>{{=pncHaematinics}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>FP Method:</label>
+				<span>{{=pncFamilyPlanning}}</span>
 				<div class="clear"></div>
 			</div>
 			
