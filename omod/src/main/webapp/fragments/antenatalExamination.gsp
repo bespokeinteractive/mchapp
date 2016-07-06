@@ -165,6 +165,26 @@
             jq(".patient-profile").append(patientProfileTemplate(patientProfile));
         }
 
+
+        var lastMenstrualPeriod = _.find(patientProfile.details, function(profile){
+            return profile.uuid == "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        });
+        var lastMenstrualPeriod = moment(lastMenstrualPeriod.value, "DD-MM-YYYY");
+        var todaysDate = moment();
+        var gestationInWeeks = Math.ceil(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
+
+        if(gestationInWeeks < 16)
+        {
+            jq("#lessthan16").show();
+            jq("#above16").hide();
+        }
+        else if(gestationInWeeks >= 16)
+        {
+            jq("#above16").show();
+            jq("#lessthan16").hide();
+        }
+
+
         var examinations = [];        
 		
         var adddrugdialog = emr.setupConfirmationDialog({
@@ -1049,21 +1069,29 @@
 		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>
 			<div style="padding: 0 4px">
-				<label for="searchExaminations" class="label title-label">Examinations <span class="important"></span></label>
-				<input type="text" id="searchExaminations" name="" value="" placeholder="Add Examination"/>
-				<field>
-					<input type="hidden" id="exams-set" class=""/>
-					<span id="exams-lbl" class="field-error" style="display: none"></span>
-				</field>
-				
-				<div class="tasks" id="task-exams" style="display:none;">
-					<header class="tasks-header">
-						<span id="title-symptom" class="tasks-title">PATIENT'S EXAMINATIONS</span>
-						<a class="tasks-lists"></a>
-					</header>
-					
-					<div id="exams-holder"></div>						
-				</div>
+                <div style="display:none" id="lessthan16">
+                    <p>There is palpable mass, Please select next visit date</p>
+                    <div>
+                        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'ac5c88af-3104-4ca2-b1f7-2073b1364065', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+                    </div>
+                </div>
+                <div style="display:none"  id="above16">
+                    <label for="searchExaminations" class="label title-label">Examinations <span class="important"></span></label>
+                    <input type="text" id="searchExaminations" name="" value="" placeholder="Add Examination"/>
+                    <field>
+                        <input type="hidden" id="exams-set" class=""/>
+                        <span id="exams-lbl" class="field-error" style="display: none"></span>
+                    </field>
+
+                    <div class="tasks" id="task-exams" style="display:none;">
+                        <header class="tasks-header">
+                            <span id="title-symptom" class="tasks-title">PATIENT'S EXAMINATIONS</span>
+                            <a class="tasks-lists"></a>
+                        </header>
+
+                        <div id="exams-holder"></div>
+                    </div>
+                </div>
 			</div>				
 		</fieldset>
 
