@@ -311,7 +311,7 @@
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Haematinics Given:</label>
 				<span>{{=pncHaematinics}}</span>
 				<div class="clear"></div>
-			</div>			
+			</div>
 			
 			<div>
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Internal Referral:</label>

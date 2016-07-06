@@ -239,7 +239,6 @@ public class VisitDetail {
 		String pncVitaminAConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_VITAMIN_A).getDisplayString();
 		String pncHaematinicsConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_HAEMATINICS).getDisplayString();
 
-	
 		//Concepts
 		Concept symptomConcept = Context.getConceptService().getConcept(symptomConceptName);
 		Concept provisionalDiagnosisConcept = Context.getConceptService().getConcept(provisionalDiagnosisConceptName);
@@ -265,7 +264,6 @@ public class VisitDetail {
 		Concept pncMultivitaminConcept = Context.getConceptService().getConcept(pncMultivitaminConceptName);
 		Concept pncVitaminAConcept = Context.getConceptService().getConcept(pncVitaminAConceptName);
 		Concept pncHaematinicsConcept = Context.getConceptService().getConcept(pncHaematinicsConceptName);
-		
 
 		//String Buffers
 		StringBuffer symptomList = new StringBuffer();
