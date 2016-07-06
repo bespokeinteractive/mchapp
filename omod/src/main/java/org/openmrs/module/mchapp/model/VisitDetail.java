@@ -233,7 +233,13 @@ public class VisitDetail {
 		String hivPartnerStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_STATUS).getDisplayString();
 		String hivPartnerTestedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_TESTED).getDisplayString();
 		String hivCoupleCouncelledConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_TESTED).getDisplayString();
+		
+		String pncExcerciseConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_EXCERCISE).getDisplayString();
+		String pncMultivitaminConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_MULTIVITAMIN).getDisplayString();
+		String pncVitaminAConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_VITAMIN_A).getDisplayString();
+		String pncHaematinicsConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_HAEMATINICS).getDisplayString();
 
+	
 		//Concepts
 		Concept symptomConcept = Context.getConceptService().getConcept(symptomConceptName);
 		Concept provisionalDiagnosisConcept = Context.getConceptService().getConcept(provisionalDiagnosisConceptName);
@@ -254,6 +260,12 @@ public class VisitDetail {
 		Concept hivPartnerStatusConcept = Context.getConceptService().getConcept(hivPartnerStatusConceptName);
 		Concept hivPartnerTestedConcept = Context.getConceptService().getConcept(hivPartnerTestedConceptName);
 		Concept hivCoupleCouncelledConcept = Context.getConceptService().getConcept(hivCoupleCouncelledConceptName);
+		
+		Concept pncExcerciseConcept = Context.getConceptService().getConcept(pncExcerciseConceptName);
+		Concept pncMultivitaminConcept = Context.getConceptService().getConcept(pncMultivitaminConceptName);
+		Concept pncVitaminAConcept = Context.getConceptService().getConcept(pncVitaminAConceptName);
+		Concept pncHaematinicsConcept = Context.getConceptService().getConcept(pncHaematinicsConceptName);
+		
 
 		//String Buffers
 		StringBuffer symptomList = new StringBuffer();
@@ -275,6 +287,11 @@ public class VisitDetail {
 		StringBuffer hivPartnerStatus = new StringBuffer();
 		StringBuffer hivPartnerTested = new StringBuffer();
 		StringBuffer hivCoupleCouncelled = new StringBuffer();
+		
+		StringBuffer pncExcercise = new StringBuffer();
+		StringBuffer pncMultivitamin = new StringBuffer();
+		StringBuffer pncVitaminA = new StringBuffer();
+		StringBuffer pncHaematinics = new StringBuffer();
 
 		for (Obs obs : encounter.getAllObs()) {
 			if (obs.getConcept().equals(symptomConcept)) {
@@ -333,6 +350,18 @@ public class VisitDetail {
 			if(obs.getConcept().equals(hivCoupleCouncelledConcept)){
 				hivCoupleCouncelled.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
+			if(obs.getConcept().equals(pncExcerciseConcept)){
+				pncExcercise.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(pncMultivitaminConcept)){
+				pncMultivitamin.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(pncVitaminAConcept)){
+				pncVitaminA.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(pncHaematinicsConcept)){
+				pncHaematinics.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
 		}
 		
 		VisitDetail visitDetail = new VisitDetail();
@@ -384,6 +413,18 @@ public class VisitDetail {
 		}
 		if (hivCoupleCouncelled.length()>0){
 			visitDetail.setHivCoupleCouncelled(hivCoupleCouncelled.toString());
+		}			
+		if (pncExcercise.length()>0){
+			visitDetail.setPncExcercise(pncExcercise.toString());
+		}	
+		if (pncMultivitamin.length()>0){
+			visitDetail.setPncMultivitamin(pncMultivitamin.toString());
+		}	
+		if (pncVitaminA.length()>0){
+			visitDetail.setPncVitaminA(pncVitaminA.toString());
+		}	
+		if (pncHaematinics.length()>0){
+			visitDetail.setPncHaematinics(pncHaematinics.toString());
 		}
 
 		return visitDetail;

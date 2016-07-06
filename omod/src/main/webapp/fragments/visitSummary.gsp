@@ -289,7 +289,29 @@
 				<div class="clear"></div>
 			</div>
 			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Exercise Given:</label>
+				<span>{{=pncExcercise}}</span>
+				<div class="clear"></div>
+			</div>
 			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Multivitamin Given:</label>
+				<span>{{=pncMultivitamin}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Vitamin A Given:</label>
+				<span>{{=pncVitaminA}}</span>
+				<div class="clear"></div>
+			</div>
+			
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Haematinics Given:</label>
+				<span>{{=pncHaematinics}}</span>
+				<div class="clear"></div>
+			</div>			
 			
 			<div>
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Internal Referral:</label>
