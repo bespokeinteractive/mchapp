@@ -176,11 +176,13 @@
         if(gestationInWeeks < 16)
         {
             jq("#lessthan16").show();
+            jq("#next-visit-date").hide();
             jq("#above16").hide();
         }
         else if(gestationInWeeks >= 16)
         {
             jq("#above16").show();
+            jq("#next-visit-date").show();
             jq("#lessthan16").hide();
         }
 
@@ -1072,7 +1074,7 @@
                 <div style="display:none" id="lessthan16">
                     <p>There is palpable mass, Please select next visit date</p>
                     <div>
-                        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'ac5c88af-3104-4ca2-b1f7-2073b1364065', label: '', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+                        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'under-16-weeks-next-visit-date', label: 'Next visit date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
                     </div>
                 </div>
                 <div style="display:none"  id="above16">
@@ -1561,6 +1563,9 @@
 					<textarea id="comments" name="comment.18b2b617-1631-457f-a36b-e593d948707f" style="width: 95.7%; resize: none;"></textarea>				
 				</div>
 			</div>
+            <div id="next-visit-date" class="onerow">
+                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+            </div>
 		</fieldset>
 	</section>
 	
