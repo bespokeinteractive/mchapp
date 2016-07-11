@@ -177,12 +177,10 @@
         {
             jq("#lessthan16").show();
             jq("#next-visit-date").hide();
-            jq("#above16").hide();
+            jq("#maturity").val(gestationInWeeks + " Weeks");
         }
         else if(gestationInWeeks >= 16)
         {
-            jq("#above16").show();
-            jq("#next-visit-date").show();
             jq("#lessthan16").hide();
         }
 
@@ -1073,11 +1071,16 @@
 			<div style="padding: 0 4px">
                 <div style="display:none" id="lessthan16">
                     <p>There is palpable mass, Please select next visit date</p>
+
+                    <label for="maturity" class="label title-label">Maturity <span class="important"></span></label>
+                    <input type="text" id="maturity" disabled="disabled" />
                     <div>
                         ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'under-16-weeks-next-visit-date', label: 'Next visit date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
                     </div>
+                    <label for="fundalHeight" class="label title-label">Fundal Height<span class="important"></span></label>
+                    <input type="text" id="fundalHeight" name="concept.1439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value=""/>
                 </div>
-                <div style="display:none"  id="above16">
+                <div>
                     <label for="searchExaminations" class="label title-label">Examinations <span class="important"></span></label>
                     <input type="text" id="searchExaminations" name="" value="" placeholder="Add Examination"/>
                     <field>
