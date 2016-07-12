@@ -44,7 +44,18 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String ANC_DEWORMING = "159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         public static final String ANC_LLITN = "160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     }
-
+    public static final class MchAppTriageConstants {
+    	public static final String PULSE_RATE = "5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    	public static final String HEIGHT = "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    	public static final String WEIGHT = "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    	public static final String SYSTOLIC = "6aa7eab2-138a-4041-a87f-00d9421492bc";
+    	public static final String DAISTOLIC = "5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    	public static final String TEMPERATURE = "5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    	public static final String MUAC = "b7112b6c-de10-42ee-b54d-2e1be98cd2d6";
+    	public static final String GROWTH_STATUS = "562a6c3e-519b-4a50-81be-76ca67b5d5ec";
+    	public static final String WEIGHT_CATEGORY = "1854AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    	
+    }
     public static final class _MchEncounterType {
         public static final String ANC_ENCOUNTER_TYPE = "40629059-f621-42bd-a7c4-bd22e2636e47";
         public static final String ANC_TRIAGE_ENCOUNTER_TYPE = "2540f75d-7af5-472e-92d7-546d1add0759";

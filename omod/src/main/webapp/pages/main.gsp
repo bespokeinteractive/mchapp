@@ -384,7 +384,7 @@ ${ui.includeFragment("mchapp","mchProfile")}
 	</div>
 
 	<div id="triage-info">
-		To-do
+		${ ui.includeFragment("mchapp", "triageSummary", [patientId: patientId]) }
 	</div>
 	
 	<div id="clinical-summary">
