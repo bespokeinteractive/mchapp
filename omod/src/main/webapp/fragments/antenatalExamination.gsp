@@ -588,6 +588,16 @@
 					jq('#partner-result input').removeAttr('checked');
 				}
 			};
+
+            if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
+                if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+                    jq('#partner-result').show(300);
+                }
+                else{
+                    jq('#partner-result').hide(300);
+                    jq('#partner-result input').removeAttr('checked');
+                }
+            };
 		});
 		
 		jq('.treatment-info input').change(function(){
@@ -636,6 +646,8 @@
 				jq('#externalRefferalSpc').hide();
 			}
 		}).change();
+
+
 
     });
 
@@ -1297,8 +1309,8 @@
         </fieldset>
 		
 		<fieldset>
-			<legend>HIV Information</legend>
-			<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+			<legend>PMTCT Information</legend>
+			<label for="investigation" class="label title-label" style="width: auto;">PMTCT Information<span class="important"></span></label>
 			
 			<field>
 				<input type="hidden" id="hiv-info-set" class=""/>
@@ -1336,6 +1348,88 @@
 							No
 						</label>
 					</div>
+                    <!-- Concepts still missing  for this block-->
+                    <div>
+                        <span>Assessed through?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="conceptuuid">
+                            WHO Stage
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
+                            CD4 Count
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div>
+                        <span>Start on ART?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+
+                    <div>
+                        <span>NVP for Mother?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.2conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+
+                    <div>
+                        <span>Screened for TB?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.2conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <span>Screened for Cervical Cancer?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.screenedforcervicalcancerconceptid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.screenedforcervicalcancerconceptid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+
+                    <!--end of concept missing block-->
 				</div>
 				
 				<div class="col4 last" style="width: 49%;">
@@ -1355,7 +1449,7 @@
 							&nbsp;
 						</label>
 					</div>
-					 
+
 					<div style="margin-top: 20px;" id="partner-result">
 						<span>Patner Results</span><br/>
 						<label>
@@ -1373,6 +1467,92 @@
 							Unknown
 						</label>
 					</div>
+                    <!-- Concepts still missing  for this block-->
+                    <div>
+                        <span>AZT Given?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div>
+                        <span>HAART Given?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div>
+                        <span>CTX Given?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="conceptuuid3">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid9">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div>
+                        <span>NVP for Baby?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div>
+                        <span>IPT 1-3 Supplementation Given?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="conceptuuid">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div style="margin-top: 20px;" id="partner-result">
+                        this section should be displayed if selection for cervical screening is yes
+                    </div>
+                    <!--end of concept missing block-->
+
 				</div>
 			</div>
 		</fieldset>
@@ -1608,7 +1788,7 @@
 							</tr>
 							
 							<tr>
-								<td><span class="status active"></span>HIV Information</td>
+								<td><span class="status active"></span>PMTCT Information</td>
 								<td>N/A</td>
 							</tr>
 							
