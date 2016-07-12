@@ -767,8 +767,8 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>HIV Information</legend>
-			<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+			<legend>PMTCT Information</legend>
+			<label for="investigation" class="label title-label" style="width: auto;">PMTCT Information<span class="important"></span></label>
 
 			<field>
 				<input type="hidden" id="hiv-info-set" class=""/>
@@ -795,18 +795,6 @@
 						</label>
 					</div>
 
-					<div style="margin-top: 20px;">
-						<span>Patner Tested?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label>
-					</div>
 					<div>
 						<span>Tested in PNC after 72 hours</span><br/>
 						<label>
@@ -823,8 +811,18 @@
 							&nbsp;
 						</label>
 					</div>
+					<div style="margin-top: 20px;">
+						<span>Patner Tested?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
 
-
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
 
 				</div>
 
@@ -845,6 +843,22 @@
 							&nbsp;
 						</label>
 					</div>
+					<div>
+						<span>Tested in PNC within 72 hours</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.d26536f5-b8df-4740-b25b-28e2b1702a71" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.d26536f5-b8df-4740-b25b-28e2b1702a71" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
+
+						<label>
+							&nbsp;
+						</label>
+					</div>
 					<div style="margin-top: 20px;" id="partner-result">
 
 						<label>
@@ -860,22 +874,6 @@
 						<label>
 							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
 							Unknown
-						</label>
-					</div>
-					<div>
-						<span>Tested in PNC within 72 hours</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.d26536f5-b8df-4740-b25b-28e2b1702a71" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.d26536f5-b8df-4740-b25b-28e2b1702a71" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-
-						<label>
-							&nbsp;
 						</label>
 					</div>
 				</div>
@@ -1162,7 +1160,7 @@
 						</tr>
 
 						<tr>
-							<td><span class="status active"></span>HIV Information</td>
+							<td><span class="status active"></span>PMTCT Information</td>
 							<td>N/A</td>
 						</tr>
 
