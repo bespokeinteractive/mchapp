@@ -339,9 +339,8 @@
             }
         });
 
-        jq("#cwcFollowUps").on('change', function () {
-            var txt = jq(this).val();
-            if (txt == '7cdc2d69-31b9-4592-9a3f-4bc167d5780b') {
+        jq("#7cdc2d69-31b9-4592-9a3f-4bc167d5780b").on('change', function () {
+            if (jq("#7cdc2d69-31b9-4592-9a3f-4bc167d5780b").is(':checked')) {
                 jq('#otherFollowUpSpec').show();
             } else {
                 jq('#otherFollowUpSpec').hide();
@@ -1235,18 +1234,21 @@
                 <span id="referral-lbl" class="field-error" style="display: none"></span>
             </field>
 
-            <div class="onerow">
-                <div class="col4">
-                    <div id="cwcFollowUp">
-                        <label for="cwcFollowUps">Follow Up</label>
-                        <select id="cwcFollowUps" name="concept.6f7b4285-a04b-4f8b-be85-81c325289539">
-                            <option value="0">Select Option</option>
-                            <% if (cwcFollowUpList != null || cwcFollowUpList != "") { %>
-                            <% cwcFollowUpList.each { followUp -> %>
-                            <option value="${followUp.answerConcept.uuid}">${followUp.answerConcept.name}</option>
+            <div class="onerow floating-controls conditions-info">
+                <div class="col8">
+                    <div id="cwcFollowUp" style="width: 600px">
+                        <label>Follow Up</label>
+                        <div>
+
+                        <% if (cwcFollowUpList != null || cwcFollowUpList != "") { %>
+                        <% cwcFollowUpList.each { followUp -> %>
+                        <label>
+                            <input type="checkbox" name="concept.6f7b4285-a04b-4f8b-be85-81c325289539" value="${followUp.answerConcept.uuid}" id="${followUp.answerConcept.uuid}" >
+                            ${followUp.answerConcept.name}
+                        </label>
                             <% } %>
-                            <% } %>
-                        </select>
+                        <% } %>
+                        </div>
                     </div>
                 </div>
 
