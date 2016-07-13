@@ -796,7 +796,7 @@
 					</div>
 
 					<div>
-						<span>Tested in PNC after 72 hours</span><br/>
+						<span>Tested in PNC after 72 hours?</span><br/>
 						<label>
 							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.43539d76-be01-45a8-96c6-968930d2e862" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -811,19 +811,38 @@
 							&nbsp;
 						</label>
 					</div>
-					<div style="margin-top: 20px;">
-						<span>Patner Tested?</span><br/>
+
+					<div>
+						<span>NVP to Baby?</span><br/>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
+						</label><br/>
+
+						<label>
+							&nbsp;
 						</label>
 					</div>
+					<div>
+						<span>CTX for Baby?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
 
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
+						<label>
+							&nbsp;
+						</label>
+					</div>
 				</div>
 
 				<div class="col4 last" style="width: 49%;">
@@ -874,6 +893,22 @@
 						<label>
 							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
 							Unknown
+						</label>
+					</div>
+					<div>
+						<span>CTX for Mother?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
+
+						<label>
+							&nbsp;
 						</label>
 					</div>
 				</div>
