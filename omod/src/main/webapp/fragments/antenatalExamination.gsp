@@ -1087,7 +1087,7 @@
                     <label for="maturity" class="label title-label">Maturity <span class="important"></span></label>
                     <input type="text" id="maturity" disabled="disabled" />
                     <div>
-                        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'under-16-weeks-next-visit-date', label: 'Next visit date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+                        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'under-16-weeks-next-visit-date', label: 'Next visit date', useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
                     </div>
                     <label for="fundalHeight" class="label title-label">Fundal Height<span class="important"></span></label>
                     <input type="text" id="fundalHeight" name="concept.1439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value=""/>
@@ -1713,7 +1713,7 @@
 				</div>
 			</div>
             <div id="next-visit-date" class="onerow">
-                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
             </div>
 		</fieldset>
 	</section>
