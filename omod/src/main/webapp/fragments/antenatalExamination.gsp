@@ -1300,8 +1300,8 @@
         </fieldset>
 		
 		<fieldset>
-			<legend>HIV Information</legend>
-			<label for="investigation" class="label title-label" style="width: auto;">HIV Information<span class="important"></span></label>
+			<legend>PMTCT Information</legend>
+			<label for="investigation" class="label title-label" style="width: auto;">PMTCT Information<span class="important"></span></label>
 			
 			<field>
 				<input type="hidden" id="hiv-info-set" class=""/>
@@ -1611,7 +1611,7 @@
 							</tr>
 							
 							<tr>
-								<td><span class="status active"></span>HIV Information</td>
+								<td><span class="status active"></span>PMTCT Information</td>
 								<td>N/A</td>
 							</tr>
 							
