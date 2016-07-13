@@ -1401,16 +1401,16 @@
                             &nbsp;
                         </label>
                     </div>
-
+                    <!--end of concept missing block-->
                     <div>
                         <span>Screened for TB?</span><br/>
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="conceptuuid">
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
                         </label><br/>
 
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.2conceptuuid" value="conceptuuid">
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
                             No
                         </label><br/>
 
@@ -1418,21 +1418,6 @@
                             &nbsp;
                         </label>
                     </div>
-
-                    <div style="margin-top: 20px;">
-                        <span>Screened for Cervical Cancer?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.screenedforcervicalcancerconceptid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
-
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.screenedforcervicalcancerconceptid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label>
-                    </div>
-
-                    <!--end of concept missing block-->
 				</div>
 				
 				<div class="col4 last" style="width: 49%;">
@@ -1534,25 +1519,6 @@
                         <label>
                             &nbsp;
                         </label>
-                    </div>
-                    <div>
-                        <span>IPT 1-3 Supplementation Given?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="conceptuuid">
-                            Yes
-                        </label><br/>
-
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="conceptuuid">
-                            No
-                        </label><br/>
-
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-                    <div style="margin-top: 20px;" id="partner-result">
-                        this section should be displayed if selection for cervical screening is yes
                     </div>
                     <!--end of concept missing block-->
 
