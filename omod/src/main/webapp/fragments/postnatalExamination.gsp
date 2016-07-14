@@ -694,6 +694,50 @@
 					<div id="exams-holder"></div>
 				</div>
 			</div>
+			<div class="onerow floating-controls misc-info" style="margin-top: 30px;" >
+				<!--Concepts missing for this block-->
+				<div class="col4" style="width: 42%;">
+					<div>
+						<span>PPC for mothers within 2-3 days of childbirth?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.concept_uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.concept_uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
+
+					<div style="margin-top: 20px;">
+						<span>PPC for mothers within 6 days of childbirth</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.concept_uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.concept_uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
+				</div>
+
+				<div class="col4 last" style="width: 42%;">
+					<div>
+						<span>PPC for infacts within 2-3 days of childbirth</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.concept_uuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.concept_uuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
+				</div>
+				<!--End of concepts missing block-->
+			</div>
 		</fieldset>
 
 		<fieldset class="no-confirmation">
