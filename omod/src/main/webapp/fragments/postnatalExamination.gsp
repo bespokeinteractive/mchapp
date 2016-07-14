@@ -796,23 +796,6 @@
 					</div>
 
 					<div>
-						<span>Tested in PNC after 72 hours?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.43539d76-be01-45a8-96c6-968930d2e862" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.43539d76-be01-45a8-96c6-968930d2e862" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-
-						<label>
-							&nbsp;
-						</label>
-					</div>
-
-					<div>
 						<span>NVP to Baby?</span><br/>
 						<label>
 							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
@@ -863,15 +846,15 @@
 						</label>
 					</div>
 					<div>
-						<span>Tested in PNC within 72 hours</span><br/>
+						<span>Tested in PNC?</span><br/>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.d26536f5-b8df-4740-b25b-28e2b1702a71" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
+							<input id="couple-counselled" type="radio" data-value="In 72 Hours" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="d26536f5-b8df-4740-b25b-28e2b1702a71">
+							In 72 Hours
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.d26536f5-b8df-4740-b25b-28e2b1702a71" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
+							<input id="couple-counselled" type="radio" data-value="After 72 Hours" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="43539d76-be01-45a8-96c6-968930d2e862">
+							After 72 Hours
 						</label><br/>
 
 						<label>
