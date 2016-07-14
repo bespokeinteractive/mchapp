@@ -645,7 +645,15 @@
 			}
 		}).change();
 
-
+        //show hiv drugs only if patient is positive and hide otherwise
+        jq('.prior-status input').change(function(){
+            if(jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+                jq('.arv-section').show();
+            }
+            else{
+                jq('.arv-section').hide();
+            }
+        });
 
     });
 
@@ -1322,7 +1330,7 @@
 			
 			<div class="onerow floating-controls hiv-info">
 				<div class="col4" style="width: 48%;">
-					<div>
+					<div class="prior-status" >
 						<span>Prior Known Status:</span><br/>
 						<label>
 							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
@@ -1339,19 +1347,6 @@
 							Unknown
 						</label>				
 					</div>
-					<div style="margin-top: 20px;">
-						<span>Patner Tested?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-						
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label>
-					</div>
-
                     <div>
                         <span>Assessed through?</span><br/>
                         <label>
@@ -1368,57 +1363,71 @@
                             &nbsp;
                         </label>
                     </div>
-                    <!-- Concepts still missing  block 1-->
-                    <div>
-                        <span>Start on ART?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+					<div style="margin-top: 20px;">
+						<span>Patner Tested?</span><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label><br/>
 
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-                    <!-- End of concepts still missing  block 1-->
+                    <div class="arv-section" style="display: none">
+                            <div>
+                                <span>Start on ART?</span><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                                    Yes
+                                </label><br/>
 
-                    <div>
-                        <span>NVP for Mother?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                                    No
+                                </label><br/>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label><br/>
+                                <label>
+                                    &nbsp;
+                                </label>
+                            </div>
+                            <div>
+                                <span>NVP for Baby?</span><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                                    Yes
+                                </label><br/>
 
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-                    <div>
-                        <span>Screened for TB?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                                    No
+                                </label><br/>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label><br/>
+                                <label>
+                                    &nbsp;
+                                </label>
+                            </div>
+                            <div>
+                                <span>NVP for Mother?</span><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                                    Yes
+                                </label><br/>
 
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                                    No
+                                </label><br/>
+
+                                <label>
+                                    &nbsp;
+                                </label>
+                            </div>
+                        </div>
+
 				</div>
 				
 				<div class="col4 last" style="width: 49%;">
@@ -1439,90 +1448,91 @@
 						</label>
 					</div>
 
+                    <div>
+                        <span>Screened for TB?</span><br/>
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label><br/>
+
+                        <label>
+                            &nbsp;
+                        </label>
+                    </div>
+
 					<div style="margin-top: 20px;" id="partner-result">
 						<span>Patner Results</span><br/>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input class="prior-status" id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Positive
 						</label><br/>
 						
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input class="prior-status" id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Negative
 						</label><br/>
 						
 						<label>
-							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							<input class="prior-status" id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
 							Unknown
 						</label>
 					</div>
-                    <!-- Concepts still missing  for this block2-->
-                    <div>
-                        <span>AZT Given?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+                    <div class="arv-section" style="display: none">
+                            <div>
+                                <span>AZT Given?</span><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                                    Yes
+                                </label><br/>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9>
-                            No
-                        </label><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                                    No
+                                </label><br/>
 
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-                    <div>
-                        <span>HAART Given?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+                                <label>
+                                    &nbsp;
+                                </label>
+                            </div>
+                            <div>
+                                <span>HAART Given?</span><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                                    Yes
+                                </label><br/>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                                    No
+                                </label><br/>
 
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-                    <!--end of concept missing block2-->
-                    <div>
-                        <span>CTX Given?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+                                <label>
+                                    &nbsp;
+                                </label>
+                            </div>
+                            <div>
+                                <span>CTX Given?</span><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                                    Yes
+                                </label><br/>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label><br/>
+                                <label>
+                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                                    No
+                                </label><br/>
 
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-                    <div>
-                        <span>NVP for Baby?</span><br/>
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                            Yes
-                        </label><br/>
+                                <label>
+                                    &nbsp;
+                                </label>
+                            </div>
 
-                        <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                            No
-                        </label><br/>
-
-                        <label>
-                            &nbsp;
-                        </label>
-                    </div>
-
+                        </div>
 				</div>
 			</div>
 		</fieldset>
