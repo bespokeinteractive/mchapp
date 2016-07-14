@@ -1368,16 +1368,15 @@
                             &nbsp;
                         </label>
                     </div>
-                    <!-- Concepts still missing  block 1-->
                     <div>
                         <span>Start on ART?</span><br/>
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuid" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
                         </label><br/>
 
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
                             No
                         </label><br/>
 
@@ -1385,8 +1384,6 @@
                             &nbsp;
                         </label>
                     </div>
-                    <!-- End of concepts still missing  block 1-->
-
                     <div>
                         <span>NVP for Mother?</span><br/>
                         <label>
@@ -1456,16 +1453,15 @@
 							Unknown
 						</label>
 					</div>
-                    <!-- Concepts still missing  for this block2-->
                     <div>
                         <span>AZT Given?</span><br/>
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
                         </label><br/>
 
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9>
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
                             No
                         </label><br/>
 
@@ -1476,12 +1472,12 @@
                     <div>
                         <span>HAART Given?</span><br/>
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.conceptuuida" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            <input id="couple-counselled" type="radio" data-value="Yes" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
                         </label><br/>
 
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="No" name="concept.conceptuuid" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            <input id="couple-counselled" type="radio" data-value="No" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
                             No
                         </label><br/>
 
@@ -1489,7 +1485,6 @@
                             &nbsp;
                         </label>
                     </div>
-                    <!--end of concept missing block2-->
                     <div>
                         <span>CTX Given?</span><br/>
                         <label>
