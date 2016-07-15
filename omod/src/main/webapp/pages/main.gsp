@@ -3,6 +3,7 @@
     ui.includeJavascript("billingui", "moment.js")
     ui.includeJavascript("mchapp", "object-to-query-string.js")
     ui.includeJavascript("mchapp", "drugOrder.js")
+	ui.includeJavascript("mchapp", "includes-polyfill.js")
     ui.includeCss("registration", "onepcssgrid.css")
 %>
 <script type="text/javascript">
