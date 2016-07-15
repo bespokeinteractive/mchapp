@@ -119,10 +119,20 @@
                     </div>
 
                     <div>
-                        <label for="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Height</label>
-                        <input type="text" id="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        <label for="height">Height</label>
+                        <input type="text" id="height"
                                name="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
                         <span class="append-to-value">Cms</span>
+                    </div>
+
+                    <div>
+                        <label for="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">M.U.A.C</label>
+                        <input id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" class="number numeric-range focused"
+                               type="text"
+                               max="999" min="0" maxlength="7" value=""
+                               name="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6"
+                               id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">
+                        <span class="append-to-value">cm</span>
                     </div>
 					
                     <div>
@@ -133,25 +143,6 @@
                             <option value="${category.uuid}">${category.label}</option>
                             <% } %>
                         </select>
-                    </div>
-
-                    <div>
-                        <label for="height">Height</label>
-                        <input type="text" id="height"
-                               name="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
-                        <span class="append-to-value">Cms</span>
-                    </div>
-
-                    <div>
-                        <label for="muac">M.U.A.C</label>
-                        <input id="muac" class="number numeric-range focused"
-                        <label for="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">M.U.A.C</label>
-                        <input id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" class="number numeric-range focused"
-                               type="text"
-                               max="999" min="0" maxlength="7" value=""
-                               name="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6"
-                               id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">
-                        <span class="append-to-value">cm</span>
                     </div>
 
                     <div>
