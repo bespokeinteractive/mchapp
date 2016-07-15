@@ -31,15 +31,15 @@
             //validate weight, height and muac to ensure they are provided
             var wValue = jq('#weight').val();
             var hValue = jq('#height').val();
-            var muacValue = jq('#muac').val();
+            var muacValue = jq('.muacs').val();
+			
+			console.log(muacValue);
 
             if(!(parseInt(wValue) > 0) || !(parseInt(hValue) > 0) || !(parseInt(muacValue) > 0) ){
                 jq().toastmessage('showErrorToast', "Check values for height, weight and muac!");
                 return false;
             }
-
-
-
+			
             event.preventDefault();
             var data = jq("form#cwc-triage-form").serialize();
 
@@ -127,12 +127,11 @@
 
                     <div>
                         <label for="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">M.U.A.C</label>
-                        <input id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" class="number numeric-range focused"
+                        <input id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" name="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" class="muacs number numeric-range focused"
                                type="text"
                                max="999" min="0" maxlength="7" value=""
-                               name="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6"
-                               id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">
-                        <span class="append-to-value">cm</span>
+                               >
+                        <span class="append-to-value">Cms</span>
                     </div>
 					
                     <div>
