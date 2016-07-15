@@ -196,10 +196,11 @@
 		//select whether diagnosis is provisional or final
 		jq("#provisional-diagnosis").on("click", function(){
 			diagnosisQuestionUuid = provisionalDiagnosisQuestionUuid;
-		})
+		});
+		
 		jq("#final-diagnosis").on("click", function(){
 			diagnosisQuestionUuid = finalDiagnosisQuestionUuid;
-		})
+		});
 
 		//Diagnosis autocomplete functionality
 		jq("#diagnoses").autocomplete({
@@ -378,15 +379,15 @@
 
 		jq('#availableReferral').change(function(){
 			if (jq(this).val() == "1"){
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('Internal Referral');
+				jq('#summaryTable tr:eq(7) td:eq(1)').text('Internal Referral');
 				jq('#referral-set').val('SET');
 			}
 			else if (jq(this).val() == "2"){
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('External Referral');
+				jq('#summaryTable tr:eq(7) td:eq(1)').text('External Referral');
 				jq('#referral-set').val('SET');
 			}
 			else {
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(7) td:eq(1)').text('N/A');
 				jq('#referral-set').val('');
 			}
 		});
@@ -402,11 +403,11 @@
 
 		jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA').change(function(){
 			if (jq(this).val() == "0"){
-				jq('#summaryTable tr:eq(5) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(6) td:eq(1)').text('N/A');
 				jq('#family-planning-set').val('');
 			}
 			else {
-				jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :selected').text());
+				jq('#summaryTable tr:eq(6) td:eq(1)').text(jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :selected').text());
 				jq('#family-planning-set').val('SET');
 			}
 		});
@@ -419,6 +420,16 @@
 			if (!jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").val()) {}
 			else {
 				output += 'Prior Known Status: ' + jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.11724bb1-9033-457b-9b09-d4080f459f2f']:checked").val()) {}
+			else {
+				output += 'Tested in PNC: ' + jq("input[name='concept.11724bb1-9033-457b-9b09-d4080f459f2f']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.0a24f03e-9133-4401-b683-76c45e166912']:checked").val()) {}
+			else {
+				output += 'Tested Results: ' + jq("input[name='concept.0a24f03e-9133-4401-b683-76c45e166912']:checked").data('value') + '<br/>';
 			}
 
 			if (!jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").val()) {}
@@ -435,18 +446,42 @@
 			else {
 				output += 'Patner Results: ' + jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").data('value') + '<br/>';
 			}
+			
+			if (!jq("input[name='concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").val()) {}
+			else {
+				output += 'NVP for Baby: ' + jq("input[name='concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb']:checked").val()) {}
+			else {
+				output += 'CTX for Baby: ' + jq("input[name='concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a']:checked").val()) {}
+			else {
+				output += 'CTX for Mother: ' + jq("input[name='concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a']:checked").data('value') + '<br/>';
+			}
 
-			jq('#summaryTable tr:eq(3) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
 			
 			if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
 				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
-					jq('#partner-result').show(300);
+					jq('.partner-results').show(500);
 				}
 				else{
-					jq('#partner-result').hide(300);
-					jq('#partner-result input').removeAttr('checked');
+					jq('.partner-results').hide(500);
+					jq('.partner-results input').removeAttr('checked');
 				}
-			};
+			}
+			else if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
+				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+					jq('.nvp-ctx-info').show(500);
+				}
+				else{
+					jq('.nvp-ctx-info').hide(500);
+					jq('.nvp-ctx-info input').removeAttr('checked');
+				}
+			}
 		});
 
 		jq('.misc-info input').change(function(){
@@ -474,9 +509,10 @@
 				output += 'Vitamin A Suppliments: ' + jq("input[name='concept.c764e84f-cfb2-424a-acec-20e4fb8531b7']:checked").data('value') + '<br/>';
 			}
 
-			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 
 		});
+		
 
     });
 
@@ -537,12 +573,7 @@
 
 
 <style>
-	.title-label{
-		color: #009384;
-		cursor: pointer;
-		font-size: 1.3em;
-		font-weight: normal;
-	}
+	
 	#exams-holder input[type="radio"]{
 		float: none;
 	}
@@ -603,7 +634,7 @@
 	.thirty-three-perc small{
 		float: left;
 		font-size: 85% !important;
-		min-width: 120px;
+		min-width: 150px;
 		margin-right: 4px;
 	}
 	.thirty-three-perc span{
@@ -612,7 +643,8 @@
 		font-size: 90%;
 	}	
 	.floating-controls{
-		margin-top: 5px;
+		margin: 5px 0 0 0!important;
+		padding: 0!important
 	}
 	.floating-controls input{
 		cursor: pointer;
@@ -627,11 +659,26 @@
 	.floating-controls textarea{
 		resize: none;
 	}
-	#partner-result{
+	.nvp-ctx-info,
+	.partner-results{
 		display: none;
 	}
 	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
 		background: #fff none repeat scroll 0 0;
+	}
+	.testbox {
+		background-color: rgba(0, 0, 0, 0.01);
+		border: 1px solid rgba(51, 51, 51, 0.1);
+		height: 130px;
+		margin: 0 0 15px 5px;
+		width: 100%;
+	}
+	.testbox div {
+		background: #5b57a6 none repeat scroll 0 0;
+		border-bottom: 1px solid rgba(51, 51, 51, 0.1);
+		color: #fff;
+		margin: -1px;
+		padding: 2px 15px;
 	}
 </style>
 
@@ -698,6 +745,7 @@
 
 		<fieldset class="no-confirmation">
 			<legend>Diagnosis</legend>
+			<label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
 			<div class="tasks-list">
 				<div class="left">
 					<label id="ts01" class="tasks-list-item" for="provisional-diagnosis">
@@ -717,9 +765,7 @@
 					</label>
 				</div>
 			</div>
-			<br><br><br>
 			<div>
-				<label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
 				<input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
 
 				<field>
@@ -776,9 +822,9 @@
 			</field>
 
 			<div class="onerow floating-controls hiv-info">
-				<div class="col4" style="width: 48%;">
-					<div>
-						<span>Prior Known Status:</span><br/>
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>Prior Known Status</div>
 						<label>
 							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Positive
@@ -794,99 +840,138 @@
 							Unknown
 						</label>
 					</div>
-
-					<div>
-						<span>NVP to Baby?</span><br/>
+				</div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>HIV Tested in PNC</div>
+						
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
+							<input id="" type="radio" data-value="Yes" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="d26536f5-b8df-4740-b25b-28e2b1702a71">
+							Within 72hrs
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-
-						<label>
-							&nbsp;
-						</label>
-					</div>
-					<div>
-						<span>CTX for Baby?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-						<label>
-							&nbsp;
+							<input id="" type="radio" data-value="No" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="43539d76-be01-45a8-96c6-968930d2e862">
+							After 72hrs
 						</label>
 					</div>
 				</div>
-
-				<div class="col4 last" style="width: 49%;">
-					<div>
-						<span>Couple Counselled?</span><br/>
-
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox">
+						<div>PNC Test Results</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-						<label>
-							&nbsp;
-						</label>
-					</div>
-					<div>
-						<span>Tested in PNC?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="In 72 Hours" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="d26536f5-b8df-4740-b25b-28e2b1702a71">
-							In 72 Hours
-						</label><br/>
-
-						<label>
-							<input id="couple-counselled" type="radio" data-value="After 72 Hours" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="43539d76-be01-45a8-96c6-968930d2e862">
-							After 72 Hours
-						</label><br/>
-
-						<label>
-							&nbsp;
-						</label>
-					</div>
-					<div style="margin-top: 20px;" id="partner-result">
-
-						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Negative
 						</label><br/>
 
 						<label>
-							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
 							Unknown
 						</label>
 					</div>
-					<div>
-						<span>CTX for Mother?</span><br/>
+				</div>				
+			</div>
+			
+			<div class="onerow floating-controls hiv-info">
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox" class="couple-counselled">
+						<div>Couple Counselled</div>
+
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input  type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>					
+				</div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox partner-tested">
+						<div>Patner Tested</div>		 
+						<label>		 
+							<input id="" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">		 
+							Yes		
+						</label><br/>		
+								
+						<label>		
+							<input id="" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">		
+							No		
+						</label>		
+					</div>
+				</div>
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox partner-results">
+						<div>Patner Results</div>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>
+					</div>					
+				</div>
+			</div>
+			
+			<div class="onerow floating-controls hiv-info nvp-ctx-info">
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>NVP for Baby</div>
+						<label>
+							<input id="" type="radio" data-value="Yes" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input id="" type="radio" data-value="No" name="concept.162327AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>						
+					</div>				
+				</div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>CTX for Baby</div>
+						<label>
+							<input id="" type="radio" data-value="Yes" name="concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input id="" type="radio" data-value="No" name="concept.7e5aa2a0-de37-4baa-8b44-2b8fe460c6fb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>				
+				</div>
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox">
+						<div>CTX for Mother</div>
+						<label>
+							<input id="" type="radio" data-value="Yes" name="concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input id="" type="radio" data-value="No" name="concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label><br/>
 
@@ -961,65 +1046,64 @@
 			</field>
 
 			<div class="onerow floating-controls misc-info">
-				<div class="col4" style="width: 42%;">
-					<div>
-						<span>PNC Exercise given?</span><br/>
+				<div class="col4" style="width: 42%; margin: 0 1% 0 0;">
+					<div class="testbox">
+						<div>PNC Exercise given?</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input id="" type="radio" data-value="Yes" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input id="" type="radio" data-value="No" name="concept.ba18b0c3-8208-465a-9c95-2f85047e2939" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
 					</div>
 
-					<div style="margin-top: 20px;">
-						<span>Vitamin A supplementation</span><br/>
+					<div class="testbox">
+						<div>Vitamin A supplementation</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input id="" type="radio" data-value="Yes" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input id="" type="radio" data-value="No" name="concept.c764e84f-cfb2-424a-acec-20e4fb8531b7" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
 					</div>
 				</div>
 
-				<div class="col4 last" style="width: 42%;">
-					<div>
-						<span>Multi-vitamin</span><br/>
+				<div class="col4 last" style="width: 49%;">
+					<div class="testbox">
+						<div>Multi-vitamin</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input id="" type="radio" data-value="Yes" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input id="" type="radio" data-value="No" name="concept.5712097d-a478-4ff4-a2aa-bd827a6833ed" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
 					</div>
 
-					<div style="margin-top: 20px;">
-						<span>Haematinics</span><br/>
+					<div class="testbox">
+						<div>Haematinics</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input id="" type="radio" data-value="Yes" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
 						</label><br/>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input id="" type="radio" data-value="No" name="concept.5d935a14-9c53-4171-bda7-51da05fbb9eb" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
 					</div>
 				</div>
 			</div>
-
 		</fieldset>
 
 		<fieldset>
 			<legend>Family Planning</legend>
-			<label for="investigation" class="label title-label" style="width: auto;">Family Planning<span class="important"></span></label>
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Family Planning<span class="important"></span></div>
 
 			<field>
 				<input type="hidden" id="family-planning-set" class=""/>
@@ -1028,9 +1112,9 @@
 
 			<div class="onerow floating-controls misc-info">
 				<div class="col4" style="width: 48%;">
-					<span>
-						<label for="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: auto;">Family Planning Option </label>
-					</span>
+					
+					<label for="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: auto; color: #009384">FP Method </label>
+					
 					<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
 						<option value="0" >Select Option</option>
 						<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
@@ -1046,9 +1130,7 @@
 				</div>
 
 				<div class="col4 last" style="width: 100%; margin-top: 10px;">
-					<span>
-						<label for="fp-comment" style="width: auto;">Comments</label>
-					</span>
+					<label for="fp-comment" style="width: auto; color: #009384">Comments</label>
 					<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="fp-comment" style="width: 97%"></textarea>
 				</div>
 			</div>

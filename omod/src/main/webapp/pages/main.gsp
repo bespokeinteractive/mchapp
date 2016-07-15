@@ -294,6 +294,12 @@
 	#investigations-table{
 		margin-top: 1px;
 	}
+	.title-label{
+		color: #f26522;
+		cursor: pointer;
+		font-size: 1.3em;
+		font-weight: normal;
+	}
 	
 </style>
 

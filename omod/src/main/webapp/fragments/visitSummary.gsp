@@ -48,12 +48,12 @@
 			jq('#cs').hide();
 		}
 		
-		jq('#ul-left-menu').slimScroll({
+		/*jq('#ul-left-menu').slimScroll({
 			allowPageScroll: false,
 			height		   : '426px',
 			distance	   : '11px',
 			color		   : '#363463'
-		});
+		});*/
 		
 		jq('#ul-left-menu').scrollTop(0);
 		jq('#slimScrollDiv').scrollTop(0);
