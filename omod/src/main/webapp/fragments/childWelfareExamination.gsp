@@ -1349,7 +1349,7 @@
                 <div class="info-header">
                     <i class="icon-list-ul"></i>
 
-                    <h3>OPD SUMMARY &amp; CONFIRMATION</h3>
+                    <h3>CWC SUMMARY &amp; CONFIRMATION</h3>
                 </div>
 
                 <div class="info-body">

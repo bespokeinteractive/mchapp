@@ -300,12 +300,23 @@
 		font-size: 1.3em;
 		font-weight: normal;
 	}
-	
+	.testbox {
+		background-color: rgba(0, 0, 0, 0.01);
+		border: 1px solid rgba(51, 51, 51, 0.1);
+		height: 130px;
+		margin: 0 0 15px 5px;
+		width: 100%;
+	}
+	.testbox div {
+		background: #5b57a6 none repeat scroll 0 0;
+		border-bottom: 1px solid rgba(51, 51, 51, 0.1);
+		color: #fff;
+		margin: -1px;
+		padding: 2px 15px;
+	}	
 </style>
 
-
 <div class="clear"></div>
-
 <div>
     <div class="example">
         <ul id="breadcrumbs">

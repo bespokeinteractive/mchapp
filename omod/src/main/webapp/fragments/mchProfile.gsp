@@ -8,7 +8,10 @@
 		</div>
 		
 		<div id="profile-items">
-			<small><i class="icon-calendar small"></i> Enrolled:</small> ${ui.formatDatePretty(enrollmentDate)}	
+			<div class="thirty-three-perc">
+				<small><i class="icon-calendar small"></i> Enrolled:</small> 
+				${ui.formatDatePretty(enrollmentDate)}	
+			</div>
 			{{ _.each(details, function(profileDetail) { }}
 				{{if (isValidDate(profileDetail.value)) { }}
 					<small><i class="icon-time small"></i> {{=profileDetail.name}}:</small>
@@ -18,7 +21,10 @@
 				
 				
 				{{=profileDetail.value}}
-			{{ }); }}	
+			{{ }); }}
+			
+			<small><i class="icon-undo small"></i> Maturity:</small> <span id="maturity"></span>
+			<div class="clear"></div>
 		</div>
 		
 	</script>

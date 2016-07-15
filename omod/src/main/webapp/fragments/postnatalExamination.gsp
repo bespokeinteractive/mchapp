@@ -659,6 +659,7 @@
 	.floating-controls textarea{
 		resize: none;
 	}
+	#next-visit-date label,
 	.nvp-ctx-info,
 	.partner-results{
 		display: none;
@@ -666,20 +667,7 @@
 	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
 		background: #fff none repeat scroll 0 0;
 	}
-	.testbox {
-		background-color: rgba(0, 0, 0, 0.01);
-		border: 1px solid rgba(51, 51, 51, 0.1);
-		height: 130px;
-		margin: 0 0 15px 5px;
-		width: 100%;
-	}
-	.testbox div {
-		background: #5b57a6 none repeat scroll 0 0;
-		border-bottom: 1px solid rgba(51, 51, 51, 0.1);
-		color: #fff;
-		margin: -1px;
-		padding: 2px 15px;
-	}
+	
 </style>
 
 <script id="diagnosis-template" type="text/template">
@@ -765,6 +753,7 @@
 					</label>
 				</div>
 			</div>
+			
 			<div>
 				<input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
 
@@ -1147,8 +1136,17 @@
 				<input type="hidden" id="referral-set" class=""/>
 				<span id="referral-lbl" class="field-error" style="display: none"></span>
 			</field>
+			
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Next Visit<span class="important"></span></div>
+			<div id="next-visit-date" class="onerow">
+				<div class="col4" style="padding-top: 5px;">
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+				</div>
+				<div class="clear"></div>
+			</div>
 
-			<div class="onerow">
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 20px 0px 2px 10px;">Referral Options<span class="important"></span></div>
+			<div class="onerow">				
 				<div class="col4">
 					<label for="availableReferral">Referral Available</label>
 					<select id="availableReferral" name="availableReferral">
@@ -1219,10 +1217,7 @@
 				<div id="externalRefferalCom" style="display: none">
 					<label for="comments">Comment</label>
 					<textarea id="comments" name="comment.18b2b617-1631-457f-a36b-e593d948707f" style="width: 95.7%; resize: none;"></textarea>
-				</div>
-				<div id="next-visit-date" class="onerow">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-				</div>
+				</div>				
 			</div>
 		</fieldset>
 	</section>
@@ -1234,7 +1229,7 @@
 			<div class="info-section">
 				<div class="info-header">
 					<i class="icon-list-ul"></i>
-					<h3>OPD SUMMARY &amp; CONFIRMATION</h3>
+					<h3>PNC SUMMARY &amp; CONFIRMATION</h3>
 				</div>
 
 				<div class="info-body">

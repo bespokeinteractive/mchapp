@@ -177,7 +177,7 @@
         {
             jq("#lessthan16").show();
             jq("#next-visit-date").hide();
-            jq("#maturity").val(gestationInWeeks + " Weeks");
+            jq("#maturity").text(gestationInWeeks + " Weeks");
         }
         else if(gestationInWeeks >= 16)
         {
@@ -654,6 +654,10 @@
                 jq('.arv-section').hide();
             }
         });
+		
+		jq('#lessthan16 span.small').click(function(){
+			jq('#lessthan16').hide(500);
+		});
 
     });
 
@@ -824,12 +828,6 @@
 </script>
 
 <style>
-	.title-label{
-		color: #009384;
-		cursor: pointer;
-		font-size: 1.3em;
-		font-weight: normal;
-	}
 	#exams-holder input[type="radio"]{
 		float: none;
 	}
@@ -931,6 +929,33 @@
 	#partner-result{
 		display: none;
 	}
+	.patient-profile{
+		border: 1px solid #eee;
+		margin: 5px 0;
+		padding: 7px 12px;
+	}
+	.thirty-three-perc {
+		border-left: 1px solid #363463;
+		display: inline-block;
+		float: left;
+		font-size: 15px !important;
+		padding-left: 0.5%;
+	}
+	#lessthan16{
+		border: 1px solid #f00;
+		color: #363463;
+		padding: 10px 5px 5px 10px;
+	}
+	#lessthan16 i.small{
+		font-size: 200%;
+	}
+	#lessthan16 span.small{
+		color: #f00;
+		cursor: pointer;
+		float: right;
+		margin-top: -5px;
+		
+	}
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -950,12 +975,12 @@
 </script>
 
 <script id="diagnosis-template" type="text/template">
-<div class="investigation diagnosis">
-    <span class="icon-remove selecticon"></span>
-    <label style="margin-top: 2px; width: 95%;">{{=label}}
-        <input type="hidden" name="concept.{{=questionUuid}}" value="{{=uuid}}"/>
-    </label>
-</div>
+	<div class="investigation diagnosis">
+		<span class="icon-remove selecticon"></span>
+		<label style="margin-top: 2px; width: 95%;">{{=label}}
+			<input type="hidden" name="concept.{{=questionUuid}}" value="{{=uuid}}"/>
+		</label>
+	</div>
 </script>
 
 <script id="investigation-template" type="text/template">
@@ -1089,19 +1114,14 @@
 		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>
 			<div style="padding: 0 4px">
-                <div style="display:none" id="lessthan16">
-                    <p>There is palpable mass, Please select next visit date</p>
-
-                    <label for="maturity" class="label title-label">Maturity <span class="important"></span></label>
-                    <input type="text" id="maturity" disabled="disabled" />
-                    <div>
-                        ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'under-16-weeks-next-visit-date', label: 'Next visit date', useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-                    </div>
-                    <label for="fundalHeight" class="label title-label">Fundal Height<span class="important"></span></label>
-                    <input type="text" id="fundalHeight" name="concept.1439AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value=""/>
-                </div>
+				
                 <div>
                     <label for="searchExaminations" class="label title-label">Examinations <span class="important"></span></label>
+					<div id="lessthan16">
+						<i class="icon-info-sign small"></i>
+						Palpable Mass Available
+						<span class="icon-remove small"></small>
+					</div>
                     <input type="text" id="searchExaminations" name="" value="" placeholder="Add Examination"/>
                     <field>
                         <input type="hidden" id="exams-set" class=""/>
@@ -1122,28 +1142,28 @@
 
         <fieldset class="no-confirmation">
             <legend>Diagnosis</legend>
-            <div class="tasks-list">
-                <div class="left">
-                    <label id="ts01" class="tasks-list-item" for="provisional-diagnosis">
+            <label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
+			<div class="tasks-list">
+				<div class="left">
+					<label id="ts01" class="tasks-list-item" for="provisional-diagnosis">
 
-                        <input type="radio" name="diagnosis_type" id="provisional-diagnosis" value="true" data-bind="checked: diagnosisProvisional" class="tasks-list-cb focused"/>
+						<input type="radio" name="diagnosis_type" id="provisional-diagnosis" value="true" data-bind="checked: diagnosisProvisional" class="tasks-list-cb focused"/>
 
-                        <span class="tasks-list-mark"></span>
-                        <span class="tasks-list-desc">Provisional</span>
-                    </label>
-                </div>
+						<span class="tasks-list-mark"></span>
+						<span class="tasks-list-desc">Provisional</span>
+					</label>
+				</div>
 
-                <div class="left">
-                    <label class="tasks-list-item" for="final-diagnosis">
-                        <input type="radio" name="diagnosis_type" id="final-diagnosis" value="false" data-bind="checked: diagnosisProvisional" class="tasks-list-cb"/>
-                        <span class="tasks-list-mark"></span>
-                        <span class="tasks-list-desc">Final</span>
-                    </label>
-                </div>
-            </div>
-            <br><br><br>
+				<div class="left">
+					<label class="tasks-list-item" for="final-diagnosis">
+						<input type="radio" name="diagnosis_type" id="final-diagnosis" value="false" data-bind="checked: diagnosisProvisional" class="tasks-list-cb"/>
+						<span class="tasks-list-mark"></span>
+						<span class="tasks-list-desc">Final</span>
+					</label>
+				</div>
+			</div>
+			
             <div>
-                <label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
                 <input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
 
                 <field>
@@ -1199,66 +1219,73 @@
 			</field>
 				
 			<div class="onerow floating-controls conditions-info">
-				<div class="col4" style="width: 48%;">
-					<label>
-						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
-							<% if (preExisitingConditions.contains("a8390549-394c-44c7-a0c3-404c1799b1b9")) { %>
-								checked="checked"
-							<% } %>
-						>
-						Hypertension
-					</label><br/>
-				
-					<label>
-						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-							<% if (preExisitingConditions.contains("119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")) { %>
-								checked="checked"
-							<% } %>
-						>
-						Diabetes
-					</label><br/>
+				<div class="col4" style="width: 50%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>Select Conditions</div>
+						<label>
+							<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="a8390549-394c-44c7-a0c3-404c1799b1b9"
+								<% if (preExisitingConditions.contains("a8390549-394c-44c7-a0c3-404c1799b1b9")) { %>
+									checked="checked"
+								<% } %>
+							>
+							Hypertension
+						</label><br/>
 					
-					<label>
-						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
-							<% if (preExisitingConditions.contains("4e896673-d822-458e-bbfe-604747e0afe8")) { %>
-								checked="checked"
-							<% } %>
-						>
-						Epilepsy
-					</label>
-				
+						<label>
+							<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+								<% if (preExisitingConditions.contains("119481AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")) { %>
+									checked="checked"
+								<% } %>
+							>
+							Diabetes
+						</label><br/>
+						
+						<label>
+							<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4e896673-d822-458e-bbfe-604747e0afe8"
+								<% if (preExisitingConditions.contains("4e896673-d822-458e-bbfe-604747e0afe8")) { %>
+									checked="checked"
+								<% } %>
+							>
+							Epilepsy
+						</label>					
+					</div>				
 				</div>
 				
 				<div class="col4 last" style="width: 49%;">
-					<label>
-						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
-							<% if (preExisitingConditions.contains("0731fc60-1c30-464b-93e9-e4adc8537e42")) { %>
-								checked="checked"
-							<% } %>
-						>
-						Malaria in Pregnancy
-					</label><br/>
+					<div class="testbox">
+						<div>&nbsp;</div>
+						<label>
+							<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="0731fc60-1c30-464b-93e9-e4adc8537e42"
+								<% if (preExisitingConditions.contains("0731fc60-1c30-464b-93e9-e4adc8537e42")) { %>
+									checked="checked"
+								<% } %>
+							>
+							Malaria in Pregnancy
+						</label><br/>
+						
+						<label>
+							<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
+								<% if (preExisitingConditions.contains("4c9b4d7d-7cb0-4d49-a833-2a13490b4632")) { %>
+									checked="checked"
+								<% } %>
+							>
+							STIs/RTI
+						</label>				
 					
-					<label>
-						<input type="checkbox" name="concept.7033ef37-461c-4953-a757-34722b6d9e38" value="4c9b4d7d-7cb0-4d49-a833-2a13490b4632"
-							<% if (preExisitingConditions.contains("4c9b4d7d-7cb0-4d49-a833-2a13490b4632")) { %>
-								checked="checked"
-							<% } %>
-						>
-						STIs/RTI
-					</label>				
+					</div>
+					
 				</div>				
 			</div>
 		</fieldset>
 
         <fieldset>
             <legend>Infant Feeding</legend>
-            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding<span class="important"></span></label>
+            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding & Councelling<span class="important"></span></label>
 
             <div class="onerow floating-controls hiv-info">
-                <div class="col4" style="width: 48%;">
-                    <div>
-                        <span>Infant feeding counseling done?</span><br/>
+                <div class="col4" style="width: 48%; margin: 0 1% 0 0">
+                    <div class="testbox">
+                        <div>Infant feeding counseling done</div>
                         <label>
                             <input id="infant-feeding-counseled" type="radio" data-value="Yes" name="concept.fb5a5471-e912-4288-8c25-750f7f88281f" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
@@ -1270,8 +1297,8 @@
                         </label>
                     </div>
 
-                    <div style="margin-top: 20px;" class="infant-feeding">
-                        <span>Infant feeding options for HIV infected discussed?</span><br/>
+                    <div class="testbox infant-feeding" style="margin-top: 20px;">
+                        <div>Infant feeding options for HIV discussed</div>
                         <label>
                             <input id="hiv-feeding-counseled" type="radio" data-value="Yes" name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
@@ -1285,12 +1312,12 @@
                 </div>
 
                 <div class="col4 last infant-feeding" style="width: 49%;">
-                    <div>
-                        <span>Counseling on exclusive breastfeeding done?</span><br/>
+                    <div class="testbox">
+                        <div>Counseling on exclusive breastfeeding</div>
                         <label>
-                        <input id="exclusive-counseled" type="radio" data-value="Yes" name="concept.42197783-8b24-49b0-b290-cbb368fa0113" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                        Yes
-                    </label><br/>
+							<input id="exclusive-counseled" type="radio" data-value="Yes" name="concept.42197783-8b24-49b0-b290-cbb368fa0113" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
 
                         <label>
                             <input id="exclusive-counseled" type="radio" data-value="No" name="concept.42197783-8b24-49b0-b290-cbb368fa0113" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
@@ -1298,8 +1325,8 @@
                         </label>
                     </div>
 
-                    <div style="margin-top: 20px;" class="decision-feeding">
-                        <span>Mother's Breastfeeding decision?</span><br/>
+                    <div class="testbox decision-feeding" style="margin-top: 20px;">
+                        <div>Mother's Breastfeeding decision?</div>
                         <label>
                             <input id="breastfeeding-decision" type="radio" data-value="Positive" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="a082375c-bfe4-4395-9ed5-d58e9ab0edd3">
                             Exclusive
@@ -1736,7 +1763,7 @@
 			<div class="info-section">
 				<div class="info-header">
 					<i class="icon-list-ul"></i>
-					<h3>OPD SUMMARY &amp; CONFIRMATION</h3>
+					<h3>ANC SUMMARY &amp; CONFIRMATION</h3>
 				</div>					
 				
 				<div class="info-body">
