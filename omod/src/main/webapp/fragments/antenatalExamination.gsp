@@ -546,8 +546,8 @@
 				jq('#conditions-info-set').val('');
 			}
 			
-			jq('#summaryTable tr:eq(3) td:eq(1)').html(output);
-		});
+			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+		}).change();
 		
 		jq('.hiv-info input').change(function(){
 			jq('#hiv-info-set').val('SET');
@@ -559,14 +559,14 @@
 				output += 'Prior Known Status: ' + jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").data('value') + '<br/>';
 			}
 			
+			if (!jq("input[name='concept.0a24f03e-9133-4401-b683-76c45e166912']:checked").val()) {}
+			else {
+				output += 'Current Status: ' + jq("input[name='concept.0a24f03e-9133-4401-b683-76c45e166912']:checked").data('value') + '<br/>';
+			}
+			
 			if (!jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").val()) {}
 			else {
 				output += 'Couple Counselled: ' + jq("input[name='concept.27b96311-bc00-4839-b7c9-31401b44cd3a']:checked").data('value') + '<br/>';
-			}
-			
-			if (!jq("input[name='concept.93366255-8903-44af-8370-3b68c0400930']:checked").val()) {}
-			else {
-				output += 'Patner Tested: ' + jq("input[name='concept.93366255-8903-44af-8370-3b68c0400930']:checked").data('value') + '<br/>';
 			}
 			
 			if (!jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").val()) {}
@@ -574,7 +574,43 @@
 				output += 'Patner Results: ' + jq("input[name='concept.df68a879-70c4-40d5-becc-a2679b174036']:checked").data('value') + '<br/>';
 			}
 			
-			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			if (!jq("input[name='concept.9e93ea80-3d6d-4e60-98cf-d29e53b4703c']:checked").val()) {}
+			else {
+				output += 'Screening Through : ' + jq("input[name='concept.9e93ea80-3d6d-4e60-98cf-d29e53b4703c']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.26a924e0-1648-4112-959f-d47647021dc9']:checked").val()) {}
+			else {
+				output += 'Screening for TB : ' + jq("input[name='concept.26a924e0-1648-4112-959f-d47647021dc9']:checked").data('value') + '<br/>';
+			}
+			
+			if (jq("input[name='concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += 'Patient Started on ART<br/>';
+			}
+			
+			if (jq("input[name='concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += 'Patient Given NVP for the Baby<br/>';
+			}
+			
+			if (jq("input[name='concept.b72e7dc9-034c-443c-ae88-5bc723a801be']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += 'Patient Given NVP for the Mother<br/>';
+			}
+			
+			if (jq("input[name='concept.37c028e7-c9f7-48bc-8440-fe845fc9e800']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += 'Patient Given CTX for the Mother<br/>';
+			}
+			
+			if (jq("input[name='concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += 'Patient Given AZT<br/>';
+			}
+			
+			if (jq("input[name='concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += 'Patient Given HAART<br/>';
+			}
+			
+			
+			
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 			
 			if (jq(this).attr('name') == 'concept.11724bb1-9033-457b-9b09-d4080f459f2f'){
 				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
@@ -614,6 +650,31 @@
 		
 		jq('.feeding-info input').change(function(){
 			jq('#feeding-info-set').val('SET');
+			
+			var output = '';
+			
+			if (jq("input[name='concept.fb5a5471-e912-4288-8c25-750f7f88281f']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Infant Feeding Counselling Done<br/>';
+			}
+			
+			if (jq("input[name='concept.42197783-8b24-49b0-b290-cbb368fa0113']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Counseling on Exclusive Breastfeeding Done<br/>';
+			}
+			
+			if (jq("input[name='concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Infant Feeding Options for HIV discussed<br/>';
+			}
+			
+			if (!jq("input[name='concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f']:checked").val()) {}
+			else {
+				output += 'Breastfeeding Decision: ' + jq("input[name='concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f']:checked").data('value') + '<br/>';
+			}
+			
+			if (output == ''){
+				output = 'N/A';
+			}
+			
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 		
 		jq('.treatment-info input').change(function(){
@@ -636,22 +697,32 @@
 				output += 'ANC Exercise Given: ' + jq("input[name='concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c']:checked").data('value') + '<br/>';
 			}
 			
-			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
 		});
 		
-		jq('#availableReferral').change(function(){
+		jq('#availableReferral, #next-visit-date-display').change(function(){
+			var output = '';
+			
 			if (jq(this).val() == "1"){
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('Internal Referral');
+				output += 'Internal Referral<br/>';
 				jq('#referral-set').val('SET');
 			}
 			else if (jq(this).val() == "2"){
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('External Referral');
+				output += 'External Referral<br/>';
 				jq('#referral-set').val('SET');
 			}
-			else {
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('N/A');
-				jq('#referral-set').val('');
+			
+			if (jq('#next-visit-date-display').val() != ''){
+				output += 'Next Visit: ' + jq('#next-visit-date-display').val();
+				jq('#referral-set').val('SET');
 			}
+			
+			if (output == ''){
+				jq('#referral-set').val('');
+				output = 'N/A';			
+			}
+			
+			jq('#summaryTable tr:eq(8) td:eq(1)').html(output);
 		});
 		
 		jq('#referralReason').change(function(){
@@ -1355,17 +1426,17 @@
                     <div class="testbox decision-feeding" style="margin-top: 20px;">
                         <div>Mother's Breastfeeding decision?</div>
                         <label>
-                            <input id="breastfeeding-decision" type="radio" data-value="Positive" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="a082375c-bfe4-4395-9ed5-d58e9ab0edd3">
+                            <input id="breastfeeding-decision" type="radio" data-value="Exclusive" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="a082375c-bfe4-4395-9ed5-d58e9ab0edd3">
                             Exclusive
                         </label><br/>
 
                         <label>
-                            <input id="breastfeeding-decision" type="radio" data-value="Negative" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="6225dd6f-f491-4c2b-ad88-b81eb5763650">
+                            <input id="breastfeeding-decision" type="radio" data-value="Replacement" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="6225dd6f-f491-4c2b-ad88-b81eb5763650">
                             Replacement
                         </label><br/>
 
                         <label>
-                            <input id="breastfeeding-decision" type="radio" data-value="Unknown" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="8b8e1133-9fe1-49c9-9365-fdd49c95ee42">
+                            <input id="breastfeeding-decision" type="radio" data-value="Not Decided" name="concept.a0bf86bb-b50e-4be4-a54c-32518bfb843f" value="8b8e1133-9fe1-49c9-9365-fdd49c95ee42">
                             Not Decided
                         </label>
                     </div>
@@ -1564,12 +1635,12 @@
 					<div class="testbox">
 						<div>NVP for Baby</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							<input id="couple-counselled" type="radio" data-value="Given" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Given
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							<input id="couple-counselled" type="radio" data-value="Not Given" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							Not Given
 						</label>
 					</div>
@@ -1762,7 +1833,7 @@
 			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Next Visit<span class="important"></span></div>
 			<div id="next-visit-date" class="onerow">
 				<div class="col4" style="padding-top: 5px;">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -1894,6 +1965,13 @@
 								<td><span class="status active"></span>Treatment</td>
 								<td>N/A</td>
 							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Feeding Options</td>
+								<td>N/A</td>
+							</tr>
+							
+							
 							
 							<tr>
 								<td><span class="status active"></span>Outcome</td>

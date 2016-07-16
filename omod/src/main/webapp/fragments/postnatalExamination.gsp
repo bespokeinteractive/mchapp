@@ -362,34 +362,45 @@
 		//submit data
         jq("#postnatal-examination-submit").on("click", function(event){
             event.preventDefault();
+			
             var data = jq("form#postnatalExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
-            jq.post(
-                    '${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
-                    data,
-                    function (data) {
-                        if (data.status === "success") {
-                            window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                        } else if (data.status === "error") {
-                            jq().toastmessage('showErrorToast', data.message);
-                        }
-                    },
-                    "json");
+            jq.post('${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+					} else if (data.status === "error") {
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
+			);
         });
 
-		jq('#availableReferral').change(function(){
+		jq('#availableReferral, #next-visit-date-display').change(function(){
+			var output = '';
+			
 			if (jq(this).val() == "1"){
-				jq('#summaryTable tr:eq(7) td:eq(1)').text('Internal Referral');
+				output += 'Internal Referral<br/>';
 				jq('#referral-set').val('SET');
 			}
 			else if (jq(this).val() == "2"){
-				jq('#summaryTable tr:eq(7) td:eq(1)').text('External Referral');
+				output += 'External Referral<br/>';
 				jq('#referral-set').val('SET');
 			}
-			else {
-				jq('#summaryTable tr:eq(7) td:eq(1)').text('N/A');
-				jq('#referral-set').val('');
+			
+			if (jq('#next-visit-date-display').val() != ''){
+				output += 'Next Visit: ' + jq('#next-visit-date-display').val();
+				jq('#referral-set').val('SET');
 			}
+			
+			if (output == ''){
+				jq('#referral-set').val('');
+				output = 'N/A';			
+			}
+			
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 
 		jq('#referralReason').change(function(){
