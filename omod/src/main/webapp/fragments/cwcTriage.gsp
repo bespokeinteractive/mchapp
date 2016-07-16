@@ -32,8 +32,6 @@
             var wValue = jq('#weight').val();
             var hValue = jq('#height').val();
             var muacValue = jq('.muacs').val();
-			
-			console.log(muacValue);
 
             if(!(parseInt(wValue) > 0) || !(parseInt(hValue) > 0) || !(parseInt(muacValue) > 0) ){
                 jq().toastmessage('showErrorToast', "Check values for height, weight and muac!");

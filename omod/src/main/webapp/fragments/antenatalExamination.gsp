@@ -176,8 +176,7 @@
         if(gestationInWeeks < 16)
         {
             jq("#lessthan16").show();
-            jq("#next-visit-date").hide();
-            jq("#maturity").text(gestationInWeeks + " Weeks");
+            jq(".maturity").text(gestationInWeeks + " Weeks");
         }
         else if(gestationInWeeks >= 16)
         {
@@ -577,25 +576,44 @@
 			
 			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
 			
-			if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
+			if (jq(this).attr('name') == 'concept.11724bb1-9033-457b-9b09-d4080f459f2f'){
 				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
-					jq('#partner-result').show(300);
+					jq('.anc-results').show(300);
+					jq('.partner-tested').show(300);
 				}
 				else{
-					jq('#partner-result').hide(300);
-					jq('#partner-result input').removeAttr('checked');
+					jq('.anc-results').hide(300);
+					jq('.partner-tested').hide(300);
+					
+					jq('.anc-results input').removeAttr('checked');
+					jq('.partner-tested input').removeAttr('checked');
 				}
-			};
-
+			}
+			
             if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
                 if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
-                    jq('#partner-result').show(300);
+                    jq('.partner-result').show(300);
                 }
                 else{
-                    jq('#partner-result').hide(300);
-                    jq('#partner-result input').removeAttr('checked');
+                    jq('.partner-result').hide(300);
+                    jq('.partner-result input').removeAttr('checked');
                 }
-            };
+            }
+			
+			if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
+				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+					jq('.initial-hide').show(300);
+				}
+				else{
+					jq('.initial-hide').hide(300);
+					jq('.initial-hide input').removeAttr('checked');
+				}
+			}
+
+		});
+		
+		jq('.feeding-info input').change(function(){
+			jq('#feeding-info-set').val('SET');
 		});
 		
 		jq('.treatment-info input').change(function(){
@@ -908,6 +926,7 @@
 	}
 	.floating-controls{
 		margin-top: 5px;
+		padding: 0 !important;
 	}
 	.floating-controls input{
 		cursor: pointer;
@@ -926,7 +945,11 @@
 		color: #f26522;
 		width: auto;
 	}
-	#partner-result{
+	.partner-tested,
+	.anc-results,
+	.initial-hide,
+	.partner-result,
+	#next-visit-date label{
 		display: none;
 	}
 	.patient-profile{
@@ -1119,8 +1142,7 @@
                     <label for="searchExaminations" class="label title-label">Examinations <span class="important"></span></label>
 					<div id="lessthan16">
 						<i class="icon-info-sign small"></i>
-						Palpable Mass Available
-						<span class="icon-remove small"></small>
+						Maturity is <span class="maturity">0wks</span>. Palpable Mass Available						
 					</div>
                     <input type="text" id="searchExaminations" name="" value="" placeholder="Add Examination"/>
                     <field>
@@ -1281,11 +1303,16 @@
         <fieldset>
             <legend>Infant Feeding</legend>
             <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding & Councelling<span class="important"></span></label>
-
-            <div class="onerow floating-controls hiv-info">
+			
+			<field>
+				<input type="hidden" id="feeding-info-set" class=""/>
+				<span id="feeding-info-lbl" class="field-error" style="display: none"></span>
+			</field>
+			
+            <div class="onerow floating-controls feeding-info">
                 <div class="col4" style="width: 48%; margin: 0 1% 0 0">
                     <div class="testbox">
-                        <div>Infant feeding counseling done</div>
+                        <div>Infant Feeding Counselling Done</div>
                         <label>
                             <input id="infant-feeding-counseled" type="radio" data-value="Yes" name="concept.fb5a5471-e912-4288-8c25-750f7f88281f" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
@@ -1348,7 +1375,7 @@
 		
 		<fieldset>
 			<legend>PMTCT Information</legend>
-			<label for="investigation" class="label title-label" style="width: auto;">PMTCT Information<span class="important"></span></label>
+			<label for="investigation" class="label title-label" style="width: auto;">PMTCT Information</label>
 			
 			<field>
 				<input type="hidden" id="hiv-info-set" class=""/>
@@ -1356,26 +1383,124 @@
 			</field>
 			
 			<div class="onerow floating-controls hiv-info">
-				<div class="col4" style="width: 48%;">
-					<div class="prior-status" >
-						<span>Prior Known Status:</span><br/>
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>Prior Known Status</div>
 						<label>
 							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Positive
 						</label><br/>
-						
+
 						<label>
 							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Negative
 						</label><br/>
-						
+
 						<label>
 							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
 							Unknown
-						</label>				
+						</label>
 					</div>
-                    <div>
-                        <span>Assessed through?</span><br/>
+				</div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>HIV Tested in ANC</div>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>
+				</div>
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox anc-results">
+						<div>ANC Test Results</div>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>
+					</div>
+				</div>				
+			</div>			
+			<div class="clear"></div>
+			
+			<div class="onerow floating-controls hiv-info partner-tested">
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox" class="couple-counselled">
+						<div>Couple Counselled</div>
+
+						<label>
+							<input  type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+
+						<label>
+							<input type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label>
+					</div>					
+				</div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox partner-tested">
+						<div>Patner Tested</div>		 
+						<label>		 
+							<input id="" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">		 
+							Yes		
+						</label><br/>		
+								
+						<label>		
+							<input id="" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">		
+							No		
+						</label>		
+					</div>
+				</div>
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox partner-result">
+						<div>Patner Results</div>
+						<label>
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							Positive
+						</label><br/>
+						<label>
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							Negative
+						</label><br/>
+						
+						<label>
+							<input id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
+							Unknown
+						</label>
+					</div>					
+				</div>
+			</div>
+			<div class="clear"></div>
+			
+			<div class="onerow floating-controls hiv-info initial-hide">
+				<label for="investigation" class="label title-label" style="width: auto;">Screening Details</label>
+				<div class="clear"></div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+                    <div class="testbox">
+                        <div>Assessed through?</div>
                         <label>
                             <input id="couple-counselled" type="radio" data-value="WHO Stage" name="concept.9e93ea80-3d6d-4e60-98cf-d29e53b4703c" value="f09aa2d9-04a9-4964-bfd4-71c3f9804cda">
                             WHO Stage
@@ -1389,94 +1514,12 @@
                         <label>
                             &nbsp;
                         </label>
-                    </div>
-					<div style="margin-top: 20px;">
-						<span>Patner Tested?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.93366255-8903-44af-8370-3b68c0400930" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-						
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.93366255-8903-44af-8370-3b68c0400930" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label>
-					</div>
-
-
-                    <div class="arv-section" style="display: none">
-                            <div>
-                                <span>Start on ART?</span><br/>
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                                    Yes
-                                </label><br/>
-
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                                    No
-                                </label><br/>
-
-                                <label>
-                                    &nbsp;
-                                </label>
-                            </div>
-                            <div>
-                                <span>NVP for Baby?</span><br/>
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                                    Yes
-                                </label><br/>
-
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                                    No
-                                </label><br/>
-
-                                <label>
-                                    &nbsp;
-                                </label>
-                            </div>
-                            <div>
-                                <span>NVP for Mother?</span><br/>
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                                    Yes
-                                </label><br/>
-
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                                    No
-                                </label><br/>
-
-                                <label>
-                                    &nbsp;
-                                </label>
-                            </div>
-                        </div>
-
+                    </div>				
 				</div>
 				
-				<div class="col4 last" style="width: 49%;">
-					<div>
-						<span>Couple Counselled?</span><br/>
-						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-						
-						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.27b96311-bc00-4839-b7c9-31401b44cd3a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-						
-						<label>
-							&nbsp;
-						</label>
-					</div>
-
-                    <div>
-                        <span>Screened for TB?</span><br/>
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+                        <div>Screened for TB?</div>
                         <label>
                             <input id="couple-counselled" type="radio" data-value="Yes" name="concept.26a924e0-1648-4112-959f-d47647021dc9" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
@@ -1491,78 +1534,115 @@
                             &nbsp;
                         </label>
                     </div>
+				</div>
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox">
+						<div>Started on ART</div>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
 
-					<div style="margin-top: 20px;" id="partner-result">
-						<span>Patner Results</span><br/>
 						<label>
-							<input class="prior-status" id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
-							Positive
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.a2a1c160-9ee2-4df5-8e48-58a50ebe8147" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
 						</label><br/>
-						
+
 						<label>
-							<input class="prior-status" id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
-							Negative
-						</label><br/>
-						
-						<label>
-							<input class="prior-status" id="prior-status-unknown" type="radio" data-value="Unknown" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="ec8e61d3-e9c9-4020-9c62-8403e14af5af">
-							Unknown
+							&nbsp;
 						</label>
 					</div>
-                    <div class="arv-section" style="display: none">
-                            <div>
-                                <span>AZT Given?</span><br/>
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                                    Yes
-                                </label><br/>
+				</div>
+			</div>
+			
+			<div class="onerow floating-controls hiv-info initial-hide">
+				<label class="label title-label" style="width: auto;">Formula Summary</label>
+				<div class="clear"></div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>NVP for Baby</div>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Given
+						</label><br/>
 
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                                    No
-                                </label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.49ac1e95-1f8f-4ac1-a0e1-c9e5572f9e1e" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							Not Given
+						</label>
+					</div>
 
-                                <label>
-                                    &nbsp;
-                                </label>
-                            </div>
-                            <div>
-                                <span>HAART Given?</span><br/>
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                                    Yes
-                                </label><br/>
+					<div class="testbox">
+						<div>AZT Given?</div>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
 
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                                    No
-                                </label><br/>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.50d00f7d-3f7f-40ed-b6ed-97b7a9e0529b" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
 
-                                <label>
-                                    &nbsp;
-                                </label>
-                            </div>
-                            <div>
-                                <span>CTX Given?</span><br/>
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="Yes" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-                                    Yes
-                                </label><br/>
+						<label>
+							&nbsp;
+						</label>
+					</div>
+				</div>
+				
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+                    <div class="arv-section" >
+						<div class="testbox">
+							<div>NVP for Mother</div>
+							<label>
+								<input id="couple-counselled" type="radio" data-value="Yes" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+								Given
+							</label><br/>
 
-                                <label>
-                                    <input id="couple-counselled" type="radio" data-value="No" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-                                    No
-                                </label><br/>
+							<label>
+								<input id="couple-counselled" type="radio" data-value="No" name="concept.b72e7dc9-034c-443c-ae88-5bc723a801be" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+								Not Given
+							</label>
+						</div>
+					</div>
+					
+					<div class="testbox">
+						<div>HAART Given?</div>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
 
-                                <label>
-                                    &nbsp;
-                                </label>
-                            </div>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
 
-                        </div>
+						<label>
+							&nbsp;
+						</label>
+					</div>
+				</div>
+				
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox">
+						<div>CTX for Mother</div>
+						<label>
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Given
+						</label><br/>
+
+						<label>
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.37c028e7-c9f7-48bc-8440-fe845fc9e800" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							Not Given
+						</label>
+					</div>
 				</div>
 			</div>
 		</fieldset>
+		
 		<fieldset class="no-confirmation">
 			<legend>Prescription</legend>
 			<label class="label title-label">Prescription <span class="important"></span></label>
@@ -1618,7 +1698,7 @@
 
 		<fieldset>
 			<legend>Treatment</legend>
-			<label class="label title-label" style="width: auto;">Treatment<span class="important"></span></label>
+			<label class="label title-label" style="width: auto;">Treatment</label>
 			
 			<field>
 				<input type="hidden" id="treatment-info-set" class=""/>
@@ -1626,9 +1706,9 @@
 			</field>
 			
 			<div class="onerow floating-controls treatment-info">
-				<div class="col4" style="width: 48%;">
-					<div>
-						<span>Deworming</span><br/>
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>Deworming</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -1639,9 +1719,11 @@
 							No
 						</label><br/>
 					</div>
+				</div>
 					
-					<div style="margin-top: 20px;">
-						<span>Received LLITN</span><br/>
+				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+					<div class="testbox">
+						<div>Received LLITN</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -1653,9 +1735,9 @@
 					</div>					
 				</div>
 				
-				<div class="col4 last" style="width: 49%;">
-					<div>
-						<span>ANC Exercise given?</span><br/>
+				<div class="col4 last" style="width: 32%;">
+					<div class="testbox">
+						<div>ANC Exercise given?</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -1676,6 +1758,17 @@
 				<input type="hidden" id="referral-set" class=""/>
 				<span id="referral-lbl" class="field-error" style="display: none"></span>
 			</field>
+			
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Next Visit<span class="important"></span></div>
+			<div id="next-visit-date" class="onerow">
+				<div class="col4" style="padding-top: 5px;">
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 20px 0px 2px 10px;">Referral Options<span class="important"></span></div>
 			
 			<div class="onerow">
 				<div class="col4">
@@ -1750,9 +1843,7 @@
 					<textarea id="comments" name="comment.18b2b617-1631-457f-a36b-e593d948707f" style="width: 95.7%; resize: none;"></textarea>				
 				</div>
 			</div>
-            <div id="next-visit-date" class="onerow">
-                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-            </div>
+           
 		</fieldset>
 	</section>
 	

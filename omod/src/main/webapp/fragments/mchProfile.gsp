@@ -23,7 +23,7 @@
 				{{=profileDetail.value}}
 			{{ }); }}
 			
-			<small><i class="icon-undo small"></i> Maturity:</small> <span id="maturity"></span>
+			<small><i class="icon-undo small"></i> Maturity:</small> <span class="maturity"></span>
 			<div class="clear"></div>
 		</div>
 		
