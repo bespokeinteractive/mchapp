@@ -1038,10 +1038,8 @@
 <script id="examination-detail-template" type="text/template">
     <div id="examination-detail-div">
         <span id="selectedExamination" data-uid="{{=value}}" class="icon-remove selecticon"></span>
-        <label style="margin-top: 0px; width: 95%;">{{-label}}</label>
-		
-		<input type="{{-text_type}}" name="{{-text_name}}" style="margin-left: 10px ! important; width: 95% ! important;" placeholder="SPECIFY VALUE FOR {{-label}}"/>
-		
+        <label style="margin-top: 0px; width: 95%;">{{-label}}</label>		
+		<input type="{{-text_type}}" name="{{-text_name}}" style="margin-left: 10px ! important; width: 95% ! important;" placeholder="SPECIFY VALUE FOR {{-label}}"/>		
 		<br/>
 		
         {{ _.each(answers, function(answer, index) { }}

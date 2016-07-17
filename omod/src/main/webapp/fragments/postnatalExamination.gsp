@@ -691,18 +691,19 @@
 </script>
 
 <script id="investigation-template" type="text/template">
-<div class="investigation">
-	<span class="icon-remove selecticon"></span>
-	<label style="margin-top: 2px; width: 95%;">{{=label}}
-		<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}"/>
-	</label>
-</div>
+	<div class="investigation">
+		<span class="icon-remove selecticon"></span>
+		<label style="margin-top: 2px; width: 95%;">{{=label}}
+			<input type="hidden" name="test_order.{{=questionUuid}}" value="{{=uuid}}"/>
+		</label>
+	</div>
 </script>
 
 <script id="examination-detail-template" type="text/template">
     <div id="examination-detail-div">
         <span id="selectedExamination" data-uid="{{=value}}" class="icon-remove selecticon"></span>
-        <label style="margin-top: 0px; width: 95%;">{{-label}}</label>
+        <label style="margin-top: 0px; width: 95%;">{{-label}}</label>		
+		<input type="{{-text_type}}" name="{{-text_name}}" style="margin-left: 10px ! important; width: 95% ! important;" placeholder="SPECIFY VALUE FOR {{-label}}"/>		
 		<br/>
 
         {{ _.each(answers, function(answer, index) { }}

@@ -23,7 +23,6 @@ public class ExaminationFilterFragmentController {
 		List<ConceptSearchResult> possibleMatches = Context.getConceptService().getConcepts(findingQuery, locales, false, requiredConceptClasses, null, requiredConceptDataTypes, null, null, null, null);
 		List<SimpleObject> searchResults = new ArrayList<SimpleObject>();
 
-
 		for (ConceptSearchResult conceptSearchResult : possibleMatches) {
 			Concept concept = conceptSearchResult.getConcept();
 			SimpleObject finding = new SimpleObject();
