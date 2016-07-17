@@ -964,7 +964,7 @@
 		padding: 7px 12px;
 	}
 	#profile-items small{
-		margin-left: 5.5%;
+		margin-left: 4.5%;
 	}
 	#profile-items small:first-child{
 		margin-left: 2px;
@@ -1666,17 +1666,13 @@
 					<div class="testbox">
 						<div>HAART Given?</div>
 						<label>
-							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
+							<input id="couple-counselled" type="radio" data-value="Yes" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="ca808985-3f2f-4200-840f-475ced524e9c">
+							P= Prophylaxis
 						</label><br/>
 
 						<label>
-							<input id="couple-counselled" type="radio" data-value="No" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-
-						<label>
-							&nbsp;
+							<input id="couple-counselled" type="radio" data-value="No" name="concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a" value="cadd0cf8-b12d-46e2-a20d-939dbf2cbec8">
+							T= Treatment
 						</label>
 					</div>
 				</div>
