@@ -303,7 +303,7 @@
 	.testbox {
 		background-color: rgba(0, 0, 0, 0.01);
 		border: 1px solid rgba(51, 51, 51, 0.1);
-		height: 130px;
+		min-height: 130px;
 		margin: 0 0 15px 5px;
 		width: 100%;
 	}
@@ -313,7 +313,24 @@
 		color: #fff;
 		margin: -1px;
 		padding: 2px 15px;
+	}
+	.floating-controls{
+		margin-top: 5px;
+		padding: 0 !important;
 	}	
+	.floating-controls input{
+		cursor: pointer;
+		float: none!important;
+	}
+	.floating-controls label{
+		cursor: pointer;
+	}
+	.floating-controls span{
+		color: #f26522;
+	}
+	.floating-controls textarea{
+		resize: none;
+	}
 </style>
 
 <div class="clear"></div>

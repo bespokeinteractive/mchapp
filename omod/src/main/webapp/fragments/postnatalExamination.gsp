@@ -381,11 +381,11 @@
 		jq('#availableReferral, #next-visit-date-display').change(function(){
 			var output = '';
 			
-			if (jq(this).val() == "1"){
+			if (jq('#availableReferral').val() == "1"){
 				output += 'Internal Referral<br/>';
 				jq('#referral-set').val('SET');
 			}
-			else if (jq(this).val() == "2"){
+			else if (jq('#availableReferral') == "2"){
 				output += 'External Referral<br/>';
 				jq('#referral-set').val('SET');
 			}
@@ -652,23 +652,6 @@
 		color: #555;
 		float: left;
 		font-size: 90%;
-	}	
-	.floating-controls{
-		margin: 5px 0 0 0!important;
-		padding: 0!important
-	}
-	.floating-controls input{
-		cursor: pointer;
-		float: none!important;
-	}
-	.floating-controls label{
-		cursor: pointer;
-	}
-	.floating-controls span{
-		color: #f26522;
-	}
-	.floating-controls textarea{
-		resize: none;
 	}
 	#next-visit-date label,
 	.nvp-ctx-info,
@@ -1151,7 +1134,7 @@
 			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Next Visit<span class="important"></span></div>
 			<div id="next-visit-date" class="onerow">
 				<div class="col4" style="padding-top: 5px;">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 				</div>
 				<div class="clear"></div>
 			</div>

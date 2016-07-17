@@ -40,20 +40,10 @@
     var outcomeId;
 
     jq(function () {
-
         jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             dateFormat: 'yy-mm-dd'
-        });
-
-        jq('input[type=radio][name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded"]').change(function() {
-            if (this.value == 'Yes') {
-                jq('#specific-disability').show();
-            }
-            else if (this.value == 'No') {
-                jq('#specific-disability').hide();
-            }
         });
 
         var exitcwcdialog = emr.setupConfirmationDialog({
@@ -341,9 +331,9 @@
 
         jq("#7cdc2d69-31b9-4592-9a3f-4bc167d5780b").on('change', function () {
             if (jq("#7cdc2d69-31b9-4592-9a3f-4bc167d5780b").is(':checked')) {
-                jq('#otherFollowUpSpec').show();
+                jq('#specifyOther').show();
             } else {
-                jq('#otherFollowUpSpec').hide();
+                jq('#specifyOther').hide();
             }
         });
 
@@ -541,21 +531,91 @@
                     "json"
             );
         });
+		
+		jq('#specific-disability, .feeding-info input').change(function(){
+			jq('#feeding-info-set').val('SET');
+			
+			var output = '';
 
-        jq('#availableReferral').change(function () {
-            if (jq(this).val() == "1") {
-                jq('#summaryTable tr:eq(3) td:eq(1)').text('Internal Referral');
-                jq('#referral-set').val('SET');
-            }
-            else if (jq(this).val() == "2") {
-                jq('#summaryTable tr:eq(3) td:eq(1)').text('External Referral');
-                jq('#referral-set').val('SET');
-            }
-            else {
-                jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
-                jq('#referral-set').val('');
-            }
-        });
+			if (jq("input[name='concept.a082375c-bfe4-4395-9ed5-d58e9ab0edd3']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Exclusive Breastfeeding (0-6 months)<br/>';
+			}
+			
+			if (jq("input[name='concept.42197783-8b24-49b0-b290-cbb368fa0113']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Counselled on Nutrition?<br/>';
+			}
+			
+			if (jq("input[name='concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Counselled on HIV<br/>';
+			}
+			
+			if (jq("input[name='concept.d311a2d5-8af3-4161-9df4-35f26b04dded']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
+				output += '&#9745; Disability ' + jq('#specific-disability').val();
+                jq('#specific-disability').show();
+			}
+			else{
+                jq('#specific-disability').hide();
+                jq('#specific-disability').val('');
+			}
+			
+			if (output == ''){
+				output = 'N/A';
+			}
+			
+			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+		});
+		
+		jq('#cwcFollowUp input').change(function(){
+			jq('#referral-set').val('SET');
+			var output = '';
+
+			if (jq('input[value="d87a8764-8e2d-4297-b49a-acbc1210109e"]:checked').length > 0) {
+				output += '&#9745; NUTRITIONAL MARASMUS<br/>';
+			}
+			
+			if (jq('input[value="6eac3451-66b6-4057-b765-1b47e6ecff6b"]:checked').length > 0) {
+				output += '&#9745; 	KWASHIORKOR<br/>';
+			}
+			
+			if (jq('input[value="cdc6042c-7237-4150-87c4-12152c7e2542"]:checked').length > 0) {
+				output += '&#9745; 	MALNUTRITION<br/>';
+			}
+			
+			if (jq('input[value="7cdc2d69-31b9-4592-9a3f-4bc167d5780b"]:checked').length > 0) {
+				output += '&#9745; 	OTHER ' + jq('#specifyOther').val();
+			}
+						
+			if (output == ''){
+				output = 'N/A';
+			}
+			
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
+		});
+
+        jq('#availableReferral, #next-visit-date-display').change(function(){
+			var output = '';
+			
+			if (jq('#availableReferral').val() == "1"){
+				output += 'Internal Referral<br/>';
+				jq('#referral-set').val('SET');
+			}
+			else if (jq('#availableReferral').val() == "2"){
+				output += 'External Referral<br/>';
+				jq('#referral-set').val('SET');
+			}
+			
+			if (jq('#next-visit-date-display').val() != ''){
+				output += 'Next Visit: ' + jq('#next-visit-date-display').val();
+				jq('#referral-set').val('SET');
+			}
+			
+			if (output == ''){
+				jq('#referral-set').val('');
+				output = 'N/A';			
+			}
+			
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+		});
 
         jq('#referralReason').change(function () {
             if (jq(this).val() == "8") {
@@ -740,12 +800,6 @@
 		color: #555;
 		text-align: left;
 	}
-	.title-label {
-		color: #009384;
-		cursor: pointer;
-		font-size: 1.3em;
-		font-weight: normal;
-	}
 	#exams-holder input[type="radio"] {
 		float: none;
 	}
@@ -837,6 +891,15 @@
 		font-size: 100% !important;
 		margin: 5px;
 		text-decoration: none;
+	}
+	#next-visit-date-wrapper{
+		padding-left: 10px;
+	}
+	#next-visit-date label{
+		display: none;
+	}
+	#next-visit-date input{
+		width: 95%!important;
 	}
 </style>
 
@@ -1018,6 +1081,7 @@
 
         <fieldset class="no-confirmation">
             <legend>Diagnosis</legend>
+			<label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
             <div class="tasks-list">
                 <div class="left">
                     <label id="ts01" class="tasks-list-item" for="provisional-diagnosis">
@@ -1037,9 +1101,7 @@
                     </label>
                 </div>
             </div>
-            <br><br><br>
             <div>
-                <label for="diagnoses" class="label title-label">Diagnosis <span class="important"></span></label>
                 <input type="text" style="width: 450px" id="diagnoses" name="diagnosis" placeholder="Enter Diagnosis" >
 
                 <field>
@@ -1090,14 +1152,18 @@
         </fieldset>
 
         <fieldset>
-            <legend>Findings</legend>
-            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding<span
-                    class="important"></span></label>
+            <legend>Infant Feeeding</legend>
+            <label class="label title-label" style="width: auto;">Infant Feeding</label>
+			
+			<field>
+				<input type="hidden" id="feeding-info-set" class=""/>
+				<span id="feeding-info-lbl" class="field-error" style="display: none"></span>
+			</field>
 
-            <div class="onerow floating-controls hiv-info">
-                <div class="col4" style="width: 48%;">
-                    <div>
-                        <span>Exclusive Breast feeding (0- 6 months)</span><br/>
+            <div class="onerow floating-controls feeding-info">
+                <div class="col4" style="width: 50%; margin: 0 1% 0 0">
+                    <div class="testbox">
+                        <div>Exclusive Breastfeeding(0-6 mnths)</div>
                         <label>
                             <input id="exclusive-breast-feeding" type="radio" data-value="Yes"
                                    name="concept.a082375c-bfe4-4395-9ed5-d58e9ab0edd3"
@@ -1113,8 +1179,8 @@
                         </label>
                     </div>
 
-                    <div style="margin-top: 20px;">
-                        <span>Counseled on HIV?</span><br/>
+                    <div class="testbox">
+                        <div>Counseled on HIV?</div>
                         <label>
                             <input id="hiv-counseled" type="radio" data-value="Yes"
                                    name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72"
@@ -1132,8 +1198,8 @@
                 </div>
 
                 <div class="col4 last" style="width: 49%;">
-                    <div>
-                        <span>Counseled on Nutrition?</span><br/>
+                    <div class="testbox">
+                        <div>Counseled on Nutrition?</div>
                         <label>
                             <input id="counseled-nutrition" type="radio" data-value="Yes"
                                    name="concept.42197783-8b24-49b0-b290-cbb368fa0113"
@@ -1149,25 +1215,20 @@
                         </label>
                     </div>
 
-                    <div style="margin-top: 20px;">
-                        <span>Any Disability?</span><br/>
-                        <label>
-                            <input  type="radio" value="Yes"
-                                   name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded"
-                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                    <div class="testbox">
+                        <div>Any Disability?</div>
+                        <label style="width: 70px">
+                            <input type="radio" name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
                             Yes
-                        </label><br/>
+                        </label>
+						
+                        <input id="specific-disability" type="text" placeholder="Specify Disability" style="width: 70% ! important; display: none; float: right ! important; margin-right: 3px;" name="concept.bfa43093-bc99-4273-8c3f-5232f631f6aa">
+						<br/>
 
                         <label>
-                            <input type="radio" value="No"
-                                   name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded"
-                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            <input type="radio" name="concept.d311a2d5-8af3-4161-9df4-35f26b04dded" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
                             No
                         </label>
-                        <div id="specify-disability">
-                            <input id="specific-disability" type="text" placeholder="Specify Disability" style="display: none"
-                                   name="concept.bfa43093-bc99-4273-8c3f-5232f631f6aa">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1233,34 +1294,39 @@
                 <input type="hidden" id="referral-set" class=""/>
                 <span id="referral-lbl" class="field-error" style="display: none"></span>
             </field>
-
+			
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Follow Up & Next Visit</div>
             <div class="onerow floating-controls conditions-info">
-                <div class="col8">
-                    <div id="cwcFollowUp" style="width: 600px">
-                        <label>Follow Up</label>
-                        <div>
+                <div class="col4" style="width: 50%; margin: 0 1% 0 0">
+                    <div id="cwcFollowUp" class="testbox" style="height: 170px">
+                        <div>Follow Up</div>                       
 
                         <% if (cwcFollowUpList != null || cwcFollowUpList != "") { %>
-                        <% cwcFollowUpList.each { followUp -> %>
-                        <label>
-                            <input type="checkbox" name="concept.6f7b4285-a04b-4f8b-be85-81c325289539" value="${followUp.answerConcept.uuid}" id="${followUp.answerConcept.uuid}" >
-                            ${followUp.answerConcept.name}
-                        </label>
+							<% cwcFollowUpList.each { followUp -> %>
+								<label style="width: 100%!important;">
+									<input type="checkbox" name="concept.6f7b4285-a04b-4f8b-be85-81c325289539" value="${followUp.answerConcept.uuid}" id="${followUp.answerConcept.uuid}" >
+									${followUp.answerConcept.name}
+								</label>
                             <% } %>
                         <% } %>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col4 last" id="otherFollowUpSpec" style="display: none">
-                    <div>
-                        <label for="specifyOther" style="width: 200px">If Other, Please Specify</label>
+                       
                         <input id="specifyOther" type="text" name="concept.7cdc2d69-31b9-4592-9a3f-4bc167d5780b"
-                               placeholder="Please Specify" style="display: inline;">
+                               placeholder="Please Specify" style="display: none; width: 70% ! important; float: right ! important; margin: -27px 5px 5px;">
+							   
+						<span class="clear"></span>
                     </div>
                 </div>
+				
+				<div class="col4 last" style="width: 49%;">
+					<div class="testbox" style="height: 170px">
+						<div style="margin-bottom: 5px;">Next Visit</div>
+						${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+					</div>
+				</div>
             </div>
-
+			<div class="clear"></div>
+			
+			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 20px 0px 2px 10px;">Referral Options</span></div>
             <div class="onerow">
                 <div class="col4">
                     <label for="availableReferral">Referral Available</label>
@@ -1334,9 +1400,7 @@
                     <textarea id="comments" name="comment.18b2b617-1631-457f-a36b-e593d948707f"
                               style="width: 95.7%; resize: none;"></textarea>
                 </div>
-                <div id="next-visit-date" class="onerow">
-                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-                </div>
+                
             </div>
         </fieldset>
     </section>
@@ -1372,6 +1436,16 @@
 
                         <tr>
                             <td><span class="status active"></span>Prescriptions</td>
+                            <td>N/A</td>
+                        </tr>
+
+                        <tr>
+                            <td><span class="status active"></span>Infant Feeding</td>
+                            <td>N/A</td>
+                        </tr>
+						
+						<tr>
+                            <td><span class="status active"></span>Follow Up</td>
                             <td>N/A</td>
                         </tr>
 
