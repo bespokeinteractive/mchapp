@@ -1356,7 +1356,7 @@
 
         <fieldset>
             <legend>Infant Feeding</legend>
-            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding & Councelling<span class="important"></span></label>
+            <label for="investigation" class="label title-label" style="width: auto;">Infant Feeding & Counselling<span class="important"></span></label>
 			
 			<field>
 				<input type="hidden" id="feeding-info-set" class=""/>
@@ -1611,7 +1611,7 @@
 			</div>
 			
 			<div class="onerow floating-controls hiv-info initial-hide">
-				<label class="label title-label" style="width: auto;">Formula Summary</label>
+				<label class="label title-label" style="width: auto;">Formula & Supplements</label>
 				<div class="clear"></div>
 				
 				<div class="col4" style="width: 33%; margin: 0 1% 0 0">

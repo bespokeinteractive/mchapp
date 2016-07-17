@@ -477,19 +477,34 @@
 			
 			if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
 				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
-					jq('.partner-results').show(500);
+					jq('.partner-results').show(300);
 				}
 				else{
-					jq('.partner-results').hide(500);
+					jq('.partner-results').hide(300);
 					jq('.partner-results input').removeAttr('checked');
 				}
 			}
-			else if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
-				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
-					jq('.nvp-ctx-info').show(500);
+			
+			if (jq(this).attr('name') == 'concept.11724bb1-9033-457b-9b09-d4080f459f2f'){
+				if (jq(this).val() == '606720bb-4a7a-4c4c-b3b5-9a8e910758c9'){
+					jq('.anc-tests').hide(300);
+					jq('.initial-hide').hide(300);
+					
+					jq('.anc-tests input').removeAttr('checked');					
+					jq('.initial-hide input').removeAttr('checked');
 				}
 				else{
-					jq('.nvp-ctx-info').hide(500);
+					jq('.anc-tests').show(300);
+					jq('.initial-hide').show(300);
+				}
+			}
+			
+			if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
+				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+					jq('.nvp-ctx-info').show(300);
+				}
+				else{
+					jq('.nvp-ctx-info').hide(300);
 					jq('.nvp-ctx-info input').removeAttr('checked');
 				}
 			}
@@ -654,6 +669,8 @@
 		font-size: 90%;
 	}
 	#next-visit-date label,
+	.anc-tests,
+	.initial-hide,
 	.nvp-ctx-info,
 	.partner-results{
 		display: none;
@@ -830,19 +847,24 @@
 						<div>HIV Tested in PNC</div>
 						
 						<label>
-							<input id="" type="radio" data-value="Yes" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="d26536f5-b8df-4740-b25b-28e2b1702a71">
+							<input id="" type="radio" data-value="Within 72hrs" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="d26536f5-b8df-4740-b25b-28e2b1702a71">
 							Within 72hrs
 						</label><br/>
 
 						<label>
-							<input id="" type="radio" data-value="No" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="43539d76-be01-45a8-96c6-968930d2e862">
+							<input id="" type="radio" data-value="After 72hrs" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="43539d76-be01-45a8-96c6-968930d2e862">
 							After 72hrs
 						</label>
+						
+						<label>
+							<input id="" type="radio" data-value="Not Tested" name="concept.11724bb1-9033-457b-9b09-d4080f459f2f" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							Not Tested
+						</label><br/>
 					</div>
 				</div>
 				
 				<div class="col4 last" style="width: 32%;">
-					<div class="testbox">
+					<div class="testbox anc-tests">
 						<div>PNC Test Results</div>
 						<label>
 							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
@@ -861,8 +883,9 @@
 					</div>
 				</div>				
 			</div>
+			<div class="clear"></div>
 			
-			<div class="onerow floating-controls hiv-info">
+			<div class="onerow floating-controls hiv-info initial-hide">
 				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
 					<div class="testbox" class="couple-counselled">
 						<div>Couple Counselled</div>
@@ -915,6 +938,9 @@
 			</div>
 			
 			<div class="onerow floating-controls hiv-info nvp-ctx-info">
+				<label class="label title-label" style="width: auto;">Formula & Supplements</label>
+				<div class="clear"></div>
+				
 				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
 					<div class="testbox">
 						<div>NVP for Baby</div>
