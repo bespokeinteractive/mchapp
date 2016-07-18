@@ -3,10 +3,8 @@ package org.openmrs.module.mchapp.fragment.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
-import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.PatientDashboardService;
@@ -53,12 +51,6 @@ public class TriageSummaryFragmentController {
         	TriageSummary triageSummary = new TriageSummary();
         	triageSummary.setVisitDate(enc.getDateCreated());
         	triageSummary.setEncounterId(enc.getEncounterId());
-        	Concept outcomeConcept = Context.getConceptService().getConcept("");
-        	for (Obs obs : enc.getAllObs()){
-        		if (obs.getConcept().equals(outcomeConcept)){
-        			triageSummary.setOutcome(obs.getValueText());
-        		}
-        	}
         	triageSummaries.add(triageSummary);
         	i++;
         	if(i >=20){
