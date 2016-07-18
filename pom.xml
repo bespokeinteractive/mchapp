@@ -3,7 +3,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>mchapp</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 	<name>MCH App Module</name>
 	<description>OpenMRS module to help track MCH visits</description>
