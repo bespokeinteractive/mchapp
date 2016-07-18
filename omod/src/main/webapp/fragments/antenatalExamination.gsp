@@ -618,9 +618,11 @@
 					jq('.partner-tested').show(300);
 				}
 				else{
+					jq('.initial-hide').hide(300);
 					jq('.anc-results').hide(300);
 					jq('.partner-tested').hide(300);
 					
+					jq('.initial-hide input').removeAttr('checked');
 					jq('.anc-results input').removeAttr('checked');
 					jq('.partner-tested input').removeAttr('checked');
 				}

@@ -294,10 +294,10 @@ public class VisitDetail {
 		String provisionalDiagnosisConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_PROVISIONAL_DIAGNOSIS);
 		String investigationConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_FOR_INVESTIGATION);
 		String procedureConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_POST_FOR_PROCEDURE);
-        String physicalExaminationConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_PHYSICAL_EXAMINATION);
         String visitOutcomeName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_VISIT_OUTCOME);
-        String internalReferralConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_INTERNAL_REFERRAL);
-        String externalReferralConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_EXTERNAL_REFERRAL);
+		String internalReferralConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_INTERNAL_REFERRAL);
+		String externalReferralConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_EXTERNAL_REFERRAL);
+		String physicalExaminationConceptName = Context.getAdministrationService().getGlobalProperty(PatientDashboardConstants.PROPERTY_PHYSICAL_EXAMINATION);
 
         String cwcFollowUpConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_FOLLOW_UP).getDisplayString();
 		String cwcBreastFeedingInfectedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_BREASTFEEDING_FOR_INFECTED).getDisplayString();

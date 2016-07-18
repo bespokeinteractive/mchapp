@@ -44,6 +44,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String ANC_DEWORMING = "159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         public static final String ANC_LLITN = "160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     }
+
     public static final class MchAppTriageConstants {
     	public static final String PULSE_RATE = "5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     	public static final String HEIGHT = "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
