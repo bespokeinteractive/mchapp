@@ -43,14 +43,6 @@
 															
 		</dependency>
 				
-		<dependency>
-		
-			<groupId>org.openmrs.module</groupId>
-									
-			<artifactId>uicommons-api</artifactId>
-															
-		</dependency>
-				
 		<!-- End OpenMRS modules -->
 		
 
