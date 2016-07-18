@@ -27,6 +27,15 @@
 		<require_module version="1.7">
 			org.openmrs.module.metadatadeploy
 		</require_module>
+		<require_module version="1.5.3">
+			org.openmrs.module.hospitalcore
+		</require_module>
+		<require_module version="2.0.12">
+			org.openmrs.module.inventory
+		</require_module>
+		<require_module version="1.0-SNAPSHOT">
+			org.openmrs.module.patientdashboardapp
+		</require_module>
 	</require_modules>
 	<!-- / Required Modules -->
 	
