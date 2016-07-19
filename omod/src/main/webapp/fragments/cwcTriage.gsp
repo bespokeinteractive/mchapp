@@ -32,27 +32,43 @@
             var wValue = jq('#weight').val();
             var hValue = jq('#height').val();
             var muacValue = jq('.muacs').val();
-
-            if(!(parseInt(wValue) > 0) || !(parseInt(hValue) > 0) || !(parseInt(muacValue) > 0) ){
-                jq().toastmessage('showErrorToast', "Check values for height, weight and muac!");
-                return false;
-            }
+			
+			if (wValue != ''){
+				if (!(parseInt(wValue) > 0)){
+					jq().toastmessage('showErrorToast', "Ensure value for Height has been properly filled!");
+					return false;
+				}
+			}
+			
+			if (hValue != ''){
+				if (!(parseInt(hValue) > 0)){
+					jq().toastmessage('showErrorToast', "Ensure value for Weight has been properly filled!");
+					return false;
+				}
+			}
+			
+			if (muacValue != ''){
+				if (!(parseInt(muacValue) > 0)){
+					jq().toastmessage('showErrorToast', "Ensure value for MUAC has been properly filled!");
+					return false;
+				}
+			}			
 			
             event.preventDefault();
             var data = jq("form#cwc-triage-form").serialize();
 
             jq.post(
-                    '${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
-                    data,
-                    function (data) {
-                        if (data.status === "success") {
-                            window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
-                        } else if (data.status === "error") {
-                            //show error message;
-                            jq().toastmessage('showErrorToast', data.message);
-                        }
-                    },
-                    "json"
+				'${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
+					} else if (data.status === "error") {
+						//show error message;
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
             );
         });
     });

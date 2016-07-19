@@ -40,6 +40,8 @@
     var outcomeId;
 
     jq(function () {
+		console.log('${patient.age}');
+		
         jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -729,12 +731,12 @@
         }
 
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-                .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
-                    return data.status;
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                });
+		.success(function (data) {
+			jq().toastmessage('showNoticeToast', data.message);
+			return data.status;
+		}).error(function (xhr, status, err) {
+			jq().toastmessage('showErrorToast', "AJAX error!" + err);
+		});
     }
 
     function hideLayer(divId) {
