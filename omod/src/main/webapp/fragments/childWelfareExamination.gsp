@@ -24,9 +24,7 @@
     var examinationArray = [];
     var investigationArray = [];
     var diagnosisArray = [];
-
-
-
+	
     var emrMessages = {};
 
     emrMessages["numericRangeHigh"] = "value should be less than {0}";
@@ -503,14 +501,14 @@
 
         function investigationSummary() {
             if (investigationArray.length == 0) {
-                jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
             }
             else {
                 var exams = '';
                 investigationArray.forEach(function (investigation) {
                     exams += investigation.label + '<br/>'
                 });
-                jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
+                jq('#summaryTable tr:eq(3) td:eq(1)').html(exams);
             }
         }
 
@@ -1433,12 +1431,12 @@
                         </tr>
 
                         <tr>
-                            <td><span class="status active"></span>Investigations</td>
+                            <td><span class="status active"></span>Prescriptions</td>
                             <td>N/A</td>
                         </tr>
 
                         <tr>
-                            <td><span class="status active"></span>Prescriptions</td>
+                            <td><span class="status active"></span>Investigations</td>
                             <td>N/A</td>
                         </tr>
 
