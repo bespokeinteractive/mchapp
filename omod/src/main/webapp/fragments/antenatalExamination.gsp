@@ -35,7 +35,6 @@
     var currentWorkflowBeingEdited;
     var patientProgramForWorkflowEdited;
     jq(function() {
-
 		jq(".infant-feeding").hide();
 		jq(".decision-feeding").hide();
 
@@ -48,6 +47,7 @@
                 jq(".decision-feeding").hide();
             }
         });
+		
         jq('input[type=radio][name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72"]').change(function() {
             if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
                 jq(".decision-feeding").show();
@@ -173,15 +173,14 @@
         var todaysDate = moment();
         var gestationInWeeks = Math.ceil(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
 
-        if(gestationInWeeks < 16)
-        {
+        if(gestationInWeeks < 16) {
             jq("#lessthan16").show();
-            jq(".maturity").text(gestationInWeeks + " Weeks");
         }
-        else if(gestationInWeeks >= 16)
-        {
+        else if(gestationInWeeks >= 16) {
             jq("#lessthan16").hide();
         }
+		
+		jq(".maturity").text(gestationInWeeks + "wks");
 
 
         var examinations = [];        
