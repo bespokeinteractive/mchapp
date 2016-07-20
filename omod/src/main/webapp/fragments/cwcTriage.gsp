@@ -14,19 +14,6 @@
                 jq().toastmessage('showErrorToast', "Select Growth Status!");
                 return false;
             }
-            if (wcat === '123814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' || wcat === 'f7cdbe84-fb91-4968-b886-ceb00a07d7ca') {
-                if (gcat !== 'b11de40f-5516-490c-bf92-9d4e69430247' || gcat !== 'b11de40f-5516-490c-bf92-9d4e69430247') {
-                    jq().toastmessage('showErrorToast', "Check Weight and Growth Status Combinations!");
-                    return false;
-                }
-            }
-
-            if (wcat === '114413AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' || wcat === '115115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') {
-                if (gcat === 'ab430762-6c89-4a9c-8c2d-bb6d6d3843e5') {
-                    jq().toastmessage('showErrorToast', "Check Weight and Growth Status Combinations!");
-                    return false;
-                }
-            }
 
             //validate weight, height and muac to ensure they are provided
             var wValue = jq('#weight').val();
