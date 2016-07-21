@@ -37,6 +37,8 @@
     jq(function() {
 		jq(".infant-feeding").hide();
 		jq(".decision-feeding").hide();
+		
+		console.log('${patientProfile}');
 
         jq('input[type=radio][name="concept.fb5a5471-e912-4288-8c25-750f7f88281f"]').change(function() {
             if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
@@ -965,7 +967,7 @@
 		padding: 7px 12px;
 	}
 	#profile-items small{
-		margin-left: 4.5%;
+		margin-left: 1.5%;
 	}
 	#profile-items small:first-child{
 		margin-left: 2px;
@@ -1443,12 +1445,12 @@
 					<div class="testbox">
 						<div>Prior Known Status</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 
@@ -1479,12 +1481,12 @@
 					<div class="testbox anc-results">
 						<div>ANC Test Results</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 
@@ -1533,11 +1535,11 @@
 					<div class="testbox partner-result">
 						<div>Patner Results</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 						
