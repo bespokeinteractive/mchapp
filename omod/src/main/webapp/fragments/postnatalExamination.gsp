@@ -44,6 +44,89 @@
         }
 
         var examinations = [];
+		
+		jq(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd'
+        });
+		
+		var exitcwcdialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#exitPncDialog',
+            actions: {
+                confirm: function () {
+                    var endDate = jq("#datepicker").val();
+                    outcomeId = jq("#programOutcome").val();
+                    var startDate = "${patientProgram.dateEnrolled}";
+
+                    if (outcomeId == '' || outcomeId == "0") {
+                        alert("Outcome Required");
+                        return;
+                    }
+                    //&& startDate > endDate run test to ensure end date is not earlier than start start date
+
+                    else if (!isEmpty(startDate) && !isEmpty(endDate)) {
+                        var result = handleExitProgram(${patientProgram.patientProgramId}, "${patientProgram.dateEnrolled}",
+                                endDate, outcomeId);
+
+                    } else {
+                        alert("invalid end date");
+                        return;
+                    }
+                    exitcwcdialog.close();
+                },
+                cancel: function () {
+                    exitcwcdialog.close();
+                }
+            }
+        });
+		
+		function SubmitInformation(){
+            var data = jq("form#postnatalExaminationsForm").serialize();
+            data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
+			
+            jq.post('${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+					} else if (data.status === "error") {
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
+			);
+		}
+		
+		function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+			var updateData = {
+				programId: programId,
+				enrollmentDateYmd: enrollmentDateYmd,
+				completionDateYmd: completionDateYmd,
+				outcomeId: outcomeId
+			}
+			jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
+			);
+		}
+		
+        jq("#postnatal-examination-submit").on("click", function(event){
+            event.preventDefault();
+			
+			if (jq('#exitPatientFromProgramme:checked').length > 0){
+				exitcwcdialog.show();
+			}else{
+				SubmitInformation();
+			}
+        });
 
         jq("#searchExaminations").autocomplete({
             minLength:0,
@@ -357,28 +440,6 @@
 			}
 		}
 
-
-
-
-		//submit data
-        jq("#postnatal-examination-submit").on("click", function(event){
-            event.preventDefault();
-			
-            var data = jq("form#postnatalExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
-            jq.post('${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
-				data,
-				function (data) {
-					if (data.status === "success") {
-						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-					} else if (data.status === "error") {
-						jq().toastmessage('showErrorToast', data.message);
-					}
-				},
-				"json"
-			);
-        });
-
 		jq('#availableReferral, #next-visit-date-display').change(function(){
 			var output = '';
 			
@@ -537,11 +598,12 @@
 			}
 
 			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
-
 		});
-		
-
     });
+	
+	function isEmpty(o) {
+        return o == null || o == '';
+    }
 
 	function selectReferrals(selectedReferral){
         if(selectedReferral == 1){
@@ -1256,46 +1318,55 @@
 
 				<div class="info-body">
 					<table id="summaryTable">
-						<tbody><tr>
-							<td><span class="status active"></span>Examinations</td>
-							<td>N/A</td>
-						</tr>
+						<tbody>
+							<tr>
+								<td><span class="status active"></span>Examinations</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Diagnosis</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Diagnosis</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Prescriptions</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Prescriptions</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Investigations</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Investigations</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>PMTCT Information</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>PMTCT Information</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Suppliments</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Suppliments</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Family Planning</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Family Planning</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Outcome</td>
-							<td>N/A</td>
-						</tr>
-					</tbody></table>
+							<tr>
+								<td><span class="status active"></span>Outcome</td>
+								<td>N/A</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<div>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+							Exit Patient from Program
+						</label>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1304,8 +1375,16 @@
 			<field style="display: inline">
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>
-
-			<input type="button" value="Submit" class="button submit confirm" id="postnatal-examination-submit">
+			
+			<span value="Submit" class="button submit confirm" id="postnatal-examination-submit">
+                <i class="icon-save small"></i>
+                Save
+            </span>
+			
+            <span id="cancelButton" class="button cancel">
+                <i class="icon-remove small"></i>			
+				Cancel
+			</span>
 		</div>
 	</div>
 </form>
@@ -1357,5 +1436,40 @@
             <label class="button confirm" style="float: right; width: auto!important;">Confirm</label>
             <label class="button cancel" style="width: auto!important;">Cancel</label>
         </form>
+    </div>
+</div>
+
+<div id="exitPncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>Exit From Program</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+                <label for="datepicker">Program</label>
+                <input type="text" readonly="" value="CHILD WELFATE CLINIC">
+            </li>
+			
+            <li>
+                <label for="datepicker">Completion Date</label>
+                <input type="text" id="datepicker" class="datepicker">
+            </li>
+			
+            <li>
+                <label for="programOutcome">Outcome</label>
+                <select name="programOutcome" id="programOutcome">
+                    <option value="0">Choose Outcome</option>
+                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
+                    <% possibleProgramOutcomes.each { outcome -> %>
+                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </li>
+            <button class="button confirm right" id="processProgramExit">Save</button>
+            <span class="button cancel">Cancel</span>
+        </ul>
     </div>
 </div>

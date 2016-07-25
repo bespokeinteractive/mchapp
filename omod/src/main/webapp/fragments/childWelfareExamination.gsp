@@ -37,13 +37,55 @@
 
     var outcomeId;
 
-    jq(function () {
-		console.log('${patient.age}');
-		
+    jq(function () {		
         jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
             dateFormat: 'yy-mm-dd'
+        });
+		
+		function SubmitInformation(){
+            var data = jq("form#cwcExaminationsForm").serialize();
+            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
+
+            jq.post('${ui.actionLink("mchapp", "childWelfareExamination", "saveCwcExaminationInformation")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+					} else if (data.status === "error") {
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
+            );		
+		}
+		
+		function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+			var updateData = {
+				programId: programId,
+				enrollmentDateYmd: enrollmentDateYmd,
+				completionDateYmd: completionDateYmd,
+				outcomeId: outcomeId
+			}
+			jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
+			);
+		}
+		
+		//submit data
+        jq("#antenatalExaminationSubmitButton").on("click", function (event) {
+            event.preventDefault();
+			
+			if (jq('#exitPatientFromProgramme:checked').length > 0){
+				exitcwcdialog.show();
+			}else{
+				SubmitInformation();
+			}
         });
 
         var exitcwcdialog = emr.setupConfirmationDialog({
@@ -148,10 +190,6 @@
             jq('#vaccine-state').html(jq('#changeToState_' + idnt).html());
 
             vaccinationDialog.show();
-        });
-
-        jq("#programExit").on("click", function (e) {
-            exitcwcdialog.show();
         });
 
         jq('.chevron').click(function () {
@@ -511,26 +549,6 @@
                 jq('#summaryTable tr:eq(3) td:eq(1)').html(exams);
             }
         }
-
-        //submit data
-        jq("#antenatalExaminationSubmitButton").on("click", function (event) {
-            event.preventDefault();
-            var data = jq("form#cwcExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
-
-            jq.post(
-                    '${ui.actionLink("mchapp", "childWelfareExamination", "saveCwcExaminationInformation")}',
-                    data,
-                    function (data) {
-                        if (data.status === "success") {
-                            window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                        } else if (data.status === "error") {
-                            jq().toastmessage('showErrorToast', data.message);
-                        }
-                    },
-                    "json"
-            );
-        });
 		
 		jq('#specific-disability, .feeding-info input').change(function(){
 			jq('#feeding-info-set').val('SET');
@@ -627,30 +645,13 @@
         }).change();
 
     });//End of Document Ready
+	
+	function refreshPage() {
+		window.location.reload();
+	}
 
     function isEmpty(o) {
         return o == null || o == '';
-    }
-
-    function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
-        var updateData = {
-            programId: programId,
-            enrollmentDateYmd: enrollmentDateYmd,
-            completionDateYmd: completionDateYmd,
-            outcomeId: outcomeId
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
-                .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
-                    refreshPage();
-                    jq("#programExit").hide();
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                });
-    }
-
-    function refreshPage() {
-        window.location.reload();
     }
 
     function showEditWorkflowPopup(wfName, patientProgramId, programWorkflowId) {
@@ -1456,6 +1457,13 @@
                         </tr>
                         </tbody>
                     </table>
+					
+					<div>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+							Exit Patient from Program
+						</label>
+					</div>
                 </div>
             </div>
         </div>
@@ -1465,11 +1473,15 @@
                 <button class="button submit confirm" style="display: none;"></button>
             </field>
 
-            <span type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+            <span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
                 <i class="icon-save small"></i>
-                Save & Close
+                Save
             </span>
-            <span id="programExit" class="button cancel">Save & Exit Program</span>
+			
+            <span id="cancelButton" class="button cancel">
+                <i class="icon-remove small"></i>			
+				Cancel
+			</span>
         </div>
     </div>
 </form>
@@ -1524,20 +1536,24 @@
     </div>
 </div>
 
-
 <div id="exitCwcDialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-
         <h3>Exit From Program</h3>
     </div>
 
     <div class="dialog-content">
         <ul>
+			<li>
+                <label for="datepicker">Program</label>
+                <input type="text" readonly="" value="CHILD WELFATE CLINIC">
+            </li>
+			
             <li>
                 <label for="datepicker">Completion Date</label>
                 <input type="text" id="datepicker" class="datepicker">
             </li>
+			
             <li>
                 <label for="programOutcome">Outcome</label>
                 <select name="programOutcome" id="programOutcome">

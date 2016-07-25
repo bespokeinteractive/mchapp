@@ -32,13 +32,92 @@
 	emrMessages["numericRangeLow"] = "value should be more than {0}";
 	emrMessages["requiredField"] = "Mandatory Field. Kindly provide details";
 	emrMessages["numberField"] = "Value not a number";
-    var currentWorkflowBeingEdited;
+    
+	var currentWorkflowBeingEdited;
     var patientProgramForWorkflowEdited;
-    jq(function() {
+    
+	jq(function() {
 		jq(".infant-feeding").hide();
 		jq(".decision-feeding").hide();
 		
-		console.log('${patientProfile}');
+		function SubmitInformation(){
+			var data = jq("form#antenatalExaminationsForm").serialize();
+            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
+
+            jq.post(
+              '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
+              data,
+              function (data) {
+                  if (data.status === "success") {
+                      window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+                  } else if (data.status === "error") {
+                      jq().toastmessage('showErrorToast', data.message);
+                  }
+              },
+              "json"
+            );
+		}
+		
+		function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+			var updateData = {
+				programId: programId,
+				enrollmentDateYmd: enrollmentDateYmd,
+				completionDateYmd: completionDateYmd,
+				outcomeId: outcomeId
+			}
+			jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
+			);
+		}
+		
+		var exitcwcdialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#exitAncDialog',
+            actions: {
+                confirm: function () {
+                    var endDate = jq("#datepicker").val();
+                    outcomeId = jq("#programOutcome").val();
+                    var startDate = "${patientProgram.dateEnrolled}";
+
+                    if (outcomeId == '' || outcomeId == "0") {
+                        alert("Outcome Required");
+                        return;
+                    }
+                    //&& startDate > endDate run test to ensure end date is not earlier than start start date
+
+                    else if (!isEmpty(startDate) && !isEmpty(endDate)) {
+                        var result = handleExitProgram(${patientProgram.patientProgramId}, "${patientProgram.dateEnrolled}",
+                                endDate, outcomeId);
+
+                    } else {
+                        alert("invalid end date");
+                        return;
+                    }
+                    exitcwcdialog.close();
+                },
+                cancel: function () {
+                    exitcwcdialog.close();
+                }
+            }
+        });
+		
+		//submit data
+        jq("#antenatalExaminationSubmitButton").on("click", function(event){
+            event.preventDefault();
+            
+			if (jq('#exitPatientFromProgramme:checked').length > 0){
+				exitcwcdialog.show();
+			}else{
+				SubmitInformation();
+			}
+        });
 
         jq('input[type=radio][name="concept.fb5a5471-e912-4288-8c25-750f7f88281f"]').change(function() {
             if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
@@ -497,26 +576,6 @@
 				jq('#summaryTable tr:eq(3) td:eq(1)').html(exams);
 			}
 		}
-
-        //submit data
-        jq("#antenatalExaminationSubmitButton").on("click", function(event){
-            event.preventDefault();
-            var data = jq("form#antenatalExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
-
-            jq.post(
-              '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
-              data,
-              function (data) {
-                  if (data.status === "success") {
-                      window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                  } else if (data.status === "error") {
-                      jq().toastmessage('showErrorToast', data.message);
-                  }
-              },
-              "json"
-            );
-        });
 		
 		jq('.conditions-info input').change(function(){
 			jq('#conditions-info-set').val('SET');
@@ -1962,6 +2021,13 @@
 							</tr>
 						</tbody>
 					</table>
+					
+					<div>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+							Exit Patient from Program
+						</label>
+					</div>
 				</div>
 			</div>				
 		</div>
@@ -1971,7 +2037,15 @@
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>
 			
-			<input type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+			<span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+                <i class="icon-save small"></i>
+                Save
+            </span>
+			
+            <span id="cancelButton" class="button cancel">
+                <i class="icon-remove small"></i>			
+				Cancel
+			</span>
 		</div>
 	</div>
 </form>
@@ -2059,5 +2133,40 @@
 			
 			<span class="button cancel">Cancel</span>
 		</ul>
+    </div>
+</div>
+
+<div id="exitAncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>Exit From Program</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+                <label for="datepicker">Program</label>
+                <input type="text" readonly="" value="ANTENATAL CLINIC">
+            </li>
+			
+            <li>
+                <label for="datepicker">Completion Date</label>
+                <input type="text" id="datepicker" class="datepicker">
+            </li>
+			
+            <li>
+                <label for="programOutcome">Outcome</label>
+                <select name="programOutcome" id="programOutcome">
+                    <option value="0">Choose Outcome</option>
+                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
+                    <% possibleProgramOutcomes.each { outcome -> %>
+                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </li>
+            <button class="button confirm right" id="processProgramExit">Save</button>
+            <span class="button cancel">Cancel</span>
+        </ul>
     </div>
 </div>

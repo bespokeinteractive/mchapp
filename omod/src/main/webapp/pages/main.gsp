@@ -61,6 +61,10 @@
 	jq(function() {
 		jq(".mch-tabs").tabs();
 		jq('#agename').text(getReadableAge('${patient.birthdate}') + ' (' +moment('${patient.birthdate}').format('DD/MM/YYYY')+')');
+		
+		jq("#cancelButton").on("click", function (e) {
+			window.location = '${ui.pageLink("patientqueueapp", "mchClinicQueue")}';            
+        });
 	});
 </script>
 
@@ -330,6 +334,9 @@
 	}
 	.floating-controls textarea{
 		resize: none;
+	}
+	#cancelButton{
+		margin-left: 5px;
 	}
 </style>
 
