@@ -37,7 +37,9 @@
 
     var outcomeId;
 
-    jq(function () {		
+    jq(function () {
+		console.log(${patientProgram.patientProgramId});
+	
         jq(".datepicker").datepicker({
             changeMonth: true,
             changeYear: true,
