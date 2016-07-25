@@ -1,6 +1,7 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
@@ -39,7 +40,61 @@ public class CwcTriageFragmentController {
     protected final Log log = LogFactory.getLog(getClass());
     DateFormat ymdDf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
+    public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui,HttpServletRequest request) {
+    	String enc = request.getParameter("encounterId");
+    	
+    	if(StringUtils.isNotEmpty(enc)){
+    		model.addAttribute("weightCategoryValue", "");
+    		Encounter current =Context.getEncounterService().getEncounter(Integer.parseInt(enc));
+    	      
+    	      //pull teh encounter id- from the url
+    	      
+    	        Set<Obs> obs= Context.getEncounterService().getEncounterByUuid(current.getUuid()).getAllObs();
+    	        	for(Obs s:obs){
+    	        		switch(s.getConcept().getId()){
+    	        		case 5089:{
+    	        			model.addAttribute("weight", s.getValueNumeric());
+    	        			break;
+    	        		}
+    	        		case 5090:{
+    	        			model.addAttribute("height", s.getValueNumeric());
+    	        			break;
+    	        		}
+    	        		case 5712:{
+    	        			model.addAttribute("muac", s.getValueNumeric());
+    	        			break;
+    	        		}
+    	        		case 1854:{
+    	        			//get the coded value - concept id
+    	        			//Get concept by id
+    	        			//get concept uuid
+    	        			//supply uuid
+    	        			Concept wCat=s.getValueCoded();
+    	        			
+    	        			model.addAttribute("weightCategoryValue", wCat.getUuid());
+    	        			
+    	        			break;
+    	        		}
+    	        		case 100126186:{
+    	        			Concept gStat=s.getValueCoded();
+    	        			model.addAttribute("growthStatusValue", gStat.getUuid());
+    	        			break;
+    	        		}
+    	        	}
+    	        }
+    	}else{
+    		model.addAttribute("weightCategoryValue", "");
+    		model.addAttribute("growthStatusValue", "");
+    		model.addAttribute("muac", "");
+    		model.addAttribute("height", "");
+    		model.addAttribute("weight", "");
+    		
+    	}
+    	
+    	
+    	
+    	
+    	
         model.addAttribute("internalReferralSources", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
 
         Concept  growthCategory= Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.MCH_GROWTH_MONITOR);
@@ -65,7 +120,10 @@ public class CwcTriageFragmentController {
         }
 
         model.addAttribute("weightCategories", weightCategories);
-    }
+      
+
+      
+ }
 
     @SuppressWarnings("unchecked")
 
@@ -102,8 +160,13 @@ public class CwcTriageFragmentController {
             String visitStatus = queue.getVisitStatus();
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient, visitStatus);
         }
-        QueueLogs.logTriagePatient(queue, encounter);
-        return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
+        boolean isEdit = Boolean.parseBoolean(request.getParameter("isEdit"));
+        
+        if(!isEdit){
+        	QueueLogs.logTriagePatient(queue, encounter);
+        }
+        		
+        return SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",isEdit);
     }
 
     public SimpleObject updatePatientProgram(HttpServletRequest request) {

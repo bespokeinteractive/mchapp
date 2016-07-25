@@ -1,3 +1,4 @@
+<% def returnUrl = ui.pageLink("mchapp", "triage") %>
 <script>
 	jq(function(){
 		jq("#triage-left-menu").on("click", ".triage-summary", function(){
@@ -16,10 +17,14 @@
 				jq("#opdRecordsPrintButton").show(100);
 			}).error(function(data){
 				console.info("Error");
-
-				});
+			});
 		});
-		
+
+		jq("#triage-left-menu").on("click", ".edit-link",function(e){
+			e.preventDefault();
+			var encounterId = jq(this).parents(".triage-summary").find(".encounter-id").val()
+			window.location.href ="${ui.pageLink("mchapp", "triage", [patientId: patientId, queueId: queueId,isEdit:true])}encounterId=" + encounterId;
+		});
 		
 
 		var triageSummaries = jq(".triage-summary");
@@ -74,7 +79,7 @@
 <div class="onerow">
 	<div id="triage-left-menu" style="padding-top: 15px;" class="col15 clear">
 		<ul id="triage-left-menu" class="left-menu">
-		<% triageSummaries.each { triagesummary -> %>
+		<% triageSummaries.eachWithIndex { triagesummary, index -> %>
 				<li class="menu-item triage-summary" visitid="54" style="border-right:1px solid #ccc; margin-right: 15px; width: 168px; height: 18px;">
 				<input type="hidden" class="encounter-id" value="${triagesummary.encounterId}" >
 				<span class="menu-date">
@@ -84,12 +89,13 @@
 					</span>
 				</span>
 				<span class="menu-title">
-				<i class="icon-stethoscope"></i>
-					<% if (triagesummary.outcome) { %>
-						${ triagesummary.outcome }
-					<% }  else { %>
-						No Outcome Yet
-					<% } %>
+				<% if (index == 0) { %>
+					<i class="icon-edit" style="float: left; margin-top: 1px; margin-right: 3px; color: rgb(0, 127, 255); font-weight: bold;"></i>
+					<a style="float: left;" class="edit-link"[encounterId: encounterId]>Edit Triage Details</a>
+				<% } else {%>
+					<i class="icon-stethoscope"></i>
+					${triagesummary.outcome?triagesummary.outcome:'Reviewed'}
+				<%}%>
 			</span>
 			<span class="arrow-border"></span>
 			<span class="arrow"></span>

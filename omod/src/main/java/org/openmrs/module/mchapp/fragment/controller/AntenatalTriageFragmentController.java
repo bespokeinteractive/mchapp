@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
@@ -22,6 +23,7 @@ import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.*;
 
 /**
@@ -33,14 +35,49 @@ public class AntenatalTriageFragmentController {
 
     private int visitTypeId;
 
-    public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
+    public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui, HttpServletRequest request) {
         config.require("patientId");
         config.require("queueId");
+        String enc = request.getParameter("encounterId");
+        
+        if(StringUtils.isNotEmpty(enc)){
+        	
+        	Encounter current =Context.getEncounterService().getEncounter(Integer.parseInt(enc));
+        	   
+            Set<Obs> obs= Context.getEncounterService().getEncounterByUuid(current.getUuid()).getAllObs();
+        	for(Obs s:obs){
+        		switch(s.getConcept().getId()){
+        		case 5089:{
+        			model.addAttribute("weight", s.getValueNumeric());
+        			break;
+        		}
+        		case 5090:{
+        			model.addAttribute("height", s.getValueNumeric());
+        			break;
+        		}
+        		case 5086:{
+        			model.addAttribute("daistolic", s.getValueNumeric());
+        			break;
+        		}
+        		case 5085:{
+        			model.addAttribute("systolic", s.getValueText());
+        			break;
+        		}
+        	}
+        }
+      }else{
+    	  model.addAttribute("weight", "");
+    	  model.addAttribute("height", "");
+    	  model.addAttribute("systolic", "");
+    	  model.addAttribute("daistolic", "");
+      }
+    	
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
         model.addAttribute("patientHistoricalProfile", PatientProfileGenerator.generateHistoricalPatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("queueId", config.get("queueId"));
+     
     }
 
     @SuppressWarnings("unchecked")
@@ -76,8 +113,12 @@ public class AntenatalTriageFragmentController {
             String visitStatus = queue.getVisitStatus();
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient, visitStatus);
         }
-        QueueLogs.logTriagePatient(queue, encounter);
-        saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.");
+        boolean isEdit = Boolean.parseBoolean(request.getParameter("isEdit"));
+        
+        if(!isEdit){
+        	QueueLogs.logTriagePatient(queue, encounter);
+        }
+        saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",isEdit);
         return saveStatus;
     }
 

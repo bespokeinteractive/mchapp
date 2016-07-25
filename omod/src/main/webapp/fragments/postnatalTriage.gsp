@@ -1,5 +1,11 @@
 <script>
+	var isEdit=false
     jq(function(){
+ 	       if(${isEdit}){
+ 	           isEdit=${isEdit};
+ 	           }
+	           console.log("${isEdit}")
+ 	       jq("#editStatus").val(isEdit);
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -52,8 +58,12 @@
 				function (data) {
 					if (data.status === "success") {
 						//show success message
-						window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
-					} else if (data.status === "error") {
+						if(data.isEdit){
+							window.location = "${ui.pageLink("mchapp", "main",[patientId: patientId, queueId: queueId])}";
+						}else{
+							window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
+							 }
+						} else if (data.status === "error") {
 						//show error message;
 						jq().toastmessage('showErrorToast', data.message);
 					}
@@ -110,6 +120,7 @@
 	<div style="min-width: 78%" class="col16 dashboard">
 		<div class="info-section">
 			<form id="pnc-triage-form">
+				<input type="hidden" value="" id="editStatus" name="isEdit"/>
 				<input type="hidden" name="patientId" value="${patient.patientId}" >
 				<input type="hidden" name="queueId" value="${queueId}" >
 				<input type="hidden" name="patientEnrollmentDate" value="${patientProgram?patientProgram.dateEnrolled:"--"}">
@@ -124,26 +135,31 @@
 					<input type="hidden" name="patientId" value="${patientId}" >
 					<div>
 						<label for="temperature">Temperature</label>
-						<input type="text" name="concept.5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+						<input type="text" name="concept.5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="number numeric-range" value="${temperature}">
 						<span class="append-to-value">..&#8451;</span>
+						<span id="12464" class="field-error" style="display: none"></span>
 					</div>
 					
 					<div>
 						<label for="pulse">Pulse</label>
-						<input type="text" name="concept.5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+						<input type="text" name="concept.5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="number numeric-range" value="${pulseRate}">
+						<span id="12463" class="field-error" style="display: none"></span>
 					</div>
 					<div>
 						<label for="bloodPressure">Blood Pressure</label>
-						<input type="text" id="systolic" name="concept.6aa7eab2-138a-4041-a87f-00d9421492bc" />
+						<input type="text" id="systolic" name="concept.6aa7eab2-138a-4041-a87f-00d9421492bc" class="number numeric-range" value="${systolic}" />
 						<span class="append-to-value">Systolic</span>
+						<span id="12462" class="field-error" style="display: none"></span>
 					</div>
 					
 					<div>
 						<label for="diastolic"></label>
-						<input type="text" id="diastolic" name="concept.5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+						<input type="text" id="diastolic" name="concept.5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="number numeric-range" value="${daistolic}" />
 						<span class="append-to-value">Diastolic</span>
+						<span id="12465" class="field-error" style="display: none"></span>
 					</div>					
 					
+					<% if(!isEdit){ %>
 					<div>
 						<label></label>
 						<label style="padding-left: 0px; width: auto; cursor: pointer;">
@@ -151,6 +167,7 @@
 							Tick to Send to Examination Room
 						</label>
 					</div>
+					<%	} %>
 				</div>
 			</form>
 			
