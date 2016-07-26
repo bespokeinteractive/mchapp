@@ -82,7 +82,7 @@
             selector: '#exitAncDialog',
             actions: {
                 confirm: function () {
-                    var endDate = jq("#datepicker").val();
+                    var endDate = jq("#complete-date-field").val();
                     outcomeId = jq("#programOutcome").val();
                     var startDate = "${patientProgram.dateEnrolled}";
 
@@ -136,12 +136,6 @@
             else if (this.value == '606720bb-4a7a-4c4c-b3b5-9a8e910758c9') {
                 jq(".decision-feeding").hide();
             }
-        });
-
-        jq(".datepicker").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'yy-mm-dd'
         });
 
         var vaccinationDialog = emr.setupConfirmationDialog({
@@ -935,7 +929,8 @@
 
     function handleChangeWorkflowState(c) {
         var stateId = jq("#changeToState_" + c).val();
-        var onDate = jq("#datepicker_" + c).val()
+        var onDate = jq("#datepicker_" + c).val();
+		
         if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
@@ -946,7 +941,6 @@
             jq().toastmessage('showNoticeToast', "Saving State...!");
             processHandleChangeWorkflowState(stateId, onDate);
         }
-
     }
 
     function processHandleChangeWorkflowState(stateId, onDateDMY) {
@@ -963,12 +957,12 @@
         }
 
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-                .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
-                    return data.status;
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                });
+		.success(function (data) {
+			jq().toastmessage('showNoticeToast', data.message);
+			return data.status;
+		}).error(function (xhr, status, err) {
+			jq().toastmessage('showErrorToast', "AJAX error!" + err);
+		});
     }
 
     function hideLayer(divId) {
@@ -2145,14 +2139,13 @@
     <div class="dialog-content">
         <ul>
 			<li>
-                <label for="datepicker">Program</label>
+                <label>Program</label>
                 <input type="text" readonly="" value="ANTENATAL CLINIC">
             </li>
 			
             <li>
-                <label for="datepicker">Completion Date</label>
-                <input type="text" id="datepicker" class="datepicker">
-            </li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'complete-date', label: 'Completion Date', formFieldName: 'referredDate', useTime: false, defaultToday: true, endDate: new Date(), startDate: patientProgram.dateEnrolled])}
+			</li>
 			
             <li>
                 <label for="programOutcome">Outcome</label>
@@ -2165,7 +2158,12 @@
                     <% } %>
                 </select>
             </li>
-            <button class="button confirm right" id="processProgramExit">Save</button>
+			
+            <button class="button confirm" id="processProgramExit" style="float: right; margin-right: 18px;">
+				<i class="icon-save small"></i>
+				Save
+			</button>
+			
             <span class="button cancel">Cancel</span>
         </ul>
     </div>
