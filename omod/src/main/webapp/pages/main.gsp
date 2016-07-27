@@ -8,6 +8,10 @@
 %>
 <script type="text/javascript">
     var successUrl = "${ui.pageLink('mchapp','main',[patientId: patient, queueId: queueId])}";
+	
+	var symptoms = [];
+    var symptomsArray = [];
+	
     function getReadableAge(dateOfBirth, fromDate) {
         var referenceDate;
         if (!fromDate) {
@@ -65,7 +69,98 @@
 		jq("#cancelButton").on("click", function (e) {
 			window.location = '${ui.pageLink("patientqueueapp", "mchClinicQueue")}';            
         });
+		
+		jq("#symptom").autocomplete({			
+			source: function(request, response) {
+				jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getSymptoms") }', {
+					q: request.term
+				}).success(function(data) {
+					var results = [];
+					for (var i in data) {
+						var result = {
+							label: data[i].name,
+							value: data[i].uuid
+						};
+						results.push(result);
+					}
+					symptoms = results;
+					response(results);
+				});
+			},			
+			minLength: 3,
+			select: function(event, ui) {
+				event.preventDefault();
+				
+				var symptom = _.find(symptoms, function (sign) {
+                    return sign.value === ui.item.value;
+                });
+
+                if (!symptomsArray.find(function (sign) {
+                            return sign.value == symptom.value;
+                        })) {					
+                    var signTemplate = _.template(jq("#symptoms-template").html());
+                    jq("#symptoms-holder").append(signTemplate(symptom));
+                    jq('#symptoms-set').val('SET');
+                    jq('#task-symptom').show();
+
+                    symptomsArray.push(symptom);
+                    symptomsSummary();
+                }
+                else {
+                    jq().toastmessage('showErrorToast', 'The symptom ' + symptom.label.toLowerCase() + ' has already been added.');
+                }
+
+                jq(this).val('');
+                return false;
+			},
+			open: function() {
+				jq(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+			},
+			close: function() {
+				jq(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+			}
+		});
+		
+		jq("#symptoms-holder").on("click", ".icon-remove",function(){
+            var symptomId = jq(this).parents('div.symptoms').find('input[type="hidden"]').attr("value");
+            symptoms.splice(symptoms.indexOf(symptomId));
+
+            symptomsArray = symptomsArray.filter(function(sign){
+                return sign.value != symptomId;
+            });
+
+            symptomsSummary();
+
+            jq(this).parents('div.symptoms').remove();
+            if (jq(".symptoms").length == 0){
+                jq('#symptoms-set').val('');
+                jq('#task-symptom').hide();
+            }
+        });
 	});
+	
+	function symptomsSummary(){
+		//does summary Here
+		if (symptomsArray.length == 0) {
+			jq('#summaryTable tr:eq(0) td:eq(1)').text('N/A');
+		}
+		else {
+			var signs = '';
+			symptomsArray.forEach(function (sign) {
+				signs += sign.label + '<br/>'
+			});
+			jq('#summaryTable tr:eq(0) td:eq(1)').html(signs);
+		}
+	}
+</script>
+
+<script id="symptoms-template" type="text/template">
+  <div class="investigation symptoms">
+	<span class="icon-remove selecticon"></span>
+    <label style="margin-top: 2px; width: 95%;">{{=label}}
+		<input type="hidden" name="concept.{{=value}}" value="{{=value}}"/>
+	</label>
+  </div>
 </script>
 
 <style>

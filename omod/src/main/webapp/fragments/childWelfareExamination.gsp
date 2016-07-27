@@ -21,7 +21,7 @@
     var diagnosisQuestionUuid = "";
     var NavigatorController;
 
-    var examinationArray = [];
+	var examinationArray = [];
     var investigationArray = [];
     var diagnosisArray = [];
 	
@@ -190,7 +190,6 @@
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
-
 
             if (jq(this).hasClass('icon-chevron-right')) {
                 jq(this).removeClass('icon-chevron-right');
@@ -371,14 +370,14 @@
 
         function examinationSummary() {
             if (examinationArray.length == 0) {
-                jq('#summaryTable tr:eq(0) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
             }
             else {
                 var exams = '';
                 examinationArray.forEach(function (examination) {
                     exams += examination.label + '<br/>'
                 });
-                jq('#summaryTable tr:eq(0) td:eq(1)').html(exams);
+                jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
             }
         }
 
@@ -439,14 +438,14 @@
 
         function diagnosisSummary(){
             if (diagnosisArray.length == 0){
-                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
             }
             else{
                 var diagnoses = '';
                 diagnosisArray.forEach(function(diagnosis){
                     diagnoses += diagnosis.label +'<br/>'
                 });
-                jq('#summaryTable tr:eq(1) td:eq(1)').html(diagnoses);
+                jq('#summaryTable tr:eq(3) td:eq(1)').html(diagnoses);
             }
         }
 
@@ -533,14 +532,14 @@
 
         function investigationSummary() {
             if (investigationArray.length == 0) {
-                jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(4) td:eq(1)').text('N/A');
             }
             else {
                 var exams = '';
                 investigationArray.forEach(function (investigation) {
                     exams += investigation.label + '<br/>'
                 });
-                jq('#summaryTable tr:eq(3) td:eq(1)').html(exams);
+                jq('#summaryTable tr:eq(4) td:eq(1)').html(exams);
             }
         }
 		
@@ -574,7 +573,7 @@
 				output = 'N/A';
 			}
 			
-			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 		});
 		
 		jq('#cwcFollowUp input').change(function(){
@@ -601,7 +600,7 @@
 				output = 'N/A';
 			}
 			
-			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
 		});
 
         jq('#availableReferral, #next-visit-date-display').change(function(){
@@ -626,7 +625,7 @@
 				output = 'N/A';			
 			}
 			
-			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 
         jq('#referralReason').change(function () {
@@ -1051,10 +1050,30 @@
                 </div>
             </div>
         </fieldset>
+		
+		<fieldset class="no-confirmation">
+			<legend>Symptoms</legend>
+			<div style="padding: 0 4px">
+				<label for="symptom" class="label">Symptoms <span class="important"></span></label>
+				<input type="text" id="symptom" name="symptom" placeholder="Add Symptoms" />
+				<field>
+					<input type="hidden" id="symptoms-set" class=""/>
+					<span id="symptoms-lbl" class="field-error" style="display: none"></span>
+				</field>
+			</div>
+
+			<div class="tasks" id="task-symptom" style="display:none;">
+				<header class="tasks-header">
+					<span id="title-symptom" class="tasks-title">PATIENT'S SYMPTOMS</span>
+					<a class="tasks-lists"></a>
+				</header>
+				
+				<div id="symptoms-holder"></div>
+			</div>
+		</fieldset>
 
         <fieldset class="no-confirmation">
             <legend>Examinations</legend>
-
             <div style="padding: 0 4px">
                 <label for="searchExaminations" class="label title-label">Examinations <span class="important"></span>
                 </label>
@@ -1416,17 +1435,22 @@
                     <table id="summaryTable">
                         <tbody>
                         <tr>
+                            <td><span class="status active"></span>Symptoms</td>
+                            <td>N/A</td>
+                        </tr>
+						
+						<tr>
                             <td><span class="status active"></span>Examinations</td>
                             <td>N/A</td>
                         </tr>
 
                         <tr>
-                            <td><span class="status active"></span>Diagnosis</td>
+                            <td><span class="status active"></span>Prescriptions</td>
                             <td>N/A</td>
                         </tr>
 
                         <tr>
-                            <td><span class="status active"></span>Prescriptions</td>
+                            <td><span class="status active"></span>Diagnosis</td>
                             <td>N/A</td>
                         </tr>
 
