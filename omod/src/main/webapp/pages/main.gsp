@@ -97,7 +97,19 @@
 
                 if (!symptomsArray.find(function (sign) {
                             return sign.value == symptom.value;
-                        })) {					
+                        })) {
+					
+					var other_type = "hidden";
+					var other_name = "";
+					
+					if (symptom.value == '00acdc90-a641-41de-ae3a-e9b8d7a71a0f'){
+						other_name = "concept.00acdc90-a641-41de-ae3a-e9b8d7a71a0f"
+						other_type = "text";
+					}			
+					
+					symptom.othername = other_name;
+					symptom.othertype = other_type;
+					
                     var signTemplate = _.template(jq("#symptoms-template").html());
                     jq("#symptoms-holder").append(signTemplate(symptom));
                     jq('#symptoms-set').val('SET');
@@ -159,6 +171,7 @@
 	<span class="icon-remove selecticon"></span>
     <label style="margin-top: 2px; width: 95%;">{{=label}}
 		<input type="hidden" name="concept.{{=value}}" value="{{=value}}"/>
+		<input type="{{=othertype}}" name="{{=othername}}" value="" placeholder="Specify Others"/>
 	</label>
   </div>
 </script>
