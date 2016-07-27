@@ -557,7 +557,7 @@
 			}
 			
 			if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
-				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+				if (jq(this).val() == '7480ebef-125b-4e0d-a8e5-256224ee31a0'){
 					jq('.nvp-ctx-info').show(300);
 				}
 				else{

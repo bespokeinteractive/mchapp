@@ -689,7 +689,7 @@
             }
 			
 			if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
-				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+				if (jq(this).val() == '7480ebef-125b-4e0d-a8e5-256224ee31a0'){
 					jq('.initial-hide').show(300);
 				}
 				else{
@@ -786,15 +786,7 @@
 			}
 		}).change();
 
-        //show hiv drugs only if patient is positive and hide otherwise
-        jq('.prior-status input').change(function(){
-            if(jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
-                jq('.arv-section').show();
-            }
-            else{
-                jq('.arv-section').hide();
-            }
-        });
+
 		
 		jq('#lessthan16 span.small').click(function(){
 			jq('#lessthan16').hide(500);
