@@ -103,7 +103,7 @@
 					var other_name = "";
 					
 					if (symptom.value == '00acdc90-a641-41de-ae3a-e9b8d7a71a0f'){
-						other_name = "concept.00acdc90-a641-41de-ae3a-e9b8d7a71a0f"
+						other_name = "concept.417c40f1-edbf-457b-8ef1-580f26b699fc"
 						other_type = "text";
 					}			
 					
