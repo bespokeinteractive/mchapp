@@ -150,9 +150,9 @@
 		</button>
 	</div>
 
-<div class="col16 dashboard">
-	<div class="info-section" id="triage-detail">
 <script id="triage-detail-template" type="text/template">
+	<div class="col16 dashboard">
+	<div class="info-section" id="triage-detail">
 	<div class="info-header">
 		<i class="icon-user-md"></i>
 		<h3>TRIAGE SUMMARY INFORMATION</h3>
@@ -209,21 +209,23 @@
 			
 			<label><span class="status active"></span>Growth Status:</label>
 			<span>{{-growthStatus}}</span>
-			<br
+			<br>
 			
 			<label><span class="status active"></span>M.U.A.C:</label>
 			<span>{{-muac}}</span>
 			<br>
 			
-			<%}%>
+			<%} %>
 			</div>
+
 
 
 </script>
 </div>
 </div>
-
 </div>
+
+
 
 <div class="clear"></div>
 <div class="clear"></div>
