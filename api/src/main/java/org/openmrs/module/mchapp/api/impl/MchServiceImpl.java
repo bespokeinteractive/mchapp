@@ -38,16 +38,32 @@ public class MchServiceImpl implements MchService {
      * ANC Operations
      *****/
 
-    @Override
-    public boolean enrolledInANC(Patient patient) {
-        Program ancProgram = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
+    public boolean enrolledInProgram(Patient patient, Program program){
         Calendar minEnrollmentDate = Calendar.getInstance();
-        minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_DURATION);
-        List<PatientProgram> ancPatientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, ancProgram, minEnrollmentDate.getTime(), null, null, null, false);
+        Calendar minCompletionDate = Calendar.getInstance();
+
+        minCompletionDate.add(Calendar.DAY_OF_MONTH, 1);
+
+        if (program.getName().toLowerCase().contains("antenatal") || program.getName().toLowerCase().contains("anc")){
+            minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_DURATION);
+        }
+        else if (program.getName().toLowerCase().contains("postnatal") || program.getName().toLowerCase().contains("pnc")){
+            minEnrollmentDate.add(Calendar.MONTH, -MAX_PNC_DURATION);
+        }
+        else{
+            minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
+        }
+
+        List<PatientProgram> ancPatientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, program, minEnrollmentDate.getTime(), null, minCompletionDate.getTime(), null, false);
         if (ancPatientPrograms.size() > 0) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean enrolledInANC(Patient patient) {
+        return enrolledInProgram(patient, Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM));
     }
 
     @Override
@@ -72,15 +88,8 @@ public class MchServiceImpl implements MchService {
      *****/
     @Override
     public boolean enrolledInPNC(Patient patient) {
-        Program pncProgram = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
-        Calendar minEnrollmentDate = Calendar.getInstance();
-        minEnrollmentDate.add(Calendar.MONTH, -MAX_PNC_DURATION);
-        List<PatientProgram> pncPatientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, pncProgram, minEnrollmentDate.getTime(), null, null, null, false);
-        if (pncPatientPrograms.size() > 0) {
-            return true;
-        }
-        return false;
-    }
+        return enrolledInProgram(patient, Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM));
+}
 
     @Override
     public SimpleObject enrollInPNC(Patient patient, Date dateEnrolled) {
@@ -103,14 +112,7 @@ public class MchServiceImpl implements MchService {
 
     @Override
     public boolean enrolledInCWC(Patient patient) {
-        Program cwcProgram = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
-        Calendar minEnrollmentDate = Calendar.getInstance();
-        minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
-        List<PatientProgram> cwcPatientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, cwcProgram, minEnrollmentDate.getTime(), null, null, null, false);
-        if (cwcPatientPrograms.size() > 0) {
-            return true;
-        }
-        return false;
+        return enrolledInProgram(patient, Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM));
     }
 
     @Override

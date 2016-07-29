@@ -13,6 +13,7 @@ public class PatientProfileGenerator {
 	public static String generatePatientProfile(Patient patient, String program) {
 		List<SimpleObject> patientProfile = new ArrayList<SimpleObject>();
 		List<Obs> profileObs = Context.getService(MchService.class).getPatientProfile(patient, program);
+
 		for (Obs singleProfileObs : profileObs) {
 			SimpleObject profileInfo = new SimpleObject();
 			profileInfo.put("name", singleProfileObs.getConcept().getDisplayString());
@@ -20,6 +21,7 @@ public class PatientProfileGenerator {
 			profileInfo.put("value", singleProfileObs.getValueAsString(Context.getLocale()));
 			patientProfile.add(profileInfo);
 		}
+
 		return SimpleObject.create("details", patientProfile).toJson();
 	}
 

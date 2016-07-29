@@ -21,12 +21,10 @@
     var diagnosisQuestionUuid = "";
     var NavigatorController;
 
-    var examinationArray = [];
+	var examinationArray = [];
     var investigationArray = [];
     var diagnosisArray = [];
-
-
-
+	
     var emrMessages = {};
 
     emrMessages["numericRangeHigh"] = "value should be less than {0}";
@@ -39,11 +37,49 @@
 
     var outcomeId;
 
-    jq(function () {
-        jq(".datepicker").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'yy-mm-dd'
+    jq(function () {		
+		function SubmitInformation(){
+            var data = jq("form#cwcExaminationsForm").serialize();
+            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
+
+            jq.post('${ui.actionLink("mchapp", "childWelfareExamination", "saveCwcExaminationInformation")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+					} else if (data.status === "error") {
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
+            );		
+		}
+		
+		function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+			var updateData = {
+				programId: programId,
+				enrollmentDateYmd: enrollmentDateYmd,
+				completionDateYmd: completionDateYmd,
+				outcomeId: outcomeId
+			}
+			jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
+			);
+		}
+		
+		//submit data
+        jq("#antenatalExaminationSubmitButton").on("click", function (event) {
+            event.preventDefault();
+			
+			if (jq('#exitPatientFromProgramme:checked').length > 0){
+				exitcwcdialog.show();
+			}else{
+				SubmitInformation();
+			}
         });
 
         var exitcwcdialog = emr.setupConfirmationDialog({
@@ -54,7 +90,7 @@
             selector: '#exitCwcDialog',
             actions: {
                 confirm: function () {
-                    var endDate = jq("#datepicker").val();
+                    var endDate = jq("#complete-date-field").val();
                     outcomeId = jq("#programOutcome").val();
                     var startDate = "${patientProgram.dateEnrolled}";
 
@@ -150,15 +186,10 @@
             vaccinationDialog.show();
         });
 
-        jq("#programExit").on("click", function (e) {
-            exitcwcdialog.show();
-        });
-
         jq('.chevron').click(function () {
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
-
 
             if (jq(this).hasClass('icon-chevron-right')) {
                 jq(this).removeClass('icon-chevron-right');
@@ -339,14 +370,14 @@
 
         function examinationSummary() {
             if (examinationArray.length == 0) {
-                jq('#summaryTable tr:eq(0) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
             }
             else {
                 var exams = '';
                 examinationArray.forEach(function (examination) {
                     exams += examination.label + '<br/>'
                 });
-                jq('#summaryTable tr:eq(0) td:eq(1)').html(exams);
+                jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
             }
         }
 
@@ -407,14 +438,14 @@
 
         function diagnosisSummary(){
             if (diagnosisArray.length == 0){
-                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
             }
             else{
                 var diagnoses = '';
                 diagnosisArray.forEach(function(diagnosis){
                     diagnoses += diagnosis.label +'<br/>'
                 });
-                jq('#summaryTable tr:eq(1) td:eq(1)').html(diagnoses);
+                jq('#summaryTable tr:eq(3) td:eq(1)').html(diagnoses);
             }
         }
 
@@ -501,36 +532,16 @@
 
         function investigationSummary() {
             if (investigationArray.length == 0) {
-                jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(4) td:eq(1)').text('N/A');
             }
             else {
                 var exams = '';
                 investigationArray.forEach(function (investigation) {
                     exams += investigation.label + '<br/>'
                 });
-                jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
+                jq('#summaryTable tr:eq(4) td:eq(1)').html(exams);
             }
         }
-
-        //submit data
-        jq("#antenatalExaminationSubmitButton").on("click", function (event) {
-            event.preventDefault();
-            var data = jq("form#cwcExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
-
-            jq.post(
-                    '${ui.actionLink("mchapp", "childWelfareExamination", "saveCwcExaminationInformation")}',
-                    data,
-                    function (data) {
-                        if (data.status === "success") {
-                            window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                        } else if (data.status === "error") {
-                            jq().toastmessage('showErrorToast', data.message);
-                        }
-                    },
-                    "json"
-            );
-        });
 		
 		jq('#specific-disability, .feeding-info input').change(function(){
 			jq('#feeding-info-set').val('SET');
@@ -562,7 +573,7 @@
 				output = 'N/A';
 			}
 			
-			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 		});
 		
 		jq('#cwcFollowUp input').change(function(){
@@ -589,7 +600,7 @@
 				output = 'N/A';
 			}
 			
-			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
 		});
 
         jq('#availableReferral, #next-visit-date-display').change(function(){
@@ -614,7 +625,7 @@
 				output = 'N/A';			
 			}
 			
-			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 
         jq('#referralReason').change(function () {
@@ -627,30 +638,13 @@
         }).change();
 
     });//End of Document Ready
+	
+	function refreshPage() {
+		window.location.reload();
+	}
 
     function isEmpty(o) {
         return o == null || o == '';
-    }
-
-    function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
-        var updateData = {
-            programId: programId,
-            enrollmentDateYmd: enrollmentDateYmd,
-            completionDateYmd: completionDateYmd,
-            outcomeId: outcomeId
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
-                .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
-                    refreshPage();
-                    jq("#programExit").hide();
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                });
-    }
-
-    function refreshPage() {
-        window.location.reload();
     }
 
     function showEditWorkflowPopup(wfName, patientProgramId, programWorkflowId) {
@@ -729,12 +723,12 @@
         }
 
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-                .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
-                    return data.status;
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                });
+		.success(function (data) {
+			jq().toastmessage('showNoticeToast', data.message);
+			return data.status;
+		}).error(function (xhr, status, err) {
+			jq().toastmessage('showErrorToast', "AJAX error!" + err);
+		});
     }
 
     function hideLayer(divId) {
@@ -1056,10 +1050,30 @@
                 </div>
             </div>
         </fieldset>
+		
+		<fieldset class="no-confirmation">
+			<legend>Symptoms</legend>
+			<div style="padding: 0 4px">
+				<label for="symptom" class="label">Symptoms <span class="important"></span></label>
+				<input type="text" id="symptom" name="symptom" placeholder="Add Symptoms" />
+				<field>
+					<input type="hidden" id="symptoms-set" class=""/>
+					<span id="symptoms-lbl" class="field-error" style="display: none"></span>
+				</field>
+			</div>
+
+			<div class="tasks" id="task-symptom" style="display:none;">
+				<header class="tasks-header">
+					<span id="title-symptom" class="tasks-title">PATIENT'S SYMPTOMS</span>
+					<a class="tasks-lists"></a>
+				</header>
+				
+				<div id="symptoms-holder"></div>
+			</div>
+		</fieldset>
 
         <fieldset class="no-confirmation">
             <legend>Examinations</legend>
-
             <div style="padding: 0 4px">
                 <label for="searchExaminations" class="label title-label">Examinations <span class="important"></span>
                 </label>
@@ -1421,7 +1435,17 @@
                     <table id="summaryTable">
                         <tbody>
                         <tr>
+                            <td><span class="status active"></span>Symptoms</td>
+                            <td>N/A</td>
+                        </tr>
+						
+						<tr>
                             <td><span class="status active"></span>Examinations</td>
+                            <td>N/A</td>
+                        </tr>
+
+                        <tr>
+                            <td><span class="status active"></span>Prescriptions</td>
                             <td>N/A</td>
                         </tr>
 
@@ -1432,11 +1456,6 @@
 
                         <tr>
                             <td><span class="status active"></span>Investigations</td>
-                            <td>N/A</td>
-                        </tr>
-
-                        <tr>
-                            <td><span class="status active"></span>Prescriptions</td>
                             <td>N/A</td>
                         </tr>
 
@@ -1456,6 +1475,13 @@
                         </tr>
                         </tbody>
                     </table>
+					
+					<div>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+							Exit Patient from Program
+						</label>
+					</div>
                 </div>
             </div>
         </div>
@@ -1465,11 +1491,15 @@
                 <button class="button submit confirm" style="display: none;"></button>
             </field>
 
-            <span type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+            <span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
                 <i class="icon-save small"></i>
-                Save & Close
+                Save
             </span>
-            <span id="programExit" class="button cancel">Save & Exit Program</span>
+			
+            <span id="cancelButton" class="button cancel">
+                <i class="icon-remove small"></i>			
+				Cancel
+			</span>
         </div>
     </div>
 </form>
@@ -1524,20 +1554,23 @@
     </div>
 </div>
 
-
 <div id="exitCwcDialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-
         <h3>Exit From Program</h3>
     </div>
 
     <div class="dialog-content">
         <ul>
-            <li>
-                <label for="datepicker">Completion Date</label>
-                <input type="text" id="datepicker" class="datepicker">
+			<li>
+                <label>Program</label>
+                <input type="text" readonly="" value="CHILD WELFARE CLINIC">
             </li>
+			
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'complete-date', label: 'Completion Date', formFieldName: 'referredDate', useTime: false, defaultToday: true, endDate: new Date(), startDate: patientProgram.dateEnrolled])}
+			</li>
+			
             <li>
                 <label for="programOutcome">Outcome</label>
                 <select name="programOutcome" id="programOutcome">
@@ -1549,7 +1582,11 @@
                     <% } %>
                 </select>
             </li>
-            <button class="button confirm right" id="processProgramExit">Save</button>
+			
+            <button class="button confirm" id="processProgramExit" style="float: right; margin-right: 18px;">
+				<i class="icon-save small"></i>
+				Save
+			</button>
             <span class="button cancel">Cancel</span>
         </ul>
     </div>

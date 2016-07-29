@@ -33,6 +33,7 @@
 	emrMessages["numberField"] = "Value not a number";
 
     jq(function(){
+		
 		NavigatorController = new KeyboardController(jq('#postnatalExaminationsForm'));
         ko.applyBindings(drugOrders, jq(".drug-table")[0]);
 
@@ -44,6 +45,83 @@
         }
 
         var examinations = [];
+		
+		var exitcwcdialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#exitPncDialog',
+            actions: {
+                confirm: function () {
+                    var endDate = jq("#complete-date-field").val();
+                    outcomeId = jq("#programOutcome").val();
+                    var startDate = "${patientProgram.dateEnrolled}";
+
+                    if (outcomeId == '' || outcomeId == "0") {
+                        alert("Outcome Required");
+                        return;
+                    }
+                    //&& startDate > endDate run test to ensure end date is not earlier than start start date
+
+                    else if (!isEmpty(startDate) && !isEmpty(endDate)) {
+                        var result = handleExitProgram(${patientProgram.patientProgramId}, "${patientProgram.dateEnrolled}",
+                                endDate, outcomeId);
+
+                    } else {
+                        alert("invalid end date");
+                        return;
+                    }
+                    exitcwcdialog.close();
+                },
+                cancel: function () {
+                    exitcwcdialog.close();
+                }
+            }
+        });
+		
+		function SubmitInformation(){
+            var data = jq("form#postnatalExaminationsForm").serialize();
+            data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
+			
+            jq.post('${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+					} else if (data.status === "error") {
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
+			);
+		}
+		
+		function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+			var updateData = {
+				programId: programId,
+				enrollmentDateYmd: enrollmentDateYmd,
+				completionDateYmd: completionDateYmd,
+				outcomeId: outcomeId
+			}
+			jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
+			);
+		}
+		
+        jq("#postnatal-examination-submit").on("click", function(event){
+            event.preventDefault();
+			
+			if (jq('#exitPatientFromProgramme:checked').length > 0){
+				exitcwcdialog.show();
+			}else{
+				SubmitInformation();
+			}
+        });
 
         jq("#searchExaminations").autocomplete({
             minLength:0,
@@ -80,14 +158,14 @@
 
 		function examinationSummary(){
 			if (examinationArray.length == 0){
-				jq('#summaryTable tr:eq(0) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
 			}
 			else{
 				var exams = '';
 				examinationArray.forEach(function(examination){
 				  exams += examination.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(0) td:eq(1)').html(exams);
+				jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
 			}
 		}
 
@@ -251,14 +329,14 @@
 
 		function diagnosisSummary(){
 			if (diagnosisArray.length == 0){
-				jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
 			}
 			else{
 				var diagnoses = '';
 				diagnosisArray.forEach(function(diagnosis){
 					diagnoses += diagnosis.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(1) td:eq(1)').html(diagnoses);
+				jq('#summaryTable tr:eq(3) td:eq(1)').html(diagnoses);
 			}
 		}
 
@@ -306,6 +384,7 @@
 
 					investigationArray.push(ui.item);
 					investigationSummary();
+					
                     var investigationTemplate = _.template(jq("#investigation-template").html());
                     jq("#investigations-holder").append(investigationTemplate(investigation));
 					jq('#investigations-set').val('SET');
@@ -345,38 +424,16 @@
 
 		function investigationSummary(){
 			if (investigationArray.length == 0){
-				jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(4) td:eq(1)').text('N/A');
 			}
 			else{
 				var exams = '';
 				investigationArray.forEach(function(investigation){
 				  exams += investigation.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
+				jq('#summaryTable tr:eq(4) td:eq(1)').html(exams);
 			}
 		}
-
-
-
-
-		//submit data
-        jq("#postnatal-examination-submit").on("click", function(event){
-            event.preventDefault();
-			
-            var data = jq("form#postnatalExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders.drug_orders);
-            jq.post('${ui.actionLink("mchapp", "postnatalExamination", "savePostnatalExaminationInformation")}',
-				data,
-				function (data) {
-					if (data.status === "success") {
-						window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-					} else if (data.status === "error") {
-						jq().toastmessage('showErrorToast', data.message);
-					}
-				},
-				"json"
-			);
-        });
 
 		jq('#availableReferral, #next-visit-date-display').change(function(){
 			var output = '';
@@ -400,7 +457,7 @@
 				output = 'N/A';			
 			}
 			
-			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(8) td:eq(1)').html(output);
 		});
 
 		jq('#referralReason').change(function(){
@@ -414,11 +471,11 @@
 
 		jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA').change(function(){
 			if (jq(this).val() == "0"){
-				jq('#summaryTable tr:eq(6) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(7) td:eq(1)').text('N/A');
 				jq('#family-planning-set').val('');
 			}
 			else {
-				jq('#summaryTable tr:eq(6) td:eq(1)').text(jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :selected').text());
+				jq('#summaryTable tr:eq(7) td:eq(1)').text(jq('#374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA :selected').text());
 				jq('#family-planning-set').val('SET');
 			}
 		});
@@ -473,7 +530,7 @@
 				output += 'CTX for Mother: ' + jq("input[name='concept.a0b98c2e-ac37-4878-ad42-34bdb0d1926a']:checked").data('value') + '<br/>';
 			}
 
-			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 			
 			if (jq(this).attr('name') == 'concept.93366255-8903-44af-8370-3b68c0400930'){
 				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
@@ -500,7 +557,7 @@
 			}
 			
 			if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
-				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+				if (jq(this).val() == '7480ebef-125b-4e0d-a8e5-256224ee31a0'){
 					jq('.nvp-ctx-info').show(300);
 				}
 				else{
@@ -535,12 +592,13 @@
 				output += 'Vitamin A Suppliments: ' + jq("input[name='concept.c764e84f-cfb2-424a-acec-20e4fb8531b7']:checked").data('value') + '<br/>';
 			}
 
-			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
-
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
 		});
-		
-
     });
+	
+	function isEmpty(o) {
+        return o == null || o == '';
+    }
 
 	function selectReferrals(selectedReferral){
         if(selectedReferral == 1){
@@ -723,6 +781,27 @@
 	<section>
 		<span class="title">Clinical Notes</span>
 		<fieldset class="no-confirmation">
+			<legend>Symptoms</legend>
+			<div style="padding: 0 4px">
+				<label for="symptom" class="label">Symptoms <span class="important"></span></label>
+				<input type="text" id="symptom" name="symptom" placeholder="Add Symptoms" />
+				<field>
+					<input type="hidden" id="symptoms-set" class=""/>
+					<span id="symptoms-lbl" class="field-error" style="display: none"></span>
+				</field>
+			</div>
+
+			<div class="tasks" id="task-symptom" style="display:none;">
+				<header class="tasks-header">
+					<span id="title-symptom" class="tasks-title">PATIENT'S SYMPTOMS</span>
+					<a class="tasks-lists"></a>
+				</header>
+				
+				<div id="symptoms-holder"></div>
+			</div>
+		</fieldset>
+		
+		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>
 			<div style="padding: 0 4px">
 				<label for="searchExaminations" class="label title-label">Examinations <span class="important"></span></label>
@@ -827,12 +906,12 @@
 					<div class="testbox">
 						<div>Prior Known Status</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 
@@ -868,12 +947,12 @@
 					<div class="testbox anc-tests">
 						<div>PNC Test Results</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 
@@ -922,11 +1001,11 @@
 					<div class="testbox partner-results">
 						<div>Patner Results</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 						
@@ -1255,46 +1334,60 @@
 
 				<div class="info-body">
 					<table id="summaryTable">
-						<tbody><tr>
-							<td><span class="status active"></span>Examinations</td>
-							<td>N/A</td>
-						</tr>
+						<tbody>
+							<tr>
+								<td><span class="status active"></span>Symptoms</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
+								<td><span class="status active"></span>Examinations</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Diagnosis</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Prescriptions</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Investigations</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Diagnosis</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Prescriptions</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Investigations</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>PMTCT Information</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>PMTCT Information</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Suppliments</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Suppliments</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Family Planning</td>
-							<td>N/A</td>
-						</tr>
+							<tr>
+								<td><span class="status active"></span>Family Planning</td>
+								<td>N/A</td>
+							</tr>
 
-						<tr>
-							<td><span class="status active"></span>Outcome</td>
-							<td>N/A</td>
-						</tr>
-					</tbody></table>
+							<tr>
+								<td><span class="status active"></span>Outcome</td>
+								<td>N/A</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<div>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+							Exit Patient from Program
+						</label>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1303,8 +1396,16 @@
 			<field style="display: inline">
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>
-
-			<input type="button" value="Submit" class="button submit confirm" id="postnatal-examination-submit">
+			
+			<span value="Submit" class="button submit confirm" id="postnatal-examination-submit">
+                <i class="icon-save small"></i>
+                Save
+            </span>
+			
+            <span id="cancelButton" class="button cancel">
+                <i class="icon-remove small"></i>			
+				Cancel
+			</span>
 		</div>
 	</div>
 </form>
@@ -1356,5 +1457,44 @@
             <label class="button confirm" style="float: right; width: auto!important;">Confirm</label>
             <label class="button cancel" style="width: auto!important;">Cancel</label>
         </form>
+    </div>
+</div>
+
+<div id="exitPncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>Exit From Program</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+                <label>Program</label>
+                <input type="text" readonly="" value="POST-NATAL CLINIC">
+            </li>
+			
+			<li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'complete-date', label: 'Completion Date', formFieldName: 'referredDate', useTime: false, defaultToday: true, endDate: new Date(), startDate: patientProgram.dateEnrolled])}
+			</li>
+			
+            <li>
+                <label for="programOutcome">Outcome</label>
+                <select name="programOutcome" id="programOutcome">
+                    <option value="0">Choose Outcome</option>
+                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
+                    <% possibleProgramOutcomes.each { outcome -> %>
+                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </li>
+			
+            <button class="button confirm" id="processProgramExit" style="float: right; margin-right: 18px;">
+				<i class="icon-save small"></i>
+				Save
+			</button>
+			
+            <span class="button cancel">Cancel</span>
+        </ul>
     </div>
 </div>

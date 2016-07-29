@@ -24,20 +24,98 @@
 	var examinationArray = [];
 	var investigationArray = [];
     var diagnosisArray = [];
-
-
     var emrMessages = {};
 
 	emrMessages["numericRangeHigh"] = "value should be less than {0}";
 	emrMessages["numericRangeLow"] = "value should be more than {0}";
 	emrMessages["requiredField"] = "Mandatory Field. Kindly provide details";
 	emrMessages["numberField"] = "Value not a number";
-    var currentWorkflowBeingEdited;
+    
+	var currentWorkflowBeingEdited;
     var patientProgramForWorkflowEdited;
-    jq(function() {
-
+    
+	jq(function() {
 		jq(".infant-feeding").hide();
 		jq(".decision-feeding").hide();
+		
+		function SubmitInformation(){
+			var data = jq("form#antenatalExaminationsForm").serialize();
+            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
+
+            jq.post(
+              '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
+              data,
+              function (data) {
+                  if (data.status === "success") {
+                      window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
+                  } else if (data.status === "error") {
+                      jq().toastmessage('showErrorToast', data.message);
+                  }
+              },
+              "json"
+            );
+		}
+		
+		function handleExitProgram(programId, enrollmentDateYmd, completionDateYmd, outcomeId) {
+			var updateData = {
+				programId: programId,
+				enrollmentDateYmd: enrollmentDateYmd,
+				completionDateYmd: completionDateYmd,
+				outcomeId: outcomeId
+			}
+			jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
+			);
+		}
+		
+		var exitcwcdialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#exitAncDialog',
+            actions: {
+                confirm: function () {
+                    var endDate = jq("#complete-date-field").val();
+                    outcomeId = jq("#programOutcome").val();
+                    var startDate = "${patientProgram.dateEnrolled}";
+
+                    if (outcomeId == '' || outcomeId == "0") {
+                        alert("Outcome Required");
+                        return;
+                    }
+                    //&& startDate > endDate run test to ensure end date is not earlier than start start date
+
+                    else if (!isEmpty(startDate) && !isEmpty(endDate)) {
+                        var result = handleExitProgram(${patientProgram.patientProgramId}, "${patientProgram.dateEnrolled}",
+                                endDate, outcomeId);
+
+                    } else {
+                        alert("invalid end date");
+                        return;
+                    }
+                    exitcwcdialog.close();
+                },
+                cancel: function () {
+                    exitcwcdialog.close();
+                }
+            }
+        });
+		
+		//submit data
+        jq("#antenatalExaminationSubmitButton").on("click", function(event){
+            event.preventDefault();
+            
+			if (jq('#exitPatientFromProgramme:checked').length > 0){
+				exitcwcdialog.show();
+			}else{
+				SubmitInformation();
+			}
+        });
 
         jq('input[type=radio][name="concept.fb5a5471-e912-4288-8c25-750f7f88281f"]').change(function() {
             if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
@@ -48,6 +126,7 @@
                 jq(".decision-feeding").hide();
             }
         });
+		
         jq('input[type=radio][name="concept.8a3c420e-b4ff-4710-81fd-90c7bfa6de72"]').change(function() {
             if (this.value == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
                 jq(".decision-feeding").show();
@@ -55,12 +134,6 @@
             else if (this.value == '606720bb-4a7a-4c4c-b3b5-9a8e910758c9') {
                 jq(".decision-feeding").hide();
             }
-        });
-
-        jq(".datepicker").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'yy-mm-dd'
         });
 
         var vaccinationDialog = emr.setupConfirmationDialog({
@@ -173,15 +246,14 @@
         var todaysDate = moment();
         var gestationInWeeks = Math.ceil(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
 
-        if(gestationInWeeks < 16)
-        {
+        if(gestationInWeeks < 16) {
             jq("#lessthan16").show();
-            jq(".maturity").text(gestationInWeeks + " Weeks");
         }
-        else if(gestationInWeeks >= 16)
-        {
+        else if(gestationInWeeks >= 16) {
             jq("#lessthan16").hide();
         }
+		
+		jq(".maturity").text(gestationInWeeks + "wks");
 
 
         var examinations = [];        
@@ -323,14 +395,14 @@
 		
 		function examinationSummary(){
 			if (examinationArray.length == 0){
-				jq('#summaryTable tr:eq(0) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
 			}
 			else{
 				var exams = '';
 				examinationArray.forEach(function(examination){
 				  exams += examination.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(0) td:eq(1)').html(exams);
+				jq('#summaryTable tr:eq(1) td:eq(1)').html(exams);
 			}
 		}
 
@@ -391,14 +463,14 @@
 
         function diagnosisSummary(){
             if (diagnosisArray.length == 0){
-                jq('#summaryTable tr:eq(1) td:eq(1)').text('N/A');
+                jq('#summaryTable tr:eq(3) td:eq(1)').text('N/A');
             }
             else{
                 var diagnoses = '';
                 diagnosisArray.forEach(function(diagnosis){
                     diagnoses += diagnosis.label +'<br/>'
                 });
-                jq('#summaryTable tr:eq(1) td:eq(1)').html(diagnoses);
+                jq('#summaryTable tr:eq(3) td:eq(1)').html(diagnoses);
             }
         }
 
@@ -486,36 +558,16 @@
 		
 		function investigationSummary(){
 			if (investigationArray.length == 0){
-				jq('#summaryTable tr:eq(2) td:eq(1)').text('N/A');
+				jq('#summaryTable tr:eq(4) td:eq(1)').text('N/A');
 			}
 			else{
 				var exams = '';
 				investigationArray.forEach(function(investigation){
 				  exams += investigation.label +'<br/>'
 				});
-				jq('#summaryTable tr:eq(2) td:eq(1)').html(exams);
+				jq('#summaryTable tr:eq(4) td:eq(1)').html(exams);
 			}
 		}
-
-        //submit data
-        jq("#antenatalExaminationSubmitButton").on("click", function(event){
-            event.preventDefault();
-            var data = jq("form#antenatalExaminationsForm").serialize();
-            data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
-
-            jq.post(
-              '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
-              data,
-              function (data) {
-                  if (data.status === "success") {
-                      window.location = "${ui.pageLink("patientqueueapp", "mchClinicQueue")}"
-                  } else if (data.status === "error") {
-                      jq().toastmessage('showErrorToast', data.message);
-                  }
-              },
-              "json"
-            );
-        });
 		
 		jq('.conditions-info input').change(function(){
 			jq('#conditions-info-set').val('SET');
@@ -546,7 +598,7 @@
 				jq('#conditions-info-set').val('');
 			}
 			
-			jq('#summaryTable tr:eq(4) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 		}).change();
 		
 		jq('.hiv-info input').change(function(){
@@ -606,11 +658,9 @@
 			
 			if (jq("input[name='concept.a4ec351a-b4cd-46aa-903b-2b8a5e29203a']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
 				output += 'Patient Given HAART<br/>';
-			}
+			}			
 			
-			
-			
-			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
 			
 			if (jq(this).attr('name') == 'concept.11724bb1-9033-457b-9b09-d4080f459f2f'){
 				if (jq(this).val() == '4536f271-5430-4345-b5f7-37ca4cfe1553'){
@@ -639,7 +689,7 @@
             }
 			
 			if (jq(this).attr('name') == 'concept.0a24f03e-9133-4401-b683-76c45e166912'){
-				if (jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
+				if (jq(this).val() == '7480ebef-125b-4e0d-a8e5-256224ee31a0'){
 					jq('.initial-hide').show(300);
 				}
 				else{
@@ -676,7 +726,7 @@
 				output = 'N/A';
 			}
 			
-			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(8) td:eq(1)').html(output);
 		});
 		
 		jq('.treatment-info input').change(function(){
@@ -699,7 +749,7 @@
 				output += 'ANC Exercise Given: ' + jq("input[name='concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c']:checked").data('value') + '<br/>';
 			}
 			
-			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 		
 		jq('#availableReferral, #next-visit-date-display').change(function(){
@@ -724,7 +774,7 @@
 				output = 'N/A';			
 			}
 			
-			jq('#summaryTable tr:eq(8) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(9) td:eq(1)').html(output);
 		});
 		
 		jq('#referralReason').change(function(){
@@ -736,15 +786,7 @@
 			}
 		}).change();
 
-        //show hiv drugs only if patient is positive and hide otherwise
-        jq('.prior-status input').change(function(){
-            if(jq(this).val() == 'aca8224b-2f4b-46cb-b75d-9e532745d61f'){
-                jq('.arv-section').show();
-            }
-            else{
-                jq('.arv-section').hide();
-            }
-        });
+
 		
 		jq('#lessthan16 span.small').click(function(){
 			jq('#lessthan16').hide(500);
@@ -875,7 +917,8 @@
 
     function handleChangeWorkflowState(c) {
         var stateId = jq("#changeToState_" + c).val();
-        var onDate = jq("#datepicker_" + c).val()
+        var onDate = jq("#datepicker_" + c).val();
+		
         if (stateId == 0) {
             jq().toastmessage('showErrorToast', "Select State!");
             return;
@@ -886,7 +929,6 @@
             jq().toastmessage('showNoticeToast', "Saving State...!");
             processHandleChangeWorkflowState(stateId, onDate);
         }
-
     }
 
     function processHandleChangeWorkflowState(stateId, onDateDMY) {
@@ -903,12 +945,12 @@
         }
 
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-                .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
-                    return data.status;
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                });
+		.success(function (data) {
+			jq().toastmessage('showNoticeToast', data.message);
+			return data.status;
+		}).error(function (xhr, status, err) {
+			jq().toastmessage('showErrorToast', "AJAX error!" + err);
+		});
     }
 
     function hideLayer(divId) {
@@ -966,7 +1008,7 @@
 		padding: 7px 12px;
 	}
 	#profile-items small{
-		margin-left: 4.5%;
+		margin-left: 1.5%;
 	}
 	#profile-items small:first-child{
 		margin-left: 2px;
@@ -1078,6 +1120,27 @@
 	
 	<section>
 		<span class="title">Clinical Notes</span>
+		
+		<fieldset class="no-confirmation">
+			<legend>Symptoms</legend>
+			<div style="padding: 0 4px">
+				<label for="symptom" class="label">Symptoms <span class="important"></span></label>
+				<input type="text" id="symptom" name="symptom" placeholder="Add Symptoms" />
+				<field>
+					<input type="hidden" id="symptoms-set" class=""/>
+					<span id="symptoms-lbl" class="field-error" style="display: none"></span>
+				</field>
+			</div>
+
+			<div class="tasks" id="task-symptom" style="display:none;">
+				<header class="tasks-header">
+					<span id="title-symptom" class="tasks-title">PATIENT'S SYMPTOMS</span>
+					<a class="tasks-lists"></a>
+				</header>
+				
+				<div id="symptoms-holder"></div>
+			</div>
+		</fieldset>
 
         <fieldset class="no-confirmation">
             <legend>Immunizations</legend>
@@ -1444,12 +1507,12 @@
 					<div class="testbox">
 						<div>Prior Known Status</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 
@@ -1480,12 +1543,12 @@
 					<div class="testbox anc-results">
 						<div>ANC Test Results</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.0a24f03e-9133-4401-b683-76c45e166912" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 
@@ -1534,11 +1597,11 @@
 					<div class="testbox partner-result">
 						<div>Patner Results</div>
 						<label>
-							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
+							<input id="prior-status-positive" type="radio" data-value="Positive" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
 							Positive
 						</label><br/>
 						<label>
-							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="7480ebef-125b-4e0d-a8e5-256224ee31a0">
+							<input id="prior-status-negative" type="radio" data-value="Negative" name="concept.df68a879-70c4-40d5-becc-a2679b174036" value="aca8224b-2f4b-46cb-b75d-9e532745d61f">
 							Negative
 						</label><br/>
 						
@@ -1914,10 +1977,20 @@
 					<table id="summaryTable">
 						<tbody>
 							<tr>
+								<td><span class="status active"></span>Symptoms</td>
+								<td>N/A</td>
+							</tr>
+							
+							<tr>
 								<td><span class="status active"></span>Examinations</td>
 								<td>N/A</td>
 							</tr>
 
+							<tr>
+								<td><span class="status active"></span>Prescriptions</td>
+								<td>N/A</td>
+							</tr>
+							
                             <tr>
                                 <td><span class="status active"></span>Diagnosis</td>
                                 <td>N/A</td>
@@ -1925,11 +1998,6 @@
 							
 							<tr>
 								<td><span class="status active"></span>Investigations</td>
-								<td>N/A</td>
-							</tr>
-							
-							<tr>
-								<td><span class="status active"></span>Prescriptions</td>
 								<td>N/A</td>
 							</tr>
 							
@@ -1961,6 +2029,13 @@
 							</tr>
 						</tbody>
 					</table>
+					
+					<div>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+							Exit Patient from Program
+						</label>
+					</div>
 				</div>
 			</div>				
 		</div>
@@ -1970,7 +2045,15 @@
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>
 			
-			<input type="button" value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+			<span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton">
+                <i class="icon-save small"></i>
+                Save
+            </span>
+			
+            <span id="cancelButton" class="button cancel">
+                <i class="icon-remove small"></i>			
+				Cancel
+			</span>
 		</div>
 	</div>
 </form>
@@ -2058,5 +2141,44 @@
 			
 			<span class="button cancel">Cancel</span>
 		</ul>
+    </div>
+</div>
+
+<div id="exitAncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>Exit From Program</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+                <label>Program</label>
+                <input type="text" readonly="" value="ANTENATAL CLINIC">
+            </li>
+			
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'complete-date', label: 'Completion Date', formFieldName: 'referredDate', useTime: false, defaultToday: true, endDate: new Date(), startDate: patientProgram.dateEnrolled])}
+			</li>
+			
+            <li>
+                <label for="programOutcome">Outcome</label>
+                <select name="programOutcome" id="programOutcome">
+                    <option value="0">Choose Outcome</option>
+                    <% if (possibleProgramOutcomes != null || possibleProgramOutcomes != "") { %>
+                    <% possibleProgramOutcomes.each { outcome -> %>
+                    <option id="${outcome.id}" value="${outcome.id}">${outcome.name}</option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </li>
+			
+            <button class="button confirm" id="processProgramExit" style="float: right; margin-right: 18px;">
+				<i class="icon-save small"></i>
+				Save
+			</button>
+			
+            <span class="button cancel">Cancel</span>
+        </ul>
     </div>
 </div>

@@ -14,45 +14,48 @@
                 jq().toastmessage('showErrorToast', "Select Growth Status!");
                 return false;
             }
-            if (wcat === '123814AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' || wcat === 'f7cdbe84-fb91-4968-b886-ceb00a07d7ca') {
-                if (gcat !== 'b11de40f-5516-490c-bf92-9d4e69430247' || gcat !== 'b11de40f-5516-490c-bf92-9d4e69430247') {
-                    jq().toastmessage('showErrorToast', "Check Weight and Growth Status Combinations!");
-                    return false;
-                }
-            }
-
-            if (wcat === '114413AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' || wcat === '115115AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA') {
-                if (gcat === 'ab430762-6c89-4a9c-8c2d-bb6d6d3843e5') {
-                    jq().toastmessage('showErrorToast', "Check Weight and Growth Status Combinations!");
-                    return false;
-                }
-            }
 
             //validate weight, height and muac to ensure they are provided
             var wValue = jq('#weight').val();
             var hValue = jq('#height').val();
             var muacValue = jq('.muacs').val();
-
-            if(!(parseInt(wValue) > 0) || !(parseInt(hValue) > 0) || !(parseInt(muacValue) > 0) ){
-                jq().toastmessage('showErrorToast', "Check values for height, weight and muac!");
-                return false;
-            }
+			
+			if (wValue != ''){
+				if (!(parseInt(wValue) > 0)){
+					jq().toastmessage('showErrorToast', "Ensure value for Height has been properly filled!");
+					return false;
+				}
+			}
+			
+			if (hValue != ''){
+				if (!(parseInt(hValue) > 0)){
+					jq().toastmessage('showErrorToast', "Ensure value for Weight has been properly filled!");
+					return false;
+				}
+			}
+			
+			if (muacValue != ''){
+				if (!(parseInt(muacValue) > 0)){
+					jq().toastmessage('showErrorToast', "Ensure value for MUAC has been properly filled!");
+					return false;
+				}
+			}			
 			
             event.preventDefault();
             var data = jq("form#cwc-triage-form").serialize();
 
             jq.post(
-                    '${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
-                    data,
-                    function (data) {
-                        if (data.status === "success") {
-                            window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
-                        } else if (data.status === "error") {
-                            //show error message;
-                            jq().toastmessage('showErrorToast', data.message);
-                        }
-                    },
-                    "json"
+				'${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
+				data,
+				function (data) {
+					if (data.status === "success") {
+						window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
+					} else if (data.status === "error") {
+						//show error message;
+						jq().toastmessage('showErrorToast', data.message);
+					}
+				},
+				"json"
             );
         });
     });
