@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
@@ -26,9 +27,42 @@ import java.util.*;
 
 public class PostnatalTriageFragmentController {
 	private int visitTypeId;
-	public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
+	public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui, HttpServletRequest request) {
 		config.require("patientId");
 		config.require("queueId");
+		String enc = request.getParameter("encounterId");
+		
+		if(StringUtils.isNotEmpty(enc)){
+			Encounter current =Context.getEncounterService().getEncounter(Integer.parseInt(enc));
+			Set<Obs> obs= Context.getEncounterService().getEncounterByUuid(current.getUuid()).getAllObs();
+	    	for(Obs s:obs){
+	    		switch(s.getConcept().getId()){
+	    		case 5088:{
+	    			model.addAttribute("temperature", s.getValueNumeric());
+	    			break;
+	    		}
+	    		case 5087:{
+	    			model.addAttribute("pulseRate", s.getValueNumeric());
+	    			break;
+	    		}
+	    		case 5085:{
+	    			model.addAttribute("systolic", s.getValueText());
+	    			break;
+	    		}
+	    		case 5086:{
+	    			model.addAttribute("daistolic", s.getValueNumeric());
+	    			break;
+	    		}
+	    	}
+		}
+	}else{
+		model.addAttribute("temperature", "");
+		model.addAttribute("pulseRate", "");
+		model.addAttribute("systolic", "");
+		model.addAttribute("daistolic", "");
+	}
+    	
+		
 		Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
 
         Concept modeOfDelivery = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.PNC_DELIVERY_MODES);
@@ -41,7 +75,9 @@ public class PostnatalTriageFragmentController {
 		model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.PNC_PROGRAM));
 		model.addAttribute("queueId", config.get("queueId"));
         model.addAttribute("deliveryMode", modesOfDelivery);
-	}
+        
+        
+    }
 	
 	@SuppressWarnings("unchecked")
 	public SimpleObject savePostnatalTriageInformation(
@@ -77,7 +113,11 @@ public class PostnatalTriageFragmentController {
 			String visitStatus = queue.getVisitStatus();
 			SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"), patient, visitStatus);
 		}
-		QueueLogs.logTriagePatient(queue, encounter);
-		return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
+		boolean isEdit = Boolean.parseBoolean(request.getParameter("isEdit"));
+		if(!isEdit){
+			QueueLogs.logTriagePatient(queue, encounter);
+		}
+		
+		return SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",isEdit);
 	}
 }

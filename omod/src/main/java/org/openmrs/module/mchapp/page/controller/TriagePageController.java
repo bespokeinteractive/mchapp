@@ -1,13 +1,19 @@
 package org.openmrs.module.mchapp.page.controller;
 
+import org.apache.commons.lang.StringUtils;
+import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.model.PatientSearch;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchService;
+import org.openmrs.module.mchapp.model.TriageDetail;
+import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -15,17 +21,33 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class TriagePageController {
     private static final int MAX_CWC_DURATION = 5;
     private static final int MAX_ANC_PNC_DURATION = 9;
 
     public void get(
             @RequestParam("patientId") Patient patient,
-            @RequestParam(value = "queueId") Integer queueId,
-            PageModel model) {
+            @RequestParam(value = "queueId") Integer queueId,            
+            PageModel model,HttpServletRequest request) {
         MchService mchService = Context.getService(MchService.class);
         model.addAttribute("patient", patient);
+        String isToEdit=request.getParameter("isEdit");
+        if(StringUtils.isEmpty(isToEdit)){
+        	model.addAttribute("isEdit", false);
+        }else{
+        	model.addAttribute("isEdit", isToEdit);
+        }
+        
         model.addAttribute("queueId", queueId);
+        String encounterId=request.getParameter("encounterId");
+        if(StringUtils.isEmpty(encounterId)){
+        	model.addAttribute("encounterId", "");
+        }else{
+        	model.addAttribute("encounterId", encounterId);
+        }
+        
 
         if (patient.getGender().equals("M")) {
             model.addAttribute("gender", "Male");
@@ -86,6 +108,8 @@ public class TriagePageController {
         //model.addAttribute("serviceOrderSize", serviceOrderList.size());
         model.addAttribute("patientId", patient.getPatientId());
         model.addAttribute("date", new Date());
+        
     }
 
+	
 }

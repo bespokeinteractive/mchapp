@@ -1,5 +1,17 @@
 <script>
+
+var isEdit=false;
     jq(function () {
+       if(${isEdit}){
+           isEdit=${isEdit};
+           }
+       console.log("${growthStatusValue}");
+       jq("#editStatus").val(isEdit);
+        var wCatergoyValue="${weightCategoryValue}";  
+       jq("#weightCategories").val(wCatergoyValue);
+       var gStatusValue="${growthStatusValue}";
+       jq("#growthMonitor").val(gStatusValue);
+        
         //submit data
         jq(".submit").on("click", function (event) {
 
@@ -43,20 +55,26 @@
 			
             event.preventDefault();
             var data = jq("form#cwc-triage-form").serialize();
-
+            
             jq.post(
-				'${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
-				data,
-				function (data) {
-					if (data.status === "success") {
-						window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}"
-					} else if (data.status === "error") {
-						//show error message;
-						jq().toastmessage('showErrorToast', data.message);
-					}
-				},
-				"json"
+                    '${ui.actionLink("mchapp", "cwcTriage", "saveCwcTriageInfo")}',
+                    data,
+                    function (data) {
+                        if (data.status === "success") {
+                            if(data.isEdit){
+                           		window.location = "${ui.pageLink("mchapp", "main",[patientId: patientId, queueId: queueId])}";
+                             }else {
+                                window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}";
+                                   }
+                           
+                        } else if (data.status === "error") {
+                            //show error message;
+                            jq().toastmessage('showErrorToast', data.message);
+                        }
+                    },
+                    "json"
             );
+           
         });
     });
 
@@ -88,6 +106,7 @@
     <div style="min-width: 78%" class="col16 dashboard">
         <div class="info-section">
             <form id="cwc-triage-form">
+            <input type="hidden" value="" id="editStatus" name="isEdit"/>
                 <div class="profile-editor"></div>
 
                 <div class="info-header">
@@ -104,37 +123,31 @@
 
                     <div>
                         <label for="weight">Weight</label>
-                        <input type="text" id="weight"
+                        <input type="text" id="weight" class="number numeric-range" value="${weight}"
                                name="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
+                        
                         <span class="append-to-value">Kgs</span>
+                        <span id="12520" class="field-error" style="display: none"></span>
                     </div>
 
                     <div>
                         <label for="weightCategories">Weight Categories</label>
-                        <select id="weightCategories" name="concept.1854AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+                        <select id="weightCategories" name="concept.1854AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="coded" >
                             <option value="0">Select Category</option>
                             <% weightCategories.each { category -> %>
                             <option value="${category.uuid}">${category.label}</option>
                             <% } %>
                         </select>
+                        <span id="12519" class="field-error" style="display: none"></span>
                     </div>
 
                     <div>
                         <label for="height">Height</label>
-                        <input type="text" id="height"
+                        <input type="text" id="height" class="number numeric-range" value="${height}"
                                name="concept.5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"/>
                         <span class="append-to-value">Cms</span>
+                         <span id="12516" class="field-error" style="display: none"></span>
                     </div>
-
-                    <div>
-                        <label for="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">M.U.A.C</label>
-                        <input id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" name="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6" class="muacs number numeric-range focused"
-                               type="text"
-                               max="999" min="0" maxlength="7" value=""
-                               >
-                        <span class="append-to-value">Cms</span>
-                    </div>
-					
                     <div>
                         <label for="growthMonitor">Growth Status</label>
                         <select id="growthMonitor" name="concept.562a6c3e-519b-4a50-81be-76ca67b5d5ec">
@@ -143,8 +156,16 @@
                             <option value="${category.uuid}">${category.label}</option>
                             <% } %>
                         </select>
+                        <label for="muac">M.U.A.C</label>
+                        <input id="muac" class="number numeric-range"
+                               type="text"
+                               max="999" min="0" maxlength="7" value="${muac}" 
+                               name="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6"
+                               id="concept.b7112b6c-de10-42ee-b54d-2e1be98cd2d6">
+                        <span class="append-to-value">cm</span>
+                         <span id="12518" class="field-error" style="display: none"></span>
                     </div>
-
+					<% if(!isEdit){ %>
                     <div>
                         <label></label>
                         <label style="padding-left:0px; width: auto;">
@@ -152,6 +173,7 @@
                             Tick to Send to Examination Room
                         </label>
                     </div>
+					<%	} %>
                 </div>
             </form>
 

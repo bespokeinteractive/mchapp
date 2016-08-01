@@ -534,7 +534,7 @@ ${ui.includeFragment("mchapp","mchProfile")}
 	</div>
 
 	<div id="triage-info">
-		${ ui.includeFragment("mchapp", "triageSummary", [patientId: patientId]) }
+		${ ui.includeFragment("mchapp", "triageSummary", [patientId: patientId, ]) }
 	</div>
 	
 	<div id="clinical-summary">
