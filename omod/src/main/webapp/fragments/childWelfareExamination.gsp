@@ -1166,6 +1166,83 @@
             </div>
         </fieldset>
 
+        <fieldset class="no-confirmation">
+            <legend>Treatment</legend>
+            <label class="label title-label" style="width: auto;">Treatment</label>
+
+            <div class="onerow floating-controls feeding-info">
+                <div class="col4" style="width: 50%; margin: 0 1% 0 0">
+                    <div class="testbox">
+                        <div>Received LLITN?</div>
+                        <label>
+                            <input  type="radio" data-value="Yes"
+                                   name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input  type="radio" data-value="No"
+                                   name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+                    <div class="testbox">
+                        <div>Deworming</div>
+                        <label>
+                            <input  type="radio" data-value="Yes"
+                                   name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                   value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input  type="radio" data-value="No"
+                                   name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                                   value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col4 last" style="width: 49%;">
+                    <div class="testbox">
+                        <div>Vitamin A Supplementation (6-59 months)</div>
+                        <label>
+                            <input  type="radio" data-value="Yes"
+                                    name="concept.c1346a48-9777-428f-a908-e8bff24e4e37"
+                                    value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input  type="radio" data-value="No"
+                                    name="concept.c1346a48-9777-428f-a908-e8bff24e4e37"
+                                    value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+                    <div class="testbox">
+                        <div>Supplemented with MNP (6-23 months)</div>
+                        <label>
+                            <input  type="radio" data-value="Yes"
+                                    name="concept.534705aa-8857-4e70-9b08-b363fb3ce677"
+                                    value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+                            Yes
+                        </label><br/>
+
+                        <label>
+                            <input  type="radio" data-value="No"
+                                    name="concept.534705aa-8857-4e70-9b08-b363fb3ce677"
+                                    value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
         <fieldset>
             <legend>Infant Feeeding</legend>
             <label class="label title-label" style="width: auto;">Infant Feeding</label>
