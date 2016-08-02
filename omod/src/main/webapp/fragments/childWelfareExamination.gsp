@@ -230,6 +230,11 @@
             selector: '#prescription-dialog',
             actions: {
                 confirm: function () {
+					if (!drugDialogVerified()){
+						jq().toastmessage('showErrorToast', 'Ensure fields marked in red have been properly filled before you continue')
+						return false;
+					}
+					
                     addDrug();
                     jq("#drugForm")[0].reset();
                     jq('select option[value!="0"]', '#drugForm').remove();

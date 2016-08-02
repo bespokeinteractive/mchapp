@@ -62,6 +62,64 @@
         return result;
     }
 	
+	function drugDialogVerified(){
+		var error = 0;
+
+		if (jq("#drugName").val().trim() == ''){
+			jq("#drugName").addClass('red');
+			error ++;
+		}
+		else {
+			jq("#drugName").removeClass('red');
+		}
+		
+		if (jq("#drugDosage").val().trim() == ''){
+			jq("#drugDosage").addClass('red');
+			error ++;
+		}
+		else {
+			jq("#drugDosage").removeClass('red');
+		}
+		
+		if (jq('#drugUnitsSelect :selected').text() == "Select Unit"){
+			jq("#drugUnitsSelect").addClass('red');
+			error ++;
+		}
+		else {
+			jq("#drugUnitsSelect").removeClass('red');
+		}
+		
+		if (jq('#formulationsSelect :selected').text() == "Select Formulation"){
+			jq("#formulationsSelect").addClass('red');
+			error ++;
+		}
+		else {
+			jq("#formulationsSelect").removeClass('red');
+		}
+		
+		if (jq('#frequencysSelect :selected').text() == "Select Frequency"){
+			jq("#frequencysSelect").addClass('red');
+			error ++;
+		}
+		else {
+			jq("#frequencysSelect").removeClass('red');
+		}
+		
+		if (jq("#numberOfDays").val().trim() == '0' || jq("#numberOfDays").val().trim() == ''){
+			jq("#numberOfDays").addClass('red');
+			error ++;
+		}
+		else {
+			jq("#numberOfDays").removeClass('red');
+		}
+
+		if (error == 0){
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
 	jq(function() {
 		jq(".mch-tabs").tabs();
 		jq('#agename').text(getReadableAge('${patient.birthdate}') + ' (' +moment('${patient.birthdate}').format('DD/MM/YYYY')+')');
@@ -177,6 +235,9 @@
 </script>
 
 <style>
+	.red{
+		border: 1px solid #f00 !important;
+	}
 	#summaryTable tr:nth-child(2n),
 	#summaryTable tr:nth-child(2n+1){
 		background: none;
@@ -195,7 +256,7 @@
 		width: 170px;
 	}
 	input[type="text"], input[type="password"], select {
-		border: 1px solid #aaa !important;
+		border: 1px solid #aaa;
 		border-radius: 2px !important;
 		box-shadow: none !important;
 		box-sizing: border-box !important;
