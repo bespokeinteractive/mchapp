@@ -361,8 +361,7 @@ public class VisitDetail {
 
 		//String Buffers
 		StringBuffer symptomList = new StringBuffer();
-		StringBuffer provisionalDiagnosisList = new StringBuffer();
-		StringBuffer finalDiagnosisList = new StringBuffer();
+		StringBuffer diagnosisList = new StringBuffer();
 		StringBuffer investigationList = new StringBuffer();
 		StringBuffer procedureList = new StringBuffer();
 		StringBuffer examination = new StringBuffer();
@@ -400,10 +399,10 @@ public class VisitDetail {
 				symptomList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if (obs.getConcept().equals(provisionalDiagnosisConcept)) {
-				provisionalDiagnosisList.append(obs.getValueCoded().getDisplayString()).append(" (Provisional)<br/>");
+				diagnosisList.append(obs.getValueCoded().getDisplayString()).append(" (Provisional)<br/>");
 			}
 			if (obs.getConcept().equals(finalDiagnosisConcept)) {
-				finalDiagnosisList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+				diagnosisList.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if (obs.getConcept().equals(investigationConcept)) {
 				String investigationName = Context.getConceptService().getConceptByUuid(obs.getValueText()).getDisplayString();
@@ -492,8 +491,8 @@ public class VisitDetail {
 		
 		VisitDetail visitDetail = new VisitDetail();
 
-		if (provisionalDiagnosisList.length() > 0) {
-			visitDetail.setDiagnosis(provisionalDiagnosisList.toString());
+		if (diagnosisList.length() > 0) {
+			visitDetail.setDiagnosis(diagnosisList.toString());
 		}
 		if (symptomList.length() > 0) {
 			visitDetail.setSymptoms(symptomList.toString());
