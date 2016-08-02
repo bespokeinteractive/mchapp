@@ -1120,27 +1120,6 @@
 	
 	<section>
 		<span class="title">Clinical Notes</span>
-		
-		<fieldset class="no-confirmation">
-			<legend>Symptoms</legend>
-			<div style="padding: 0 4px">
-				<label for="symptom" class="label">Symptoms <span class="important"></span></label>
-				<input type="text" id="symptom" name="symptom" placeholder="Add Symptoms" />
-				<field>
-					<input type="hidden" id="symptoms-set" class=""/>
-					<span id="symptoms-lbl" class="field-error" style="display: none"></span>
-				</field>
-			</div>
-
-			<div class="tasks" id="task-symptom" style="display:none;">
-				<header class="tasks-header">
-					<span id="title-symptom" class="tasks-title">PATIENT'S SYMPTOMS</span>
-					<a class="tasks-lists"></a>
-				</header>
-				
-				<div id="symptoms-holder"></div>
-			</div>
-		</fieldset>
 
         <fieldset class="no-confirmation">
             <legend>Immunizations</legend>
@@ -1253,6 +1232,27 @@
                 </div>
             </div>
         </fieldset>
+		
+		<fieldset class="no-confirmation">
+			<legend>Symptoms</legend>
+			<div style="padding: 0 4px">
+				<label for="symptom" class="label title-label">Symptoms <span class="important"></span></label>
+				<input type="text" id="symptom" name="symptom" placeholder="Add Symptoms" />
+				<field>
+					<input type="hidden" id="symptoms-set" class=""/>
+					<span id="symptoms-lbl" class="field-error" style="display: none"></span>
+				</field>
+			</div>
+
+			<div class="tasks" id="task-symptom" style="display:none;">
+				<header class="tasks-header">
+					<span id="title-symptom" class="tasks-title">PATIENT'S SYMPTOMS</span>
+					<a class="tasks-lists"></a>
+				</header>
+				
+				<div id="symptoms-holder"></div>
+			</div>
+		</fieldset>
 
 		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>

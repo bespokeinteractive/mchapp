@@ -79,7 +79,8 @@
 					for (var i in data) {
 						var result = {
 							label: data[i].name,
-							value: data[i].uuid
+							value: data[i].uuid,
+							id: data[i].id
 						};
 						results.push(result);
 					}
@@ -99,29 +100,23 @@
                             return sign.value == symptom.value;
                         })) {
 					
-					var other_type = "hidden";
-					var other_name = "";
-					
-					if (symptom.value == '00acdc90-a641-41de-ae3a-e9b8d7a71a0f'){
-						other_name = "concept.00acdc90-a641-41de-ae3a-e9b8d7a71a0f"
-						other_type = "text";
-					}			
-					
-					symptom.othername = other_name;
-					symptom.othertype = other_type;
-					
-                    var signTemplate = _.template(jq("#symptoms-template").html());
-                    jq("#symptoms-holder").append(signTemplate(symptom));
-                    jq('#symptoms-set').val('SET');
-                    jq('#task-symptom').show();
+					jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getQualifiers") }', {
+						signId: ui.item.id
+					}).success(function(data) {
+						var signTemplate = _.template(jq("#symptoms-template").html());
+						jq("#symptoms-holder").append(signTemplate({ "symptom": symptom, "data": data}));						
+						
+						jq('#symptoms-set').val('SET');
+						jq('#task-symptom').show();
 
-                    symptomsArray.push(symptom);
-                    symptomsSummary();
+						symptomsArray.push(symptom);
+						symptomsSummary();
+					});					
                 }
                 else {
                     jq().toastmessage('showErrorToast', 'The symptom ' + symptom.label.toLowerCase() + ' has already been added.');
                 }
-
+				
                 jq(this).val('');
                 return false;
 			},
@@ -132,7 +127,7 @@
 				jq(this).removeClass("ui-corner-top").addClass("ui-corner-all");
 			}
 		});
-		
+			
 		jq("#symptoms-holder").on("click", ".icon-remove",function(){
             var symptomId = jq(this).parents('div.symptoms').find('input[type="hidden"]').attr("value");
             symptoms.splice(symptoms.indexOf(symptomId));
@@ -149,6 +144,17 @@
                 jq('#task-symptom').hide();
             }
         });
+		
+		jq("#symptoms-holder").on("click", "span.show-qualifiers", function() {
+			var qualifierContainer = jq(this).parents(".symptoms").find(".qualifier-container");
+			var icon = jq(this).find("i");
+			qualifierContainer.toggle();
+			if (qualifierContainer.is(":visible")) {
+				icon.removeClass("icon-caret-down").addClass("icon-caret-up");
+			} else {
+				icon.removeClass("icon-caret-up").addClass("icon-caret-down");
+			}
+		});
 	});
 	
 	function symptomsSummary(){
@@ -167,16 +173,39 @@
 </script>
 
 <script id="symptoms-template" type="text/template">
-  <div class="investigation symptoms">
+  <div class="investigation symptoms" style="margin: 5px;">	
 	<span class="icon-remove selecticon"></span>
-    <label style="margin-top: 2px; width: 95%;">{{=label}}
-		<input type="hidden" name="concept.{{=value}}" value="{{=value}}"/>
-		<input type="{{=othertype}}" name="{{=othername}}" value="" placeholder="Specify Others"/>
+	<span class="right pointer show-qualifiers">
+		<i class="icon-caret-down small" title="more"></i>
+	</span>
+	
+    <label style="margin-top: 2px; width: 90%;">{{=symptom.label}}
+		<input type="hidden" name="concept.0b1df8b4-3689-4fc8-a73e-b82764641908" value="{{=symptom.value}}"/>
 	</label>
+	
+	<div class="qualifier-container" style="padding: 0px 0 0px 5px; display: none;">
+		{{ _.each(data, function(qualifier, index) { }}
+			<label>{{=qualifier.label}}</label>
+			
+			{{ if (qualifier.options.length > 0 ){ }}			
+				{{ _.each(qualifier.options, function(opts, index){ }}
+					<label style="cursor: pointer;">
+						<input type="radio" name="qualifier.{{=symptom.value}}.{{=qualifier.uuid}}" value="{{=opts.uuid}}"></input>
+						{{=opts.label}}
+					</label>
+				{{ }) }}
+			{{ } else { }}
+				<input type="text" name="qualifier.{{=symptom.value}}.{{=qualifier.uuid}}" style="margin: 5px 15px; width: 96%!important;"></input>
+			{{ } }}
+		{{ }) }}
+	</div>
   </div>
 </script>
 
 <style>
+	.qualifier-container label{
+		width: 90%;
+	}
 	#summaryTable tr:nth-child(2n),
 	#summaryTable tr:nth-child(2n+1){
 		background: none;
