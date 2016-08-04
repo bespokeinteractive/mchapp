@@ -166,15 +166,15 @@
                         </select>
                         </div>
                     
-					<% if(!isEdit) { %>
-                    <div>
-                        <label></label>
-                        <label style="padding-left:0px; width: auto;">
-                            <input type="checkbox" name="send_for_examination" value="yes">
-                            Tick to Send to Examination Room
-                        </label>
-                    </div>
-					<%	} %>
+                      <% if(!isEdit) { %>
+                        <div>
+                            <label></label>
+                            <label style="padding-left:0px; width: auto;">
+                                <input type="checkbox" name="send_for_examination" value="yes">
+                                 Tick to Send to Examination Room
+                            </label>
+                        </div>
+                      <% } %>
                 </div>
             </form>
 
