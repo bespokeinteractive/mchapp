@@ -43,6 +43,9 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String ANC_EXCERCISE = "0a92efcc-51b3-448d-b4e3-a743ea5aa18c";
         public static final String ANC_DEWORMING = "159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         public static final String ANC_LLITN = "160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        
+        public static final String PNC_CERVICAL_SCREENING_METHOD = "50c026c3-f2bc-44b9-a9dd-e972ffcbb774";
+        public static final String PNC_CERVICAL_SCREENING_RESULT = "1406dbf3-05da-4264-9659-fb688cea5809";
     }
 
     public static final class MchAppTriageConstants {

@@ -28,6 +28,9 @@ public class VisitDetail {
 	private String cwcBreastFeedingExclussive = "Not Specified";
 	private String cwcBreastFeedingCouncelling = "Not Specified";
 
+	private String pncCervicalScreeningMethod = "Not Specified";
+	private String pncCervicalScreeningResult = "Not Specified";
+	
 	private String hivPriorStatus = "Not Specified";
 	private String hivPartnerStatus = "Not Specified";
 	private String hivPartnerTested = "Not Specified";
@@ -142,6 +145,22 @@ public class VisitDetail {
 
 	public void setPncHaematinics(String pncHaematinics) {
 		this.pncHaematinics = pncHaematinics;
+	}
+	
+	public String getPncCervicalScreeningMethod() {
+		return pncCervicalScreeningMethod;
+	}
+
+	public void setPncCervicalScreeningMethod(String pncCervicalScreeningMethod) {
+		this.pncCervicalScreeningMethod = pncCervicalScreeningMethod;
+	}
+	
+	public String getPncCervicalScreeningResult() {
+		return pncCervicalScreeningResult;
+	}
+
+	public void setPncCervicalScreeningResult(String pncCervicalScreeningResult) {
+		this.pncCervicalScreeningResult = pncCervicalScreeningResult;
 	}
 
 	public String getHivCoupleCouncelled() {
@@ -302,7 +321,10 @@ public class VisitDetail {
         String cwcFollowUpConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_FOLLOW_UP).getDisplayString();
 		String cwcBreastFeedingInfectedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_BREASTFEEDING_FOR_INFECTED).getDisplayString();
 		String cwcBreastFeedingExclussiveConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_BREASTFEEDING_EXCLUSSIVE).getDisplayString();
-
+		
+		String pncCervicalScreeningMethodConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_CERVICAL_SCREENING_METHOD).getDisplayString();
+		String pncCervicalScreeningResultConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_CERVICAL_SCREENING_RESULT).getDisplayString();
+		
 		String hivPriorStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PRIOR_STATUS).getDisplayString();
 		String hivPartnerStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_STATUS).getDisplayString();
 		String hivPartnerTestedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_TESTED).getDisplayString();
@@ -338,7 +360,10 @@ public class VisitDetail {
         Concept cwcFollowUpConcept = Context.getConceptService().getConcept(cwcFollowUpConceptName);
 		Concept cwcBreastFeedingInfectedConcept = Context.getConceptService().getConcept(cwcBreastFeedingInfectedConceptName);
 		Concept cwcBreastFeedingExclussiveConcept = Context.getConceptService().getConcept(cwcBreastFeedingExclussiveConceptName);
-
+		
+		Concept pncCervicalScreeningMethodConcept = Context.getConceptService().getConcept(pncCervicalScreeningMethodConceptName);
+		Concept pncCervicalScreeningResultConcept = Context.getConceptService().getConcept(pncCervicalScreeningResultConceptName);
+		
 		Concept hivPriorStatusConcept = Context.getConceptService().getConcept(hivPriorStatusConceptName);
 		Concept hivPartnerStatusConcept = Context.getConceptService().getConcept(hivPartnerStatusConceptName);
 		Concept hivPartnerTestedConcept = Context.getConceptService().getConcept(hivPartnerTestedConceptName);
@@ -379,6 +404,8 @@ public class VisitDetail {
 		StringBuffer hivPartnerTested = new StringBuffer();
 		StringBuffer hivCoupleCouncelled = new StringBuffer();
 		
+		StringBuffer pncCervicalScreeningMethod = new StringBuffer();
+		StringBuffer pncCervicalScreeningResult = new StringBuffer();
 		StringBuffer pncExcercise = new StringBuffer();
 		StringBuffer pncMultivitamin = new StringBuffer();
 		StringBuffer pncVitaminA = new StringBuffer();
@@ -450,6 +477,12 @@ public class VisitDetail {
 			}
 			if(obs.getConcept().equals(hivCoupleCouncelledConcept)){
 				hivCoupleCouncelled.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(pncCervicalScreeningMethodConcept)){
+				pncCervicalScreeningMethod.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(pncCervicalScreeningResultConcept)){
+				pncCervicalScreeningResult.append(obs.getValueCoded().getDisplayString()).append("<br/>");
 			}
 			if(obs.getConcept().equals(pncExcerciseConcept)){
 				pncExcercise.append(obs.getValueCoded().getDisplayString()).append("<br/>");
@@ -538,7 +571,13 @@ public class VisitDetail {
 		}
 		if (hivCoupleCouncelled.length()>0){
 			visitDetail.setHivCoupleCouncelled(hivCoupleCouncelled.toString());
-		}			
+		}
+		if (pncCervicalScreeningMethod.length()>0){
+			visitDetail.setPncCervicalScreeningMethod(pncCervicalScreeningMethod.toString());
+		}
+		if (pncCervicalScreeningResult.length()>0){
+			visitDetail.setPncCervicalScreeningResult(pncCervicalScreeningResult.toString());
+		}
 		if (pncExcercise.length()>0){
 			visitDetail.setPncExcercise(pncExcercise.toString());
 		}	
