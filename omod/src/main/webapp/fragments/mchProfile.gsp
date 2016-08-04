@@ -52,7 +52,7 @@
 						</small>
 						
 						<span>
-							{{=moment(profileDetail.value,"DD MMMM YYYY").format("DD/YY/YYYY")}}
+							{{=moment(profileDetail.value,"DD MMMM YYYY").format("DD/MM/YYYY")}}
 						</span>
 						
 					{{ } else { }}

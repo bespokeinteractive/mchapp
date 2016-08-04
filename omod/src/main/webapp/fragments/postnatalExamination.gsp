@@ -181,6 +181,11 @@
             selector: '#prescription-dialog',
             actions: {
                 confirm: function() {
+					if (!drugDialogVerified()){
+						jq().toastmessage('showErrorToast', 'Ensure fields marked in red have been properly filled before you continue')
+						return false;
+					}
+					
                     addDrug();
                     jq("#drugForm")[0].reset();
                     jq('select option[value!="0"]', '#drugForm').remove();
@@ -566,6 +571,27 @@
 				}
 			}
 		});
+		jq('.cervical-info input').change(function(){
+			jq('#cervical-info-set').val('SET');
+			var output = '';
+
+			if (!jq("input[name='concept.50c026c3-f2bc-44b9-a9dd-e972ffcbb774']:checked").val()) {
+			output += 'Screening Method: results not provided' +  '<br/>';
+			}
+			else {
+				output += 'Screening Method: ' + jq("input[name='concept.50c026c3-f2bc-44b9-a9dd-e972ffcbb774']:checked").data('value') + '<br/>';
+			}
+			
+			if (!jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").val()) {
+			output += 'Screening results: results not provided' +  '<br/>';
+			}
+			else {
+				output += 'Screening Results: ' + jq("input[name='concept.1406dbf3-05da-4264-9659-fb688cea5809']:checked").data('value') + '<br/>';
+			}
+			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+			
+			
+		});
 
 		jq('.misc-info input').change(function(){
 			jq('#misc-info-set').val('SET');
@@ -592,7 +618,7 @@
 				output += 'Vitamin A Suppliments: ' + jq("input[name='concept.c764e84f-cfb2-424a-acec-20e4fb8531b7']:checked").data('value') + '<br/>';
 			}
 
-			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
     });
 	
@@ -1071,6 +1097,44 @@
 				</div>
 			</div>
 		</fieldset>
+		<fieldset>
+				<legend>Cervical Screening</legend>
+					<label for="investigation" class="label title-label" style="width: auto;">Cervical Screening Information<span class="important"></span></label>
+										
+					<field>
+						<input type="hidden" id="cervical-info-set" class=""/>
+						<span id="cervical-info-lbl" class="field-error" style="display: none"></span>
+					</field>
+						<div class = "onerow floating controls cervical-info">
+							<div class="col4" style="width: 48%;">
+								<div>
+									<span>Screening Method:</span><br/>
+									<label>
+										<input id="screening-method-via" type="radio"  name="concept.50c026c3-f2bc-44b9-a9dd-e972ffcbb774" value="556f371e-d980-4adb-adfc-93dc31973b98" data-value="VIA">
+										V.I.A
+									</label><br/>
+								
+									<label>
+										<input id="screening-method-pap" type="radio" name="concept.50c026c3-f2bc-44b9-a9dd-e972ffcbb774" value="fc60e89d-68c8-4844-bd5a-efb43b203c18" data-value="PAP">
+										P.A.P
+									</label><br/>
+				
+								</div>
+			
+							<div>
+								<span>Screening Results:</span><br/>
+									<label>
+										<input id="screening-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0" data-value="Positive">
+										Positive
+									</label><br/>
+								
+									<label>
+										<input id="screening-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f" data-value="Negative">
+										Negative
+									</label><br/>
+							</div>
+						</div>
+		</fieldset>
 
 		<fieldset class="no-confirmation">
 			<legend>Prescription</legend>
@@ -1366,6 +1430,11 @@
 							</tr>
 
 							<tr>
+							<td><span class="status active"></span>Cervical Screening</td>
+							<td>N/A</td>
+							</tr>
+
+							<tr>
 								<td><span class="status active"></span>Suppliments</td>
 								<td>N/A</td>
 							</tr>
@@ -1388,6 +1457,7 @@
 							Exit Patient from Program
 						</label>
 					</div>
+
 				</div>
 			</div>
 		</div>
