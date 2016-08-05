@@ -27,6 +27,11 @@ public class VisitDetail {
 	private String cwcBreastFeedingInfected = "Not Specified";
 	private String cwcBreastFeedingExclussive = "Not Specified";
 	private String cwcBreastFeedingCouncelling = "Not Specified";
+	
+	private String cwcLLITN = "Not Specified";
+	private String cwcDewormed = "Not Specified";
+	private String cwcVitaminASupplementation = "Not Specified";
+	private String cwcSupplementedWithMNP = "Not Specified";
 
 	private String pncCervicalScreeningMethod = "Not Specified";
 	private String pncCervicalScreeningResult = "Not Specified";
@@ -217,6 +222,38 @@ public class VisitDetail {
 		this.cwcBreastFeedingInfected = cwcBreastFeedingInfected;
 	}
 
+	public String getCwcLLITN() {
+		return cwcLLITN;
+	}
+
+	public void setCwcLLTIN(String cwcLLITN) {
+		this.cwcLLITN = cwcLLITN;
+	}
+
+	public String getCwcDewormed() {
+		return cwcDewormed;
+	}
+
+	public void setCwcDewormed(String cwcDewormed) {
+		this.cwcDewormed = cwcDewormed;
+	}
+
+	public String getCwcVitaminASupplementation() {
+		return cwcVitaminASupplementation;
+	}
+
+	public void setCwcVitaminASupplementation(String cwcVitaminASupplementation) {
+		this.cwcVitaminASupplementation = cwcVitaminASupplementation;
+	}
+
+	public String getCwcSupplementedWithMNP() {
+		return cwcSupplementedWithMNP;
+	}
+
+	public void setCwcSupplementedWithMNP(String cwcSupplementedWithMNP) {
+		this.cwcSupplementedWithMNP = cwcSupplementedWithMNP;
+	}
+
 	public String getCwcFollowUp() {
 		return cwcFollowUp;
 	}
@@ -324,6 +361,11 @@ public class VisitDetail {
 		
 		String pncCervicalScreeningMethodConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_CERVICAL_SCREENING_METHOD).getDisplayString();
 		String pncCervicalScreeningResultConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.PNC_CERVICAL_SCREENING_RESULT).getDisplayString();
+
+		String cwcLLITNConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_LLITN).getDisplayString();
+		String cwcDewormedConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_DEWORMED).getDisplayString();
+		String cwcVitaminASupplementationConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_VITAMIN_A_SUPPLEMENTATION).getDisplayString();
+		String cwcSupplementedWithMNPConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.CWC_SUPPLEMENTED_WITH_MNP).getDisplayString();
 		
 		String hivPriorStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PRIOR_STATUS).getDisplayString();
 		String hivPartnerStatusConceptName =  Context.getConceptService().getConceptByUuid(MchMetadata.MchAppConstants.MCH_HIV_PARTNER_STATUS).getDisplayString();
@@ -364,6 +406,11 @@ public class VisitDetail {
 		Concept pncCervicalScreeningMethodConcept = Context.getConceptService().getConcept(pncCervicalScreeningMethodConceptName);
 		Concept pncCervicalScreeningResultConcept = Context.getConceptService().getConcept(pncCervicalScreeningResultConceptName);
 		
+		Concept cwcLLITNConcept = Context.getConceptService().getConcept(cwcLLITNConceptName);
+		Concept cwcDewormedConcept = Context.getConceptService().getConcept(cwcDewormedConceptName);
+		Concept cwcVitaminASupplementationConcept = Context.getConceptService().getConcept(cwcVitaminASupplementationConceptName);
+		Concept cwcSupplementedWithMNPConcept = Context.getConceptService().getConcept(cwcSupplementedWithMNPConceptName);
+
 		Concept hivPriorStatusConcept = Context.getConceptService().getConcept(hivPriorStatusConceptName);
 		Concept hivPartnerStatusConcept = Context.getConceptService().getConcept(hivPartnerStatusConceptName);
 		Concept hivPartnerTestedConcept = Context.getConceptService().getConcept(hivPartnerTestedConceptName);
@@ -398,6 +445,10 @@ public class VisitDetail {
         StringBuffer cwcFollowUp = new StringBuffer();
 		StringBuffer cwcBreastFeedingInfected = new StringBuffer();
 		StringBuffer cwcBreastFeedingExclussive = new StringBuffer();
+		StringBuffer cwcLLITN = new StringBuffer();
+		StringBuffer cwcDewormed = new StringBuffer();
+		StringBuffer cwcVitaminASupplementation = new StringBuffer();
+		StringBuffer cwcSupplementedWithMNP = new StringBuffer();
 
 		StringBuffer hivPriorStatus = new StringBuffer();
 		StringBuffer hivPartnerStatus = new StringBuffer();
@@ -465,6 +516,18 @@ public class VisitDetail {
 			}
 			if(obs.getConcept().equals(cwcBreastFeedingInfectedConcept)){
 				cwcBreastFeedingInfected.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(cwcLLITNConcept)){
+				cwcLLITN.append(Context.getConceptService().getConceptByUuid(obs.getValueText()).getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(cwcDewormedConcept)){
+				cwcDewormed.append(obs.getValueCoded().getDisplayString()).append("<br/>");
+			}
+			if(obs.getConcept().equals(cwcVitaminASupplementationConcept)){
+				cwcVitaminASupplementation.append(obs.getValueCoded().getDisplayString()).append("(6-59mnths)<br/>");
+			}
+			if(obs.getConcept().equals(cwcSupplementedWithMNPConcept)){
+				cwcSupplementedWithMNP.append(obs.getValueCoded().getDisplayString()).append("(6-23mnths)<br/>");
 			}
 			if(obs.getConcept().equals(hivPriorStatusConcept)){
 				hivPriorStatus.append(obs.getValueCoded().getDisplayString()).append("<br/>");
@@ -560,6 +623,19 @@ public class VisitDetail {
 		if (cwcBreastFeedingInfected.length()>0){
 			visitDetail.setCwcBreastFeedingInfected(cwcBreastFeedingInfected.toString());
 		}
+		if (cwcLLITN.length()>0){
+			visitDetail.setCwcLLTIN(cwcLLITN.toString());
+		}
+		if (cwcDewormed.length()>0){
+			visitDetail.setCwcDewormed(cwcDewormed.toString());
+		}
+		if (cwcVitaminASupplementation.length()>0){
+			visitDetail.setCwcVitaminASupplementation(cwcVitaminASupplementation.toString());
+		}
+		if (cwcSupplementedWithMNP.length()>0){
+			visitDetail.setCwcSupplementedWithMNP(cwcSupplementedWithMNP.toString());
+		}
+		
 		if (hivPriorStatus.length()>0){
 			visitDetail.setHivPriorStatus(hivPriorStatus.toString());
 		}

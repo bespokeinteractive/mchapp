@@ -580,6 +580,39 @@
 			
 			jq('#summaryTable tr:eq(5) td:eq(1)').html(output);
 		});
+
+         jq('.treatment-info input').change(function(){
+            jq('#treatment-info-set').val('SET');
+            var output = '';
+
+            if (!jq("input[name='concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").val()) {
+            output += 'RECEIVED LLITN: results not provided' +  '<br/>';
+            }
+            else {
+                output += 'RECEIVED LLITN: ' + jq("input[name='concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").data('value') + '<br/>';
+            }
+            
+            if (!jq("input[name='concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").val()) {
+            output += 'Dewormed: results not provided' +  '<br/>';
+            }
+            else {
+                output += 'Dewormed: ' + jq("input[name='concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']:checked").data('value') + '<br/>';
+            }
+            if (!jq("input[name='concept.c1346a48-9777-428f-a908-e8bff24e4e37']:checked").val()) {
+            output += 'Vitamin A Supplementation (6-59 months): results not provided' +  '<br/>';
+            }
+            else {
+                output += 'Vitamin A Supplementation (6-59 months): ' + jq("input[name='concept.c1346a48-9777-428f-a908-e8bff24e4e37']:checked").data('value') + '<br/>';
+            }
+
+            if (!jq("input[name='concept.534705aa-8857-4e70-9b08-b363fb3ce677']:checked").val()) {
+            output += 'Supplemented with MNP (6-23 months): results not provided' +  '<br/>';
+            }
+            else {
+                output += 'Supplemented with MNP (6-23 months): ' + jq("input[name='concept.534705aa-8857-4e70-9b08-b363fb3ce677']:checked").data('value') + '<br/>';
+            }   
+                jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+        });
 		
 		jq('#cwcFollowUp input').change(function(){
 			jq('#referral-set').val('SET');
@@ -605,7 +638,7 @@
 				output = 'N/A';
 			}
 			
-			jq('#summaryTable tr:eq(6) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 
         jq('#availableReferral, #next-visit-date-display').change(function(){
@@ -630,7 +663,7 @@
 				output = 'N/A';			
 			}
 			
-			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
+			jq('#summaryTable tr:eq(8) td:eq(1)').html(output);
 		});
 
         jq('#referralReason').change(function () {
@@ -1174,8 +1207,13 @@
         <fieldset class="no-confirmation">
             <legend>Treatment</legend>
             <label class="label title-label" style="width: auto;">Treatment</label>
+            
+            <field>
+                <input type="hidden" id="treatment-info-set" class=""/>
+                <span id="tretament-info-lbl" class="field-error" style="display: none"></span>
+            </field>
 
-            <div class="onerow floating-controls feeding-info">
+            <div class="onerow floating-controls treatment-info">
                 <div class="col4" style="width: 50%; margin: 0 1% 0 0">
                     <div class="testbox">
                         <div>Received LLITN?</div>
@@ -1194,7 +1232,7 @@
                         </label>
                     </div>
                     <div class="testbox">
-                        <div>Deworming</div>
+                        <div>Dewormed</div>
                         <label>
                             <input  type="radio" data-value="Yes"
                                    name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -1546,6 +1584,11 @@
                             <td>N/A</td>
                         </tr>
 						
+						<tr>
+                            <td><span class="status active"></span>Treatment</td>
+                            <td>N/A</td>
+                        </tr>
+                        
 						<tr>
                             <td><span class="status active"></span>Follow Up</td>
                             <td>N/A</td>
