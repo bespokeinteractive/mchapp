@@ -331,6 +331,16 @@
 				<span>{{=hivCoupleCouncelled}}</span>
 				<div class="clear"></div>
 			</div>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Cervical Screening Method:</label>
+				<span>{{=pncCervicalScreeningMethod}}</span>
+				<div class="clear"></div>
+			</div>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Cervical Screening Result:</label>
+				<span>{{=pncCervicalScreeningResult}}</span>
+				<div class="clear"></div>
+			</div>
 			
 			<div>
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Exercise Given:</label>
