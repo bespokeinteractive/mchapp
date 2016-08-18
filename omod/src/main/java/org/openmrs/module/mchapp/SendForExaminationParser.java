@@ -23,7 +23,7 @@ public class SendForExaminationParser {
         OpdPatientQueue opdPatient = new OpdPatientQueue();
         if (StringUtils.equalsIgnoreCase(referParamKey, "send_for_examination") &&
                 referParamValue.length > 0 &&
-                StringUtils.equalsIgnoreCase(referParamValue[0], "yes")) {
+                StringUtils.equalsIgnoreCase(referParamValue[0], "examination")) {
             List<PersonAttribute> pas = Context.getService(HospitalCoreService.class).getPersonAttributes(patient.getPatientId());
             String selectedCategory = "";
             for (PersonAttribute pa : pas) {

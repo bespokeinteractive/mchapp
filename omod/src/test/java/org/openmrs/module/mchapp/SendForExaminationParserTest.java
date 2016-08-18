@@ -9,10 +9,10 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class SendForExaminationParserTest extends BaseModuleContextSensitiveTest {
 
-	@Test public void parse_shouldSendPatientToExamRoomWhenReferOptionIsYes() throws Exception {
+	@Test public void parse_shouldSendPatientToExamRoomWhenReferOptionIsExamination() throws Exception {
 		executeDataSet("mch-concepts.xml");
 		String referParamKey = "send_for_examination";
-		String[] referParamValue = new String[] { "yes" };
+		String[] referParamValue = new String[] { "examination" };
 		Patient patient = Context.getPatientService().getPatient(2);
 		OpdPatientQueue opdPatient =  null;
 		String visitStatus = "REVISIT";
