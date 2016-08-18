@@ -1459,7 +1459,7 @@
 				<div class="col4 last" style="width: 49%;">
 					<div class="testbox" style="height: 170px">
 						<div style="margin-bottom: 5px;">Next Visit</div>
-						${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+						${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date', useTime: false,  defaultToday: true,  startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 					</div>
 				</div>
             </div>
