@@ -1082,6 +1082,10 @@
 		margin-top: -5px;
 		
 	}
+    .important {
+        color: #f00 !important;
+    }   
+
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -2078,7 +2082,7 @@
                     <input class="drug-name" id="drugName" type="text">
                 </li>
                 <li>
-                    <label>Dosage</label>
+                    <label>Dosage<span class="important">*<span></label>
                     <input type="text" id="drugDosage" style="width: 60px !important;">
                     <select id="drugUnitsSelect" style="width: 174px !important;">
                         <option value="0">Select Unit</option>
@@ -2099,7 +2103,7 @@
                 </li>
 
                 <li>
-                    <label>Number of Days</label>
+                    <label>Number of Days<span class="important">*<span></label>
                     <input id="numberOfDays" type="text">
                 </li>
                 <li>
