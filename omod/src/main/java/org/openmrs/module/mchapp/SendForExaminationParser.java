@@ -16,7 +16,7 @@ import java.util.List;
 public class SendForExaminationParser {
     private static final String TRIAGE_ROOM_CONCEPT_UUID = "7f5cd7ad-ff69-4d60-b70c-799a98b046ef";
     private static final String EXAM_ROOM_CONCEPT_UUID = "11303942-75cd-442a-aead-ae1d2ea9b3eb";
-    private static final String IMMUNIZATION_ROOM_CONCEPT_UUID = "11303942-75cd-442a-aead-ae1d2ea9b3eb";
+    private static final String IMMUNIZATION_ROOM_CONCEPT_UUID = "4e87c99b-8451-4789-91d8-2aa33fe1e5f6";
 
     public static OpdPatientQueue parse(String referParamKey, String[] referParamValue, Patient patient, String visitStatus) {
         Concept mchTriageConcept = Context.getConceptService().getConceptByUuid(TRIAGE_ROOM_CONCEPT_UUID);
@@ -25,7 +25,6 @@ public class SendForExaminationParser {
         OpdPatientQueue opdPatient = new OpdPatientQueue();
         if (StringUtils.equalsIgnoreCase(referParamKey, "send_for_examination") &&
                 referParamValue.length > 0) {
-
             List<PersonAttribute> pas = Context.getService(HospitalCoreService.class).getPersonAttributes(patient.getPatientId());
             String selectedCategory = "";
             for (PersonAttribute pa : pas) {
