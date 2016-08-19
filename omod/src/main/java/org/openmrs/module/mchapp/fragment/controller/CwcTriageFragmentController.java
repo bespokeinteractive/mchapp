@@ -139,15 +139,10 @@ public class CwcTriageFragmentController {
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations,
                 Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM,
                 MchMetadata._MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
-        String roomToVisit;
-        if (request.getParameter("send_for_examination") != null && request.getParameter("send_for_examination").equals("examination")) {
+        if (StringUtils.isNotEmpty(request.getParameter("send_for_examination"))) {
             String visitStatus = queue.getVisitStatus();
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
                     patient, visitStatus);
-            roomToVisit="examination";
-        }else{
-            //Sending to the Immunization Room
-            roomToVisit="immunization";
         }
 
         if (!isEdit) {
@@ -155,7 +150,7 @@ public class CwcTriageFragmentController {
         }
 
         return SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",
-                isEdit,"roomToVisit",roomToVisit);
+                isEdit);
     }
 
     public SimpleObject updatePatientProgram(HttpServletRequest request) {

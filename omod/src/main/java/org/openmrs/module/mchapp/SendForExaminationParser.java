@@ -16,14 +16,16 @@ import java.util.List;
 public class SendForExaminationParser {
     private static final String TRIAGE_ROOM_CONCEPT_UUID = "7f5cd7ad-ff69-4d60-b70c-799a98b046ef";
     private static final String EXAM_ROOM_CONCEPT_UUID = "11303942-75cd-442a-aead-ae1d2ea9b3eb";
+    private static final String IMMUNIZATION_ROOM_CONCEPT_UUID = "11303942-75cd-442a-aead-ae1d2ea9b3eb";
 
     public static OpdPatientQueue parse(String referParamKey, String[] referParamValue, Patient patient, String visitStatus) {
         Concept mchTriageConcept = Context.getConceptService().getConceptByUuid(TRIAGE_ROOM_CONCEPT_UUID);
         Concept mchExamRoomConcept = Context.getConceptService().getConceptByUuid(EXAM_ROOM_CONCEPT_UUID);
+        Concept mchImmunizationRoomConcept = Context.getConceptService().getConceptByUuid(IMMUNIZATION_ROOM_CONCEPT_UUID);
         OpdPatientQueue opdPatient = new OpdPatientQueue();
         if (StringUtils.equalsIgnoreCase(referParamKey, "send_for_examination") &&
-                referParamValue.length > 0 &&
-                StringUtils.equalsIgnoreCase(referParamValue[0], "examination")) {
+                referParamValue.length > 0) {
+
             List<PersonAttribute> pas = Context.getService(HospitalCoreService.class).getPersonAttributes(patient.getPatientId());
             String selectedCategory = "";
             for (PersonAttribute pa : pas) {
@@ -37,8 +39,13 @@ public class SendForExaminationParser {
             queue.setCreatedOn(new Date());
             queue.setBirthDate(patient.getBirthdate());
             queue.setPatientIdentifier(patient.getPatientIdentifier().getIdentifier());
-            queue.setOpdConcept(mchExamRoomConcept);
-            queue.setOpdConceptName(mchExamRoomConcept.getName().getName());
+            if (StringUtils.equalsIgnoreCase(referParamValue[0], "examination")) {
+                queue.setOpdConcept(mchExamRoomConcept);
+                queue.setOpdConceptName(mchExamRoomConcept.getName().getName());
+            } else if (StringUtils.equalsIgnoreCase(referParamValue[0], "immunization")) {
+                queue.setOpdConcept(mchImmunizationRoomConcept);
+                queue.setOpdConceptName(mchImmunizationRoomConcept.getName().getName());
+            }
             if (patient.getMiddleName() != null) {
                 queue.setPatientName(patient.getGivenName() + " "
                         + patient.getFamilyName() + " "

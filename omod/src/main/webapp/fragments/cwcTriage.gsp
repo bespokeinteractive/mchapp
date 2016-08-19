@@ -61,8 +61,6 @@
                         if (data.status === "success") {
                             if (data.isEdit) {
                                 window.location = "${ui.pageLink("mchapp", "main",[patientId: patientId, queueId: queueId])}";
-                            } else if(data.roomToVisit === "immunization") {
-                                window.location = "${ui.pageLink("mchapp", "mchCwcImmunization",[patientId: patient])}";
                             }else {
                                 window.location = "${ui.pageLink("patientqueueapp", "mchTriageQueue")}";
                             }
