@@ -67,7 +67,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>patientdashboardapp-api</artifactId>
-				<version>1.1</version>
+				<version>1.2-SNAPSHOT</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -84,10 +84,8 @@
 			</dependency>
 						
 			<!-- End OpenMRS modules -->
-			
 
 			<!-- Begin OpenMRS core -->
-			
 			<dependency>
 				<groupId>org.openmrs.api</groupId>
 				<artifactId>openmrs-api</artifactId>

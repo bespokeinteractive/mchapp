@@ -1,29 +1,9 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientProgram;
-import org.openmrs.PatientState;
-import org.openmrs.ProgramWorkflow;
-import org.openmrs.ProgramWorkflowState;
+import org.openmrs.*;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
@@ -42,6 +22,12 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by USER on 5/4/2016.
@@ -153,7 +139,7 @@ public class CwcTriageFragmentController {
         Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations,
                 Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.CWC_PROGRAM,
                 MchMetadata._MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
-        if (request.getParameter("send_for_examination") != null) {
+        if (StringUtils.isNotEmpty(request.getParameter("send_for_examination"))) {
             String visitStatus = queue.getVisitStatus();
             SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
                     patient, visitStatus);
