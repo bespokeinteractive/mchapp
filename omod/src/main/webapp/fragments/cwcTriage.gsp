@@ -172,11 +172,11 @@
                     <div>
                         <label></label>
                         <label style="padding-left:0px; width: auto;">
-                            <input type="radio" name="send_for_examination" value="examination">
+                            <input type="radio" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb">
                             Send to Examination Room
                         </label>
                         <label style="padding-left:0px; width: auto;">
-                            <input type="radio" name="send_for_examination" value="immunization">
+                            <input type="radio" name="send_for_examination" value="4e87c99b-8451-4789-91d8-2aa33fe1e5f6">
                             Send to Immunization Room
                         </label>
                     </div>

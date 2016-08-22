@@ -19,6 +19,7 @@ public class SendForExaminationParser {
     private static final String IMMUNIZATION_ROOM_CONCEPT_UUID = "4e87c99b-8451-4789-91d8-2aa33fe1e5f6";
 
     public static OpdPatientQueue parse(String referParamKey, String[] referParamValue, Patient patient, String visitStatus) {
+
         Concept mchTriageConcept = Context.getConceptService().getConceptByUuid(TRIAGE_ROOM_CONCEPT_UUID);
         Concept mchExamRoomConcept = Context.getConceptService().getConceptByUuid(EXAM_ROOM_CONCEPT_UUID);
         Concept mchImmunizationRoomConcept = Context.getConceptService().getConceptByUuid(IMMUNIZATION_ROOM_CONCEPT_UUID);
@@ -38,10 +39,10 @@ public class SendForExaminationParser {
             queue.setCreatedOn(new Date());
             queue.setBirthDate(patient.getBirthdate());
             queue.setPatientIdentifier(patient.getPatientIdentifier().getIdentifier());
-            if (StringUtils.equalsIgnoreCase(referParamValue[0], "examination")) {
+            if (StringUtils.equalsIgnoreCase(referParamValue[0], EXAM_ROOM_CONCEPT_UUID)) {
                 queue.setOpdConcept(mchExamRoomConcept);
                 queue.setOpdConceptName(mchExamRoomConcept.getName().getName());
-            } else if (StringUtils.equalsIgnoreCase(referParamValue[0], "immunization")) {
+            } else if (StringUtils.equalsIgnoreCase(referParamValue[0], IMMUNIZATION_ROOM_CONCEPT_UUID)) {
                 queue.setOpdConcept(mchImmunizationRoomConcept);
                 queue.setOpdConceptName(mchImmunizationRoomConcept.getName().getName());
             }

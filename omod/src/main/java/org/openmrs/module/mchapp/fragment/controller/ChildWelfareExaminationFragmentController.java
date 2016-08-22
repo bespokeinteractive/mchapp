@@ -34,7 +34,8 @@ public class ChildWelfareExaminationFragmentController {
         config.require("patientId");
         config.require("queueId");
         String queueId = config.get("queueId").toString();
-        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(queueId));
+        String patientID = config.get("patientId").toString();
+        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(patientID));
         model.addAttribute("patient", patient);
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.CWC_PROGRAM));
         model.addAttribute("patientHistoricalProfile", PatientProfileGenerator.generateHistoricalPatientProfile(patient, MchMetadata._MchProgram.CWC_PROGRAM));
@@ -52,6 +53,8 @@ public class ChildWelfareExaminationFragmentController {
             @RequestParam("queueId") Integer queueId,
             UiSessionContext session,
             HttpServletRequest request) {
+
+
         OpdPatientQueue patientQueue = Context.getService(
                 PatientQueueService.class).getOpdPatientQueueById(queueId);
         String location = "CWC Exam Room";
