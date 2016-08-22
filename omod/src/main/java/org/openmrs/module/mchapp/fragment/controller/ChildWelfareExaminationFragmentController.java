@@ -33,15 +33,17 @@ public class ChildWelfareExaminationFragmentController {
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         config.require("patientId");
         config.require("queueId");
-        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
+        String queueId = config.get("queueId").toString();
+        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(queueId));
         model.addAttribute("patient", patient);
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.CWC_PROGRAM));
         model.addAttribute("patientHistoricalProfile", PatientProfileGenerator.generateHistoricalPatientProfile(patient, MchMetadata._MchProgram.CWC_PROGRAM));
-
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
-        model.addAttribute("queueId", config.get("queueId"));
+
+
+        model.addAttribute("queueId", queueId);
     }
 
     @SuppressWarnings("unchecked")

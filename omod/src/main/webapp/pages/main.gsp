@@ -576,7 +576,13 @@ ${ui.includeFragment("mchapp","mchProfile")}
 
 <div class="mch-tabs" style="margin-top:5px!important;">
 	<ul>
-		<li id="cn"><a href="#clinical-notes">Clinical Notes</a></li>
+		<li id="cn"><a href="#clinical-notes">
+			<% if (opdConcept.equalsIgnoreCase("MCH CLINIC")) { %>
+				<span class="title">Clinical Notes</span>
+			<% } else if (opdConcept.equalsIgnoreCase("MCH IMMUNIZATION")){ %>
+				<span class="title">Immunizations</span>
+			<% } %>
+		</a></li>
 		<li id="ti"><a href="#triage-info">Triage Information</a></li>
 		<li id="cs"><a href="#clinical-summary">Clinical History</a></li>
 		<li id="lr"><a href="#investigations">Lab Reports</a></li>
