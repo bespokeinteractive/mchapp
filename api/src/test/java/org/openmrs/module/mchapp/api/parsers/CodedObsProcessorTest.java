@@ -1,4 +1,4 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mchapp.api.parsers.CodedObsProcessor;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class CodedObsProcessorTest extends BaseModuleContextSensitiveTest{

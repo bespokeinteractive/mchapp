@@ -1,10 +1,16 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mchapp.api.parsers.CodedObsProcessor;
+import org.openmrs.module.mchapp.api.parsers.DateTimeObsProcessor;
+import org.openmrs.module.mchapp.api.parsers.NumericObsProcessor;
+import org.openmrs.module.mchapp.api.parsers.ObsFactory;
+import org.openmrs.module.mchapp.api.parsers.ObsProcessor;
+import org.openmrs.module.mchapp.api.parsers.TextObsProcessor;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class ObsFactoryTest extends BaseModuleContextSensitiveTest {

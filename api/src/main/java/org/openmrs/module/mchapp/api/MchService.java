@@ -8,8 +8,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
-import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
-import org.openmrs.module.hospitalcore.model.OpdTestOrder;
+import org.openmrs.module.mchapp.api.model.ClinicalForm;
 import org.openmrs.ui.framework.SimpleObject;
 
 import java.text.ParseException;
@@ -31,10 +30,10 @@ public interface MchService {
 
 	boolean enrolledInCWC(Patient patient);
 	SimpleObject enrollInCWC(Patient patient, Date dateEnrolled,Map<String,String> cwcInitialStates);
-	Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-							   List<OpdTestOrder> testOrders, String program, String encounterType,Location location, Integer visitTypeId);
-	Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-							   List<OpdTestOrder> testOrders, String program, String encounterType, Location location);
+	Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
+							Location location, Integer visitTypeId);
+	Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
+							Location location);
 	
 	List<Obs> getPatientProfile(Patient patient, String program);
 

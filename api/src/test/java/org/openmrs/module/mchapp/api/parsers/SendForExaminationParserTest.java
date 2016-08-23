@@ -1,10 +1,11 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.mchapp.api.parsers.SendForExaminationParser;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class SendForExaminationParserTest extends BaseModuleContextSensitiveTest {

@@ -1,4 +1,4 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mchapp.api.parsers.ObsParser;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class ObsParserTest extends BaseModuleContextSensitiveTest {

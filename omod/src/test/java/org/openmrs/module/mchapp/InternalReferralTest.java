@@ -12,8 +12,9 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 /**
  * Created by qqnarf on 5/26/16.
  */
+@Ignore
 public class InternalReferralTest extends BaseModuleContextSensitiveTest {
-    @Ignore
+
     @Test
     public void sendToRefferalRoom_shouldFetchPatientFromQueueAndAddToAnotherQueue() throws Exception {
         executeDataSet("mch-concepts.xml");

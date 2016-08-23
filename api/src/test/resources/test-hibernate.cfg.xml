@@ -14,5 +14,10 @@
         <mapping resource="OpdTestOrder.hbm.xml" />
         <mapping resource="Lab.hbm.xml" />
         <mapping resource="LabTest.hbm.xml" />
+        <mapping resource="OpdPatientQueue.hbm.xml"/>
+        <mapping resource="OpdPatientQueueLog.hbm.xml"/>
+        <mapping resource="TriagePatientData.hbm.xml"/>
+        <mapping resource="TriagePatientQueue.hbm.xml"/>
+        <mapping resource="TriagePatientQueueLog.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

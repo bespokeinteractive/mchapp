@@ -1,4 +1,4 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.CoreMatchers.is;
@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.model.OpdDrugOrder;
+import org.openmrs.module.mchapp.api.parsers.DrugOrdersParser;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class DrugOrderParserTest extends BaseModuleContextSensitiveTest {
