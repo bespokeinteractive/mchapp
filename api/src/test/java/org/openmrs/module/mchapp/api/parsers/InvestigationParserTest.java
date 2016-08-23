@@ -1,4 +1,4 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +13,7 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
+import org.openmrs.module.mchapp.api.parsers.InvestigationParser;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class InvestigationParserTest extends BaseModuleContextSensitiveTest {

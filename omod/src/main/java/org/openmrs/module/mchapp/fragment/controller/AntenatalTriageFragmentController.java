@@ -1,10 +1,8 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,22 +16,24 @@ import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.mchapp.MchMetadata;
-import org.openmrs.module.mchapp.ObsParser;
 import org.openmrs.module.mchapp.QueueLogs;
-import org.openmrs.module.mchapp.SendForExaminationParser;
 import org.openmrs.module.mchapp.api.MchService;
+import org.openmrs.module.mchapp.api.model.ClinicalForm;
+import org.openmrs.module.mchapp.api.parsers.SendForExaminationParser;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Created by qqnarf on 4/27/16.
  */
 public class AntenatalTriageFragmentController {
-
+    protected Logger log = LoggerFactory.getLogger(AntenatalTriageFragmentController.class);
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui,
             @RequestParam(value = "encounterId", required = false) String encounterId) {
         config.require("patientId");
@@ -80,7 +80,6 @@ public class AntenatalTriageFragmentController {
 
     }
 
-    @SuppressWarnings("unchecked")
     public SimpleObject saveAntenatalTriageInformation(@RequestParam("patientId") Patient patient,
             @RequestParam("queueId") Integer queueId, @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
             @RequestParam(value = "isEdit", required = false) Boolean isEdit, UiSessionContext session,
@@ -88,40 +87,40 @@ public class AntenatalTriageFragmentController {
         SimpleObject saveStatus = null;
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
-        List<Obs> observations = new ArrayList<Obs>();
-        ObsParser obsParser = new ObsParser();
-        for (Map.Entry<String, String[]> postedParams : ((Map<String, String[]>) request.getParameterMap())
-                .entrySet()) {
-            try {
-                observations = obsParser.parse(observations, patient, postedParams.getKey(), postedParams.getValue());
-            } catch (Exception e) {
-                saveStatus = SimpleObject.create("status", "error", "message", e.getMessage());
+        try {
+            ClinicalForm form = ClinicalForm.generateForm(request, patient, null);
+            List<Object> previousVisitsByPatient = Context.getService(MchService.class).findVisitsByPatient(patient, true,
+                    true, patientEnrollmentDate);
+            int visitTypeId;
+            if (previousVisitsByPatient.size() == 0) {
+                visitTypeId = MchMetadata._MchProgram.INITIAL_MCH_CLINIC_VISIT;
+            } else {
+                visitTypeId = MchMetadata._MchProgram.RETURN_ANC_CLINIC_VISIT;
             }
-        }
-        List<Object> previousVisitsByPatient = Context.getService(MchService.class).findVisitsByPatient(patient, true,
-                true, patientEnrollmentDate);
-        int visitTypeId;
-        if (previousVisitsByPatient.size() == 0) {
-            visitTypeId = MchMetadata._MchProgram.INITIAL_MCH_CLINIC_VISIT;
-        } else {
-            visitTypeId = MchMetadata._MchProgram.RETURN_ANC_CLINIC_VISIT;
-        }
-        Encounter encounter = Context.getService(MchService.class).saveMchEncounter(patient, observations,
-                Collections.EMPTY_LIST, Collections.EMPTY_LIST, MchMetadata._MchProgram.ANC_PROGRAM,
+            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form, MchMetadata._MchProgram.ANC_PROGRAM,
                 MchMetadata._MchEncounterType.ANC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
 
-        if (request.getParameter("send_for_examination") != null) {
-            String visitStatus = queue.getVisitStatus();
-            SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
+            if (request.getParameter("send_for_examination") != null) {
+                String visitStatus = queue.getVisitStatus();
+                SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
                     patient, visitStatus);
-        }
+            }
 
-        if (!isEdit) {
-            QueueLogs.logTriagePatient(queue, encounter);
-        }
-        saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",
+            if (!isEdit) {
+                QueueLogs.logTriagePatient(queue, encounter);
+            }
+            saveStatus = SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",
                 isEdit);
-        return saveStatus;
+            return saveStatus;
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
+            return SimpleObject.create("status", "error", "message",
+                e.getMessage());
+        } catch (ParseException e) {
+            log.error(e.getMessage());
+            return SimpleObject.create("status", "error", "message",
+                e.getMessage());
+        }
     }
 
 }

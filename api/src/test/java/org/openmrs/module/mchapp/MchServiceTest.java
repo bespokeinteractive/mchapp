@@ -13,6 +13,7 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
@@ -30,6 +31,7 @@ import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.MchMetadata._MchProgram;
 import org.openmrs.module.mchapp.api.MchService;
+import org.openmrs.module.mchapp.api.model.ClinicalForm;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.ui.framework.SimpleObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -273,13 +275,16 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         Obs ancObs = generateObs(ultrasoundDone, yes);
         OpdDrugOrder drugOrder = generateDrugOrder();
         OpdTestOrder testOrder = generateTestOrder(patient);
+        ClinicalForm form = Mockito.mock(ClinicalForm.class);
+        Mockito.when(form.getObservations()).thenReturn(Arrays.asList(ancObs));
+        Mockito.when(form.getDrugOrders()).thenReturn(Arrays.asList(drugOrder));
+        Mockito.when(form.getTestOrders()).thenReturn(Arrays.asList(testOrder));
+        Mockito.when(form.getPatient()).thenReturn(patient);
         Location location = Context.getLocationService().getLocation(1);
 
         Assert.assertNull(drugOrder.getOpdDrugOrderId());
         Encounter encounter = Context.getService(MchService.class)
-                .saveMchEncounter(patient, Arrays.asList(ancObs), Arrays.asList(drugOrder), 
-                    Arrays.asList(testOrder), MchMetadata._MchProgram.ANC_PROGRAM,
-                    MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, location);
+                .saveMchEncounter(form, MchMetadata._MchProgram.ANC_PROGRAM, MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, location);
 
         Assert.assertNotNull(encounter.getId());
         Assert.assertThat(encounter.getLocation(), equalTo(location));
@@ -330,11 +335,6 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
         drugOrder.setReferralWardName("Ward A");
 		return drugOrder;
 	}
-
-    @Test
-    public void saveMchEncounter_shouldSavePNCEncounter() {
-
-    }
 
     @Test
     public void getPatientProfile_shouldGetProfileForCurrentProgram() {

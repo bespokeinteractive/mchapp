@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <concept concept_id="9960" retired="false" datatype_id="4" class_id="20" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="17daa17b-47ae-4a93-8e89-8d7b1eae41b6"/>
+  <concept concept_id="9961" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="62b81b50-4f1a-4d4a-ac05-e14ecaee2909"/>
+  <concept concept_id="8989" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="7f5cd7ad-ff69-4d60-b70c-799a98b046ef"/>
+  <concept concept_id="8990" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="11303942-75cd-442a-aead-ae1d2ea9b3eb"/>
+  <concept_class concept_class_id="20" name="Frequency" description="Drug frequency" creator="1" date_created="2008-08-15 13:56:55.0" retired="false" uuid="0fd33d76-8b4b-445f-899e-161c5e85d36c"/><!-- B/S For Malaria -->
+  <!-- B/S for Malaria -->
+  <concept concept_id="9996" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="17a83f95-49d9-473c-9aeb-c20c874fa5a1"/>
+  <concept concept_id="9997" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="53a5e2de-b5c9-4c01-92fa-f3f8ad838e56"/>
+  <concept concept_id="9999" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2008-08-15 15:27:51.0" version="" uuid="122b36a4-9c07-4dfa-81ae-e6a4fe823077"/>
+  <concept_name concept_id="9950" name="AMOX" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="4007" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="5951924c-23fc-43df-bf68-2f090c37984b"/>
+  <concept_name concept_id="8989" name="MCH Triage" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="8989" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="80a0afa7-7887-4e93-81d7-f8a32d16e3e5"/>
+  <concept_name concept_id="8990" name="MCH Exam 1" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="8990" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="306236eb-a6ab-4c0d-a2b9-c98054ae76ab"/>
+  <concept_name concept_id="9999" name="Investigations" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="4004" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="bea3b7c3-cf29-431e-b98d-69e00d4e13c0"/>
+
+  <inventory_drug_formulation id="1" name="TAB" dozage="250" created_on="2014-07-14 12:23:19" created_by="Super" />
+  <inventory_drug id="1" name="AMOX" attribute="2" created_on="2014-07-14 12:55:15" created_by="Super" />
+
+  <triage_patient_queue id="14" user="1" patient_id="2" triage_concept_id="4000" created_on="2015-12-09 18:06:12" triage_concept_name="CASUALTY TRIAGE" patient_name="Test" sex="M" patient_identifier="MAKL515125347472831" birth_date="1992-12-05 00:00:00"/>
+  <opd_patient_queue id="14" user="1" patient_id="2" opd_concept_id="4000" created_on="2015-12-09 18:06:12" opd_concept_name="CASUALTY TRIAGE" patient_name="Test" sex="M" patient_identifier="MAKL515125347472831" birth_date="1992-12-05 00:00:00"/>
+  <billing_billable_service service_id="3" concept_id="9996" name="Maralia Tests" short_name="" price="0" disable="false" category="9996" />
+  <billing_billable_service service_id="4" concept_id="9997" name="Other Tests" short_name="" price="0" disable="false" category="9999" />
+</dataset>
+
+
