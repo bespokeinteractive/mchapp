@@ -1,4 +1,4 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import java.util.Date;
 
@@ -12,6 +12,7 @@ import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.hospitalcore.model.TriagePatientQueueLog;
+import org.openmrs.module.mchapp.api.parsers.QueueLogs;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 public class QueueLogsTest extends BaseModuleContextSensitiveTest {

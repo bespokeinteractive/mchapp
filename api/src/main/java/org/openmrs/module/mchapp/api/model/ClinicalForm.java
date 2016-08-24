@@ -52,7 +52,7 @@ public class ClinicalForm {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static ClinicalForm generateForm(HttpServletRequest request, Patient patient, String location) throws NullPointerException, ParseException {
+	public static ClinicalForm generateForm(HttpServletRequest request, Patient patient, String location) throws ParseException {
 		ClinicalForm form = new ClinicalForm();
 		form.patient = patient;
 		ObsParser obsParser = new ObsParser();
