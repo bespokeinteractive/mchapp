@@ -147,9 +147,9 @@ public class MchServiceImpl implements MchService {
     }
 
     @Override
-    public Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
+    public Encounter saveMchEncounter(ClinicalForm form, String encounterType,
                                       Location location, Integer visitTypeId) {
-        Encounter mchEncounter = saveMchEncounter(form, program,
+        Encounter mchEncounter = saveMchEncounter(form,
                 encounterType, location);
         Visit visit = new Visit();
         visit.setLocation(location);
@@ -164,8 +164,11 @@ public class MchServiceImpl implements MchService {
 
 
     @Override
-    public Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
+    public Encounter saveMchEncounter(ClinicalForm form, String encounterType,
             Location location) {
+        if (form == null) {
+            throw new IllegalArgumentException("form argument cannot be null");
+        }
         Encounter mchEncounter = new Encounter();
         mchEncounter.setPatient(form.getPatient());
         mchEncounter.setLocation(location);

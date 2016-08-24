@@ -136,7 +136,7 @@ public class CwcTriageFragmentController {
             } else {
                 visitTypeId = MchMetadata._MchProgram.RETURN_CWC_CLINIC_VISIT;
             }
-            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form, MchMetadata._MchProgram.CWC_PROGRAM,
+            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
                 MchMetadata._MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
             if (request.getParameter("send_for_examination") != null) {
                 String visitStatus = queue.getVisitStatus();

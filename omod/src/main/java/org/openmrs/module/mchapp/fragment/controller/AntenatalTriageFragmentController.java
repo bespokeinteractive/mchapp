@@ -97,7 +97,7 @@ public class AntenatalTriageFragmentController {
             } else {
                 visitTypeId = MchMetadata._MchProgram.RETURN_ANC_CLINIC_VISIT;
             }
-            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form, MchMetadata._MchProgram.ANC_PROGRAM,
+            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
                 MchMetadata._MchEncounterType.ANC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
 
             if (request.getParameter("send_for_examination") != null) {

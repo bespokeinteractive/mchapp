@@ -64,7 +64,7 @@ public class ChildWelfareExaminationFragmentController {
             ClinicalForm form = ClinicalForm.generateForm(request, patient, location);
             InternalReferral internalReferral = new InternalReferral();
             Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
-                MchMetadata._MchProgram.CWC_PROGRAM, MchMetadata._MchEncounterType.CWC_ENCOUNTER_TYPE, session.getSessionLocation());
+                 MchMetadata._MchEncounterType.CWC_ENCOUNTER_TYPE, session.getSessionLocation());
             String refferedRoomUuid = request.getParameter("internalRefferal");
             if(refferedRoomUuid != "" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
                 internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);

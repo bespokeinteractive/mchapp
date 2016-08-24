@@ -102,7 +102,7 @@ public class PostnatalTriageFragmentController {
             } else {
                 visitTypeId = MchMetadata._MchProgram.RETURN_PNC_CLINIC_VISIT;
             }
-            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form, MchMetadata._MchProgram.PNC_PROGRAM,
+            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
                 MchMetadata._MchEncounterType.PNC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
             if (request.getParameter("send_for_examination") != null) {
                 String visitStatus = queue.getVisitStatus();

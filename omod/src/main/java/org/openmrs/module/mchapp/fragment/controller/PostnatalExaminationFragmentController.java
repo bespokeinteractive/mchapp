@@ -65,7 +65,7 @@ public class PostnatalExaminationFragmentController {
         }
         try {
             ClinicalForm form = ClinicalForm.generateForm(request, patient, location);
-            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form, MchMetadata._MchProgram.PNC_PROGRAM, MchMetadata._MchEncounterType.PNC_ENCOUNTER_TYPE, session.getSessionLocation());
+            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form, MchMetadata._MchEncounterType.PNC_ENCOUNTER_TYPE, session.getSessionLocation());
             QueueLogs.logOpdPatient(patientQueue, encounter);
             InternalReferral internalReferral = new InternalReferral();
             String refferedRoomUuid = request.getParameter("internalRefferal");
