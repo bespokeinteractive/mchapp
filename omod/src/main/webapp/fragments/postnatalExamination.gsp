@@ -1256,44 +1256,12 @@
 			</div>
 		</fieldset>
 
-		<fieldset>
-			<legend>Family Planning</legend>
-			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Family Planning<span class="important"></span></div>
-
-			<field>
-				<input type="hidden" id="family-planning-set" class=""/>
-				<span id="family-planning-lbl" class="field-error" style="display: none"></span>
-			</field>
-
-			<div class="onerow floating-controls misc-info">
-				<div class="col4" style="width: 48%;">
-					
-					<label for="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: auto; color: #009384">FP Method </label>
-					
-					<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-						<option value="0" >Select Option</option>
-						<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
-						<% familyPlanningOptions.each { familyPlanningOption -> %>
-						<option value="${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
-						<% } %>
-						<% } %>
-					</select>
-				</div>
-
-				<div class="col4 last" style="width: 49%;">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, endDate: new Date(), class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-				</div>
-
-				<div class="col4 last" style="width: 100%; margin-top: 10px;">
-					<label for="fp-comment" style="width: auto; color: #009384">Comments</label>
-					<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="fp-comment" style="width: 97%"></textarea>
-				</div>
-			</div>
-
-
-
-
-		</fieldset>
+		<% if(context.getAdministrationService().getGlobalProperty("fptab.includedInPNC")=="true"){ %>
+			<fieldset class="no-confirmation">
+				<legend>FP Administration</legend>
+				${ui.includeFragment("fpapp", "familyPlanning")}
+			</fieldset>
+		<% } %>
 
 		<fieldset>
 			<legend>Referral Options</legend>
