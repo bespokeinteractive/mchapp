@@ -284,7 +284,7 @@ public class MchServiceTest extends BaseModuleContextSensitiveTest {
 
         Assert.assertNull(drugOrder.getOpdDrugOrderId());
         Encounter encounter = Context.getService(MchService.class)
-                .saveMchEncounter(form, MchMetadata._MchProgram.ANC_PROGRAM, MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, location);
+                .saveMchEncounter(form,  MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, location);
 
         Assert.assertNotNull(encounter.getId());
         Assert.assertThat(encounter.getLocation(), equalTo(location));

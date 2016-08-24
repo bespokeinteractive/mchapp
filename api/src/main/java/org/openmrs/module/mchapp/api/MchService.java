@@ -30,9 +30,9 @@ public interface MchService {
 
 	boolean enrolledInCWC(Patient patient);
 	SimpleObject enrollInCWC(Patient patient, Date dateEnrolled,Map<String,String> cwcInitialStates);
-	Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
+	Encounter saveMchEncounter(ClinicalForm form, String encounterType,
 							Location location, Integer visitTypeId);
-	Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
+	Encounter saveMchEncounter(ClinicalForm form, String encounterType,
 							Location location);
 	
 	List<Obs> getPatientProfile(Patient patient, String program);
