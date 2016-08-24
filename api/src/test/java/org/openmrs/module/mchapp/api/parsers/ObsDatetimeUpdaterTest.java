@@ -1,4 +1,4 @@
-package org.openmrs.module.mchapp;
+package org.openmrs.module.mchapp.api.parsers;
 
 import java.util.Arrays;
 import java.util.Calendar;
