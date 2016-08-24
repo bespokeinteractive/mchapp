@@ -166,6 +166,9 @@ public class MchServiceImpl implements MchService {
     @Override
     public Encounter saveMchEncounter(ClinicalForm form, String encounterType,
             Location location) {
+        if (form == null) {
+            throw new IllegalArgumentException("form argument cannot be null");
+        }
         Encounter mchEncounter = new Encounter();
         mchEncounter.setPatient(form.getPatient());
         mchEncounter.setLocation(location);
