@@ -149,7 +149,7 @@ public class MchServiceImpl implements MchService {
     @Override
     public Encounter saveMchEncounter(ClinicalForm form, String program, String encounterType,
                                       Location location, Integer visitTypeId) {
-        Encounter mchEncounter = saveMchEncounter(null, program,
+        Encounter mchEncounter = saveMchEncounter(form, program,
                 encounterType, location);
         Visit visit = new Visit();
         visit.setLocation(location);
