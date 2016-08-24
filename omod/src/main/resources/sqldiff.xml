@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqldiff PUBLIC "-//OpenMRS//DTD OpenMRS SQL Diff Config 1.0//EN" "http://resources.openmrs.org/doctype/sqldiff-1.0.dtd">
+
+<sqldiff version="1.0">
+	<help>
+		USE:
+			The diffs are ordered by datamodel version number.
+			The script can be run in a top down fashion and is
+			expected to not failor overwrite old data
+
+		EXPECT:
+			- "use business-database-name;" was called prior to
+			   calling this script
+	</help>
+	<diff>
+		<version>1.0.0</version>
+		<author>Stanslaus Odhiambo</author>
+		<date>Aug 24th 2016</date>
+		<description>
+			Create immunization commodity tables
+		</description>
+		<sql>
+			CREATE TABLE IF NOT EXISTS immunization_store_transaction_type (id INT NOT NULL AUTO_INCREMENT,transaction_type VARCHAR(255) NULL,	PRIMARY KEY (id))
+            CREATE TABLE IF NOT EXISTS immunization_store_drug (id INT NOT NULL AUTO_INCREMENT,inventory_drug_id INT(11) NOT NULL,batch_no VARCHAR(45) NOT NULL,current_quantity INT NOT NULL,created_on DATETIME NULL,expiry_date DATETIME NOT NULL,created_by INT(11) NOT NULL, PRIMARY KEY (id), UNIQUE INDEX batch_no_UNIQUE (batch_no ASC),  INDEX fk_immunization_store_drug_person1_idx (created_by ASC),  INDEX fk_immunization_store_drug_inventory_drug1_idx (inventory_drug_id ASC),  CONSTRAINT fk_immunization_store_drug_person1  FOREIGN KEY (created_by)  REFERENCES person (person_id) ON DELETE NO ACTION  ON UPDATE NO ACTION,  CONSTRAINT fk_immunization_store_drug_inventory_drug1 FOREIGN KEY (inventory_drug_id) REFERENCES inventory_drug(id)  ON DELETE NO ACTION ON UPDATE NO ACTION)
+            CREATE TABLE IF NOT EXISTS immunization_store_drug_transaction_detail (id INT NOT NULL AUTO_INCREMENT,patient_id INT(11) NULL,transaction_type INT NOT NULL,immunization_store_drug_id INT NOT NULL,quantity INT NULL,openning_balance INT NULL,closing_balance INT NULL,created_on DATETIME NULL,created_by INT(11) NOT NULL,remark VARCHAR(150) NULL, PRIMARY KEY (id), INDEX fk_immunization_store_drug_transaction_detail_immunization__idx (transaction_type ASC), INDEX fk_immunization_store_drug_transaction_detail_person1_idx (created_by ASC),  INDEX fk_immunization_store_drug_transaction_detail_patient1_idx (patient_id ASC), INDEX fk_immunization_store_drug_transaction_detail_immunization__idx1(immunization_store_drug_id ASC),  CONSTRAINT fk_immunization_store_drug_transaction_detail_immunization_st1 FOREIGN KEY (transaction_type) REFERENCES immunization_store_transaction_type (id) ON DELETE NO ACTION ON UPDATE NO ACTION,  CONSTRAINT fk_immunization_store_drug_transaction_detail_person1 FOREIGN KEY (created_by) REFERENCES person (person_id)  ON DELETE NO ACTION  ON UPDATE NO ACTION,  CONSTRAINT fk_immunization_store_drug_transaction_detail_patient1    FOREIGN KEY (patient_id) REFERENCES patient (patient_id) ON DELETE NO ACTION ON UPDATE NO ACTION, CONSTRAINT fk_immunization_store_drug_transaction_detail_immunization_st2  FOREIGN KEY (immunization_store_drug_id)   REFERENCES immunization_store_drug (id) ON DELETE NO ACTION  ON UPDATE NO ACTION)
+        </sql>
+	</diff>
+
+</sqldiff>
