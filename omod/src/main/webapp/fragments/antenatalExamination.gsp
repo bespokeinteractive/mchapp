@@ -796,6 +796,8 @@
 		jq('#lessthan16 span.small').click(function(){
 			jq('#lessthan16').hide(500);
 		});
+		
+		showEditWorkflowPopup('Malarial Prophylaxis', 26, 10);
 
     });
 
@@ -1084,8 +1086,7 @@
 	}
     .important {
         color: #f00 !important;
-    }   
-
+    }
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -1130,6 +1131,122 @@
 	<section>
 		<span class="title">Clinical Notes</span>
 		
+        <fieldset class="no-confirmation">
+            <legend>Immunizations</legend>
+
+            <div style="padding: 0 4px">
+                <field>
+
+                </field>
+
+                <div style="min-width: 78%" class="col16 dashboard">
+                    <% patientProgram.program.workflows.each { workflow -> %>					
+						<% if (workflow.programWorkflowId != 10) { %>
+							<% def stateId; def stateStart; def stateName; %>
+							<div id="data-holder">
+								<div style="" valign="top">
+									<div class="info-section" style="width: 100.7%">
+										<% patientProgram.states.each { state -> %>
+										<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+											stateId = state.state.concept.conceptId;
+											stateName = state.state.concept.name;
+											stateStart = state.startDate;
+										} %>
+										<% } %>
+
+										<div class="info-header">
+											<i class="icon-medicine"></i>
+
+											<h3>${workflow.concept.name}</h3>
+											<a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+										</div>
+
+										<div class="info-body">
+											<div id="${workflow.programWorkflowId}" style="display: none;">
+												<table id="workflowTable_${workflow.programWorkflowId}">
+													<thead>
+													<tr>
+													<thead>
+													<th>#</th>
+													<th>VACCINE</th>
+													<th>GIVEN ON</th>
+													<th>RECORDED</th>
+													<th>PROVIDER</th>
+													</thead>
+												</tr>
+												</thead>
+
+													<tbody>
+
+													</tbody>
+												</table>
+
+												<div class="update-vaccine">
+													<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}">
+														<i class="icon-pencil small"></i>
+														Update Vaccine
+													</a>											
+												</div>
+
+												<div class="">&nbsp;</div>
+
+												<div style="display: none">
+													<select name="changeToState_${workflow.programWorkflowId}"
+															id="changeToState_${workflow.programWorkflowId}">
+														<option value="0">Select a State</option>
+														<% if (workflow.states != null || workflow.states != "") { %>
+														<% workflow.states.each { state -> %>
+														<option id="${state.id}"
+																value="${state.id}">${state.concept.name}</option>
+														<% } %>
+														<% } %>
+													</select>
+												</div>
+
+											</div>
+
+										   <div id="currentStateDetails_${workflow.programWorkflowId}">
+												<% if (stateId != null) { %>
+													<div id='main-show-${workflow.programWorkflowId}'>
+														<span class="status active"></span>
+														<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
+														
+														<small style="font-size: 77%; margin-left: 10px;">
+															( <span class="icon-time"></span>
+															Date: <span id="state_date_${workflow.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
+														</small>												
+													</div>											
+												<% } else { %>
+													<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
+														<em>(No Previous Vaccinations Found)</em>												
+													</div>
+													<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+														<span class="status active"></span>
+														<span id="state_name_${workflow.programWorkflowId}"></span>
+														
+														<small style="font-size: 77%; margin-left: 10px;">
+															( <span class="icon-time"></span>
+															Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
+														</small>												
+													</div>
+												<% } %>
+
+											</div>
+
+										</div>
+									</div>
+								</td>
+								</div>
+							
+						<% } %>
+					
+                    <% } %>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+		
 		<fieldset class="no-confirmation">
 			<legend>Symptoms</legend>
 			<div style="padding: 0 4px">
@@ -1150,118 +1267,6 @@
 				<div id="symptoms-holder"></div>
 			</div>
 		</fieldset>
-
-        <fieldset class="no-confirmation">
-            <legend>Immunizations</legend>
-
-            <div style="padding: 0 4px">
-                <field>
-
-                </field>
-
-                <div style="min-width: 78%" class="col16 dashboard">
-                    <% patientProgram.program.workflows.each { workflow -> %>
-                    <% def stateId; def stateStart; def stateName; %>
-                    <div id="data-holder">
-                        <div style="" valign="top">
-                            <div class="info-section">
-                                <% patientProgram.states.each { state -> %>
-                                <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-                                    stateId = state.state.concept.conceptId;
-                                    stateName = state.state.concept.name;
-                                    stateStart = state.startDate;
-                                } %>
-                                <% } %>
-
-                                <div class="info-header">
-                                    <i class="icon-medicine"></i>
-
-                                    <h3>${workflow.concept.name}</h3>
-                                    <a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
-                                </div>
-
-                                <div class="info-body">
-                                    <div id="${workflow.programWorkflowId}" style="display: none;">
-                                        <table id="workflowTable_${workflow.programWorkflowId}">
-                                            <thead>
-                                            <tr>
-                                            <thead>
-                                            <th>#</th>
-                                            <th>VACCINE</th>
-                                            <th>GIVEN ON</th>
-                                            <th>RECORDED</th>
-                                            <th>PROVIDER</th>
-                                            </thead>
-                                        </tr>
-                                        </thead>
-
-                                            <tbody>
-
-                                            </tbody>
-                                        </table>
-
-                                        <div class="update-vaccine">
-											<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}">
-												<i class="icon-pencil small"></i>
-												Update Vaccine
-											</a>											
-										</div>
-
-                                        <div class="">&nbsp;</div>
-
-                                        <div style="display: none">
-											<select name="changeToState_${workflow.programWorkflowId}"
-													id="changeToState_${workflow.programWorkflowId}">
-												<option value="0">Select a State</option>
-												<% if (workflow.states != null || workflow.states != "") { %>
-												<% workflow.states.each { state -> %>
-												<option id="${state.id}"
-														value="${state.id}">${state.concept.name}</option>
-												<% } %>
-												<% } %>
-											</select>
-										</div>
-
-                                    </div>
-
-                                   <div id="currentStateDetails_${workflow.programWorkflowId}">
-										<% if (stateId != null) { %>
-											<div id='main-show-${workflow.programWorkflowId}'>
-												<span class="status active"></span>
-												<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
-												
-												<small style="font-size: 77%; margin-left: 10px;">
-													( <span class="icon-time"></span>
-													Date: <span id="state_date_${workflow.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
-												</small>												
-											</div>											
-										<% } else { %>
-											<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
-												<em>(No Previous Vaccinations Found)</em>												
-											</div>
-									 		<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
-												<span class="status active"></span>
-												<span id="state_name_${workflow.programWorkflowId}"></span>
-												
-												<small style="font-size: 77%; margin-left: 10px;">
-													( <span class="icon-time"></span>
-													Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
-												</small>												
-											</div>
-										<% } %>
-
-									</div>
-
-                                </div>
-                            </div>
-                        </td>
-                        </div>
-                        <% } %>
-
-                    </div>
-                </div>
-            </div>
-        </fieldset>
 
 		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>
@@ -1822,13 +1827,119 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>Treatment</legend>
-			<label class="label title-label" style="width: auto;">Treatment</label>
+			<legend>Prophylatic Drugs</legend>			
 			
 			<field>
 				<input type="hidden" id="treatment-info-set" class=""/>
 				<span id="treatment-info-lbl" class="field-error" style="display: none"></span>
 			</field>
+			
+			<div style="min-width: 78%" class="col16 dashboard">
+				<% def malariaProphylaxis = patientProgram.program.workflows.find { it.programWorkflowId == 10} %>				
+				<% def stateId; def stateStart; def stateName; %>
+				
+				<div id="data-holder">
+					<div style="" valign="top">
+						<div class="info-section" style="width: 100.7%;">
+							<% patientProgram.states.each { state -> %>
+							<% if (!state.voided && state.state.programWorkflow.programWorkflowId == malariaProphylaxis.programWorkflowId && state.active) {
+								stateId = state.state.concept.conceptId;
+								stateName = state.state.concept.name;
+								stateStart = state.startDate;
+							} %>
+							<% } %>
+
+							<div class="info-header" style="text-transform: uppercase">
+								<i class="icon-medicine"></i>
+
+								<h3>${malariaProphylaxis.concept.name}</h3>
+								<a><i class="icon-chevron-down small right chevron" data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+							</div>
+
+							<div class="info-body">
+								<div id="${malariaProphylaxis.programWorkflowId}" style="display: none;">
+									<table id="workflowTable_${malariaProphylaxis.programWorkflowId}">
+										<thead>
+										<tr>
+										<thead>
+										<th>#</th>
+										<th>VACCINE</th>
+										<th>GIVEN ON</th>
+										<th>RECORDED</th>
+										<th>PROVIDER</th>
+										</thead>
+									</tr>
+									</thead>
+
+										<tbody>
+
+										</tbody>
+									</table>
+
+									<div class="update-vaccine">
+										<a data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}">
+											<i class="icon-pencil small"></i>
+											Update Vaccine
+										</a>											
+									</div>
+
+									<div class="">&nbsp;</div>
+
+									<div style="display: none">
+										<select name="changeToState_${malariaProphylaxis.programWorkflowId}"
+												id="changeToState_${malariaProphylaxis.programWorkflowId}">
+											<option value="0">Select a State</option>
+											<% if (malariaProphylaxis.states != null || malariaProphylaxis.states != "") { %>
+											<% malariaProphylaxis.states.each { state -> %>
+											<option id="${state.id}"
+													value="${state.id}">${state.concept.name}</option>
+											<% } %>
+											<% } %>
+										</select>
+									</div>
+
+								</div>
+
+								<div id="currentStateDetails_${malariaProphylaxis.programWorkflowId}">
+									<% if (stateId != null) { %>
+										<div id='main-show-${malariaProphylaxis.programWorkflowId}'>
+											<span class="status active"></span>
+											<span id="state_name_${malariaProphylaxis.programWorkflowId}">${stateName}</span>
+											
+											<small style="font-size: 77%; margin-left: 10px;">
+												( <span class="icon-time"></span>
+												Date: <span id="state_date_${malariaProphylaxis.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
+											</small>												
+										</div>											
+									<% } else { %>
+										<div id="no-show-${malariaProphylaxis.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
+											<em>(No Previous Records Found)</em>												
+										</div>
+										<div id='main-show-${malariaProphylaxis.programWorkflowId}' style="display: none;">
+											<span class="status active"></span>
+											<span id="state_name_${malariaProphylaxis.programWorkflowId}"></span>
+											
+											<small style="font-size: 77%; margin-left: 10px;">
+												( <span class="icon-time"></span>
+												Date: <span id="state_date_${malariaProphylaxis.programWorkflowId}"></span> )
+											</small>												
+										</div>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col16 dashboard" style="min-width: 78%">
+				<div class="info-section" style="width: 100.7%;">
+					<div class="info-header" style="text-transform: uppercase;">
+						<i class="icon-paste"></i>
+						<h3>Treatment</h3>
+					</div>				
+				</div>
+			</div>		
 			
 			<div class="onerow floating-controls treatment-info">
 				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
@@ -1841,6 +1952,19 @@
 						
 						<label>
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
+					</div>
+					
+					<div class="testbox">
+						<div>Folic Acid Given</div>
+						<label>
+							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.47c59040-500a-4c00-97d9-58ca55ee097d" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" data-value="No" type="radio" name="concept.47c59040-500a-4c00-97d9-58ca55ee097d" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label><br/>
 					</div>
@@ -1877,7 +2001,7 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>Referral</legend>
+			<legend>Referral Information</legend>
 			
 			<field>
 				<input type="hidden" id="referral-set" class=""/>

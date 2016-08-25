@@ -504,6 +504,9 @@
 	.floating-controls textarea{
 		resize: none;
 	}
+	.info-header h3{
+		color: #f26522;
+	}
 	#cancelButton{
 		margin-left: 5px;
 	}
