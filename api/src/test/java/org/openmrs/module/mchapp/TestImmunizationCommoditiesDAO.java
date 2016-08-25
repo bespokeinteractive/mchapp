@@ -25,7 +25,7 @@ public class TestImmunizationCommoditiesDAO extends BaseModuleContextSensitiveTe
     {
         ImmunizationService service = Context.getService(ImmunizationService.class);
         List<ImmunizationStoreTransactionType> allTransactionTypes = service.getAllTransactionTypes();
-       
+
 //        ImmunizationStoreTransactionType transactionType=new ImmunizationStoreTransactionType();
 //        transactionType.setId(1);
 //        transactionType.setTransactionType("Test Type");

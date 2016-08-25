@@ -3,8 +3,10 @@ package org.openmrs.module.mchapp.db.hibernate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.NotYetImplementedException;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
@@ -51,7 +53,6 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
 
     @Override
     public List<ImmunizationStoreTransactionType> getAllTransactionTypes() {
-        System.out.println(sessionFactory);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ImmunizationStoreTransactionType.class);
         List l = criteria.list();
         return l;
@@ -59,66 +60,105 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
 
     @Override
     public ImmunizationStoreTransactionType getTransactionTypeByName(String name) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreTransactionType.class);
+        criteria.add(Restrictions.eq("transactionType", name));
+        ImmunizationStoreTransactionType transactionType = (ImmunizationStoreTransactionType) criteria.uniqueResult();
+        return transactionType;
     }
 
     @Override
     public ImmunizationStoreTransactionType getTransactionTypeById(int id) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreTransactionType.class);
+        criteria.add(Restrictions.eq("id", id));
+        ImmunizationStoreTransactionType transactionType = (ImmunizationStoreTransactionType) criteria.uniqueResult();
+        return transactionType;
     }
 
     @Override
-    public ImmunizationStoreTransactionType saveImmunizationStoreTransactionType(ImmunizationStoreTransactionType type) {
-        return null;
+    public ImmunizationStoreTransactionType saveImmunizationStoreTransactionType(ImmunizationStoreTransactionType type) throws DAOException {
+        return (ImmunizationStoreTransactionType) getSession().merge(type);
     }
 
     @Override
     public List<ImmunizationStoreDrug> getAllImmunizationStoreDrug() {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class);
+        List l = criteria.list();
+        return l;
     }
 
     @Override
     public ImmunizationStoreDrug getImmunizationStoreDrugById(int id) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class);
+        criteria.add(Restrictions.eq("id", id));
+        ImmunizationStoreDrug storeDrug = (ImmunizationStoreDrug) criteria.uniqueResult();
+        return storeDrug;
     }
 
     @Override
     public ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class);
+        criteria.add(Restrictions.eq("batchNo", batchNo));
+        ImmunizationStoreDrug storeDrug = (ImmunizationStoreDrug) criteria.uniqueResult();
+        return storeDrug;
     }
 
     @Override
     public ImmunizationStoreDrug saveImmunizationStoreDrug(ImmunizationStoreDrug storeDrug) {
-        return null;
+        return (ImmunizationStoreDrug) getSession().merge(storeDrug);
     }
 
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByType(ImmunizationStoreTransactionType transactionType) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("transactionType", transactionType));
+        List l = criteria.list();
+        return l;
     }
 
     @Override
-    public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByDrug(ImmunizationStoreDrug drug) {
-        return null;
+    public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByDrug(ImmunizationStoreDrug storeDrug) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("storeDrug", storeDrug));
+        List l = criteria.list();
+        return l;
     }
 
     @Override
-    public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByDate(Date date) {
-        return null;
+    public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByDate(Date createdOn) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("createdOn", createdOn));
+        List l = criteria.list();
+        return l;
     }
 
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByPatient(Patient patient) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("patient", patient));
+        List l = criteria.list();
+        return l;
     }
 
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> getAllImmunizationStoreDrugTransactionDetail() {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        return criteria.list();
+
     }
 
     @Override
     public ImmunizationStoreDrugTransactionDetail getImmunizationStoreDrugTransactionDetailById(int id) {
-        return null;
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("id", id));
+        return (ImmunizationStoreDrugTransactionDetail) criteria.uniqueResult();
+    }
+
+    @Override
+    public ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail) {
+        return (ImmunizationStoreDrugTransactionDetail) getSession().merge(transactionDetail);
+    }
+
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 }
