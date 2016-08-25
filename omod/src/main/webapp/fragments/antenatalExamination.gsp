@@ -242,7 +242,8 @@
         var lastMenstrualPeriod = _.find(patientProfile.details, function(profile){
             return profile.uuid == "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         });
-        var lastMenstrualPeriod = moment(lastMenstrualPeriod.value, "DD-MM-YYYY");
+        
+		lastMenstrualPeriod = moment(lastMenstrualPeriod, "DD-MM-YYYY");
         var todaysDate = moment();
         var gestationInWeeks = Math.ceil(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
 
@@ -797,8 +798,7 @@
 			jq('#lessthan16').hide(500);
 		});
 		
-		showEditWorkflowPopup('Malarial Prophylaxis', 26, 10);
-
+		jq('#malariaProphylaxisLink .chevron').click();
     });
 
     function selectReferrals(selectedReferral){
@@ -1087,6 +1087,11 @@
     .important {
         color: #f00 !important;
     }
+	
+	.treatment-info .testbox{
+		min-height:	100px!important;
+		height: 	100px!important;
+	}
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -1238,11 +1243,11 @@
 								</td>
 								</div>
 							
+							</div>
 						<% } %>
 					
                     <% } %>
 
-                    </div>
                 </div>
             </div>
         </fieldset>
@@ -1853,7 +1858,7 @@
 								<i class="icon-medicine"></i>
 
 								<h3>${malariaProphylaxis.concept.name}</h3>
-								<a><i class="icon-chevron-down small right chevron" data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+								<a id="malariaProphylaxisLink"><i class="icon-chevron-right small right chevron" data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
 							</div>
 
 							<div class="info-body">
@@ -1942,7 +1947,7 @@
 			</div>		
 			
 			<div class="onerow floating-controls treatment-info">
-				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+				<div class="col4" style="width: 50%; margin: 0 1% 0 0">
 					<div class="testbox">
 						<div>Deworming</div>
 						<label>
@@ -1954,23 +1959,8 @@
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label><br/>
-					</div>
+					</div>				
 					
-					<div class="testbox">
-						<div>Folic Acid Given</div>
-						<label>
-							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.47c59040-500a-4c00-97d9-58ca55ee097d" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
-						</label><br/>
-						
-						<label>
-							<input id="couple-counselled" data-value="No" type="radio" name="concept.47c59040-500a-4c00-97d9-58ca55ee097d" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
-						</label><br/>
-					</div>
-				</div>
-					
-				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
 					<div class="testbox">
 						<div>Received LLITN</div>
 						<label>
@@ -1981,12 +1971,12 @@
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
-					</div>					
+					</div>
 				</div>
 				
-				<div class="col4 last" style="width: 32%;">
+				<div class="col4 last" style="width: 49%;">
 					<div class="testbox">
-						<div>ANC Exercise given?</div>
+						<div>ANC Exercise Given</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -1995,7 +1985,20 @@
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
-					</div>				
+					</div>
+					
+					<div class="testbox">
+						<div>Folic Acid Given</div>
+						<label>
+							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
+							Yes
+						</label><br/>
+						
+						<label>
+							<input id="couple-counselled" data-value="No" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
+							No
+						</label><br/>
+					</div>
 				</div>
 			</div>
 		</fieldset>
