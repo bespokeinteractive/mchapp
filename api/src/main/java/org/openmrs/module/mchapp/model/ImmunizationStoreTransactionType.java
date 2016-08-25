@@ -6,6 +6,7 @@ import java.io.Serializable;
  * @author Stanslaus Odhiambo
  *         Created on 8/24/2016.
  */
+
 public class ImmunizationStoreTransactionType implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;

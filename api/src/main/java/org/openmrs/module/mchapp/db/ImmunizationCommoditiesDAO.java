@@ -32,7 +32,7 @@ public interface ImmunizationCommoditiesDAO {
 
     ImmunizationStoreTransactionType getTransactionTypeById(int id);
 
-    ImmunizationStoreTransactionType saveImmunizationStoreTransactionType(ImmunizationStoreTransactionType type);
+    ImmunizationStoreTransactionType saveImmunizationStoreTransactionType(ImmunizationStoreTransactionType type) throws DAOException;
 
 
     /*        ImmunizationStoreDrug     */
@@ -57,6 +57,8 @@ public interface ImmunizationCommoditiesDAO {
     List<ImmunizationStoreDrugTransactionDetail> getAllImmunizationStoreDrugTransactionDetail();
 
     ImmunizationStoreDrugTransactionDetail getImmunizationStoreDrugTransactionDetailById(int id);
+
+    ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail);
 
 
 }

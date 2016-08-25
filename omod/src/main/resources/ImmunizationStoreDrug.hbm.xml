@@ -17,6 +17,5 @@
 		<property name="currentQuantity" column="current_quantity"  />
 		<property name="createdOn" column="created_on"  />
 		<property name="expiryDate" column="expiry_date"  />
-		<property name="expiryDate" column="expiry_date"  />
 	</class>
 </hibernate-mapping>
