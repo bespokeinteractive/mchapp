@@ -45,6 +45,7 @@
 
     <!-- Maps hibernate file's, if present -->
     <mappingFiles>
+
         ImmunizationStoreTransactionType.hbm.xml
         ImmunizationStoreDrug.hbm.xml
         ImmunizationStoreDrugTransactionDetail.hbm.xml

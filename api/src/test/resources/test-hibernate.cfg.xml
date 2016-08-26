@@ -14,5 +14,6 @@
         <mapping resource="OpdTestOrder.hbm.xml" />
         <mapping resource="Lab.hbm.xml" />
         <mapping resource="LabTest.hbm.xml" />
+        <mapping resource="ImmunizationStoreTransactionType.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
