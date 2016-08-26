@@ -26,4 +26,19 @@
         </sql>
 	</diff>
 
+<diff>
+		<version>1.1.0</version>
+		<author>Stanslaus Odhiambo</author>
+		<date>Aug 26th 2016</date>
+		<description>
+			add immunization equipment tables
+		</description>
+		<sql>
+			CREATE TABLE IF NOT EXISTS immunization_stockout (id INT NOT NULL AUTO_INCREMENT,drug_id INT(11) NOT NULL, no_of_days INT NOT NULL,remarks VARCHAR(255) NULL,  PRIMARY KEY (id),  INDEX fk_immunization_stockout_inventory_drug_idx (drug_id ASC),  CONSTRAINT fk_immunization_stockout_inventory_drug    FOREIGN KEY (drug_id)    REFERENCES inventory_drug (id)    ON DELETE NO ACTION  ON UPDATE NO ACTION);
+			CREATE TABLE IF NOT EXISTS immunization_equipment (id INT NOT NULL AUTO_INCREMENT,equipment_type VARCHAR(45) NULL,  model VARCHAR(45) NULL,working_status TINYINT(1) NULL,energy_source VARCHAR(45) NULL,age_in_years INT NULL,created_by VARCHAR(45) NULL,created_on DATETIME NULL, PRIMARY KEY (id));
+        </sql>
+	</diff>
+
+
+
 </sqldiff>
