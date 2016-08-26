@@ -88,7 +88,7 @@ public class AntenatalExaminationFragmentController {
         InventoryService service = Context.getService(InventoryService.class);
         List<ToxoidModel> list = new ArrayList<ToxoidModel>();
         try {
-            service.getTetanusToxoidTransactions(patient.getPatientId());
+            list = service.getTetanusToxoidTransactions(patient.getPatientId());
         } catch (Exception e) {
             log.error("Error Pulling Toxoid Details", e);
         }
