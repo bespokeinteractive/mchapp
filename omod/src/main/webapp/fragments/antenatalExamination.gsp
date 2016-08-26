@@ -1920,7 +1920,7 @@
 										<tr>
 										<thead>
 										<th>#</th>
-										<th>VACCINE</th>
+										<th>ANTI-MALARIAL</th>
 										<th>GIVEN ON</th>
 										<th>RECORDED</th>
 										<th>PROVIDER</th>
@@ -1936,7 +1936,7 @@
 									<div class="update-vaccine">
 										<a data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}">
 											<i class="icon-pencil small"></i>
-											Update Vaccine
+											Update Malarial Vaccine
 										</a>											
 									</div>
 
@@ -2040,7 +2040,7 @@
 					</div>
 					
 					<div class="testbox">
-						<div>Folic Acid Given</div>
+						<div>Iron & Folate Given</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
