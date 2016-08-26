@@ -195,6 +195,8 @@
 			var name = jq(this).data('name');
 			var prog = jq(this).data('prog');
 			
+			if (typeof(idnt) === 'undefined'){ return false }
+			
 			jq('#vaccine-idnt').val(idnt);
 			jq('#vaccine-name').val(name);
 			jq('#vaccine-prog').val(prog);
@@ -212,6 +214,8 @@
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
+			
+			if (typeof(idnt) === 'undefined'){ return false }
 
             if (jq(this).hasClass('icon-chevron-right')){
                 jq(this).removeClass('icon-chevron-right');
@@ -1145,8 +1149,56 @@
                 </field>
 
                 <div style="min-width: 78%" class="col16 dashboard">
+					
+					<div id="data-holder">
+						<div style="" valign="top">
+							<div class="info-section" style="width: 100.7%">
+								<div class="info-header">
+									<i class="icon-medicine"></i>
+									<h3> TETANUS TOXOID</h3>
+									<a><i class="icon-chevron-down small right chevron"></i></a>
+								</div>
+
+								<div class="info-body">
+									<div style="display: nones;">
+										<table>
+											<thead>
+												<tr>
+													<thead>
+														<th>#</th>
+														<th>VACCINE</th>
+														<th>GIVEN ON</th>
+														<th>RECORDED</th>
+														<th>PROVIDER</th>
+													</thead>
+												</tr>
+											</thead>
+
+											<tbody>
+												<tr>
+													<td>&nbsp;</td>
+													<td colspan="5">No Records Found</td>
+												</tr>
+
+											</tbody>
+										</table>
+
+										<div class="update-vaccine">
+											<a>
+												<i class="icon-pencil small"></i>
+												Update Vaccine
+											</a>											
+										</div>
+
+										<div class="clear"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
                     <% patientProgram.program.workflows.each { workflow -> %>					
-						<% if (workflow.programWorkflowId != 10) { %>
+						<% if (workflow.programWorkflowId != 10 && workflow.programWorkflowId != 11) { %>
 							<% def stateId; def stateStart; def stateName; %>
 							<div id="data-holder">
 								<div style="" valign="top">
@@ -1193,7 +1245,7 @@
 													</a>											
 												</div>
 
-												<div class="">&nbsp;</div>
+												<div class="clear"></div>
 
 												<div style="display: none">
 													<select name="changeToState_${workflow.programWorkflowId}"

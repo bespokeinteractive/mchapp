@@ -1,11 +1,16 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchEncounterService;
@@ -21,9 +26,6 @@ import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 
 
 /**
@@ -41,6 +43,7 @@ public class AntenatalExaminationFragmentController {
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("queueId", config.get("queueId"));
+        model.addAttribute("tetanusVaccines", getTT(patient, ui));
         model.addAttribute("preExisitingConditions", Context.getService(MchEncounterService.class).getConditions(patient));
     }
 
@@ -77,5 +80,12 @@ public class AntenatalExaminationFragmentController {
 			return SimpleObject.create("status", "error", "message",
 					e.getMessage());
 		}
+	}
+
+	public List<SimpleObject> getTT(Patient patient, UiUtils ui){
+		InventoryService service = Context.getService(InventoryService.class);
+		List<Object> list =new ArrayList<Object>();
+		//List<OurObject> list =service.getTetanusToxoidTransactions(patient.getPatientId());
+		return SimpleObject.fromCollection(list,ui,"vaccineName", "dateGiven", "dateRecorded","provider");
 	}
 }
