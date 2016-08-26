@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class ImmunizationEquipment implements Serializable {
     private static final long serialVersionUID = 1L;
+    private int id;
     private String equipmentType;
     private String model;
     private boolean workingStatus;
@@ -17,6 +18,14 @@ public class ImmunizationEquipment implements Serializable {
     private int ageInYears;
     private String createdBy;
     private Date createdOn;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getEquipmentType() {
         return equipmentType;
@@ -73,4 +82,6 @@ public class ImmunizationEquipment implements Serializable {
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
+
+
 }

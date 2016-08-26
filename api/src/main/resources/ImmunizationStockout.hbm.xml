@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.mchapp.model">
+
+	<class name="ImmunizationStockout" table="immunization_stockout" batch-size="500">
+		<id name="id" type="int" column="id" unsaved-value="0">
+				<generator class="native" />
+		</id>
+	    <many-to-one name="drug" class="org.openmrs.module.hospitalcore.model.InventoryDrug"
+	        column="drug_id" cascade="none"  />
+		<property name="noOfDays" column="no_of_days" />
+		<property name="remarks" column="remarks"  />
+	</class>
+</hibernate-mapping>

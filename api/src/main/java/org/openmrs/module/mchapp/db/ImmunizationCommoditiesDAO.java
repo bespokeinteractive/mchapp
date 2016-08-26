@@ -2,9 +2,8 @@ package org.openmrs.module.mchapp.db;
 
 import org.openmrs.Patient;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
-import org.openmrs.module.mchapp.model.ImmunizationStoreTransactionType;
+import org.openmrs.module.hospitalcore.model.InventoryDrug;
+import org.openmrs.module.mchapp.model.*;
 
 import java.util.Date;
 import java.util.List;
@@ -61,4 +60,18 @@ public interface ImmunizationCommoditiesDAO {
     ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail);
 
 
+    /*        ImmunizationEquipment     */
+    List<ImmunizationEquipment> getAllImmunizationEquipments();
+
+    ImmunizationEquipment getImmunizationEquipmentById(int id);
+
+    ImmunizationEquipment getImmunizationEquipmentByType(String type);
+
+    ImmunizationEquipment saveImmunizationEquipment(ImmunizationEquipment immunizationEquipment);
+
+    List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug);
+
+    ImmunizationStockout getImmunizationStockoutById(int id);
+
+    ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout);
 }

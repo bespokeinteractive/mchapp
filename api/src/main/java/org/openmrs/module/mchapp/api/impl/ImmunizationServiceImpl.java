@@ -5,11 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
-import org.openmrs.module.mchapp.model.ImmunizationStoreTransactionType;
+import org.openmrs.module.mchapp.model.*;
 
 import java.util.Date;
 import java.util.List;
@@ -103,5 +102,40 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     @Override
     public ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail) {
         return dao.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
+    }
+
+    @Override
+    public List<ImmunizationEquipment> getAllImmunizationEquipments() {
+        return dao.getAllImmunizationEquipments();
+    }
+
+    @Override
+    public ImmunizationEquipment getImmunizationEquipmentById(int id) {
+        return dao.getImmunizationEquipmentById(id);
+    }
+
+    @Override
+    public ImmunizationEquipment getImmunizationEquipmentByType(String type) {
+        return dao.getImmunizationEquipmentByType(type);
+    }
+
+    @Override
+    public ImmunizationEquipment saveImmunizationEquipment(ImmunizationEquipment immunizationEquipment) {
+        return dao.saveImmunizationEquipment(immunizationEquipment);
+    }
+
+    @Override
+    public List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug) {
+        return dao.getImmunizationStockoutByDrug(drug);
+    }
+
+    @Override
+    public ImmunizationStockout getImmunizationStockoutById(int id) {
+        return dao.getImmunizationStockoutById(id);
+    }
+
+    @Override
+    public ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout) {
+        return dao.saveImmunizationStockout(immunizationStockout);
     }
 }

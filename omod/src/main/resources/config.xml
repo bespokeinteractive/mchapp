@@ -49,6 +49,8 @@
         ImmunizationStoreTransactionType.hbm.xml
         ImmunizationStoreDrug.hbm.xml
         ImmunizationStoreDrugTransactionDetail.hbm.xml
+        ImmunizationEquipment.hbm.xml
+        ImmunizationStockout.hbm.xml
 
     </mappingFiles>
 

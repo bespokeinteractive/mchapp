@@ -9,10 +9,9 @@ import org.hibernate.cfg.NotYetImplementedException;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.api.db.DAOException;
+import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
-import org.openmrs.module.mchapp.model.ImmunizationStoreTransactionType;
+import org.openmrs.module.mchapp.model.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -156,6 +155,55 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     @Override
     public ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail) {
         return (ImmunizationStoreDrugTransactionDetail) getSession().merge(transactionDetail);
+    }
+
+
+    /*        ImmunizationEquipment     */
+    @Override
+    public List<ImmunizationEquipment> getAllImmunizationEquipments() {
+        Criteria criteria = getSession().createCriteria(ImmunizationEquipment.class);
+        return criteria.list();
+    }
+
+    @Override
+    public ImmunizationEquipment getImmunizationEquipmentById(int id) {
+        Criteria criteria = getSession().createCriteria(ImmunizationEquipment.class);
+        criteria.add(Restrictions.eq("id", id));
+        return (ImmunizationEquipment) criteria.uniqueResult();
+    }
+
+    @Override
+    public ImmunizationEquipment getImmunizationEquipmentByType(String type) {
+        Criteria criteria = getSession().createCriteria(ImmunizationEquipment.class);
+        criteria.add(Restrictions.eq("equipmentType", type));
+        return (ImmunizationEquipment) criteria.uniqueResult();
+    }
+
+    @Override
+    public ImmunizationEquipment saveImmunizationEquipment(ImmunizationEquipment immunizationEquipment) {
+        return (ImmunizationEquipment) getSession().merge(immunizationEquipment);
+    }
+
+    /*             ImmunizationStockout                  */
+
+    @Override
+    public List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStockout.class);
+        criteria.add(Restrictions.eq("drug", drug));
+        List l = criteria.list();
+        return l;
+    }
+
+    @Override
+    public ImmunizationStockout getImmunizationStockoutById(int id) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStockout.class);
+        criteria.add(Restrictions.eq("id", id));
+        return (ImmunizationStockout) criteria.uniqueResult();
+    }
+
+    @Override
+    public ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout) {
+        return null;
     }
 
     private Session getSession() {
