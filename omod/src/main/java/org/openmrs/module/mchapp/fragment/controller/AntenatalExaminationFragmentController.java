@@ -11,6 +11,7 @@ import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
 import org.openmrs.module.inventory.InventoryService;
+import org.openmrs.module.inventory.model.ToxoidModel;
 import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchEncounterService;
@@ -32,7 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Created by qqnarf on 5/18/16.
  */
 public class AntenatalExaminationFragmentController {
-    protected Logger log = LoggerFactory.getLogger(AntenatalExaminationFragmentController.class);
+    protected Logger log = LoggerFactory.getLogger(getClass());
+
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         config.require("patientId");
         config.require("queueId");
@@ -43,49 +45,54 @@ public class AntenatalExaminationFragmentController {
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("queueId", config.get("queueId"));
-        model.addAttribute("tetanusVaccines", getTT(patient, ui));
+        model.addAttribute("tetanusVaccines", getTetanusToxoid(patient, ui));
         model.addAttribute("preExisitingConditions", Context.getService(MchEncounterService.class).getConditions(patient));
     }
 
-	public SimpleObject saveAntenatalExaminationInformation(
-			@RequestParam("patientId") Patient patient,
-			@RequestParam("queueId") Integer queueId,
-			UiSessionContext session,
-			HttpServletRequest request) {
-		OpdPatientQueue patientQueue = Context.getService(
-				PatientQueueService.class).getOpdPatientQueueById(queueId);
-		String location = "ANC Exam Room";
-		if (patientQueue != null) {
-			location = patientQueue.getOpdConceptName();
-		}
-		try {
-			ClinicalForm form = ClinicalForm.generateForm(request, patient, location);
-			InternalReferral internalReferral = new InternalReferral();
-			Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
-					 MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, session.getSessionLocation());
-			String refferedRoomUuid = request.getParameter("internalRefferal");
-			if(refferedRoomUuid!="" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
-				internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
-			}
-			QueueLogs.logOpdPatient(patientQueue, encounter);
-			
-			return SimpleObject.create("status", "success", "message",
-					"Triage information has been saved.");
-		} catch (NullPointerException e) {
-			log.error(e.getMessage());
-			return SimpleObject.create("status", "error", "message",
-					e.getMessage());
-		} catch (ParseException e) {
-			log.error(e.getMessage());
-			return SimpleObject.create("status", "error", "message",
-					e.getMessage());
-		}
-	}
+    public SimpleObject saveAntenatalExaminationInformation(
+            @RequestParam("patientId") Patient patient,
+            @RequestParam("queueId") Integer queueId,
+            UiSessionContext session,
+            HttpServletRequest request) {
+        OpdPatientQueue patientQueue = Context.getService(
+                PatientQueueService.class).getOpdPatientQueueById(queueId);
+        String location = "ANC Exam Room";
+        if (patientQueue != null) {
+            location = patientQueue.getOpdConceptName();
+        }
+        try {
+            ClinicalForm form = ClinicalForm.generateForm(request, patient, location);
+            InternalReferral internalReferral = new InternalReferral();
+            Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
+                    MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE, session.getSessionLocation());
+            String refferedRoomUuid = request.getParameter("internalRefferal");
+            if (refferedRoomUuid != "" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
+                internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
+            }
+            QueueLogs.logOpdPatient(patientQueue, encounter);
 
-	public List<SimpleObject> getTT(Patient patient, UiUtils ui){
-		InventoryService service = Context.getService(InventoryService.class);
-		List<Object> list =new ArrayList<Object>();
-		//List<OurObject> list =service.getTetanusToxoidTransactions(patient.getPatientId());
-		return SimpleObject.fromCollection(list,ui,"vaccineName", "dateGiven", "dateRecorded","provider");
-	}
+            return SimpleObject.create("status", "success", "message",
+                    "Triage information has been saved.");
+        } catch (NullPointerException e) {
+            log.error(e.getMessage());
+            return SimpleObject.create("status", "error", "message",
+                    e.getMessage());
+        } catch (ParseException e) {
+            log.error(e.getMessage());
+            return SimpleObject.create("status", "error", "message",
+                    e.getMessage());
+        }
+    }
+
+    public List<SimpleObject> getTetanusToxoid(Patient patient, UiUtils ui) {
+        InventoryService service = Context.getService(InventoryService.class);
+        List<ToxoidModel> list = new ArrayList<ToxoidModel>();
+        try {
+            service.getTetanusToxoidTransactions(patient.getPatientId());
+        } catch (Exception e) {
+            log.error("Error Pulling Toxoid Details", e);
+        }
+
+        return SimpleObject.fromCollection(list, ui, "vaccineName", "dateGiven", "dateRecorded", "provider");
+    }
 }
