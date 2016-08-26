@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mchapp.api.ImmunizationService;
@@ -25,12 +26,13 @@ public class TestImmunizationCommoditiesDAO extends BaseModuleContextSensitiveTe
     {
         ImmunizationService service = Context.getService(ImmunizationService.class);
         List<ImmunizationStoreTransactionType> allTransactionTypes = service.getAllTransactionTypes();
+        Assert.assertEquals(allTransactionTypes.size(),0);
+        ImmunizationStoreTransactionType type=new ImmunizationStoreTransactionType();
+        type.setTransactionType("Trial Test");
+        ImmunizationStoreTransactionType transactionType = service.saveImmunizationStoreTransactionType(type);
+        allTransactionTypes = service.getAllTransactionTypes();
+        Assert.assertEquals(allTransactionTypes.size(), 1);
 
-//        ImmunizationStoreTransactionType transactionType=new ImmunizationStoreTransactionType();
-//        transactionType.setId(1);
-//        transactionType.setTransactionType("Test Type");
-//        List<ImmunizationStoreTransactionType> allTransactionTypes= commoditiesDAO.getAllTransactionTypes();
-//        Assert.assertEquals(0, allTransactionTypes.size());
     }
 
 }
