@@ -15,7 +15,6 @@
     <require_version>${openMRSVersion}</require_version>
     <!-- / Module Properties -->
 
-
     <!-- Required Modules -->
     <require_modules>
         <require_module version="1.7">
@@ -69,6 +68,15 @@
         <file>messages_es.properties</file>
     </messages>
     <!-- /Internationalization -->
+	<!-- Required global properties -->
+	<globalProperty>
+		<property>fptab.includedInPNC</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			To determine whether to include family planning tab in pnc if same clinician is serving both pnc and fp patients
+		</description>
+	</globalProperty>
 
+	<!-- /Required global properties -->
 </module>
 
