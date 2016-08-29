@@ -14,10 +14,10 @@
                 addBtn.html('<i class="icon-refresh"></i> Add Receipts');
             }
             else if (jq('#issues').is(':visible')) {
-                addBtn.html('<i class="icon-refresh"></i> Add Returns');
+                addBtn.html('<i class="icon-refresh"></i> Add Issues');
             }
             else if (jq('#returns').is(':visible')) {
-                addBtn.html('<i class="icon-refresh"></i> Add Issues');
+                addBtn.html('<i class="icon-refresh"></i> Add Returns');
             }
 			else if (jq('#stockouts').is(':visible')) {
                 addBtn.html('<i class="icon-refresh"></i> Add StockOuts');
