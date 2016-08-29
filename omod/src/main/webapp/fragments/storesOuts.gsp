@@ -4,7 +4,7 @@
 			<i class="icon-folder-open"></i>
 			<h3 class="name">VIEW STOCKOUTS</h3>
 			
-			<div style="margin-top: -1px">
+			<div style="margin-top: -3px">
 				<i class="icon-filter" style="font-size: 26px!important; color: #5b57a6"></i>				
 				<label for="outsNames">&nbsp; Name:</label>
 				<input id="outsNames" type="text" value="" name="outsNames" placeholder="Vaccine/Diluent" style="width: 240px">
@@ -34,3 +34,34 @@
 		</tr>
     </tbody>
 </table>
+
+<div id="stockouts-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Record Stock-Outs</h3>
+    </div>
+
+    <div class="dialog-content">
+        <form id="receiptsForm">
+            <ul>
+                <li>
+                    <label>Vaccine/Diluent</label>
+                    <input id="outsName" type="text">
+                </li>
+				
+				<li>
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsExpiry', id: 'outsExpiry', label: 'Depleted On', useTime: false, defaultToday: false])}
+                </li>
+				
+                <li>
+                    <label>Remarks</label>
+                    <textarea id="outsRemarks"></textarea>
+                </li>
+            </ul>
+			
+            <label class="button confirm" style="float: right; width: auto ! important; margin-right: 5px;">Confirm</label>
+            <label class="button cancel" style="width: auto!important;">Cancel</label>
+        </form>
+    </div>
+</div>

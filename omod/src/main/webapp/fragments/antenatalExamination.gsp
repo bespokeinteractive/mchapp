@@ -201,7 +201,7 @@
 			
 			jq('#vaccine-state').html(jq('#changeToState_'+idnt).html());			
 		
-			vaccinationDialog.show();		
+			vaccinationDialog.show();
 		});
 
         jq("#programExit").on("click", function (e) {

@@ -7,9 +7,123 @@
 	jq(function () {
 		jq("#tabs").tabs();		
 		
-		jq('#inline-tabs li').click(function(){			
+		jq('#inline-tabs li').click(function(){
+			var addBtn = jq('#adder a');
 			
+			if (jq('#receipts').is(':visible')) {
+                addBtn.html('<i class="icon-refresh"></i> Add Receipts');
+            }
+            else if (jq('#issues').is(':visible')) {
+                addBtn.html('<i class="icon-refresh"></i> Add Returns');
+            }
+            else if (jq('#returns').is(':visible')) {
+                addBtn.html('<i class="icon-refresh"></i> Add Issues');
+            }
+			else if (jq('#stockouts').is(':visible')) {
+                addBtn.html('<i class="icon-refresh"></i> Add StockOuts');
+            }
+			else if (jq('#equipments').is(':visible')) {
+                addBtn.html('<i class="icon-refresh"></i> Add Equipments');
+            }
 		}).click();
+		
+		jq('#adder a').click(function(){
+			if (jq('#receipts').is(':visible')) {
+                receiptsDialog.show();
+            }
+            else if (jq('#issues').is(':visible')) {
+                issuesDialog.show();
+            }
+            else if (jq('#returns').is(':visible')) {
+                returnsDialog.show();
+            }
+			else if (jq('#stockouts').is(':visible')) {
+                stockoutsDialog.show();
+            }
+			else if (jq('#equipments').is(':visible')) {
+                equipmentsDialog.show();
+            }
+		});
+		
+		var receiptsDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#receipts-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                },
+                cancel: function () {
+                    receiptsDialog.close();
+                }
+            }
+        });
+		
+		var returnsDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#returns-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                },
+                cancel: function () {
+                    returnsDialog.close();
+                }
+            }
+        });
+		
+		var issuesDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#issues-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                },
+                cancel: function () {
+                    issuesDialog.close();
+                }
+            }
+        });
+		
+		var stockoutsDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#stockouts-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                },
+                cancel: function () {
+                    stockoutsDialog.close();
+                }
+            }
+        });
+		
+		var equipmentsDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#equipments-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                },
+                cancel: function () {
+                    equipmentsDialog.close();
+                }
+            }
+        });
 	});
 </script>
 
@@ -40,7 +154,7 @@
 		border-radius: 2px !important;
 		box-shadow: none !important;
 		box-sizing: border-box !important;
-		height: 30px;
+		height: 32px;
 		padding-left: 5px;
 	}	
 	.info-header span {
@@ -56,8 +170,11 @@
 		font-size: 8px !important;
 		left: auto;
 		margin-left: -29px;
-		margin-top: 4px !important;
+		margin-top: 5px !important;
 		position: absolute;
+	}	
+	li .add-on {
+		font-size: 16px !important;
 	}
 	#inline-tabs {
 		background: #f9f9f9 none repeat scroll 0 0;
@@ -79,6 +196,54 @@
 	}
 	.name {
 		color: #f26522;
+	}	
+	#adder {
+		border: 1px none #88af28;
+		color: #fff !important;
+		float: right;
+		margin-right: -10px;
+		margin-top: 5px;
+	}
+	.dialog .dialog-content li {
+		margin-bottom: 0px;
+	}
+	.dialog label {
+		display: inline-block;
+		width: 120px;
+	}
+	.dialog select option {
+		font-size: 1.0em;
+	}
+	.dialog select {
+		display: inline-block;
+		margin: 4px 0 0;
+		width: 260px;
+		height: 38px;
+	}
+	.dialog input {
+		display: inline-block;
+		width: 260px;
+		min-width: 10%;
+		margin: 4px 0 0;
+	}
+	.dialog td input {
+		width: 40px;
+	}
+	.dialog textarea {
+		display: inline-block;
+		width: 260px;
+		min-width: 10%;
+		resize: none
+	}
+	form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus {
+		outline: 1px none #007fff;
+	}
+	#modal-overlay {
+		background: #000 none repeat scroll 0 0;
+		opacity: 0.4 !important;
+	}
+	.dialog ul {
+		margin-bottom: 20px;
 	}
 </style>
 
@@ -121,6 +286,13 @@
                 <li><a href="#returns">Returns</a></li>
                 <li><a href="#stockouts">Stock Outs</a></li>
                 <li><a href="#equipments">Equipments</a></li>
+				
+				<li id="adder" class="ui-state-default">
+                    <a style="color:#fff" class="button confirm">
+                        <i class="icon-plus"></i>
+                        Add Receipts
+                    </a>
+                </li>
             </ul>
 
             <div id="receipts">
