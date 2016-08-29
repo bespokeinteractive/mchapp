@@ -18,6 +18,7 @@
         <many-to-one name="createdBy" class="org.openmrs.Person"
                      column="created_by" cascade="none"  />
         <property name="quantity" column="quantity"  />
+        <property name="vvmStage" column="vvm_stage"  />
         <property name="createdOn" column="created_on"  />
 		<property name="openingBalance" column="openning_balance"  />
 		<property name="closingBalance" column="closing_balance"  />
