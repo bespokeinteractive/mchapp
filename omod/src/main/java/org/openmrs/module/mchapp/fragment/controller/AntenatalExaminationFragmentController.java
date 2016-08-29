@@ -92,7 +92,6 @@ public class AntenatalExaminationFragmentController {
         } catch (Exception e) {
             log.error("Error Pulling Toxoid Details", e);
         }
-
         return SimpleObject.fromCollection(list, ui, "vaccineName", "dateGiven", "dateRecorded", "provider");
     }
 }

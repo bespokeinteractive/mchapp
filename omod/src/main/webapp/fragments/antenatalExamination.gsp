@@ -1176,8 +1176,7 @@
 
 											<tbody>
 												<tr>
-													<td>&nbsp;</td>
-													<td colspan="5">No Records Found</td>
+													<td colspan="5">No Records Found<br />${tetanusVaccines}</td>
 												</tr>
 
 											</tbody>
