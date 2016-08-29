@@ -70,6 +70,16 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     }
 
     @Override
+    public ImmunizationStoreTransactionType getImmunizationStoreTransactionTypeById(int id) {
+        return dao.getImmunizationStoreTransactionTypeById(id);
+    }
+
+    @Override
+    public List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType() {
+        return dao.getAllImmunizationStoreTransactionType();
+    }
+
+    @Override
     public List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByType(ImmunizationStoreTransactionType transactionType) {
         return dao.getImmunizationStoreDrugTransactionDetailByType(transactionType);
     }
@@ -137,5 +147,11 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     @Override
     public ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout) {
         return dao.saveImmunizationStockout(immunizationStockout);
+    }
+
+    @Override
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
+
+        return dao.listImmunizationReceipts(type, rcptNames, fromDate, toDate);
     }
 }

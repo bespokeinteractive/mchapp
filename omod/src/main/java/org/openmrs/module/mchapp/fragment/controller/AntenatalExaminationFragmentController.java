@@ -1,9 +1,5 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
-import java.text.ParseException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -25,6 +21,9 @@ import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 
 
 /**

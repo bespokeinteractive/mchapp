@@ -36,6 +36,10 @@ public interface ImmunizationService extends OpenmrsService {
 
 
     /*  ImmunizationStoreDrugTransactionDetail    */
+    ImmunizationStoreTransactionType getImmunizationStoreTransactionTypeById(int id);
+    List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType();
+
+    /*  ImmunizationStoreDrugTransactionDetail    */
     List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByType(ImmunizationStoreTransactionType transactionType);
 
     List<ImmunizationStoreDrugTransactionDetail> getImmunizationStoreDrugTransactionDetailByDrug(ImmunizationStoreDrug drug);
@@ -66,4 +70,6 @@ public interface ImmunizationService extends OpenmrsService {
     ImmunizationStockout getImmunizationStockoutById(int id);
 
     ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout);
+
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 }

@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.db.hibernate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -204,6 +205,38 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     @Override
     public ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout) {
         return null;
+    }
+
+    @Override
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
+        if (StringUtils.isNotEmpty(rcptNames)) {
+            criteria.add(Restrictions.eq("storeDrug", rcptNames));
+        }
+
+        if (fromDate != null && toDate != null) {
+            //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
+            criteria.add(Restrictions.between("createdOn", fromDate, toDate));
+        } else if (fromDate != null && toDate == null) {
+            criteria.add(Restrictions.ge("createdOn", fromDate));
+        } else if (fromDate == null && toDate != null) {
+            criteria.add(Restrictions.le("createdOn", toDate));
+        }
+        return criteria.list();
+    }
+
+    @Override
+    public ImmunizationStoreTransactionType getImmunizationStoreTransactionTypeById(int id) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreTransactionType.class);
+        criteria.add(Restrictions.eq("id", id));
+        return (ImmunizationStoreTransactionType) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType() {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreTransactionType.class);
+        return criteria.list();
     }
 
     private Session getSession() {

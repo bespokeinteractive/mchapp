@@ -24,8 +24,6 @@ public class ProgramSelectionFragmentController {
         model.addAttribute("queueId", config.get("queueId"));
     }
 
-    ;
-
     public SimpleObject enrollInAnc(
             @RequestParam("patientId") Patient patient,
             @RequestParam("dateEnrolled") String dateEnrolledAsString

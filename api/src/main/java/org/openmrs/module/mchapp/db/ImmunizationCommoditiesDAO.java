@@ -74,4 +74,13 @@ public interface ImmunizationCommoditiesDAO {
     ImmunizationStockout getImmunizationStockoutById(int id);
 
     ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout);
+
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate);
+
+
+    /* ImmunizationStoreTransactionType */
+    ImmunizationStoreTransactionType getImmunizationStoreTransactionTypeById(int id);
+
+    List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType();
+
 }

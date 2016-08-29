@@ -14,6 +14,7 @@ import java.util.Date;
 public class ImmunizationStoreDrugTransactionDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
+    private int vvmStage;
     private Patient patient;
     private ImmunizationStoreTransactionType transactionType;
     private ImmunizationStoreDrug storeDrug;
@@ -102,5 +103,13 @@ public class ImmunizationStoreDrugTransactionDetail implements Serializable {
 
     public void setCreatedBy(Person createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public int getVvmStage() {
+        return vvmStage;
+    }
+
+    public void setVvmStage(int vvmStage) {
+        this.vvmStage = vvmStage;
     }
 }
