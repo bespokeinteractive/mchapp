@@ -1,6 +1,7 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +9,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
@@ -77,8 +80,20 @@ public class AntenatalTriageFragmentController {
         model.addAttribute("internalReferrals",
                 SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("queueId", config.get("queueId"));
+        
+        Concept visitNumber = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.ANTENATAL_VISIT_NUMBER);
+        List<SimpleObject> antenatalVisitNumber = new ArrayList<SimpleObject>();
+        if (visitNumber != null){
+        	for (ConceptAnswer ancAnswer : visitNumber.getAnswers()){
+        		antenatalVisitNumber.add(SimpleObject.create("uuid", ancAnswer.getAnswerConcept().getUuid(),"label",
+        				ancAnswer.getAnswerConcept().getDisplayString()));
+        	}
+        }
+        model.addAttribute("antenatalVisitNumber", antenatalVisitNumber);
+        
 
     }
+    
 
     public SimpleObject saveAntenatalTriageInformation(@RequestParam("patientId") Patient patient,
             @RequestParam("queueId") Integer queueId, @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
@@ -105,7 +120,6 @@ public class AntenatalTriageFragmentController {
                 SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
                     patient, visitStatus);
             }
-
             if (!isEdit) {
                 QueueLogs.logTriagePatient(queue, encounter);
             }

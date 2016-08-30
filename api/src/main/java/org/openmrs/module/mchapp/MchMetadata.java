@@ -79,6 +79,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String ANC_PROGRAM_CONCEPT = "ae6a8bba-b7cd-4e2f-8c87-720c86966666";
         public static final String PNC_PROGRAM = "a15f2617-9f5d-4022-8de3-181b2e286a28";
         public static final String PNC_PROGRAM_CONCEPT = "f5d0b8a9-aacc-4d78-9c9e-792197debc77";
+        public static final String ANTENATAL_VISIT_NUMBER = "1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         public static final Integer INITIAL_MCH_CLINIC_VISIT = 2;
         public static final Integer RETURN_ANC_CLINIC_VISIT = 3;
         public static final Integer RETURN_PNC_CLINIC_VISIT = 4;

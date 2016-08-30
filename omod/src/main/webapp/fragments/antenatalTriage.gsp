@@ -241,6 +241,11 @@
 				<input type="text" id="gestation">
 				<span class="append-to-value">Weeks</span>
 			</div>
+            <div>
+                 <label for="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Number of Visit</label>
+                 <input type="text" name="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="visitNumber">
+                 <span id="" class="field-error" style="display: none"></span>
+            </div>
 		</div>
 	</div>
 </div>
