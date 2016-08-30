@@ -1422,7 +1422,11 @@
 					</table>
 					
 					<div>
-						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 45.5%;">
+							<input id="sendToFamilyPlannning" name="sendToFamilyPlannning" type="checkbox">
+							Send to Family Plannning
+						</label>
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 45.5%;float:right;">
 							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
 							Exit Patient from Program
 						</label>

@@ -3,6 +3,7 @@ package org.openmrs.module.mchapp.fragment.controller;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +15,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchService;
@@ -72,6 +74,10 @@ public class PostnatalExaminationFragmentController {
             if(refferedRoomUuid!="" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
                 internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
             }
+            String sendToFp = request.getParameter("sendToFamilyPlannning");
+            if(sendToFp.equals("on")){
+                internalReferral.sendToRefferedRoom(patient, MchMetadata.MchAppConstants.FAMILY_PLANNING_CLINIC_CONCEPT_UUID);
+            }
             return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         } catch (NullPointerException e) {
             log.error(e.getMessage());
@@ -83,4 +89,6 @@ public class PostnatalExaminationFragmentController {
                 e.getMessage());
         }
     }
+
+
 }
