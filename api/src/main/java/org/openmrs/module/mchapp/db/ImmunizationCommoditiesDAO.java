@@ -83,4 +83,5 @@ public interface ImmunizationCommoditiesDAO {
 
     List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType();
 
+    List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName);
 }

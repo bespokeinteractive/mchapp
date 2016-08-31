@@ -4,6 +4,7 @@
 %>
 
 <script>
+	var eAction
 	jq(function () {
 		jq("#tabs").tabs();		
 		
@@ -29,6 +30,7 @@
 		
 		jq('#adder a').click(function(){
 			if (jq('#receipts').is(':visible')) {
+
                 receiptsDialog.show();
             }
             else if (jq('#issues').is(':visible')) {
@@ -54,6 +56,25 @@
             actions: {
                 confirm: function () {
                     //Code Here
+					var requestData = {
+						storeDrugName: jq("#rcptName").val(),
+						quantity: jq("#rcptQuantity").val(),
+						vvmStage: jq("#rcptStage").val(),
+						rcptBatchNo: jq("#rcptBatchNo").val(),
+						expiryDate: jq("#rcptExpiry-field").val(),
+						remarks: jq("#rcptRemarks").val(),
+					}
+					jq.getJSON('${ ui.actionLink("mchapp", "storesReceipts", "saveImmunizationReceipts") }', requestData)
+							.success(function (data) {
+								if(data.status === "success"){
+									jq().toastmessage('showSuccessToast', "Receipt Stored Successfully");
+								}else{
+									jq().toastmessage('showErrorToast', "Error Saving Receipt");
+								}
+							}).error(function (xhr, status, err) {
+								jq().toastmessage('showErrorToast', "AJAX error!" + err);
+							}
+					);
                 },
                 cancel: function () {
                     receiptsDialog.close();

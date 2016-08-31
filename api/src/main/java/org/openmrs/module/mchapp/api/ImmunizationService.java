@@ -31,6 +31,7 @@ public interface ImmunizationService extends OpenmrsService {
     ImmunizationStoreDrug getImmunizationStoreDrugById(int id);
 
     ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo);
+    List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName);
 
     ImmunizationStoreDrug saveImmunizationStoreDrug(ImmunizationStoreDrug storeDrug);
 
@@ -72,4 +73,7 @@ public interface ImmunizationService extends OpenmrsService {
     ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout);
 
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate);
+
+
+    ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String rcptBatchNo);
 }

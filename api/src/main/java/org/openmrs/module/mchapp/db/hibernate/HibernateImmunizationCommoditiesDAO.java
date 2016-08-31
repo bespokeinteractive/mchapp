@@ -9,8 +9,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
+import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
 import org.openmrs.module.mchapp.model.*;
 
@@ -204,17 +206,17 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
 
     @Override
     public ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout) {
-        return null;
+        return (ImmunizationStockout) getSession().merge(immunizationStockout);
     }
 
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
+
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
         criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
         if (StringUtils.isNotEmpty(rcptNames)) {
-            criteria.add(Restrictions.eq("storeDrug", rcptNames));
+//            criteria.add(Restrictions.like("storeDrug.inventoryDrug.name", rcptNames));
         }
-
         if (fromDate != null && toDate != null) {
             //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
             criteria.add(Restrictions.between("createdOn", fromDate, toDate));
@@ -223,6 +225,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         } else if (fromDate == null && toDate != null) {
             criteria.add(Restrictions.le("createdOn", toDate));
         }
+
         return criteria.list();
     }
 
@@ -236,6 +239,14 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     @Override
     public List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType() {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreTransactionType.class);
+        return criteria.list();
+    }
+
+    @Override
+    public List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName) {
+        InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(drugName);
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
+                .add(Restrictions.eq("inventoryDrug",inventoryDrug));
         return criteria.list();
     }
 
