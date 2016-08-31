@@ -55,7 +55,7 @@
             selector: '#receipts-dialog',
             actions: {
                 confirm: function () {
-                    //Code Here
+                    //Code to save the receipt
 					var requestData = {
 						storeDrugName: jq("#rcptName").val(),
 						quantity: jq("#rcptQuantity").val(),
@@ -68,6 +68,7 @@
 							.success(function (data) {
 								if(data.status === "success"){
 									jq().toastmessage('showSuccessToast', "Receipt Stored Successfully");
+                                    receiptsDialog.close();
 								}else{
 									jq().toastmessage('showErrorToast', "Error Saving Receipt");
 								}
@@ -78,6 +79,41 @@
                 },
                 cancel: function () {
                     receiptsDialog.close();
+                }
+            }
+        });
+
+        var issuesDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#issues-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                    var issueData = {
+                        issueName: jq("#issueName").val(),
+                        issueQuantity: jq("#issueQuantity").val(),
+                        issueStage: jq("#issueStage").val(),
+                        issueBatchNo: jq("#issueBatchNo").val(),
+                        issueRemarks: jq("#issueRemarks").val(),
+                    }
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesReceipts", "saveImmunizationReceipts") }', issueData)
+                            .success(function (data) {
+                                if(data.status === "success"){
+                                    jq().toastmessage('showSuccessToast', "Receipt Stored Successfully");
+                                    receiptsDialog.close();
+                                }else{
+                                    jq().toastmessage('showErrorToast', "Error Saving Receipt");
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
+                },
+                cancel: function () {
+                    issuesDialog.close();
                 }
             }
         });
@@ -98,21 +134,7 @@
             }
         });
 		
-		var issuesDialog = emr.setupConfirmationDialog({
-			dialogOpts: {
-				overlayClose: false,
-				close: true
-			},
-            selector: '#issues-dialog',
-            actions: {
-                confirm: function () {
-                    //Code Here
-                },
-                cancel: function () {
-                    issuesDialog.close();
-                }
-            }
-        });
+
 		
 		var stockoutsDialog = emr.setupConfirmationDialog({
 			dialogOpts: {

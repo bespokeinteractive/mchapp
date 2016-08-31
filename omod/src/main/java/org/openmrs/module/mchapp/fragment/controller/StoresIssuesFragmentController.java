@@ -21,23 +21,23 @@ import java.util.List;
  * @author Stanslaus Odhiambo
  *         Created on 8/29/2016.
  */
-public class StoresReceiptsFragmentController {
+public class StoresIssuesFragmentController {
     private ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
 
     //    Default handler for GET and POST requests if none exist
     public void controller() {
     }
 
-    public List<SimpleObject> listImmunizationReceipts(UiUtils uiUtils,
-                                                       @RequestParam(value = "rcptNames", required = false) String rcptNames,
+    public List<SimpleObject> listImmunizationIssues(UiUtils uiUtils,
+                                                       @RequestParam(value = "issueNames", required = false) String rcptNames,
                                                        @RequestParam(value = "fromDate", required = false) Date fromDate,
                                                        @RequestParam(value = "toDate", required = false) Date toDate) {
 
-        List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationReceipts(TransactionType.RECEIPTS, rcptNames, fromDate, toDate);
+        List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationReceipts(TransactionType.ISSUES, rcptNames, fromDate, toDate);
         return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "quantity", "vvmStage", "remark");
     }
 
-    public SimpleObject saveImmunizationReceipts(UiUtils uiUtils, @RequestParam("storeDrugName") String storeDrugName,
+    public SimpleObject saveImmunizationIssue(UiUtils uiUtils, @RequestParam("storeDrugName") String storeDrugName,
                                                  @RequestParam("quantity") Integer quantity,
                                                  @RequestParam("vvmStage") Integer vvmStage,
                                                  @RequestParam("rcptBatchNo") String rcptBatchNo,

@@ -215,7 +215,9 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
         criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
         if (StringUtils.isNotEmpty(rcptNames)) {
-//            criteria.add(Restrictions.like("storeDrug.inventoryDrug.name", rcptNames));
+            InventoryService service = Context.getService(InventoryService.class);
+            List<InventoryDrug> drugs = service.findDrug(null, rcptNames);
+            criteria.add(Restrictions.in("storeDrug.inventoryDrug",drugs));
         }
         if (fromDate != null && toDate != null) {
             //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
