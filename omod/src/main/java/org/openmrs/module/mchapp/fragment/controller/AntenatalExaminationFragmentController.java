@@ -6,12 +6,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
+import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
-import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.hospitalcore.model.*;
+import org.openmrs.module.hospitalcore.util.ActionValue;
+import org.openmrs.module.hospitalcore.util.FlagStates;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.inventory.model.ToxoidModel;
+import org.openmrs.module.inventory.util.DateUtils;
 import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.MchEncounterService;
@@ -27,6 +31,9 @@ import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 
 /**
@@ -93,5 +100,104 @@ public class AntenatalExaminationFragmentController {
             log.error("Error Pulling Toxoid Details", e);
         }
         return SimpleObject.fromCollection(list, ui, "vaccineName", "dateGiven", "dateRecorded", "provider");
+    }
+
+    public String saveTetanusToxoid(@RequestParam(value = "patientId", required = false) Patient patient,
+                                   @RequestParam(value = "drugId", required = false) Integer drugId,
+                                   @RequestParam(value = "formulation", required = false) Integer formulation,
+                                   @RequestParam(value = "frequency", required = false) String frequency,
+                                   @RequestParam(value = "injDate", required = false) Date injDate,
+                                   @RequestParam(value = "batchNo", required = false) String batchNo) {
+
+        InventoryService inventoryService = (InventoryService) Context
+                .getService(InventoryService.class);
+        List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
+
+        InventoryStoreRoleRelation srl = null;
+        Role rl = null;
+        for (Role r : role) {
+            if (inventoryService.getStoreRoleByName(r.toString()) != null) {
+                srl = inventoryService.getStoreRoleByName(r.toString());
+                rl = r;
+            }
+        }
+        InventoryStore store = null;
+        if (srl != null) {
+            store = inventoryService.getStoreById(srl.getStoreid());
+
+        }
+
+        InventoryStoreDrugPatient inventoryStoreDrugPatient = new InventoryStoreDrugPatient();
+        InventoryStoreDrugPatientDetail inventoryStoreDrugPatientDetail = new InventoryStoreDrugPatientDetail();
+
+        InventoryStoreDrugTransaction transaction = new InventoryStoreDrugTransaction();
+        transaction.setDescription("DISPENSE TETANUS TOXOID " + DateUtils.getDDMMYYYY());
+        transaction.setStore(store);
+        transaction.setTypeTransaction(ActionValue.TRANSACTION[1]);
+        transaction.setCreatedOn(new Date());
+        transaction.setCreatedBy(Context.getAuthenticatedUser().getGivenName());
+        transaction = inventoryService.saveStoreDrugTransaction(transaction);
+
+        //for (InventoryStoreDrugPatientDetail pDetail : listDrugIssue) {
+        Date date1 = new Date();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Integer totalQuantity = inventoryService.sumCurrentQuantityDrugOfStore(store.getId(), drugId, formulation);
+
+        InventoryStoreDrugTransactionDetail transDetail = new InventoryStoreDrugTransactionDetail();
+        transDetail.setTransaction(transaction);
+        transDetail.setCurrentQuantity(0);
+        transDetail.setIssueQuantity(1);
+        transDetail.setOpeningBalance(totalQuantity);
+        transDetail.setClosingBalance(totalQuantity -1);
+        transDetail.setQuantity(0);
+        transDetail.setVAT(BigDecimal.ZERO);
+        transDetail.setCostToPatient(BigDecimal.ZERO);
+        transDetail.setUnitPrice(BigDecimal.ZERO);
+        transDetail.setDrug(inventoryService.getDrugById(drugId));
+        transDetail.setFormulation(inventoryService.getDrugFormulationById(formulation));
+        transDetail.setBatchNo(batchNo);
+
+//            transDetail.setCompanyName(pDetail.getTransactionDetail()
+//                    .getCompanyName());
+//            transDetail.setDateManufacture(pDetail.getTransactionDetail()
+//                    .getDateManufacture());
+//            transDetail.setDateExpiry(pDetail.getTransactionDetail()
+//                    .getDateExpiry());
+//            transDetail.setReceiptDate(pDetail.getTransactionDetail()
+//                    .getReceiptDate());
+
+        transDetail.setCreatedOn(injDate);
+        transDetail.setReorderPoint(0);
+        transDetail.setAttribute("B");
+        transDetail.setFrequency(Context.getConceptService().getConceptByName(frequency));
+        transDetail.setNoOfDays(1);
+        transDetail.setFlag(FlagStates.FULLY_PROCESSED);
+        transDetail.setTotalPrice(BigDecimal.ZERO);
+        transDetail = inventoryService.saveStoreDrugTransactionDetail(transDetail);
+
+        inventoryStoreDrugPatient.setStore(store);
+        inventoryStoreDrugPatient.setPatient(patient);
+        inventoryStoreDrugPatient.setName(patient.getNames().toString());
+        inventoryStoreDrugPatient.setIdentifier(patient.getIdentifiers().toString());
+        inventoryStoreDrugPatient.setCreatedBy(Context.getAuthenticatedUser().getGivenName());
+        inventoryStoreDrugPatient.setCreatedOn(date1);
+        inventoryStoreDrugPatient.setValues(0);
+        inventoryStoreDrugPatient.setStatuss(0);
+        inventoryStoreDrugPatient.setComment("");
+        inventoryStoreDrugPatient.setWaiverAmount(BigDecimal.ZERO);
+        inventoryStoreDrugPatient.setPrescriber(Context.getAuthenticatedUser());
+        inventoryStoreDrugPatient = inventoryService.saveStoreDrugPatient(inventoryStoreDrugPatient);
+
+        inventoryStoreDrugPatientDetail.setStoreDrugPatient(inventoryStoreDrugPatient);
+        inventoryStoreDrugPatientDetail.setTransactionDetail(transDetail);
+        inventoryStoreDrugPatientDetail.setQuantity(1);
+        inventoryStoreDrugPatientDetail = inventoryService.saveStoreDrugPatientDetail(inventoryStoreDrugPatientDetail);
+
+        return "success";
     }
 }

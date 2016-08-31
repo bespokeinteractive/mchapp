@@ -42,8 +42,7 @@
 			var data = jq("form#antenatalExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
 
-            jq.post(
-              '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
+            jq.post('${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
               data,
               function (data) {
                   if (data.status === "success") {
@@ -105,6 +104,10 @@
                 }
             }
         });
+		
+		jq('#tetanus-batch-no').keyup(function(){
+			this.value = this.value.toUpperCase();
+		});
 		
 		//submit data
         jq("#antenatalExaminationSubmitButton").on("click", function(event){
@@ -189,13 +192,66 @@
                 }
             }
         });
+		
+		var tetanusVaccineDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#tetanus-vaccine-dialog',
+            actions: {
+                confirm: function () {
+					if (jq('#tetanus-batch-no').val().trim() == ''){
+						jq().toastmessage('showErrorToast', 'Kindly specify the Batch Number');
+						jq(this).focus();
+						return false;
+					}
+					
+					jq().toastmessage({
+						sticky: true
+					});
+					var savingMessage = jq().toastmessage('showSuccessToast', 'Please wait as Information is being Saved...');
+			
+					jq.getJSON('${ ui.actionLink("mchapp", "antenatalExamination", "saveTetanusToxoid") }', {
+						patientId: '${patient.id}',
+						drugId: 188,
+						formulation: 438,
+						frequency: 'QID',
+						batchNo: jq('#tetanus-batch-no').val(),
+						injDate: jq('#tetanus-vaccine-date-field').val()
+					}).success(function (data) {
+						jq().toastmessage('removeToast', savingMessage);
+						jq().toastmessage('showSuccessToast', 'Successfully saved Tetanus Toxoid Vaccine');						
+						tetanusVaccineDialog.close();
+						location.reload();
+						
+					}).error(function (xhr, status, err) {
+						jq().toastmessage('removeToast', savingMessage);
+						jq().toastmessage('showErrorToast', "Saving Failed! " + err);
+						
+					});
+                    
+                },
+                cancel: function () {
+                    tetanusVaccineDialog.close();
+                }
+            }
+        });
 
         jq('.update-vaccine a').click(function(){
 			var idnt = jq(this).data('idnt');
 			var name = jq(this).data('name');
 			var prog = jq(this).data('prog');
 			
-			if (typeof(idnt) === 'undefined'){ return false }
+			if (typeof(idnt) === 'undefined'){
+				if (jq(this).attr('id') == 'update-tetanus-vaccine'){
+					tetanusVaccineDialog.show();
+					return false;				
+				}
+				else{
+					return false;				
+				}
+			}
 			
 			jq('#vaccine-idnt').val(idnt);
 			jq('#vaccine-name').val(name);
@@ -759,6 +815,19 @@
 				output += 'ANC Exercise Given: ' + jq("input[name='concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c']:checked").data('value') + '<br/>';
 			}
 			
+			if (jq(this).attr('name') == 'test.folate'){
+				if (jq(this).data('value') == 'Yes'){
+					jq('.iron-individual-doses').hide();
+					jq("input[name='concept.424bd134-a3af-4095-8fe9-374f0af13768'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").attr('checked', 'true');
+					jq("input[name='concept.8ee937e9-07b9-4962-94b0-73c05df8652a'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").attr('checked', 'true');
+				}
+				else{
+					jq('.iron-individual-doses').show();
+					jq("input[name='concept.424bd134-a3af-4095-8fe9-374f0af13768'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").removeAttr('checked');
+					jq("input[name='concept.8ee937e9-07b9-4962-94b0-73c05df8652a'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").removeAttr('checked');
+				}			
+			}
+			
 			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 		
@@ -795,8 +864,6 @@
 				jq('#externalRefferalSpc').hide();
 			}
 		}).change();
-
-
 		
 		jq('#lessthan16 span.small').click(function(){
 			jq('#lessthan16').hide(500);
@@ -1096,6 +1163,13 @@
 		min-height:	100px!important;
 		height: 	100px!important;
 	}
+	.iron-individual-doses{
+		display: none;
+		border-left: 5px solid rgb(242, 101, 34);
+		display: block;
+		margin-left: 37px;
+		padding-top: 0;
+	}
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -1155,7 +1229,7 @@
 							<div class="info-section" style="width: 100.7%">
 								<div class="info-header">
 									<i class="icon-medicine"></i>
-									<h3> TETANUS TOXOID</h3>
+									<h3> TETANUS VACCINES</h3>
 									<a><i class="icon-chevron-down small right chevron"></i></a>
 								</div>
 
@@ -1175,15 +1249,27 @@
 											</thead>
 
 											<tbody>
-												<tr>
-													<td colspan="5">No Records Found<br />${tetanusVaccines}</td>
-												</tr>
-
+												<% if (tetanusVaccines.size() == 0) {%>
+													<tr>
+														<td></td>
+														<td colspan="5">No Records Found<br/></td>
+													</tr>
+												<% } else {%>
+													<% tetanusVaccines.eachWithIndex { vaccines, index -> %>
+														<tr>
+															<td>${index+1}</td>
+															<td>TETANUS TOXOID</td>
+															<td>${vaccines.dateGiven.toString().substring(0,10)}</td>
+															<td>${vaccines.dateRecorded.toString().substring(0,10)}</td>
+															<td>${vaccines.provider}</td>															
+														</tr>
+													<% } %>
+												<% } %>
 											</tbody>
 										</table>
 
 										<div class="update-vaccine">
-											<a>
+											<a id="update-tetanus-vaccine">
 												<i class="icon-pencil small"></i>
 												Update Vaccine
 											</a>											
@@ -1196,7 +1282,7 @@
 						</div>
 					</div>
 				
-                    <% patientProgram.program.workflows.each { workflow -> %>					
+                    <% patientProgram.program.workflows.each { workflow -> %>
 						<% if (workflow.programWorkflowId != 10 && workflow.programWorkflowId != 11) { %>
 							<% def stateId; def stateStart; def stateName; %>
 							<div id="data-holder">
@@ -2012,7 +2098,7 @@
 						</label><br/>
 					</div>				
 					
-					<div class="testbox">
+					<div class="testbox" style="height: 190px!important">
 						<div>Received LLITN</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
@@ -2038,17 +2124,35 @@
 						</label>
 					</div>
 					
-					<div class="testbox">
+					<div class="testbox iron-folate" style="height: 190px!important">
 						<div>Iron & Folate Given</div>
-						<label>
-							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
-							Yes
+						<label style="width: 300px;">
+							<input id="couple-counselled" data-value="Yes" name="test.folate" type="radio"/>
+							Combined Dose
 						</label><br/>
 						
-						<label>
-							<input id="couple-counselled" data-value="No" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
-							No
+						<label style="width: 300px;">
+							<input id="couple-counselled" data-value="No"  name="test.folate" type="radio"/>
+							Individual Doses
 						</label><br/>
+						
+						<span class="iron-individual-doses" style="margin-top: 5px; display: none;">
+							<label style="width: 300px; margin-top: -4px; margin-left: -5px;">
+								<span>Folic Acid</span>
+							</label>
+							
+							<input data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><span style="color: #363463">Yes</span>
+							<input data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><span style="color: #363463">No</span>
+						</span>	<br/>
+						
+						<span class="iron-individual-doses" style="margin-top: -18px; display: none;">
+							<label style="width: 300px; margin-top: -4px; margin-left: -5px;">
+								<span>Iron Supplements</span>
+							</label>
+							
+							<input data-value="Yes" type="radio" name="concept.8ee937e9-07b9-4962-94b0-73c05df8652a" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><span style="color: #363463">Yes</span>
+							<input data-value="Yes" type="radio" name="concept.8ee937e9-07b9-4962-94b0-73c05df8652a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><span style="color: #363463">No</span>							
+						</span>
 					</div>
 				</div>
 			</div>
@@ -2319,6 +2423,38 @@
 			
 			<li>				
 				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true,startDate: patient.birthdate, endDate: new Date()])}
+			</li>
+			
+			<span class="button confirm" style="float: right; margin-right: 17px;">
+				<i class="icon-save small"></i>
+				Save
+			</span>
+			
+			<span class="button cancel">Cancel</span>
+		</ul>
+    </div>
+</div>
+
+<div id="tetanus-vaccine-dialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE VACCINE</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="vaccine-name">Vaccine Name:</label>
+				<input type="text" id="tetanus-vaccine-name" readonly="" value="Tetanus Toxoid"/>
+			</li>
+			
+			<li>
+				<label for="vaccine-name">Batch Number:</label>
+				<input type="text" id="tetanus-batch-no"/>
+			</li>
+			
+			<li>				
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'tetanus-vaccine-date', id: 'tetanus-vaccine-date', label: 'Date Given', useTime: false, defaultToday: true, startDate: patient.birthdate, endDate: new Date()])}
 			</li>
 			
 			<span class="button confirm" style="float: right; margin-right: 17px;">
