@@ -1,7 +1,39 @@
 <script>
     var drugIssues;
+    var drugBatches;
+
+    function DrugBatchViewModel(){
+        var self =this;
+        self.availableDrugs = ko.observableArray([]);
+        self.drugObject=ko.observable();
+    }
+    function checkBatchAvailability(drgId,drgName) {
+        var requestData = {
+            drgId: drgId,
+            drgName: drgName
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "getBatchesForSelectedDrug") }', requestData)
+                .success(function (data) {
+                    if(data.status ==="success"){
+                        jq().toastmessage('showSuccessToast', data.message);
+                    }else if(data.status ==="fail"){
+                        jq().toastmessage('showErrorToast', data.message);
+                    }
+
+                    drugBatches.availableDrugs.removeAll();
+                    jq.each(data.drugs, function (i, item) {
+                        console.log(item);
+                        drugBatches.availableDrugs.push(item);
+                    });
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                }
+        );
+
+    }
     jq(function () {
         drugIssues = new IssuesViewModel();
+        drugBatches = new DrugBatchViewModel();
         listImmunizationIssues();
         jq(".searchIssueParams").on('blur change', function () {
             var issueNames = jq("#issueNames").val();
@@ -10,7 +42,39 @@
             listImmunizationIssues(issueNames, fromDate, toDate);
         });
 
+        jq("#issueName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("pharmacyapp", "addReceiptsToStore", "fetchDrugListByName") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+                            var results = [];
+                            for (var i in data) {
+                                var result = {label: data[i].name, value: data[i]};
+                                results.push(result);
+                            }
+                            response(results);
+                        });
+            },
+            focus: function (event, ui) {
+                jq("#issueName").val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                var drgName=ui.item.value.name;
+                jQuery("#issueName").val(drgName);
+                //set parent category
+                var catId = ui.item.value.category.id;
+                var drgId = ui.item.value.id;
+                checkBatchAvailability(drgId,drgName);
+            }
+        });
+
         ko.applyBindings(drugIssues, jq("#issuesList")[0]);
+        ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);
 
     });//end of doc ready
 
@@ -30,7 +94,6 @@
                 .success(function (data) {
                     jq.each(data, function (i, item) {
                         drugIssues.availableIssues.push(item);
-                        console.log(item);
                     });
                 }).error(function (xhr, status, err) {
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);
@@ -118,12 +181,12 @@
 
                 <li>
                     <label>Batch No.</label>
-                    <input id="issueBatchNo" type="text">
+                    <select id="issueBatchNo" data-bind="options: \$root.availableDrugs, value: drugObject, optionsText: 'batchNo'"></select>
                 </li>
 
                 <li>
-                    <label>Expiry Date</label>
-                    <label>The date</label>
+                    <label>Expiry Date:</label>
+                    <span data-bind="text: \$root.drugObject"></span>
                 </li>
 
                 <li>

@@ -84,4 +84,8 @@ public interface ImmunizationCommoditiesDAO {
     List<ImmunizationStoreTransactionType> getAllImmunizationStoreTransactionType();
 
     List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName);
+
+    List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId);
+
+    ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String drugName);
 }

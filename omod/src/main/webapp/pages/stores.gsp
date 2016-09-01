@@ -96,16 +96,18 @@
                         issueName: jq("#issueName").val(),
                         issueQuantity: jq("#issueQuantity").val(),
                         issueStage: jq("#issueStage").val(),
-                        issueBatchNo: jq("#issueBatchNo").val(),
+                        issueBatchNo: jq("#issueBatchNo option:selected").text(),
                         issueRemarks: jq("#issueRemarks").val(),
+						patientId:null
                     }
-                    jq.getJSON('${ ui.actionLink("mchapp", "storesReceipts", "saveImmunizationReceipts") }', issueData)
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "saveImmunizationIssues") }', issueData)
                             .success(function (data) {
+								console.log(data.message);
                                 if(data.status === "success"){
-                                    jq().toastmessage('showSuccessToast', "Receipt Stored Successfully");
-                                    receiptsDialog.close();
+                                    jq().toastmessage('showSuccessToast', data.message);
+									issuesDialog.close();
                                 }else{
-                                    jq().toastmessage('showErrorToast', "Error Saving Receipt");
+                                    jq().toastmessage('showErrorToast', data.message);
                                 }
                             }).error(function (xhr, status, err) {
                                 jq().toastmessage('showErrorToast', "AJAX error!" + err);

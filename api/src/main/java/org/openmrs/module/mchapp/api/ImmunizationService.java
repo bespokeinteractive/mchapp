@@ -76,4 +76,6 @@ public interface ImmunizationService extends OpenmrsService {
 
 
     ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String rcptBatchNo);
+
+    List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId);
 }

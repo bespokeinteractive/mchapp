@@ -252,6 +252,23 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         return criteria.list();
     }
 
+    @Override
+    public List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId) {
+        InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugById(drgId);
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
+                .add(Restrictions.eq("inventoryDrug",inventoryDrug))
+                .add(Restrictions.ge("currentQuantity",0));
+        return criteria.list();
+    }
+
+    @Override
+    public ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String drugName) {
+        InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(drugName);
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
+                .add(Restrictions.eq("inventoryDrug",inventoryDrug));
+        return (ImmunizationStoreDrug) criteria.uniqueResult();
+    }
+
     private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
