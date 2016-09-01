@@ -1,7 +1,7 @@
 <script>
-
     jq(function () {
     	var isEdit=${isEdit};
+		
     	jq("#editStatus").val(isEdit?"true":"false");
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
@@ -140,7 +140,7 @@
 		</ul>
 	</div>
 	
-	<div style="min-width: 78%" class="col16 dashboard">
+	<div style="min-width: 70%" class="col16 dashboard">
 		<div class="info-section">
 			<form id="antenatal-triage-form">
 			<input type="hidden" value="" id="editStatus" name="isEdit"/>
@@ -151,10 +151,10 @@
 					<h3>TRIAGE DETAILS</h3>
 				</div>
 				
-				<div class="info-body">						
+				<div class="info-body" style="margin-bottom: 20px; padding-bottom: 10px;">
 					<input type="hidden" name="patientId" value="${patientId}" >
 					<input type="hidden" name="queueId" value="${queueId}" >
-					<input type="hidden" name="patientEnrollmentDate" value="${patientProgram?patientProgram.dateEnrolled:"--"}">
+					<input type="hidden" name="patientEnrollmentDate" value='${patientProgram?patientProgram.dateEnrolled:"--"}'>
 					<div>
 						<label for="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Weight</label>
 						<input type="text" id="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="number numeric-range" value="${weight}"/>
@@ -180,21 +180,38 @@
 						<span class="append-to-value">Diastolic</span>
 						<span id="12484" class="field-error" style="display: none"></span>
 					</div>					
-					
-				<%if(!isEdit){ %>
+				</div>
+				
+				<div class="info-header">
+					<i class="icon-group"></i>
+					<h3>VISIT DETAILS</h3>
+				</div>
+				
+				<div class="info-body">
 					<div>
-						<label></label>
-						<label style="padding-left: 0px; width: auto; cursor: pointer;">
-							<input type="checkbox" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb" >
-							Tick to Send to Examination Room
-						</label>
+						<label for="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Number of Visit</label>
+						<input type="text" name="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="visitNumber" value="${visitCount}">
+						<span id="" class="field-error" style="display: none"></span>
 					</div>
+			
+					<%if(!isEdit){ %>
+						<div>
+							<label></label>
+							<label style="padding-left: 0px; width: auto; cursor: pointer;">
+								<input type="checkbox" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb" >
+								Tick to Send to Examination Room
+							</label>
+						</div>
 					<% }%>
 				</div>
+				
+				
+				
+				
 			</form>
 			
 			<div>
-				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 50px;">
+				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 30px;">
 					<i class="icon-save"></i>
 					Save
 				</span>

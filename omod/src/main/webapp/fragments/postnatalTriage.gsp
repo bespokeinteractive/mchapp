@@ -114,7 +114,7 @@
 	</div>
 	
 	
-	<div style="min-width: 78%" class="col16 dashboard">
+	<div style="min-width: 70%" class="col16 dashboard">
 		<div class="info-section">
 			<form id="pnc-triage-form">
 				<input type="hidden" value="" id="editStatus" name="isEdit"/>
@@ -169,7 +169,7 @@
 			</form>
 			
 			<div>
-				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 50px;">
+				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 30px;">
 					<i class="icon-save"></i>
 					Save
 				</span>
