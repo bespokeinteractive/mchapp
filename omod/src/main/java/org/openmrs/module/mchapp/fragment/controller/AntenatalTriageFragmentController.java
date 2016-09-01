@@ -1,19 +1,12 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
@@ -41,6 +34,9 @@ public class AntenatalTriageFragmentController {
             @RequestParam(value = "encounterId", required = false) String encounterId) {
         config.require("patientId");
         config.require("queueId");
+
+        MchService service = Context.getService(MchService.class);
+
 
         if (StringUtils.isNotEmpty(encounterId)) {
             Encounter current = Context.getEncounterService().getEncounter(Integer.parseInt(encounterId));
@@ -80,20 +76,33 @@ public class AntenatalTriageFragmentController {
         model.addAttribute("internalReferrals",
                 SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("queueId", config.get("queueId"));
-        
-        Concept visitNumber = Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.ANTENATAL_VISIT_NUMBER);
-        List<SimpleObject> antenatalVisitNumber = new ArrayList<SimpleObject>();
-        if (visitNumber != null){
-        	for (ConceptAnswer ancAnswer : visitNumber.getAnswers()){
-        		antenatalVisitNumber.add(SimpleObject.create("uuid", ancAnswer.getAnswerConcept().getUuid(),"label",
-        				ancAnswer.getAnswerConcept().getDisplayString()));
-        	}
-        }
-        model.addAttribute("antenatalVisitNumber", antenatalVisitNumber);
-        
-
+        model.addAttribute("visitCount", getLastANCVisitNumber(patient)+1);
     }
-    
+
+    public int getLastANCVisitNumber(Patient patient){
+        List<Obs> ancVisitObs = new ArrayList<Obs>();
+        List<PatientProgram> patientPrograms = Context.getProgramWorkflowService().getPatientPrograms(patient, Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM), null, null, null, null, false);
+        PatientProgram currentProgram = null;
+        for (PatientProgram patientProgram : patientPrograms) {
+            if (patientProgram.getActive()) {
+                currentProgram = patientProgram;
+                break;
+            }
+        }
+        if (currentProgram != null) {
+            Date dateEnrolled = currentProgram.getDateEnrolled();
+            List<Concept> questions = new ArrayList<Concept>() ;
+            questions.add(Context.getConceptService().getConceptByUuid(MchMetadata._MchProgram.ANTENATAL_VISIT_NUMBER));
+            ancVisitObs = Context.getObsService().getObservations(Arrays.asList((Person) patient), null, questions, null, null, null, Arrays.asList("obsDatetime"), 1, null, dateEnrolled, null, false);
+        }
+
+        if (ancVisitObs.size() == 0){
+            return 0;
+        }
+        else{
+            return ancVisitObs.get(0).getValueNumeric().intValue();
+        }
+    }
 
     public SimpleObject saveAntenatalTriageInformation(@RequestParam("patientId") Patient patient,
             @RequestParam("queueId") Integer queueId, @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,

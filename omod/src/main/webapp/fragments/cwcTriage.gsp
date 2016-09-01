@@ -1,5 +1,4 @@
 <script>
-
     jq(function () {
         var isEdit = ${isEdit};
         console.log(isEdit);
@@ -77,6 +76,16 @@
 
 </script>
 
+<style>
+	input[type="radio"] {
+		-webkit-appearance: checkbox;
+		-moz-appearance: checkbox;
+		-ms-appearance: checkbox;
+		margin: 4px 5px 0 0!important;
+		cursor: pointer;
+	}
+</style>
+
 <div>
     <div style="padding-top: 15px;" class="col15 clear">
         <ul id="left-menu" class="left-menu">
@@ -100,7 +109,7 @@
         </ul>
     </div>
 
-    <div style="min-width: 78%" class="col16 dashboard">
+    <div style="min-width: 70%" class="col16 dashboard">
         <div class="info-section">
             <form id="cwc-triage-form">
                 <input type="hidden" value="" id="editStatus" name="isEdit"/>
@@ -117,7 +126,7 @@
                     <input type="hidden" name="patientId" value="${patientId}">
                     <input type="hidden" name="queueId" value="${queueId}">
                     <input type="hidden" name="patientEnrollmentDate"
-                           value="${patientProgram ? patientProgram.dateEnrolled : "--"}">
+                           value='${patientProgram ? patientProgram.dateEnrolled : "--"}'>
 
                     <div>
                         <label for="weight">Weight</label>
@@ -171,11 +180,13 @@
                     <% if (!isEdit) { %>
                     <div>
                         <label></label>
-                        <label style="padding-left:0px; width: auto;">
+                        <label style="padding-left:0px; width: auto; cursor: pointer;">
                             <input type="radio" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb">
                             Send to Examination Room
-                        </label>
-                        <label style="padding-left:0px; width: auto;">
+                        </label><br/>
+						
+                        <label></label>
+                        <label style="padding-left:0px; width: auto; cursor: pointer;">
                             <input type="radio" name="send_for_examination" value="4e87c99b-8451-4789-91d8-2aa33fe1e5f6">
                             Send to Immunization Room
                         </label>
@@ -186,7 +197,7 @@
 
             <div>
                 <span class="button submit confirm right" id="antenatalTriageFormSubmitButton"
-                      style="margin-top: 10px; margin-right: 50px;">
+                      style="margin-top: 10px; margin-right: 30px;">
                     <i class="icon-save"></i>
                     Save
                 </span>
