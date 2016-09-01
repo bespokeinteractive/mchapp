@@ -1000,13 +1000,12 @@ table[id*='workflowTable_'] th:nth-child(4) {
 </div>
 </script>
 
-<% if (opdConcept.equalsIgnoreCase("MCH CLINIC")) { %>
 <form method="post" id="cwcExaminationsForm" class="simple-form-ui">
     <input type="hidden" name="patientId" value="${patient?.patientId}">
     <input type="hidden" name="queueId" value="${queueId}">
 
     <section>
-        
+        <% if (opdConcept.equalsIgnoreCase("MCH CLINIC")) { %>
         <span class="title">Clinical Notes</span>
 
         <fieldset class="no-confirmation">
@@ -1479,6 +1478,122 @@ table[id*='workflowTable_'] th:nth-child(4) {
 
             </div>
         </fieldset>
+        <% } else if (opdConcept.equalsIgnoreCase("MCH IMMUNIZATION")) { %>
+        <span class="title">Immunizations</span>
+
+        <fieldset class="no-confirmation">
+            <legend>Immunizations</legend>
+
+            <div style="padding: 0 4px">
+                <field>
+                    <input type="hidden" id="immunizations-set" class=""/>
+                    <span id="immunizations-lbl" class="field-error" style="display: none"></span>
+                </field>
+
+                <div style="min-width: 78%" class="col16 dashboard">
+                    <% patientProgram.program.workflows.each { workflow -> %>
+                    <% def stateId; def stateStart; def stateName; %>
+                    <div class="info-section">
+                        <% patientProgram.states.each { state -> %>
+                        <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+                            stateId = state.state.concept.conceptId;
+                            stateName = state.state.concept.name;
+                            stateStart = state.startDate;
+                        } %>
+                        <% } %>
+
+                        <div class="info-header">
+                            <i class="icon-medicine"></i>
+
+                            <h3>${workflow.concept.name}</h3>
+                            <a><i class="icon-chevron-right small right chevron"
+                                  data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
+                                  data-prog="${patientProgram.patientProgramId}"></i></a>
+                        </div>
+
+                        <div class="info-body">
+                            <div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
+                                <table id="workflowTable_${workflow.programWorkflowId}">
+                                    <thead>
+                                    <tr>
+                                    <thead>
+                                    <th>#</th>
+                                    <th>VACCINE</th>
+                                    <th>GIVEN ON</th>
+                                    <th>AT AGE</th>
+                                    <th>RECORDED</th>
+                                    <th>PROVIDER</th>
+                                    </thead>
+                                </tr>
+                                </thead>
+
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                                <div class="update-vaccine">
+                                    <a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
+                                       data-prog="${patientProgram.patientProgramId}">
+                                        <i class="icon-pencil small"></i>
+                                        Update Vaccine
+                                    </a>
+                                </div>
+
+                                <div class="">&nbsp;</div>
+
+                                <div style="display: none">
+                                    <select name="changeToState_${workflow.programWorkflowId}"
+                                            id="changeToState_${workflow.programWorkflowId}">
+                                        <option value="0">Select a State</option>
+                                        <% if (workflow.states != null || workflow.states != "") { %>
+                                        <% workflow.states.each { state -> %>
+                                        <option id="${state.id}"
+                                                value="${state.id}">${state.concept.name}</option>
+                                        <% } %>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="currentStateDetails_${workflow.programWorkflowId}">
+                                <% if (stateId != null) { %>
+                                <div id='main-show-${workflow.programWorkflowId}'>
+                                    <span class="status active"></span>
+                                    <span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
+
+                                    <small style="font-size: 77%; margin-left: 10px;">
+                                        ( <span class="icon-time"></span>
+                                        Date: <span id="state_date_${workflow.programWorkflowId}">${
+                                            ui.formatDatePretty(stateStart)}</span> )
+                                    </small>
+                                </div>
+                                <% } else { %>
+                                <div id="no-show-${workflow.programWorkflowId}"
+                                     style="margin-left: 20px; color: rgb(153, 153, 153);">
+                                    <em>(No Previous Vaccinations Found)</em>
+                                </div>
+
+                                <div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+                                    <span class="status active"></span>
+                                    <span id="state_name_${workflow.programWorkflowId}"></span>
+
+                                    <small style="font-size: 77%; margin-left: 10px;">
+                                        ( <span class="icon-time"></span>
+                                        Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
+                                    </small>
+                                </div>
+                                <% } %>
+
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+
+                </div>
+            </div>
+        </fieldset>
+        <% } %>
     </section>
 
     <div id="confirmation" style="width:74.6%; min-height: 400px;">
@@ -1572,152 +1687,10 @@ table[id*='workflowTable_'] th:nth-child(4) {
     </div>
 </form>
 
-<% } else { %>
- 
-<style>
-	#formBreadcrumb{
-		display: none;
-	}
-</style>
- 
-<form method="post" id="cwcExaminationsForm">
-    <input type="hidden" name="patientId" value="${patient?.patientId}">
-    <input type="hidden" name="queueId" value="${queueId}">
-	
-	<div style="padding: 0 4px">
-		<field>
-			<input type="hidden" id="immunizations-set" class=""/>
-			<span id="immunizations-lbl" class="field-error" style="display: none"></span>
-		</field>
-
-		<div style="width: 100%;" class="col16 dashboard">
-			<% patientProgram.program.workflows.each { workflow -> %>
-			<% def stateId; def stateStart; def stateName; %>
-			<div class="info-section">
-				<% patientProgram.states.each { state -> %>
-				<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-					stateId = state.state.concept.conceptId;
-					stateName = state.state.concept.name;
-					stateStart = state.startDate;
-				} %>
-				<% } %>
-
-				<div class="info-header">
-					<i class="icon-medicine"></i>
-
-					<h3>${workflow.concept.name}</h3>
-					<a><i class="icon-chevron-right small right chevron"
-						  data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
-						  data-prog="${patientProgram.patientProgramId}"></i></a>
-				</div>
-
-				<div class="info-body">
-					<div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
-						<table id="workflowTable_${workflow.programWorkflowId}">
-							<thead>
-							<tr>
-							<thead>
-							<th>#</th>
-							<th>VACCINE</th>
-							<th>GIVEN ON</th>
-							<th>AT AGE</th>
-							<th>RECORDED</th>
-							<th>PROVIDER</th>
-							</thead>
-						</tr>
-						</thead>
-
-							<tbody>
-
-							</tbody>
-						</table>
-
-						<div class="update-vaccine">
-							<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
-							   data-prog="${patientProgram.patientProgramId}">
-								<i class="icon-pencil small"></i>
-								Update Vaccine
-							</a>
-						</div>
-
-						<div class="">&nbsp;</div>
-
-						<div style="display: none">
-							<select name="changeToState_${workflow.programWorkflowId}"
-									id="changeToState_${workflow.programWorkflowId}">
-								<option value="0">Select a State</option>
-								<% if (workflow.states != null || workflow.states != "") { %>
-								<% workflow.states.each { state -> %>
-								<option id="${state.id}"
-										value="${state.id}">${state.concept.name}</option>
-								<% } %>
-								<% } %>
-							</select>
-						</div>
-					</div>
-
-					<div id="currentStateDetails_${workflow.programWorkflowId}">
-						<% if (stateId != null) { %>
-						<div id='main-show-${workflow.programWorkflowId}'>
-							<span class="status active"></span>
-							<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
-
-							<small style="font-size: 77%; margin-left: 10px;">
-								( <span class="icon-time"></span>
-								Date: <span id="state_date_${workflow.programWorkflowId}">${
-									ui.formatDatePretty(stateStart)}</span> )
-							</small>
-						</div>
-						<% } else { %>
-						<div id="no-show-${workflow.programWorkflowId}"
-							 style="margin-left: 20px; color: rgb(153, 153, 153);">
-							<em>(No Previous Vaccinations Found)</em>
-						</div>
-
-						<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
-							<span class="status active"></span>
-							<span id="state_name_${workflow.programWorkflowId}"></span>
-
-							<small style="font-size: 77%; margin-left: 10px;">
-								( <span class="icon-time"></span>
-								Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
-							</small>
-						</div>
-						<% } %>
-
-					</div>
-				</div>
-			</div>
-			<% } %>
-
-		</div>
-	</div>
-	
-	<div class="clear"></div>	
-	<div style="margin: -15px 9px 0px;">
-		<label style="padding: 7px 10px 3px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.7%; display: block;">
-			<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
-			Exit Patient from Program
-		</label>		
-	</div>
-	
-	<div id="confirmationQuestion" class="focused" style="margin:5px 10px 20px 4px">	
-		<span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton" style="float: right;">
-			<i class="icon-save small"></i>
-			Save
-		</span>
-
-		<span id="cancelButton" class="button cancel">
-			<i class="icon-remove small"></i>
-			Cancel
-		</span>
-	</div>
-</form>
-<% } %>
-
 <div id="prescription-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
+
         <h3>Prescription</h3>
     </div>
 
