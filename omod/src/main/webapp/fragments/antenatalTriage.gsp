@@ -76,6 +76,12 @@
 				jq().toastmessage('showErrorToast', "Check that the L.M.P has been provided!");
 				return false;
 			}
+			
+			if (!jq.isNumeric(jq('#visitNumber').val())){
+				jq().toastmessage('showErrorToast', "Check that the ANC Visit Count has been filled properly!");
+				return false;
+			}
+			
             event.preventDefault();
             var data = jq("form#antenatal-triage-form").serialize();
 
