@@ -68,7 +68,6 @@
                 .success(function (data) {
                     jq.each(data, function(i, item) {
                         receipts.availableReceipts.push(item);
-                        console.log(item);
                     });
                 }).error(function (xhr, status, err) {
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);

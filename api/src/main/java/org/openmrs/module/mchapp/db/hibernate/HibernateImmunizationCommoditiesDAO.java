@@ -209,27 +209,6 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         return (ImmunizationStockout) getSession().merge(immunizationStockout);
     }
 
-    @Override
-    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
-
-        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
-        criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
-        if (StringUtils.isNotEmpty(rcptNames)) {
-            InventoryService service = Context.getService(InventoryService.class);
-            List<InventoryDrug> drugs = service.findDrug(null, rcptNames);
-            criteria.add(Restrictions.in("storeDrug.inventoryDrug",drugs));
-        }
-        if (fromDate != null && toDate != null) {
-            //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
-            criteria.add(Restrictions.between("createdOn", fromDate, toDate));
-        } else if (fromDate != null && toDate == null) {
-            criteria.add(Restrictions.ge("createdOn", fromDate));
-        } else if (fromDate == null && toDate != null) {
-            criteria.add(Restrictions.le("createdOn", toDate));
-        }
-
-        return criteria.list();
-    }
 
     @Override
     public ImmunizationStoreTransactionType getImmunizationStoreTransactionTypeById(int id) {
@@ -267,6 +246,27 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
                 .add(Restrictions.eq("inventoryDrug",inventoryDrug));
         return (ImmunizationStoreDrug) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
+        if (StringUtils.isNotEmpty(rcptNames)) {
+            InventoryService service = Context.getService(InventoryService.class);
+            List<InventoryDrug> drugs = service.findDrug(null, rcptNames);
+            criteria.add(Restrictions.in("storeDrug.inventoryDrug",drugs));
+        }
+        if (fromDate != null && toDate != null) {
+            //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
+            criteria.add(Restrictions.between("createdOn", fromDate, toDate));
+        } else if (fromDate != null && toDate == null) {
+            criteria.add(Restrictions.ge("createdOn", fromDate));
+        } else if (fromDate == null && toDate != null) {
+            criteria.add(Restrictions.le("createdOn", toDate));
+        }
+
+        return criteria.list();
     }
 
     private Session getSession() {

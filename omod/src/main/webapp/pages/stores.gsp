@@ -104,6 +104,7 @@
                             .success(function (data) {
 								console.log(data.message);
                                 if(data.status === "success"){
+
                                     jq().toastmessage('showSuccessToast', data.message);
 									issuesDialog.close();
                                 }else{

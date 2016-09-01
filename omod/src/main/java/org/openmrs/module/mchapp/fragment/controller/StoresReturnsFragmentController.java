@@ -19,19 +19,19 @@ import java.util.List;
  * @author Stanslaus Odhiambo
  *         Created on 8/29/2016.
  */
-public class StoresIssuesFragmentController {
+public class StoresReturnsFragmentController {
     private ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
 
     //    Default handler for GET and POST requests if none exist
     public void controller() {
     }
 
-    public List<SimpleObject> listImmunizationIssues(UiUtils uiUtils,
-                                                     @RequestParam(value = "issueNames", required = false) String rcptNames,
+    public List<SimpleObject> listImmunizationReturns(UiUtils uiUtils,
+                                                     @RequestParam(value = "returnNames", required = false) String returnNames,
                                                      @RequestParam(value = "fromDate", required = false) Date fromDate,
                                                      @RequestParam(value = "toDate", required = false) Date toDate) {
 
-        List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(TransactionType.ISSUES, rcptNames, fromDate, toDate);
+        List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(TransactionType.RETURNS, returnNames, fromDate, toDate);
         return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "quantity", "vvmStage", "remark");
     }
 
@@ -48,7 +48,7 @@ public class StoresIssuesFragmentController {
 
     }
 
-    public SimpleObject saveImmunizationIssues(UiUtils uiUtils, @RequestParam("issueName") String issueName,
+    public SimpleObject saveImmunizationReturns(UiUtils uiUtils, @RequestParam("issueName") String issueName,
                                               @RequestParam("issueQuantity") Integer issueQuantity,
                                               @RequestParam("issueStage") Integer issueStage,
                                               @RequestParam("issueBatchNo") String issueBatchNo,

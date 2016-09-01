@@ -75,8 +75,6 @@ public interface ImmunizationCommoditiesDAO {
 
     ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout);
 
-    List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate);
-
 
     /* ImmunizationStoreTransactionType */
     ImmunizationStoreTransactionType getImmunizationStoreTransactionTypeById(int id);
@@ -88,4 +86,6 @@ public interface ImmunizationCommoditiesDAO {
     List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId);
 
     ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String drugName);
+
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 }

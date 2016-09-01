@@ -156,9 +156,9 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     }
 
     @Override
-    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationReceipts(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
 
-        return dao.listImmunizationReceipts(type, rcptNames, fromDate, toDate);
+        return dao.listImmunizationTransactions(type, rcptNames, fromDate, toDate);
     }
 
     @Override
@@ -170,4 +170,5 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     public List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId) {
         return dao.getAvailableDrugBatches(drgId);
     }
+
 }
