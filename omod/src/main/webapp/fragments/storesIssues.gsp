@@ -137,7 +137,7 @@
     </thead>
 
     <tbody data-bind="foreach: availableIssues">
-    <tr>
+
     <tr>
         <td data-bind="text: \$index() + 1 "></td>
         <td data-bind="text: createdOn"></td>
@@ -147,7 +147,7 @@
         <td data-bind="text: remark"></td>
         <td><i class="icon-share small"></i></td>
     </tr>
-    </tr>
+
     </tbody>
 </table>
 

@@ -3,6 +3,7 @@ package org.openmrs.module.mchapp.model;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Stanslaus Odhiambo
@@ -13,7 +14,7 @@ public class ImmunizationStockout implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
     private InventoryDrug drug;
-    private int noOfDays;
+    private Date createdOn, dateDepleted, dateRestocked, dateModified;
     private String remarks;
 
     public Integer getId() {
@@ -32,12 +33,36 @@ public class ImmunizationStockout implements Serializable {
         this.drug = drug;
     }
 
-    public int getNoOfDays() {
-        return noOfDays;
+    public Date getCreatedOn() {
+        return createdOn;
     }
 
-    public void setNoOfDays(int noOfDays) {
-        this.noOfDays = noOfDays;
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getDateDepleted() {
+        return dateDepleted;
+    }
+
+    public void setDateDepleted(Date dateDepleted) {
+        this.dateDepleted = dateDepleted;
+    }
+
+    public Date getDateRestocked() {
+        return dateRestocked;
+    }
+
+    public void setDateRestocked(Date dateRestocked) {
+        this.dateRestocked = dateRestocked;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 
     public String getRemarks() {

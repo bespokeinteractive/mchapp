@@ -88,4 +88,6 @@ public interface ImmunizationCommoditiesDAO {
     ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String drugName);
 
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
+
+    List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
 }

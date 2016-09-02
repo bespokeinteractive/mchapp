@@ -11,7 +11,10 @@
 		</id>
 	    <many-to-one name="drug" class="org.openmrs.module.hospitalcore.model.InventoryDrug"
 	        column="drug_id" cascade="none"  />
-		<property name="noOfDays" column="no_of_days" />
+		<property name="createdOn" column="created_on" />
+		<property name="dateDepleted" column="date_depleted" />
+		<property name="dateRestocked" column="date_restocked" />
+		<property name="dateModified" column="date_modified" />
 		<property name="remarks" column="remarks"  />
 	</class>
 </hibernate-mapping>

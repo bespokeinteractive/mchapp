@@ -104,6 +104,10 @@
 			<artifactId>inventory-omod</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>inventory-api</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>

@@ -269,6 +269,25 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         return criteria.list();
     }
 
+    @Override
+    public List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStockout.class);
+        if (StringUtils.isNotEmpty(outsNames)) {
+            InventoryService service = Context.getService(InventoryService.class);
+            List<InventoryDrug> drugs = service.findDrug(null, outsNames);
+            criteria.add(Restrictions.in("drug",drugs));
+        }
+        if (fromDate != null && toDate != null) {
+            //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
+            criteria.add(Restrictions.between("createdOn", fromDate, toDate));
+        } else if (fromDate != null && toDate == null) {
+            criteria.add(Restrictions.ge("createdOn", fromDate));
+        } else if (fromDate == null && toDate != null) {
+            criteria.add(Restrictions.le("createdOn", toDate));
+        }
+        return criteria.list();
+    }
+
     private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
