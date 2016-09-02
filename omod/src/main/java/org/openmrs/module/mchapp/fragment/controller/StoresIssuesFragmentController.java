@@ -43,7 +43,7 @@ public class StoresIssuesFragmentController {
             List<SimpleObject> simpleObjects = SimpleObject.fromCollection(storeDrugs, uiUtils, "batchNo", "currentQuantity", "expiryDate");
             return SimpleObject.create("status","success","message","Found Drugs","drugs",simpleObjects);
         }else{
-            return SimpleObject.create("status","fail","message","No Records Found");
+            return SimpleObject.create("status","fail","message","No Batch for this Drug");
         }
 
     }

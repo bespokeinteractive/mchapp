@@ -35,25 +35,12 @@ public class StoresReturnsFragmentController {
         return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "quantity", "vvmStage", "remark");
     }
 
-    public SimpleObject getBatchesForSelectedDrug(UiUtils uiUtils,
-                                                        @RequestParam("drgId") Integer drgId,
-                                                        @RequestParam("drgName") String drgName) {
-        List<ImmunizationStoreDrug> storeDrugs = immunizationService.getAvailableDrugBatches(drgId);
-        if (storeDrugs.size() > 0) {
-            List<SimpleObject> simpleObjects = SimpleObject.fromCollection(storeDrugs, uiUtils, "batchNo", "currentQuantity", "expiryDate");
-            return SimpleObject.create("status","success","message","Found Drugs","drugs",simpleObjects);
-        }else{
-            return SimpleObject.create("status","fail","message","No Records Found");
-        }
-
-    }
-
-    public SimpleObject saveImmunizationReturns(UiUtils uiUtils, @RequestParam("issueName") String issueName,
-                                              @RequestParam("issueQuantity") Integer issueQuantity,
-                                              @RequestParam("issueStage") Integer issueStage,
-                                              @RequestParam("issueBatchNo") String issueBatchNo,
+    public SimpleObject saveImmunizationReturns(UiUtils uiUtils, @RequestParam("rtnsName") String rtnsName,
+                                              @RequestParam("rtnsQuantity") Integer rtnsQuantity,
+                                              @RequestParam("rtnsStage") Integer rtnsStage,
+                                              @RequestParam("rtnsBatchNo") String rtnsBatchNo,
                                               @RequestParam(value = "patientId", required = false) Patient patient,
-                                              @RequestParam("issueRemarks") String issueRemarks) {
+                                              @RequestParam("rtnsRemarks") String rtnsRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
         transactionDetail.setCreatedBy(person);
@@ -62,13 +49,12 @@ public class StoresReturnsFragmentController {
         if (patient != null) {
             transactionDetail.setPatient(patient);
         }
-        transactionDetail.setQuantity(issueQuantity);
-
-        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo);
+        transactionDetail.setQuantity(rtnsQuantity);
+        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo);
         if (drug != null) {
 //            drug exists with the given batch
             int currentQuantity = drug.getCurrentQuantity();
-            int i = currentQuantity - issueQuantity;
+            int i = currentQuantity - rtnsQuantity;
             transactionDetail.setClosingBalance(i);
             transactionDetail.setOpeningBalance(currentQuantity);
 
@@ -79,15 +65,15 @@ public class StoresReturnsFragmentController {
             return SimpleObject.create("status", "error","message","No Drug Found for selected Batch");
         }
         //process the batch
-        transactionDetail.setVvmStage(issueStage);
-        transactionDetail.setRemark(issueRemarks);
-        ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.ISSUES.getValue());
+        transactionDetail.setVvmStage(rtnsStage);
+        transactionDetail.setRemark(rtnsRemarks);
+        ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.RETURNS.getValue());
         transactionDetail.setTransactionType(transactionType);
         ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
         if (storeDrugTransactionDetail != null) {
-            return SimpleObject.create("status", "success","message","Drug Issue Saved Successfully");
+            return SimpleObject.create("status", "success","message","Drug Return Saved Successfully");
         } else {
-            return SimpleObject.create("status", "error","message","Error occurred while saving Issue");
+            return SimpleObject.create("status", "error","message","Error occurred while saving Return");
         }
 
 

@@ -130,6 +130,26 @@
             actions: {
                 confirm: function () {
                     //Code Here
+					var returnsData = {
+						rtnsName: jq("#rtnsName").val(),
+						rtnsQuantity: jq("#rtnsQuantity").val(),
+						rtnsStage: jq("#rtnsStage").val(),
+						rtnsBatchNo: jq("#rtnsBatchNo option:selected").text(),
+						rtnsRemarks: jq("#rtnsRemarks").val(),
+						patientId:null
+					}
+					jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "saveImmunizationReturns") }', returnsData)
+							.success(function (data) {
+								if(data.status === "success"){
+									jq().toastmessage('showSuccessToast', data.message);
+									returnsDialog.close();
+								}else{
+									jq().toastmessage('showErrorToast', data.message);
+								}
+							}).error(function (xhr, status, err) {
+								jq().toastmessage('showErrorToast', "AJAX error!" + err);
+							}
+					);
                 },
                 cancel: function () {
                     returnsDialog.close();

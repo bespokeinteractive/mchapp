@@ -15,9 +15,11 @@
         jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "getBatchesForSelectedDrug") }', requestData)
                 .success(function (data) {
                     if(data.status ==="success"){
+                        jq(".confirm").show();
                         jq().toastmessage('showSuccessToast', data.message);
                     }else if(data.status ==="fail"){
                         jq().toastmessage('showErrorToast', data.message);
+                        jq(".confirm").hide();
                     }
 
                     drugBatches.availableDrugs.removeAll();

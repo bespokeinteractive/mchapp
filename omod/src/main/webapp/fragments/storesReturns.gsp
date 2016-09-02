@@ -1,16 +1,79 @@
 <script>
     var drugReturns;
+    var returnDrugBatches;
 
     function DrugReturnsViewModel() {
         var self = this;
         self.availableReturns = ko.observableArray([]);
     }
+
+    function ReturnDrugBatchViewModel() {
+        var self = this;
+        self.availableDrugs = ko.observableArray([]);
+        self.drugObject = ko.observable();
+    }
+    function checkReturnsBatchAvailability(drgId, drgName) {
+        var requestData = {
+            drgId: drgId,
+            drgName: drgName
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "getBatchesForSelectedDrug") }', requestData)
+                .success(function (data) {
+                    if (data.status === "success") {
+                        jq(".confirm").show();
+                        jq().toastmessage('showSuccessToast', data.message);
+                    } else if (data.status === "fail") {
+                        jq().toastmessage('showErrorToast', data.message);
+                        jq(".confirm").hide();
+                    }
+
+                    returnDrugBatches.availableDrugs.removeAll();
+                    jq.each(data.drugs, function (i, item) {
+                        returnDrugBatches.availableDrugs.push(item);
+                    });
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                }
+        );
+    }
     jq(function () {
         drugReturns = new DrugReturnsViewModel();
+        returnDrugBatches = new ReturnDrugBatchViewModel();
 
         listImmunizationReturns();
+        jq("#rtnsName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("pharmacyapp", "addReceiptsToStore", "fetchDrugListByName") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+                            var results = [];
+                            for (var i in data) {
+                                var result = {label: data[i].name, value: data[i]};
+                                results.push(result);
+                            }
+                            response(results);
+                        });
+            },
+            focus: function (event, ui) {
+                jq("#rtnsName").val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                var drgName = ui.item.value.name;
+                jQuery("#rtnsName").val(drgName);
+                //set parent category
+                var catId = ui.item.value.category.id;
+                var drgId = ui.item.value.id;
+                checkReturnsBatchAvailability(drgId, drgName);
+            }
+        });
 
         ko.applyBindings(drugReturns, jq("#returnsList")[0]);
+        ko.applyBindings(returnDrugBatches, jq("#returns-dialog")[0]);
 
     });//end of document ready function
 
@@ -111,12 +174,16 @@
 
                 <li>
                     <label>Batch No.</label>
-                    <input id="rtnsBatchNo" type="text">
+                    <select id="rtnsBatchNo"
+                            data-bind="options: \$root.availableDrugs, value: drugObject, optionsText: 'batchNo'"></select>
                 </li>
 
                 <li>
-                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rtnsExpiry', id: 'rtnsExpiry', label: 'Expiry Date', useTime: false, defaultToday: false])}
+                    <label>Expiry Date.</label>
+                    <span data-bind="text: \$root.drugObject"></span>
                 </li>
+
+
 
                 <li>
                     <label>Remarks</label>
