@@ -5,6 +5,36 @@
         drugStockouts = new DrugStockoutsViewModel();
         listImmunizationStockouts();
 
+        jq("#outsName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("pharmacyapp", "addReceiptsToStore", "fetchDrugListByName") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+                            var results = [];
+                            for (var i in data) {
+                                var result = {label: data[i].name, value: data[i]};
+                                results.push(result);
+                            }
+                            response(results);
+                        });
+            },
+            focus: function (event, ui) {
+                jq("#outsName").val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                var drgName=ui.item.value.name;
+                jQuery("#outsName").val(drgName);
+                //set parent category
+                var catId = ui.item.value.category.id;
+                var drgId = ui.item.value.id;
+            }
+        });
+
         ko.applyBindings(drugStockouts, jq("#stockOutList")[0]);
     }); //end of doc ready function
 
@@ -23,7 +53,6 @@
         jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "listImmunizationStockouts") }', stockoutData)
                 .success(function (data) {
                     jq.each(data, function (i, item) {
-                        console.log(item);
                         drugStockouts.availableStockouts.push(item);
                     });
                 }).error(function (xhr, status, err) {
@@ -94,7 +123,7 @@
                 </li>
 
                 <li>
-                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsExpiry', id: 'outsExpiry', label: 'Depleted On', useTime: false, defaultToday: false])}
+                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsExpiry', id: 'outsExpiry', label: 'Depleted On', endDate: new Date(),useTime: false, defaultToday: false])}
                 </li>
 
                 <li>

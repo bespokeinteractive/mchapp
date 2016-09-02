@@ -168,6 +168,23 @@
             actions: {
                 confirm: function () {
                     //Code Here
+					var stockoutsData = {
+						outsName: jq("#outsName").val(),
+						depletionDate: jq("#outsExpiry-field").val(),
+						outsRemarks: jq("#outsRemarks").val()
+					}
+					jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "saveImmunizationStockout") }', stockoutsData)
+							.success(function (data) {
+								if(data.status === "success"){
+									jq().toastmessage('showSuccessToast', data.message);
+									stockoutsDialog.close();
+								}else{
+									jq().toastmessage('showErrorToast', data.message);
+								}
+							}).error(function (xhr, status, err) {
+								jq().toastmessage('showErrorToast', "AJAX error!" + err);
+							}
+					);
                 },
                 cancel: function () {
                     stockoutsDialog.close();

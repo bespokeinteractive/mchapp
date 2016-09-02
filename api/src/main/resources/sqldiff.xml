@@ -78,6 +78,19 @@
         </sql>
 	</diff>
 
+	<diff>
+		<version>1.2.1</version>
+		<author>Stanslaus Odhiambo</author>
+		<date>Sept 2nd 2016</date>
+		<description>
+			alter immunization stock-out dates to allow for nulls
+		</description>
+		<sql>
+			ALTER TABLE immunization_stockout MODIFY date_restocked DATETIME;
+			ALTER TABLE immunization_stockout MODIFY date_modified DATETIME;
+		</sql>
+	</diff>
+
 
 
 </sqldiff>
