@@ -53,7 +53,7 @@ public class StoresIssuesFragmentController {
                                               @RequestParam("issueStage") Integer issueStage,
                                               @RequestParam("issueBatchNo") String issueBatchNo,
                                               @RequestParam(value = "patientId", required = false) Patient patient,
-                                              @RequestParam("issueRemarks") String issueRemarks) {
+                                              @RequestParam(value = "issueRemarks", required = false) String issueRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
         transactionDetail.setCreatedBy(person);

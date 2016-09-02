@@ -37,7 +37,7 @@ public class StoresOutsFragmentController {
                                               @RequestParam("depletionDate") Date depletionDate,
                                               @RequestParam(value = "dateModified",required = false) Date dateModified,
                                               @RequestParam(value = "dateRestocked",required = false) Date dateRestocked,
-                                              @RequestParam("outsRemarks") String outsRemarks) {
+                                              @RequestParam(value = "outsRemarks",required = false) String outsRemarks) {
         InventoryDrug drug = Context.getService(InventoryService.class).getDrugByName(outsName);
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStockout stockout = new ImmunizationStockout();

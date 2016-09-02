@@ -40,7 +40,7 @@ public class StoresReturnsFragmentController {
                                               @RequestParam("rtnsStage") Integer rtnsStage,
                                               @RequestParam("rtnsBatchNo") String rtnsBatchNo,
                                               @RequestParam(value = "patientId", required = false) Patient patient,
-                                              @RequestParam("rtnsRemarks") String rtnsRemarks) {
+                                              @RequestParam(value = "rtnsRemarks" , required = false) String rtnsRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
         transactionDetail.setCreatedBy(person);

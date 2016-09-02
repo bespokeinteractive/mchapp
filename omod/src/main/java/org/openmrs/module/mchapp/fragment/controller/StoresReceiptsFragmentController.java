@@ -43,23 +43,29 @@ public class StoresReceiptsFragmentController {
                                                  @RequestParam("rcptBatchNo") String rcptBatchNo,
                                                  @RequestParam("expiryDate") Date expiryDate,
                                                  @RequestParam(value = "patient", required = false) Patient patient,
-                                                 @RequestParam("remarks") String remarks) {
+                                                 @RequestParam(value = "remarks", required = false) String remarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
+        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo);
+
+        int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
+        //TODO: Pull the cummulative Quantity from Transaction Detail
+
         transactionDetail.setCreatedBy(person);
         transactionDetail.setCreatedOn(new Date());
-//        TODO need rework
-        transactionDetail.setClosingBalance(quantity);
-        transactionDetail.setOpeningBalance(quantity);
+
+        transactionDetail.setOpeningBalance(cummulativeQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity + quantity);
+
         if (patient != null) {
             transactionDetail.setPatient(patient);
         }
         transactionDetail.setQuantity(quantity);
 
-        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo);
         if (drug != null) {
 //            drug exists with the given batch
             int currentQuantity = drug.getCurrentQuantity();
+
             currentQuantity += quantity;
             drug.setCurrentQuantity(currentQuantity);
             transactionDetail.setStoreDrug(drug);
@@ -76,6 +82,8 @@ public class StoresReceiptsFragmentController {
             drug = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
             transactionDetail.setStoreDrug(drug);
         }
+
+
         //process the batch
         transactionDetail.setVvmStage(vvmStage);
         transactionDetail.setRemark(remarks);
