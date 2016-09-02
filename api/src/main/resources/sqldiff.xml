@@ -59,10 +59,22 @@
 			alter immunization stock-out to reflect date of depletion and restock
 		</description>
 		<sql>
-			ALTER TABLE immunization_stockout ADD created_on DATETIME NOT NULL AFTER drug_id
-			ALTER TABLE immunization_stockout ADD date_depleted DATETIME NOT NULL
-			ALTER TABLE immunization_stockout ADD date_restocked DATETIME NOT NULL
-			ALTER TABLE immunization_stockout ADD date_modified DATETIME NOT NULL
+			ALTER TABLE immunization_stockout ADD created_on DATETIME NOT NULL AFTER drug_id;
+			ALTER TABLE immunization_stockout ADD date_depleted DATETIME NOT NULL;
+			ALTER TABLE immunization_stockout ADD date_restocked DATETIME NOT NULL;
+			ALTER TABLE immunization_stockout ADD date_modified DATETIME NOT NULL;
+        </sql>
+	</diff>
+
+	<diff>
+		<version>1.1.3</version>
+		<author>Stanslaus Odhiambo</author>
+		<date>Sept 2nd 2016</date>
+		<description>
+			alter immunization stock-out to remove no_of_days - to be computed
+		</description>
+		<sql>
+			ALTER TABLE immunization_stockout DROP COLUMN no_of_days;
         </sql>
 	</diff>
 
