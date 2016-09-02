@@ -6,10 +6,12 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
+import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
 import org.openmrs.module.mchapp.*;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.mchapp.api.model.ClinicalForm;
 import org.openmrs.module.mchapp.api.parsers.QueueLogs;
+import org.openmrs.module.mchapp.api.parsers.SendForExaminationParser;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.module.patientdashboardapp.model.ReferralReasons;
 import org.openmrs.ui.framework.SimpleObject;
@@ -69,6 +71,16 @@ public class ChildWelfareExaminationFragmentController {
             if(refferedRoomUuid != "" && refferedRoomUuid != null && !refferedRoomUuid.equals(0) && !refferedRoomUuid.equals("0")) {
                 internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
             }
+
+            PatientQueueService queueService = Context.getService(PatientQueueService.class);
+            OpdPatientQueue queue = queueService.getOpdPatientQueueById(queueId);
+
+            if (request.getParameter("send_for_examination") != null) {
+                String visitStatus = queue.getVisitStatus();
+                SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
+                        patient, visitStatus);
+            }
+
             QueueLogs.logOpdPatient(patientQueue, encounter);
             return SimpleObject.create("status", "success", "message",
                 "Examination information has been saved.");
@@ -81,5 +93,7 @@ public class ChildWelfareExaminationFragmentController {
             return SimpleObject.create("status", "error", "message",
                 e.getMessage());
         }
+
+
     }
 }

@@ -1545,7 +1545,12 @@ table[id*='workflowTable_'] th:nth-child(4) {
                     <% } %>
 
                     <div>
-                        <label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+						<label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%; margin-bottom: 0px;">
+                            <input type="checkbox" name="send_for_examination" value="4e87c99b-8451-4789-91d8-2aa33fe1e5f6" />
+                            Send to Immunization Room
+                        </label>
+						
+                        <label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; width: 96.5%; margin-top: -3px;">
                             <input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
                             Exit Patient from Program
                         </label>
@@ -1695,7 +1700,12 @@ table[id*='workflowTable_'] th:nth-child(4) {
 	
 	<div class="clear"></div>	
 	<div style="margin: -15px 9px 0px;">
-		<label style="padding: 7px 10px 3px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.7%; display: block;">
+		<label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.7%; margin-bottom: 0px;">
+			<input type="checkbox" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb" />
+			Send to Examination Room
+		</label>
+						
+		<label style="padding: 7px 10px 3px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: -10px; width: 96.7%; display: block;">
 			<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
 			Exit Patient from Program
 		</label>		

@@ -241,7 +241,7 @@
 		</ul>
 	</div>
 	
-	<div style="min-width: 78%" class="col16 dashboard">			
+	<div style="min-width: 70%" class="col16 dashboard">			
 		<div id="visit-detail" class="info-section">
 			<div class="info-header">
 				<i class="icon-user-md"></i>
