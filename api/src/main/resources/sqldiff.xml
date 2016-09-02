@@ -91,6 +91,17 @@
 		</sql>
 	</diff>
 
-
-
+	<diff>
+		<version>1.2.2</version>
+		<author>Stanslaus Odhiambo</author>
+		<date>Sept 2nd 2016</date>
+		<description>
+			Insert Transaction Types
+		</description>
+		<sql>
+			INSERT INTO immunization_store_transaction_type(id, transaction_type) VALUES(1, "Receipts") ON DUPLICATE KEY UPDATE transaction_type="Receipts";
+			INSERT INTO immunization_store_transaction_type(id, transaction_type) VALUES(2, "Issues") ON DUPLICATE KEY UPDATE transaction_type="Issues";
+			INSERT INTO immunization_store_transaction_type(id, transaction_type) VALUES(3, "Returns") ON DUPLICATE KEY UPDATE transaction_type="Returns";
+		</sql>
+	</diff>
 </sqldiff>
