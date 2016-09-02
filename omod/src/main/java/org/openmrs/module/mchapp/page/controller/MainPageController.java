@@ -55,10 +55,14 @@ public class MainPageController {
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         OpdPatientQueue patientQueue = queueService.getOpdPatientQueueById(queueId);
         String opdConcept = patientQueue.getOpdConceptName();
+
         if (patientQueue != null) {
             model.addAttribute("opdConcept", opdConcept); //MCH IMMUNIZATION or MCH CLINIC
         }
-        if (enrolledInANC) {
+
+        if(opdConcept.equalsIgnoreCase("FAMILY PLANNING CLINIC")){
+            return "redirect:" + uiUtils.pageLink("fpapp", "main") + "?patientId=" + patient.getPatientId() + "&queueId=" + queueId;
+        } else if (enrolledInANC) {
             model.addAttribute("title", "ANC Clinic");
             minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_PNC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
@@ -74,7 +78,6 @@ public class MainPageController {
             } else if (opdConcept.equalsIgnoreCase("MCH IMMUNIZATION")) {
                 model.addAttribute("title", "CWC IMMUNIZATION");
             }
-
 
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
             minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
