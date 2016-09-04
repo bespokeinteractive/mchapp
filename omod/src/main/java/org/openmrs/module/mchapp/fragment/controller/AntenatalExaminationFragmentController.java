@@ -171,6 +171,7 @@ public class AntenatalExaminationFragmentController {
         transDetail.setFormulation(inventoryService.getDrugFormulationById(formulation));
         transDetail.setBatchNo(batchNo);
         transDetail.setEncounter(encounter);
+        transDetail.setPatientType("mchImmunization");
 
 //            transDetail.setCompanyName(pDetail.getTransactionDetail()
 //                    .getCompanyName());
