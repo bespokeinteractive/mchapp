@@ -52,7 +52,6 @@ public class StoresIssuesFragmentController {
                                               @RequestParam("issueQuantity") Integer issueQuantity,
                                               @RequestParam("issueStage") Integer issueStage,
                                               @RequestParam("issueBatchNo") String issueBatchNo,
-                                              @RequestParam(value = "issueWastage") Integer issueWastage,
                                               @RequestParam(value = "patientId", required = false) Patient patient,
                                               @RequestParam(value = "issueRemarks", required = false) String issueRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();

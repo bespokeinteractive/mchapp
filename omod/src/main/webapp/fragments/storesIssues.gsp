@@ -170,11 +170,6 @@
                     <label>Quantity</label>
                     <input type="text" id="issueQuantity">
                 </li>
-				
-				<li>
-                    <label>Wastage</label>
-                    <input type="text" id="issueWastage">
-                </li>
 
                 <li>
                     <label>VVM Stage</label>
