@@ -4,9 +4,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.openmrs.Encounter;
-import org.openmrs.Patient;
-import org.openmrs.Role;
+
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
@@ -107,7 +106,8 @@ public class AntenatalExaminationFragmentController {
                                    @RequestParam(value = "formulation", required = false) Integer formulation,
                                    @RequestParam(value = "frequency", required = false) String frequency,
                                    @RequestParam(value = "injDate", required = false) Date injDate,
-                                   @RequestParam(value = "batchNo", required = false) String batchNo) {
+                                   @RequestParam(value = "batchNo", required = false) String batchNo,
+                                    UiSessionContext session) {
 
         InventoryService inventoryService = (InventoryService) Context
                 .getService(InventoryService.class);
@@ -121,11 +121,20 @@ public class AntenatalExaminationFragmentController {
                 rl = r;
             }
         }
+
         InventoryStore store = null;
         if (srl != null) {
             store = inventoryService.getStoreById(srl.getStoreid());
-
         }
+
+        Encounter encounter = new Encounter();
+        EncounterType mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE);
+
+        encounter.setPatient(patient);
+        encounter.setLocation(session.getSessionLocation());
+        encounter.setEncounterDatetime(new Date());
+        encounter.setEncounterType(mchEncounterType);
+        encounter = Context.getEncounterService().saveEncounter(encounter);
 
         InventoryStoreDrugPatient inventoryStoreDrugPatient = new InventoryStoreDrugPatient();
         InventoryStoreDrugPatientDetail inventoryStoreDrugPatientDetail = new InventoryStoreDrugPatientDetail();
@@ -161,6 +170,7 @@ public class AntenatalExaminationFragmentController {
         transDetail.setDrug(inventoryService.getDrugById(drugId));
         transDetail.setFormulation(inventoryService.getDrugFormulationById(formulation));
         transDetail.setBatchNo(batchNo);
+        transDetail.setEncounter(encounter);
 
 //            transDetail.setCompanyName(pDetail.getTransactionDetail()
 //                    .getCompanyName());

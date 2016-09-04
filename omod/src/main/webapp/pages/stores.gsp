@@ -95,6 +95,7 @@
                     var issueData = {
                         issueName: jq("#issueName").val(),
                         issueQuantity: jq("#issueQuantity").val(),
+                        issueWastage: jq("#issueWastage").val(),
                         issueStage: jq("#issueStage").val(),
                         issueBatchNo: jq("#issueBatchNo option:selected").text(),
                         issueRemarks: jq("#issueRemarks").val(),

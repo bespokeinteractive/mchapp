@@ -46,10 +46,14 @@ public class StoresReceiptsFragmentController {
                                                  @RequestParam(value = "remarks", required = false) String remarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
-        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo);
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo);
 
+        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(storeDrugName);
         int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
-        //TODO: Pull the cummulative Quantity from Transaction Detail
+
+        for(ImmunizationStoreDrug drug : drugs) {
+            cummulativeQuantity += drug.getCurrentQuantity();
+        }
 
         transactionDetail.setCreatedBy(person);
         transactionDetail.setCreatedOn(new Date());
@@ -62,15 +66,15 @@ public class StoresReceiptsFragmentController {
         }
         transactionDetail.setQuantity(quantity);
 
-        if (drug != null) {
-//            drug exists with the given batch
-            int currentQuantity = drug.getCurrentQuantity();
+        if (drugBatch != null) {
+//            drugBatch exists with the given batch
+            int currentQuantity = drugBatch.getCurrentQuantity();
 
             currentQuantity += quantity;
-            drug.setCurrentQuantity(currentQuantity);
-            transactionDetail.setStoreDrug(drug);
+            drugBatch.setCurrentQuantity(currentQuantity);
+            transactionDetail.setStoreDrug(drugBatch);
         } else {
-//            no current drug with this batch ae the drug, then assign
+//            no current drugBatch with this batch ae the drugBatch, then assign
             InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(storeDrugName);
             ImmunizationStoreDrug immunizationStoreDrug = new ImmunizationStoreDrug();
             immunizationStoreDrug.setExpiryDate(expiryDate);
@@ -79,8 +83,8 @@ public class StoresReceiptsFragmentController {
             immunizationStoreDrug.setBatchNo(rcptBatchNo);
             immunizationStoreDrug.setCreatedOn(new Date());
             immunizationStoreDrug.setInventoryDrug(inventoryDrug);
-            drug = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
-            transactionDetail.setStoreDrug(drug);
+            drugBatch = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
+            transactionDetail.setStoreDrug(drugBatch);
         }
 
 

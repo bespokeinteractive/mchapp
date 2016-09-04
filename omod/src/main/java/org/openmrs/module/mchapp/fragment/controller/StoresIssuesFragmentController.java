@@ -52,30 +52,41 @@ public class StoresIssuesFragmentController {
                                               @RequestParam("issueQuantity") Integer issueQuantity,
                                               @RequestParam("issueStage") Integer issueStage,
                                               @RequestParam("issueBatchNo") String issueBatchNo,
+                                              @RequestParam(value = "issueWastage") Integer issueWastage,
                                               @RequestParam(value = "patientId", required = false) Patient patient,
                                               @RequestParam(value = "issueRemarks", required = false) String issueRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
+
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo);
+        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
+
+        int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
+        for(ImmunizationStoreDrug drug : drugs) {
+            cummulativeQuantity += drug.getCurrentQuantity();
+        }
+
         transactionDetail.setCreatedBy(person);
         transactionDetail.setCreatedOn(new Date());
+        transactionDetail.setQuantity(issueQuantity);
+
+        transactionDetail.setOpeningBalance(cummulativeQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity - issueQuantity);
+
 //        TODO need rework
         if (patient != null) {
             transactionDetail.setPatient(patient);
         }
-        transactionDetail.setQuantity(issueQuantity);
 
-        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo);
-        if (drug != null) {
-//            drug exists with the given batch
-            int currentQuantity = drug.getCurrentQuantity();
+        if (drugBatch != null) {
+//            drugBatch exists with the given batch
+            int currentQuantity = drugBatch.getCurrentQuantity();
             int i = currentQuantity - issueQuantity;
-            transactionDetail.setClosingBalance(i);
-            transactionDetail.setOpeningBalance(currentQuantity);
 
-            drug.setCurrentQuantity(i);
-            transactionDetail.setStoreDrug(drug);
+            drugBatch.setCurrentQuantity(i);
+            transactionDetail.setStoreDrug(drugBatch);
         } else {
-//            no current drug with this batch ae the drug, then assign
+//            no current drugBatch with this batch ae the drugBatch, then assign
             return SimpleObject.create("status", "error","message","No Drug Found for selected Batch");
         }
         //process the batch

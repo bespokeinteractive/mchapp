@@ -165,9 +165,15 @@
                     <label>Vaccine/Diluent</label>
                     <input id="issueName" type="text">
                 </li>
+				
                 <li>
                     <label>Quantity</label>
                     <input type="text" id="issueQuantity">
+                </li>
+				
+				<li>
+                    <label>Wastage</label>
+                    <input type="text" id="issueWastage">
                 </li>
 
                 <li>

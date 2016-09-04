@@ -43,25 +43,33 @@ public class StoresReturnsFragmentController {
                                               @RequestParam(value = "rtnsRemarks" , required = false) String rtnsRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo);
+
+        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
+        int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
+
+        for(ImmunizationStoreDrug drug : drugs) {
+            cummulativeQuantity += drug.getCurrentQuantity();
+        }
+
         transactionDetail.setCreatedBy(person);
         transactionDetail.setCreatedOn(new Date());
+        transactionDetail.setOpeningBalance(cummulativeQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity - rtnsQuantity);
+
 //        TODO need rework
         if (patient != null) {
             transactionDetail.setPatient(patient);
         }
         transactionDetail.setQuantity(rtnsQuantity);
-        ImmunizationStoreDrug drug = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo);
-        if (drug != null) {
-//            drug exists with the given batch
-            int currentQuantity = drug.getCurrentQuantity();
-            int i = currentQuantity - rtnsQuantity;
-            transactionDetail.setClosingBalance(i);
-            transactionDetail.setOpeningBalance(currentQuantity);
+        if (drugBatch != null) {
+//            drugBatch exists with the given batch
+            int currentQuantity = drugBatch.getCurrentQuantity();
 
-            drug.setCurrentQuantity(i);
-            transactionDetail.setStoreDrug(drug);
+            drugBatch.setCurrentQuantity(currentQuantity - rtnsQuantity);
+            transactionDetail.setStoreDrug(drugBatch);
         } else {
-//            no current drug with this batch ae the drug, then assign
+//            no current drugBatch with this batch ae the drugBatch, then assign
             return SimpleObject.create("status", "error","message","No Drug Found for selected Batch");
         }
         //process the batch
