@@ -201,7 +201,9 @@
             selector: '#tetanus-vaccine-dialog',
             actions: {
                 confirm: function () {
-					if (jq('#tetanus-batch-no').val().trim() == ''){
+					var batchNo = jq('#tetanus-batch-no').val();
+					
+					if (batchNo == ''){
 						jq().toastmessage('showErrorToast', 'Kindly specify the Batch Number');
 						jq(this).focus();
 						return false;
@@ -217,7 +219,7 @@
 						drugId: 188,
 						formulation: 438,
 						frequency: 'QID',
-						batchNo: jq('#tetanus-batch-no').val(),
+						batchNo: batchNo,
 						injDate: jq('#tetanus-vaccine-date-field').val()
 					}).success(function (data) {
 						jq().toastmessage('removeToast', savingMessage);
@@ -2450,7 +2452,12 @@
 			
 			<li>
 				<label for="vaccine-name">Batch Number:</label>
-				<input type="text" id="tetanus-batch-no"/>
+				<select id="tetanus-batch-no">
+                    <option value="">Choose Batch No.</option>
+					<% tetanusBatchNo.drugs.each { drug -> %>
+						<option value="${drug.batchNo}">${drug.batchNo}</option>					
+					<% } %>
+				</select>
 			</li>
 			
 			<li>				

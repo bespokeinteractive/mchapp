@@ -17,6 +17,7 @@ import org.openmrs.module.inventory.model.ToxoidModel;
 import org.openmrs.module.inventory.util.DateUtils;
 import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.MchMetadata;
+import org.openmrs.module.mchapp.MchStores;
 import org.openmrs.module.mchapp.api.MchEncounterService;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.mchapp.api.model.ClinicalForm;
@@ -52,6 +53,7 @@ public class AntenatalExaminationFragmentController {
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("queueId", config.get("queueId"));
         model.addAttribute("tetanusVaccines", getTetanusToxoid(patient, ui));
+        model.addAttribute("tetanusBatchNo", MchStores.getBatchesForSelectedDrug(ui, 188));
         model.addAttribute("preExisitingConditions", Context.getService(MchEncounterService.class).getConditions(patient));
     }
 
@@ -108,7 +110,6 @@ public class AntenatalExaminationFragmentController {
                                    @RequestParam(value = "injDate", required = false) Date injDate,
                                    @RequestParam(value = "batchNo", required = false) String batchNo,
                                     UiSessionContext session) {
-
         InventoryService inventoryService = (InventoryService) Context
                 .getService(InventoryService.class);
         List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
@@ -171,7 +172,7 @@ public class AntenatalExaminationFragmentController {
         transDetail.setFormulation(inventoryService.getDrugFormulationById(formulation));
         transDetail.setBatchNo(batchNo);
         transDetail.setEncounter(encounter);
-        transDetail.setPatientType("mchImmunization");
+        transDetail.setPatientType("mchClinic");
 
 //            transDetail.setCompanyName(pDetail.getTransactionDetail()
 //                    .getCompanyName());
@@ -193,7 +194,7 @@ public class AntenatalExaminationFragmentController {
 
         inventoryStoreDrugPatient.setStore(store);
         inventoryStoreDrugPatient.setPatient(patient);
-        inventoryStoreDrugPatient.setName(patient.getNames().toString());
+        inventoryStoreDrugPatient.setName(patient.getPersonName().toString());
         inventoryStoreDrugPatient.setIdentifier(patient.getIdentifiers().toString());
         inventoryStoreDrugPatient.setCreatedBy(Context.getAuthenticatedUser().getGivenName());
         inventoryStoreDrugPatient.setCreatedOn(date1);

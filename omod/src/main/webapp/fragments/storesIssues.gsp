@@ -23,8 +23,8 @@
                     }
 
                     drugBatches.availableDrugs.removeAll();
+					
                     jq.each(data.drugs, function (i, item) {
-                        console.log(item);
                         drugBatches.availableDrugs.push(item);
                     });
                 }).error(function (xhr, status, err) {

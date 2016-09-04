@@ -3,6 +3,7 @@ package org.openmrs.module.mchapp.fragment.controller;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mchapp.MchStores;
 import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
 import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
@@ -38,13 +39,7 @@ public class StoresIssuesFragmentController {
     public SimpleObject getBatchesForSelectedDrug(UiUtils uiUtils,
                                                         @RequestParam("drgId") Integer drgId,
                                                         @RequestParam("drgName") String drgName) {
-        List<ImmunizationStoreDrug> storeDrugs = immunizationService.getAvailableDrugBatches(drgId);
-        if (storeDrugs.size() > 0) {
-            List<SimpleObject> simpleObjects = SimpleObject.fromCollection(storeDrugs, uiUtils, "batchNo", "currentQuantity", "expiryDate");
-            return SimpleObject.create("status","success","message","Found Drugs","drugs",simpleObjects);
-        }else{
-            return SimpleObject.create("status","fail","message","No Batch for this Drug");
-        }
+        return MchStores.getBatchesForSelectedDrug(uiUtils, drgId);
 
     }
 
