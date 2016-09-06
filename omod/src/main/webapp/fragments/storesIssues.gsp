@@ -1,17 +1,63 @@
 <script>
-    var drugIssues;
-    var drugBatches;
-
-    function DrugBatchViewModel(){
+	var issuesTable;
+	var issuesTableObject;
+	var issuesResultsData = [];
+	
+	var drugBatches;
+	
+	function DrugBatchViewModel(){
         var self =this;
         self.availableDrugs = ko.observableArray([]);
         self.drugObject=ko.observable();
     }
+	
+	var getStoreIssues = function(){
+		issuesTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="'+emr.resourceLink('uicommons', 'images/spinner.gif')+'" /></span>');
+		var requestData = {
+			issueNames: '',
+			fromDate:	jq('#issueFrom-field').val(),
+			toDate:		jq('#issueDate-field').val()
+		}
+		
+		jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "listImmunizationIssues") }', requestData)
+			.success(function (data) {
+				updateIssuesResults(data);
+			}).error(function (xhr, status, err) {
+				updateIssuesResults([]);
+			}
+		);
+	};
+	
+	var updateIssuesResults = function(results){
+		issuesResultsData = results || [];
+		var dataRows = [];
+		_.each(issuesResultsData, function(result){
+			var drugName = '<a href="storesVaccinesIssues.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var remarks = 'N/A';
+			var icons = '<a href="storesIssues.page?issueId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			
+			if (result.remark !== ''){
+				remarks = result.remark;
+			}
+			
+			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), drugName, result.quantity, result.vvmStage, remarks, icons]);
+		});
+
+		issuesTable.api().clear();
+		
+		if(dataRows.length > 0) {
+			issuesTable.fnAddData(dataRows);
+		}
+
+		refreshInTable(issuesResultsData, issuesTable);
+	}
+
     function checkBatchAvailability(drgId,drgName) {
         var requestData = {
             drgId: drgId,
             drgName: drgName
         }
+		
         jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "getBatchesForSelectedDrug") }', requestData)
                 .success(function (data) {
                     if(data.status ==="success"){
@@ -31,17 +77,68 @@
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);
                 }
         );
-
     }
+	
     jq(function () {
-        drugIssues = new IssuesViewModel();
-        drugBatches = new DrugBatchViewModel();
-        listImmunizationIssues();
-        jq(".searchIssueParams").on('blur change', function () {
-            var issueNames = jq("#issueNames").val();
-            var fromDate = jq("#issueFrom-field").val();
-            var toDate = jq("#issueDate-field").val();
-            listImmunizationIssues(issueNames, fromDate, toDate);
+		drugBatches = new DrugBatchViewModel();
+		
+		issuesTableObject = jq("#issuesList");
+		
+		issuesTable = issuesTableObject.dataTable({
+			autoWidth: false,
+			bFilter: true,
+			bJQueryUI: true,
+			bLengthChange: false,
+			iDisplayLength: 25,
+			sPaginationType: "full_numbers",
+			bSort: false,
+			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
+			oLanguage: {
+				"sInfo": "Issues",
+				"sInfoEmpty": " ",
+				"sZeroRecords": "No Issues Found",
+				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Issues)",
+				"oPaginate": {
+					"sFirst": "First",
+					"sPrevious": "Previous",
+					"sNext": "Next",
+					"sLast": "Last"
+				}
+			},
+
+			fnDrawCallback : function(oSettings){
+				if(isTableEmpty(issuesResultsData, issuesTable)){
+					return;
+				}
+				
+				issuesTableObject.find('tbody tr').unbind('click');
+				issuesTableObject.find('tbody tr').unbind('hover');
+
+				issuesTableObject.find('tbody tr').click(
+					function(){
+						highlightedMouseRowIndex = issuesTable.fnGetPosition(this);
+						selectRow(highlightedMouseRowIndex);
+					}
+				);
+			},
+			
+			fnRowCallback : function (nRow, aData, index){
+				return nRow;
+			}
+		});
+		
+		issuesTable.on( 'order.dt search.dt', function () {
+			issuesTable.api().column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		}).api().draw();
+		
+		jq('#issueNames').on('keyup', function () {
+			issuesTable.api().search( this.value ).draw();
+		});
+	
+        jq(".issuesParams").on('change', function () {
+            getStoreIssues();
         });
 
         jq("#issueName").autocomplete({
@@ -68,41 +165,17 @@
                 event.preventDefault();
                 var drgName=ui.item.value.name;
                 jQuery("#issueName").val(drgName);
-                //set parent category
+                
                 var catId = ui.item.value.category.id;
                 var drgId = ui.item.value.id;
                 checkBatchAvailability(drgId,drgName);
             }
         });
-
-        ko.applyBindings(drugIssues, jq("#issuesList")[0]);
-        ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);
-
-    });//end of doc ready
-
-    function IssuesViewModel() {
-        var self = this;
-        self.availableIssues = ko.observableArray([]);
-    }
-
-    function listImmunizationIssues(issueNames, fromDate, toDate) {
-        drugIssues.availableIssues.removeAll();
-        var requestData = {
-            issueNames: issueNames,
-            fromDate: fromDate,
-            toDate: toDate
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "listImmunizationIssues") }', requestData)
-                .success(function (data) {
-                    jq.each(data, function (i, item) {
-                        drugIssues.availableIssues.push(item);
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
-        );
-    }
-
+		
+		ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);
+		
+		getStoreIssues();
+    });
 </script>
 
 <div class="dashboard clear">
@@ -118,8 +191,8 @@
                 <input id="issueNames" type="text" value="" name="issueNames" placeholder="Vaccine/Diluent"
                        style="width: 240px">
 
-                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'issueFrom', label: '', useTime: false, defaultToday: false, class: ['newdtp']])}
-                <label>&nbsp;&nbsp;To&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate', id: 'issueDate', label: '', useTime: false, defaultToday: false, class: ['newdtp']])}
+                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'issueFrom', label: '', useTime: false, defaultToday: false, classes: ['issuesParams']])}
+                <label>&nbsp;&nbsp;To&nbsp;</label>${  ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate'  , id: 'issueDate', label: '', useTime: false, defaultToday: false, classes: ['issuesParams']])}
             </div>
         </div>
     </div>
@@ -127,27 +200,16 @@
 
 <table id="issuesList">
     <thead>
-    <th>#</th>
-    <th>DATE</th>
-    <th>VACCINE/DILUENT</th>
-    <th>ISSUED</th>
-    <th>VVM STAGE</th>
-    <th>REMARKS</th>
-    <th>ACTIONS</th>
+		<th>#</th>
+		<th style="width: 100px!important">DATE</th>
+		<th>VACCINE/DILUENT</th>
+		<th style="width: 100px!important">ISSUED</th>
+		<th style="width: 100px!important">VVM STAGE</th>
+		<th>REMARKS</th>
+		<th>ACTIONS</th>
     </thead>
 
-    <tbody data-bind="foreach: availableIssues">
-
-    <tr>
-        <td data-bind="text: \$index() + 1 "></td>
-        <td data-bind="text: createdOn"></td>
-        <td data-bind="text: storeDrug.inventoryDrug.name"></td>
-        <td data-bind="text: quantity"></td>
-        <td data-bind="text: vvmStage"></td>
-        <td data-bind="text: remark"></td>
-        <td><i class="icon-share small"></i></td>
-    </tr>
-
+    <tbody>
     </tbody>
 </table>
 

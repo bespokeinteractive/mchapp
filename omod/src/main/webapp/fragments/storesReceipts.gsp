@@ -1,24 +1,114 @@
 <script>
-    var receipts;
+	var receiptsTable;
+	var receiptsTableObject;
+	var receiptsResultsData = [];
+	var receiptshighlightedKeyboardRowIndex;
+	
+	var getStoreReceipts = function(){
+		receiptsTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="'+emr.resourceLink('uicommons', 'images/spinner.gif')+'" /></span>');
+		var requestData = {
+			rcptNames: '',
+			fromDate:	jq('#rcptFrom-field').val(),
+			toDate:		jq('#rcptDate-field').val()
+		}
+		
+		jq.getJSON(emr.fragmentActionLink("mchapp", "storesReceipts", "listImmunizationReceipts"), requestData)
+			.success(function (data) {
+				updateReceiptResults(data);
+			}).error(function (xhr, status, err) {
+				updateReceiptResults([]);
+			}
+		);
+	};
+	
+	var updateReceiptResults = function(results){
+		receiptsResultsData = results || [];
+		var dataRows = [];
+		_.each(receiptsResultsData, function(result){
+			var drugName = '<a href="storesVaccinesReceipts.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var remarks = 'N/A';
+			var icons = '<a href="storesReceipts.page?receiptId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			
+			if (result.remark !== ''){
+				remarks = result.remark;
+			}
+			
+			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), drugName, result.quantity, result.vvmStage, remarks, icons]);
+		});
+
+		receiptsTable.api().clear();
+		
+		if(dataRows.length > 0) {
+			receiptsTable.fnAddData(dataRows);
+		}
+
+		refreshInTable(receiptsResultsData, receiptsTable);
+	}
 
     jq(function () {
-        receipts = new ReceiptsViewModel();
-        listImmunizationReceipts();
+		receiptsTableObject = jq("#receiptsList");
+		
+		receiptsTable = receiptsTableObject.dataTable({
+			bFilter: true,
+			bJQueryUI: true,
+			bLengthChange: false,
+			iDisplayLength: 25,
+			sPaginationType: "full_numbers",
+			bSort: false,
+			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
+			oLanguage: {
+				"sInfo": "Receipts",
+				"sInfoEmpty": " ",
+				"sZeroRecords": "No Receipts Found",
+				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Receipts)",
+				"oPaginate": {
+					"sFirst": "First",
+					"sPrevious": "Previous",
+					"sNext": "Next",
+					"sLast": "Last"
+				}
+			},
 
-        jq(".searchParams").on('blur change', function () {
-            var rcptNames = jq("#rcptNames").val();
-            var fromDate = jq("#rcptFrom-field").val();
-            var toDate = jq("#rcptDate-field").val();
-            listImmunizationReceipts(rcptNames, fromDate, toDate);
+			fnDrawCallback : function(oSettings){
+				if(isTableEmpty(receiptsResultsData, receiptsTable)){
+					//this should ensure that nothing happens when the use clicks the
+					//row that contain the text that says 'No data available in table'
+					return;
+				}
+
+				if(receiptshighlightedKeyboardRowIndex != undefined && !isHighlightedRowOnVisiblePage()){
+					unHighlightRow(receiptsTable.fnGetNodes(receiptshighlightedKeyboardRowIndex));
+				}
+				
+				receiptsTableObject.find('tbody tr').unbind('click');
+				receiptsTableObject.find('tbody tr').unbind('hover');
+
+				receiptsTableObject.find('tbody tr').click(
+					function(){
+						highlightedMouseRowIndex = receiptsTable.fnGetPosition(this);
+						selectRow(highlightedMouseRowIndex);
+					}
+				);
+			},
+			
+			fnRowCallback : function (nRow, aData, index){
+				return nRow;
+			}
+		});
+		
+		receiptsTable.on( 'order.dt search.dt', function () {
+			receiptsTable.api().column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		}).api().draw();
+		
+        jq(".receiptParams").on('change', function () {			
+            getStoreReceipts();
         });
-
-        jq(".date").on('dblclick', function () {
-//           Clear the date fields
-        });
-
-        ko.applyBindings(receipts, jq("#receiptsList")[0]);
-
-
+		
+		jq('#rcptNames').on('keyup', function () {
+			receiptsTable.api().search( this.value ).draw();
+		});
 
         jq("#rcptName").autocomplete({
             minLength: 3,
@@ -48,32 +138,9 @@
                 var drgId = ui.item.value.id;
             }
         });
-
-
-    });//end of document ready
-
-    function ReceiptsViewModel() {
-        var self = this;
-        self.availableReceipts = ko.observableArray([]);
-    }
-
-    function listImmunizationReceipts(rcptNames, fromDate, toDate) {
-        receipts.availableReceipts.removeAll();
-        var requestData = {
-            rcptNames: rcptNames,
-            fromDate: fromDate,
-            toDate: toDate
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "storesReceipts", "listImmunizationReceipts") }', requestData)
-                .success(function (data) {
-                    jq.each(data, function(i, item) {
-                        receipts.availableReceipts.push(item);
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
-        );
-    }
+		
+		getStoreReceipts();
+    });
 </script>
 
 <div class="dashboard clear">
@@ -83,15 +150,13 @@
 
             <h3 class="name">VIEW RECEIPTS</h3>
 
-            <div style="margin-top: -1px">
+            <div style="margin-top: -3px">
                 <i class="icon-filter" style="font-size: 26px!important; color: #5b57a6"></i>
                 <label for="rcptNames">&nbsp; Name:</label>
-                <input id="rcptNames" type="text" value="" name="rcptNames" placeholder="Vaccine/Diluent"
-                       class="searchParams"
-                       style="width: 240px">
+				<input id="rcptNames" type="text" value="" name="rcptNames" placeholder="Vaccine/Diluent" style="width: 240px">
 
-                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'rcptFrom', label: '', endDate: new Date(), useTime: false, defaultToday: false, classes: ['searchParams']])}
-                <label>&nbsp;&nbsp;To&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate', id: 'rcptDate', label: '', endDate: new Date(), useTime: false, defaultToday: false, classes: ['searchParams']])}
+                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'rcptFrom', label: '', endDate: new Date(), useTime: false, defaultToday: false, classes: ['receiptParams']])}
+                <label>&nbsp;&nbsp;To&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate', id: 'rcptDate', label: '', endDate: new Date(), useTime: false, defaultToday: false, classes: ['receiptParams']])}
             </div>
         </div>
     </div>
@@ -102,24 +167,16 @@
 <div id="receipts">
     <table id="receiptsList">
         <thead>
-        <th>#</th>
-        <th>DATE</th>
-        <th>VACCINE/DILUENT</th>
-        <th>QUANTITY</th>
-        <th>VVM STAGE</th>
-        <th>REMARKS</th>
-        <th>ACTIONS</th>
+			<th>#</th>
+			<th>DATE</th>
+			<th>VACCINE/DILUENT</th>
+			<th>QUANTITY</th>
+			<th>VVM STAGE</th>
+			<th>REMARKS</th>
+			<th>ACTIONS</th>
         </thead>
-        <tbody data-bind="foreach: availableReceipts">
-        <tr>
-            <td data-bind="text: \$index() + 1 "></td>
-            <td data-bind="text: createdOn"></td>
-            <td data-bind="text: storeDrug.inventoryDrug.name"></td>
-            <td data-bind="text: quantity"></td>
-            <td data-bind="text: vvmStage"></td>
-            <td data-bind="text: remark"></td>
-            <td><i class="icon-share small"></i></td>
-        </tr>
+		
+        <tbody>			
         </tbody>
     </table>
 </div>

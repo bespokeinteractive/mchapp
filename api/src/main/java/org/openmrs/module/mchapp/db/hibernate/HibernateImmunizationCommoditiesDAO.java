@@ -17,6 +17,7 @@ import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
 import org.openmrs.module.mchapp.model.*;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -266,6 +267,16 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
         criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
+
+        Calendar stopDate = Calendar.getInstance();
+
+        if (toDate != null){
+            stopDate.setTime(toDate);
+            stopDate.set(Calendar.HOUR_OF_DAY, 23);
+            stopDate.set(Calendar.MINUTE, 59);
+            stopDate.set(Calendar.SECOND, 59);
+        }
+
         if (StringUtils.isNotEmpty(rcptNames)) {
             InventoryService service = Context.getService(InventoryService.class);
             List<InventoryDrug> drugs = service.findDrug(null, rcptNames);
@@ -273,11 +284,11 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         }
         if (fromDate != null && toDate != null) {
             //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
-            criteria.add(Restrictions.between("createdOn", fromDate, toDate));
+            criteria.add(Restrictions.between("createdOn", fromDate, stopDate.getTime()));
         } else if (fromDate != null && toDate == null) {
             criteria.add(Restrictions.ge("createdOn", fromDate));
         } else if (fromDate == null && toDate != null) {
-            criteria.add(Restrictions.le("createdOn", toDate));
+            criteria.add(Restrictions.le("createdOn", stopDate.getTime()));
         }
 
         return criteria.list();

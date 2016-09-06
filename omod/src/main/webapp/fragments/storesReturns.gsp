@@ -1,17 +1,59 @@
 <script>
-    var drugReturns;
     var returnDrugBatches;
+	
+	var returnsTable;
+	var returnsTableObject;
+	var issuesReturnsData = [];
+	
+	var getStoreReturns = function(){
+		returnsTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="'+emr.resourceLink('uicommons', 'images/spinner.gif')+'" /></span>');
+		var requestData = {
+			returnNames: '',
+			fromDate:	 jq('#returnFrom-field').val(),
+			toDate:		 jq('#returnDate-field').val()
+		}
+		
+		jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "listImmunizationReturns") }', requestData)
+			.success(function (data) {
+				console.log(data);
+				
+				updateReturnsResults(data);
+			}).error(function (xhr, status, err) {
+				updateReturnsResults([]);
+			}
+		);
+	};
+	
+	var updateReturnsResults = function(results){
+		issuesReturnsData = results || [];
+		var dataRows = [];
+		_.each(issuesReturnsData, function(result){
+			var drugName = '<a href="storesVaccinesReturns.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var remarks = 'N/A';
+			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			
+			if (result.remark !== ''){
+				remarks = result.remark;
+			}
+			
+			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), drugName, result.quantity, result.vvmStage, remarks, icons]);
+		});
 
-    function DrugReturnsViewModel() {
-        var self = this;
-        self.availableReturns = ko.observableArray([]);
-    }
+		returnsTable.api().clear();
+		
+		if(dataRows.length > 0) {
+			returnsTable.fnAddData(dataRows);
+		}
+
+		refreshInTable(issuesReturnsData, returnsTable);
+	}
 
     function ReturnDrugBatchViewModel() {
         var self = this;
         self.availableDrugs = ko.observableArray([]);
         self.drugObject = ko.observable();
     }
+	
     function checkReturnsBatchAvailability(drgId, drgName) {
         var requestData = {
             drgId: drgId,
@@ -37,10 +79,67 @@
         );
     }
     jq(function () {
-        drugReturns = new DrugReturnsViewModel();
         returnDrugBatches = new ReturnDrugBatchViewModel();
 
-        listImmunizationReturns();
+		returnsTableObject = jq("#returnsList");
+		
+		returnsTable = returnsTableObject.dataTable({
+			autoWidth: false,
+			bFilter: true,
+			bJQueryUI: true,
+			bLengthChange: false,
+			iDisplayLength: 25,
+			sPaginationType: "full_numbers",
+			bSort: false,
+			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
+			oLanguage: {
+				"sInfo": "Issues",
+				"sInfoEmpty": " ",
+				"sZeroRecords": "No Issues Found",
+				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Issues)",
+				"oPaginate": {
+					"sFirst": "First",
+					"sPrevious": "Previous",
+					"sNext": "Next",
+					"sLast": "Last"
+				}
+			},
+
+			fnDrawCallback : function(oSettings){
+				if(isTableEmpty(issuesReturnsData, returnsTable)){
+					return;
+				}
+				
+				returnsTableObject.find('tbody tr').unbind('click');
+				returnsTableObject.find('tbody tr').unbind('hover');
+
+				returnsTableObject.find('tbody tr').click(
+					function(){
+						highlightedMouseRowIndex = returnsTable.fnGetPosition(this);
+						selectRow(highlightedMouseRowIndex);
+					}
+				);
+			},
+			
+			fnRowCallback : function (nRow, aData, index){
+				return nRow;
+			}
+		});
+		
+		returnsTable.on( 'order.dt search.dt', function () {
+			returnsTable.api().column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		}).api().draw();
+		
+		jq('#returnNames').on('keyup', function () {
+			returnsTable.api().search( this.value ).draw();
+		});
+	
+        jq(".returnsParams").on('change', function () {
+            getStoreReturns();
+        });
+		
         jq("#rtnsName").autocomplete({
             minLength: 3,
             source: function (request, response) {
@@ -72,28 +171,10 @@
             }
         });
 
-        ko.applyBindings(drugReturns, jq("#returnsList")[0]);
         ko.applyBindings(returnDrugBatches, jq("#returns-dialog")[0]);
-
+		
+		getStoreReturns();
     });//end of document ready function
-
-    function listImmunizationReturns(returnNames, fromDate, toDate) {
-        drugReturns.availableReturns.removeAll();
-        var requestData = {
-            returnNames: returnNames,
-            fromDate: fromDate,
-            toDate: toDate
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "listImmunizationReturns") }', requestData)
-                .success(function (data) {
-                    jq.each(data, function (i, item) {
-                        drugReturns.availableReturns.push(item);
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
-        );
-    }
 </script>
 
 <div class="dashboard clear">
@@ -109,8 +190,8 @@
                 <input id="returnNames" type="text" value="" name="returnNames" placeholder="Vaccine/Diluent"
                        style="width: 240px">
 
-                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'returnFrom', label: '', useTime: false, defaultToday: false, class: ['newdtp']])}
-                <label>&nbsp;&nbsp;To&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate', id: 'returnDate', label: '', useTime: false, defaultToday: false, class: ['newdtp']])}
+                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'returnFrom', label: '', useTime: false, defaultToday: false, classes: ['returnsParams']])}
+                <label>&nbsp;&nbsp;To&nbsp;</label>${  ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate',   id: 'returnDate', label: '', useTime: false, defaultToday: false, classes: ['returnsParams']])}
             </div>
         </div>
     </div>
@@ -118,27 +199,16 @@
 
 <table id="returnsList">
     <thead>
-    <th>#</th>
-    <th>DATE</th>
-    <th>VACCINE/DILUENT</th>
-    <th>RETURNED</th>
-    <th>VVM STAGE</th>
-    <th>REMARKS</th>
-    <th>ACTIONS</th>
+		<th>#</th>
+		<th>DATE</th>
+		<th>VACCINE/DILUENT</th>
+		<th>RETURNED</th>
+		<th>VVM STAGE</th>
+		<th>REMARKS</th>
+		<th>ACTIONS</th>
     </thead>
 
-    <tbody data-bind="foreach: availableReturns">
-    <tr>
-    <tr>
-        <td data-bind="text: \$index() + 1 "></td>
-        <td data-bind="text: createdOn"></td>
-        <td data-bind="text: storeDrug.inventoryDrug.name"></td>
-        <td data-bind="text: quantity"></td>
-        <td data-bind="text: vvmStage"></td>
-        <td data-bind="text: remark"></td>
-        <td><i class="icon-share small"></i></td>
-    </tr>
-    </tr>
+    <tbody>    
     </tbody>
 </table>
 
