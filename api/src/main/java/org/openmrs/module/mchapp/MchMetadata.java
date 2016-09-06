@@ -16,6 +16,8 @@ public class MchMetadata extends AbstractMetadataBundle {
     }
 
     public static final class MchAppConstants {
+        public static final String FAMILY_PLANNING_CLINIC_CONCEPT_UUID = "68f095fb-1701-42b1-bd30-46d5f0473ae6";
+
         public static final String CWC_FOLLOW_UP = "6f7b4285-a04b-4f8b-be85-81c325289539";
         public static final String CWC_BREASTFEEDING_COUNCELLING = "42197783-8b24-49b0-b290-cbb368fa0113";
         public static final String CWC_BREASTFEEDING_EXCLUSSIVE = "42197783-8b24-49b0-b290-cbb368fa0113";
