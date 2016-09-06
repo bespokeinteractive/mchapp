@@ -93,7 +93,12 @@
             <ul>
                 <li>
                     <label>Type</label>
-                    <input id="equipementName" type="text">
+                    <select id="equipementTypeName" name="equipmentType">
+                        <option value="0">SELECT TYPE</option>
+                        <option value="FREEZER">FREEZER</option>
+                        <option value="REFRIGERATOR">REFRIGERATOR</option>
+                    </select>
+
                 </li>
                 <li>
                     <label>Model</label>

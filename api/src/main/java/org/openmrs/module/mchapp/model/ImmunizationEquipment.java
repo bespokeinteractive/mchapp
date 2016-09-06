@@ -18,6 +18,7 @@ public class ImmunizationEquipment implements Serializable {
     private int ageInYears;
     private String createdBy;
     private Date createdOn;
+    private String remarks;
 
     public int getId() {
         return id;
@@ -83,5 +84,11 @@ public class ImmunizationEquipment implements Serializable {
         this.createdOn = createdOn;
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
 
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }

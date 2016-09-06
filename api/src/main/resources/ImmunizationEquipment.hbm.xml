@@ -16,5 +16,6 @@
 		<property name="energySource" column="energy_source"  />
 		<property name="ageInYears" column="age_in_years"  />
 		<property name="createdOn" column="created_on"  />
+		<property name="remarks" column="remarks"  />
 	</class>
 </hibernate-mapping>

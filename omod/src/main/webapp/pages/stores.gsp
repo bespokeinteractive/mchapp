@@ -201,6 +201,25 @@
             actions: {
                 confirm: function () {
                     //Code Here
+					var equipmentData = {
+						equipementTypeName: jq("#equipementTypeName").val(),
+						equipementModel: jq("#equipementModel").val(),
+						dateManufactured: jq("#equipementManufactured-field").val(),
+						equipementRemarks: jq("#equipementRemarks").val(),
+						equipementEnergySource: jq("#equipementEnergySource").val()
+					}
+					jq.getJSON('${ ui.actionLink("mchapp", "storesEquipments", "saveImmunizationEquipment") }', equipmentData)
+							.success(function (data) {
+								if(data.status === "success"){
+									jq().toastmessage('showSuccessToast', data.message);
+									stockoutsDialog.close();
+								}else{
+									jq().toastmessage('showErrorToast', data.message);
+								}
+							}).error(function (xhr, status, err) {
+								jq().toastmessage('showErrorToast', "AJAX error!" + err);
+							}
+					);
                 },
                 cancel: function () {
                     equipmentsDialog.close();
