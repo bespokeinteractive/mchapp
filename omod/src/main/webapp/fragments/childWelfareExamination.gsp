@@ -26,7 +26,6 @@
     var diagnosisArray = [];
 
     var emrMessages = {};
-
     emrMessages["numericRangeHigh"] = "value should be less than {0}";
     emrMessages["numericRangeLow"] = "value should be more than {0}";
     emrMessages["requiredField"] = "Mandatory Field. Kindly provide details";
@@ -36,6 +35,11 @@
     var patientProgramForWorkflowEdited;
 
     var outcomeId;
+    function DrugBatchViewModel() {
+        var self = this;
+        self.availableDrugs = ko.observableArray([]);
+        self.drugObject = ko.observable();
+    }
 
     jq(function () {
         function SubmitInformation() {
@@ -132,14 +136,17 @@
                     var idnt = jq('#vaccine-idnt').val();
                     var prog = jq('#vaccine-prog').val();
                     var name = jq('#vaccine-name').val();
-
                     var state = jq('#vaccine-state').val();
+                    var batch = jq('#vaccine-batch').val();
+                    var quantity = jq('#vaccine-quantity').val();
 
                     var stateData = {
                         patientProgramId: prog,
                         programWorkflowId: idnt,
                         programWorkflowStateId: jq('#vaccine-state').val(),
-                        onDateDMY: jq('#vaccine-date-field').val()
+                        onDateDMY: jq('#vaccine-date-field').val(),
+                        batch: batch,
+                        quantity: quantity
                     }
 
                     jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
@@ -176,13 +183,13 @@
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
-
             jq('#vaccine-idnt').val(idnt);
             jq('#vaccine-name').val(name);
             jq('#vaccine-prog').val(prog);
 
             jq('#vaccine-state').html(jq('#changeToState_' + idnt).html());
 
+            checkBatchAvailability(name);
             vaccinationDialog.show();
         });
 
@@ -676,6 +683,9 @@
             }
         }).change();
 
+
+
+
     });//End of Document Ready
 
     function refreshPage() {
@@ -825,6 +835,36 @@
                 numberOfDays, comment);
 
         drugOrders.addDrugOrder(drugId, drugOrderDetail);
+    }
+
+
+    function checkBatchAvailability(drgName) {
+        var requestData = {
+            drgName: drgName
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "childWelfareExamination", "getBatchesForSelectedDrug") }', requestData)
+                .success(function (data) {
+                    if (data.status === "success") {
+                        jq(".confirm").show();
+                        jq().toastmessage('showSuccessToast', data.message);
+                    } else if (data.status === "fail") {
+                        jq().toastmessage('showErrorToast', data.message);
+                        jq(".confirm").hide();
+                    }
+
+                    var options = jq("#vaccine-batch");
+                    jq(options).empty();
+                    options.append(jq("<option />").val("0").text("Select Batch"));
+                    jq.each(data.drugs, function (i, item) {
+                        console.log(item);
+
+                        options.append(jq("<option />").val(item).text(item.batchNo));
+                    });
+                }).error(function (xhr, status, err) {
+                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                }
+        );
+
     }
 </script>
 
@@ -1006,7 +1046,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
     <input type="hidden" name="queueId" value="${queueId}">
 
     <section>
-        
+
         <span class="title">Clinical Notes</span>
 
         <fieldset class="no-confirmation">
@@ -1545,11 +1585,12 @@ table[id*='workflowTable_'] th:nth-child(4) {
                     <% } %>
 
                     <div>
-						<label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%; margin-bottom: 0px;">
-                            <input type="checkbox" name="send_for_examination" value="4e87c99b-8451-4789-91d8-2aa33fe1e5f6" />
+                        <label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%; margin-bottom: 0px;">
+                            <input type="checkbox" name="send_for_examination"
+                                   value="4e87c99b-8451-4789-91d8-2aa33fe1e5f6"/>
                             Send to Immunization Room
                         </label>
-						
+
                         <label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; width: 96.5%; margin-top: -3px;">
                             <input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
                             Exit Patient from Program
@@ -1578,156 +1619,158 @@ table[id*='workflowTable_'] th:nth-child(4) {
 </form>
 
 <% } else { %>
- 
+
 <style>
-	#formBreadcrumb{
-		display: none;
-	}
+#formBreadcrumb {
+    display: none;
+}
 </style>
- 
+
 <form method="post" id="cwcExaminationsForm">
     <input type="hidden" name="patientId" value="${patient?.patientId}">
     <input type="hidden" name="queueId" value="${queueId}">
-	
-	<div style="padding: 0 4px">
-		<field>
-			<input type="hidden" id="immunizations-set" class=""/>
-			<span id="immunizations-lbl" class="field-error" style="display: none"></span>
-		</field>
 
-		<div style="width: 100%;" class="col16 dashboard">
-			<% patientProgram.program.workflows.each { workflow -> %>
-			<% def stateId; def stateStart; def stateName; %>
-			<div class="info-section">
-				<% patientProgram.states.each { state -> %>
-				<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-					stateId = state.state.concept.conceptId;
-					stateName = state.state.concept.name;
-					stateStart = state.startDate;
-				} %>
-				<% } %>
+    <div style="padding: 0 4px">
+        <field>
+            <input type="hidden" id="immunizations-set" class=""/>
+            <span id="immunizations-lbl" class="field-error" style="display: none"></span>
+        </field>
 
-				<div class="info-header">
-					<i class="icon-medicine"></i>
+        <div style="width: 100%;" class="col16 dashboard">
+            <% patientProgram.program.workflows.each { workflow -> %>
+            <% def stateId; def stateStart; def stateName; %>
+            <div class="info-section">
+                <% patientProgram.states.each { state -> %>
+                <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+                    stateId = state.state.concept.conceptId;
+                    stateName = state.state.concept.name;
+                    stateStart = state.startDate;
+                } %>
+                <% } %>
 
-					<h3>${workflow.concept.name}</h3>
-					<a><i class="icon-chevron-right small right chevron"
-						  data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
-						  data-prog="${patientProgram.patientProgramId}"></i></a>
-				</div>
+                <div class="info-header">
+                    <i class="icon-medicine"></i>
 
-				<div class="info-body">
-					<div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
-						<table id="workflowTable_${workflow.programWorkflowId}">
-							<thead>
-							<tr>
-							<thead>
-							<th>#</th>
-							<th>VACCINE</th>
-							<th>GIVEN ON</th>
-							<th>AT AGE</th>
-							<th>RECORDED</th>
-							<th>PROVIDER</th>
-							</thead>
-						</tr>
-						</thead>
+                    <h3>${workflow.concept.name}</h3>
+                    <a><i class="icon-chevron-right small right chevron"
+                          data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
+                          data-prog="${patientProgram.patientProgramId}"></i></a>
+                </div>
 
-							<tbody>
+                <div class="info-body">
+                    <div id="currentStateVaccine_${workflow.programWorkflowId}" style="display: none;">
+                        <table id="workflowTable_${workflow.programWorkflowId}">
+                            <thead>
+                            <tr>
+                            <thead>
+                            <th>#</th>
+                            <th>VACCINE</th>
+                            <th>GIVEN ON</th>
+                            <th>AT AGE</th>
+                            <th>RECORDED</th>
+                            <th>PROVIDER</th>
+                            </thead>
+                        </tr>
+                        </thead>
 
-							</tbody>
-						</table>
+                            <tbody>
 
-						<div class="update-vaccine">
-							<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
-							   data-prog="${patientProgram.patientProgramId}">
-								<i class="icon-pencil small"></i>
-								Update Vaccine
-							</a>
-						</div>
+                            </tbody>
+                        </table>
 
-						<div class="">&nbsp;</div>
+                        <div class="update-vaccine">
+                            <a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}"
+                               data-prog="${patientProgram.patientProgramId}">
+                                <i class="icon-pencil small"></i>
+                                Update Vaccine
+                            </a>
+                        </div>
 
-						<div style="display: none">
-							<select name="changeToState_${workflow.programWorkflowId}"
-									id="changeToState_${workflow.programWorkflowId}">
-								<option value="0">Select a State</option>
-								<% if (workflow.states != null || workflow.states != "") { %>
-								<% workflow.states.each { state -> %>
-								<option id="${state.id}"
-										value="${state.id}">${state.concept.name}</option>
-								<% } %>
-								<% } %>
-							</select>
-						</div>
-					</div>
+                        <div class="">&nbsp;</div>
 
-					<div id="currentStateDetails_${workflow.programWorkflowId}">
-						<% if (stateId != null) { %>
-						<div id='main-show-${workflow.programWorkflowId}'>
-							<span class="status active"></span>
-							<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
+                        <div style="display: none">
+                            <select name="changeToState_${workflow.programWorkflowId}"
+                                    id="changeToState_${workflow.programWorkflowId}">
+                                <option value="0">Select a State</option>
+                                <% if (workflow.states != null || workflow.states != "") { %>
+                                <% workflow.states.each { state -> %>
+                                <option id="${state.id}"
+                                        value="${state.id}">${state.concept.name}</option>
+                                <% } %>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
 
-							<small style="font-size: 77%; margin-left: 10px;">
-								( <span class="icon-time"></span>
-								Date: <span id="state_date_${workflow.programWorkflowId}">${
-									ui.formatDatePretty(stateStart)}</span> )
-							</small>
-						</div>
-						<% } else { %>
-						<div id="no-show-${workflow.programWorkflowId}"
-							 style="margin-left: 20px; color: rgb(153, 153, 153);">
-							<em>(No Previous Vaccinations Found)</em>
-						</div>
+                    <div id="currentStateDetails_${workflow.programWorkflowId}">
+                        <% if (stateId != null) { %>
+                        <div id='main-show-${workflow.programWorkflowId}'>
+                            <span class="status active"></span>
+                            <span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
 
-						<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
-							<span class="status active"></span>
-							<span id="state_name_${workflow.programWorkflowId}"></span>
+                            <small style="font-size: 77%; margin-left: 10px;">
+                                ( <span class="icon-time"></span>
+                                Date: <span id="state_date_${workflow.programWorkflowId}">${
+                                    ui.formatDatePretty(stateStart)}</span> )
+                            </small>
+                        </div>
+                        <% } else { %>
+                        <div id="no-show-${workflow.programWorkflowId}"
+                             style="margin-left: 20px; color: rgb(153, 153, 153);">
+                            <em>(No Previous Vaccinations Found)</em>
+                        </div>
 
-							<small style="font-size: 77%; margin-left: 10px;">
-								( <span class="icon-time"></span>
-								Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
-							</small>
-						</div>
-						<% } %>
+                        <div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+                            <span class="status active"></span>
+                            <span id="state_name_${workflow.programWorkflowId}"></span>
 
-					</div>
-				</div>
-			</div>
-			<% } %>
+                            <small style="font-size: 77%; margin-left: 10px;">
+                                ( <span class="icon-time"></span>
+                                Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
+                            </small>
+                        </div>
+                        <% } %>
 
-		</div>
-	</div>
-	
-	<div class="clear"></div>	
-	<div style="margin: -15px 9px 0px;">
-		<label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.7%; margin-bottom: 0px;">
-			<input type="checkbox" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb" />
-			Send to Examination Room
-		</label>
-						
-		<label style="padding: 7px 10px 3px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: -10px; width: 96.7%; display: block;">
-			<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
-			Exit Patient from Program
-		</label>		
-	</div>
-	
-	<div id="confirmationQuestion" class="focused" style="margin:5px 10px 20px 4px">	
-		<span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton" style="float: right;">
-			<i class="icon-save small"></i>
-			Save
-		</span>
+                    </div>
+                </div>
+            </div>
+            <% } %>
 
-		<span id="cancelButton" class="button cancel">
-			<i class="icon-remove small"></i>
-			Cancel
-		</span>
-	</div>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+
+    <div style="margin: -15px 9px 0px;">
+        <label style="padding: 3px 10px; border: 1px solid rgb(255, 247, 153); background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.7%; margin-bottom: 0px;">
+            <input type="checkbox" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb"/>
+            Send to Examination Room
+        </label>
+
+        <label style="padding: 7px 10px 3px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: -10px; width: 96.7%; display: block;">
+            <input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
+            Exit Patient from Program
+        </label>
+    </div>
+
+    <div id="confirmationQuestion" class="focused" style="margin:5px 10px 20px 4px">
+        <span value="Submit" class="button submit confirm" id="antenatalExaminationSubmitButton" style="float: right;">
+            <i class="icon-save small"></i>
+            Save
+        </span>
+
+        <span id="cancelButton" class="button cancel">
+            <i class="icon-remove small"></i>
+            Cancel
+        </span>
+    </div>
 </form>
 <% } %>
 
 <div id="prescription-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
+
         <h3>Prescription</h3>
     </div>
 
@@ -1835,6 +1878,17 @@ table[id*='workflowTable_'] th:nth-child(4) {
                     <option value="0">Select a State</option>
                 </select>
             </li>
+            <li>
+                <label for="vaccine-batch">Batch:</label>
+                <select id="vaccine-batch">
+                    <option value="0">Select a Batch</option>
+                </select>
+            </li>
+            <li>
+                <label for="vaccine-quantity">Quantity:</label>
+                <input type="text" id="vaccine-quantity" name="vaccine-quantity" value="1"/>
+            </li>
+
 
             <li>
                 ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true, startDate: patient?.birthdate, endDate: new Date()])}

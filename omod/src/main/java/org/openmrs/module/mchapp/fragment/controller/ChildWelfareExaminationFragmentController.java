@@ -5,13 +5,17 @@ import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
-import org.openmrs.module.hospitalcore.model.TriagePatientQueue;
-import org.openmrs.module.mchapp.*;
+import org.openmrs.module.inventory.InventoryService;
+import org.openmrs.module.mchapp.InternalReferral;
+import org.openmrs.module.mchapp.MchMetadata;
+import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.mchapp.api.model.ClinicalForm;
 import org.openmrs.module.mchapp.api.parsers.QueueLogs;
 import org.openmrs.module.mchapp.api.parsers.SendForExaminationParser;
+import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.module.patientdashboardapp.model.ReferralReasons;
 import org.openmrs.ui.framework.SimpleObject;
@@ -23,8 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * @author Stanslaus Odhiambo
@@ -32,6 +36,7 @@ import java.text.ParseException;
  */
 public class ChildWelfareExaminationFragmentController {
     protected Logger log = LoggerFactory.getLogger(ChildWelfareExaminationFragmentController.class);
+    public static ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui) {
         config.require("patientId");
         config.require("queueId");
@@ -95,5 +100,23 @@ public class ChildWelfareExaminationFragmentController {
         }
 
 
+    }
+
+
+
+    public static SimpleObject getBatchesForSelectedDrug(UiUtils uiUtils,
+                                                         @RequestParam("drgName") String drgName) {
+        InventoryDrug drugByName = Context.getService(InventoryService.class).getDrugByName(drgName);
+        List<ImmunizationStoreDrug> storeDrugs = null;
+        if(drugByName!=null){
+            storeDrugs = immunizationService.getAvailableDrugBatches(drugByName.getId());
+        }
+
+        if (storeDrugs!=null && storeDrugs.size() > 0) {
+            List<SimpleObject> simpleObjects = SimpleObject.fromCollection(storeDrugs, uiUtils, "batchNo", "currentQuantity", "expiryDate");
+            return SimpleObject.create("status","success","message","Found Drugs","drugs",simpleObjects);
+        }else{
+            return SimpleObject.create("status","fail","message","No Batch for this Drug");
+        }
     }
 }
