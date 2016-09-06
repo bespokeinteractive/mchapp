@@ -7,16 +7,6 @@
 %>
 
 <script>
-<<<<<<< cf63ad12a0cc7e536d366dc9b3849dae5b7d2849
-    var eAction
-    jq(function () {
-        jq("#tabs").tabs();
-
-        jq('#inline-tabs li').click(function () {
-            var addBtn = jq('#adder a');
-
-            if (jq('#receipts').is(':visible')) {
-=======
 	var eAction;
 	
 	var refreshInTable = function(resultData, dTable){
@@ -41,7 +31,6 @@
 			var addBtn = jq('#adder a');
 			
 			if (jq('#receipts').is(':visible')) {
->>>>>>> Introduce Datatables in Stores and Implement Search & Filter Functions
                 addBtn.html('<i class="icon-refresh"></i> Add Receipts');
             }
             else if (jq('#issues').is(':visible')) {
@@ -56,12 +45,6 @@
             else if (jq('#equipments').is(':visible')) {
                 addBtn.html('<i class="icon-refresh"></i> Add Equipments');
             }
-<<<<<<< cf63ad12a0cc7e536d366dc9b3849dae5b7d2849
-        }).click();
-
-        jq('#adder a').click(function () {
-            if (jq('#receipts').is(':visible')) {
-=======
 		}).click();
 		
 		jq('#adder a').click(function(){
@@ -71,7 +54,6 @@
 				jq('#rcptStage').val(0);				
 				jq('#rcptBatchNo').val('');
 				jq('#rcptRemarks').val('');
->>>>>>> Introduce Datatables in Stores and Implement Search & Filter Functions
 
                 receiptsDialog.show();
             }
