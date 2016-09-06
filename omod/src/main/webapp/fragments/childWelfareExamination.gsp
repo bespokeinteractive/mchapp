@@ -35,11 +35,6 @@
     var patientProgramForWorkflowEdited;
 
     var outcomeId;
-    function DrugBatchViewModel() {
-        var self = this;
-        self.availableDrugs = ko.observableArray([]);
-        self.drugObject = ko.observable();
-    }
 
     jq(function () {
         function SubmitInformation() {
@@ -137,7 +132,7 @@
                     var prog = jq('#vaccine-prog').val();
                     var name = jq('#vaccine-name').val();
                     var state = jq('#vaccine-state').val();
-                    var batch = jq('#vaccine-batch').val();
+                    var batchNo = jq('#vaccine-batch').val();
                     var quantity = jq('#vaccine-quantity').val();
 
                     var stateData = {
@@ -145,8 +140,9 @@
                         programWorkflowId: idnt,
                         programWorkflowStateId: jq('#vaccine-state').val(),
                         onDateDMY: jq('#vaccine-date-field').val(),
-                        batch: batch,
-                        quantity: quantity
+                        batchNo: batchNo,
+                        quantity: quantity,
+                        patientId:${patient?.patientId}
                     }
 
                     jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
@@ -845,11 +841,9 @@
         jq.getJSON('${ ui.actionLink("mchapp", "childWelfareExamination", "getBatchesForSelectedDrug") }', requestData)
                 .success(function (data) {
                     if (data.status === "success") {
-                        jq(".confirm").show();
                         jq().toastmessage('showSuccessToast', data.message);
                     } else if (data.status === "fail") {
                         jq().toastmessage('showErrorToast', data.message);
-                        jq(".confirm").hide();
                     }
 
                     var options = jq("#vaccine-batch");
@@ -858,7 +852,7 @@
                     jq.each(data.drugs, function (i, item) {
                         console.log(item);
 
-                        options.append(jq("<option />").val(item).text(item.batchNo));
+                        options.append(jq("<option />").val(item.batchNo).text(item.batchNo));
                     });
                 }).error(function (xhr, status, err) {
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);
