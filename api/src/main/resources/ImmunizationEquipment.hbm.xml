@@ -9,8 +9,7 @@
 		<id name="id" type="int" column="id" unsaved-value="0">
 				<generator class="native" />
 		</id>
-	    <many-to-one name="createdBy" class="org.openmrs.Person"
-	        column="created_by" cascade="none"  />
+		<property name="createdBy" column="created_by" length="45"  />
 		<property name="equipmentType" column="equipment_type" length="45"  />
 		<property name="model" column="model"  />
 		<property name="workingStatus" column="working_status"  />
