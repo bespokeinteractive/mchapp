@@ -212,7 +212,7 @@
 							.success(function (data) {
 								if(data.status === "success"){
 									jq().toastmessage('showSuccessToast', data.message);
-									stockoutsDialog.close();
+									equipmentsDialog.close();
 								}else{
 									jq().toastmessage('showErrorToast', data.message);
 								}
