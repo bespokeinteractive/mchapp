@@ -63,6 +63,7 @@ public interface ImmunizationService extends OpenmrsService {
     ImmunizationEquipment getImmunizationEquipmentByType(String type);
 
     ImmunizationEquipment saveImmunizationEquipment(ImmunizationEquipment immunizationEquipment);
+    List<ImmunizationEquipment> listImmunizationEquipment(String equipmentName, String equipmentType);
 
 
     /*  ImmunizationStockout    */
@@ -83,4 +84,6 @@ public interface ImmunizationService extends OpenmrsService {
     List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId);
 
     List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
+
+
 }

@@ -69,6 +69,10 @@ public interface ImmunizationCommoditiesDAO {
 
     ImmunizationEquipment saveImmunizationEquipment(ImmunizationEquipment immunizationEquipment);
 
+    List<ImmunizationEquipment> listImmunizationEquipment(String equipmentName, String equipmentType);
+
+
+
     List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug);
 
     ImmunizationStockout getImmunizationStockoutById(int id);
@@ -90,4 +94,6 @@ public interface ImmunizationCommoditiesDAO {
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 
     List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
+
+
 }

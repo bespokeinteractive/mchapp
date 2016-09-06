@@ -187,6 +187,20 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         return (ImmunizationEquipment) getSession().merge(immunizationEquipment);
     }
 
+    @Override
+    public List<ImmunizationEquipment> listImmunizationEquipment(String equipmentName, String equipmentType) {
+        Criteria criteria = getSession().createCriteria(ImmunizationEquipment.class);
+        if (StringUtils.isNotEmpty(equipmentName)) {
+            criteria.add(Restrictions.like("model", equipmentName));
+        }
+        if (StringUtils.isNotEmpty(equipmentType)) {
+            criteria.add(Restrictions.eq("equipmentType", equipmentType));
+        }
+
+        return criteria.list();
+
+    }
+
     /*             ImmunizationStockout                  */
 
     @Override
@@ -227,7 +241,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     public List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName) {
         InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(drugName);
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
-                .add(Restrictions.eq("inventoryDrug",inventoryDrug));
+                .add(Restrictions.eq("inventoryDrug", inventoryDrug));
         return criteria.list();
     }
 
@@ -235,8 +249,8 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     public List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId) {
         InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugById(drgId);
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
-                .add(Restrictions.eq("inventoryDrug",inventoryDrug))
-                .add(Restrictions.ge("currentQuantity",0));
+                .add(Restrictions.eq("inventoryDrug", inventoryDrug))
+                .add(Restrictions.ge("currentQuantity", 0));
         return criteria.list();
     }
 
@@ -244,7 +258,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     public ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String drugName) {
         InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(drugName);
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
-                .add(Restrictions.eq("inventoryDrug",inventoryDrug));
+                .add(Restrictions.eq("inventoryDrug", inventoryDrug));
         return (ImmunizationStoreDrug) criteria.uniqueResult();
     }
 
@@ -255,7 +269,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         if (StringUtils.isNotEmpty(rcptNames)) {
             InventoryService service = Context.getService(InventoryService.class);
             List<InventoryDrug> drugs = service.findDrug(null, rcptNames);
-            criteria.add(Restrictions.in("storeDrug.inventoryDrug",drugs));
+            criteria.add(Restrictions.in("storeDrug.inventoryDrug", drugs));
         }
         if (fromDate != null && toDate != null) {
             //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!
@@ -275,7 +289,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         if (StringUtils.isNotEmpty(outsNames)) {
             InventoryService service = Context.getService(InventoryService.class);
             List<InventoryDrug> drugs = service.findDrug(null, outsNames);
-            criteria.add(Restrictions.in("drug",drugs));
+            criteria.add(Restrictions.in("drug", drugs));
         }
         if (fromDate != null && toDate != null) {
             //TODO check that the to date is not earlier than the from date - this should probably be handle from the interface!!

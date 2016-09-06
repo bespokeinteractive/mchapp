@@ -140,6 +140,12 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
         return dao.saveImmunizationEquipment(immunizationEquipment);
     }
 
+
+    @Override
+    public List<ImmunizationEquipment> listImmunizationEquipment(String equipmentName, String equipmentType) {
+        return dao.listImmunizationEquipment(equipmentName,equipmentType);
+    }
+
     @Override
     public List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug) {
         return dao.getImmunizationStockoutByDrug(drug);
