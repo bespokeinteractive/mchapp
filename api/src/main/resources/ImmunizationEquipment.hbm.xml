@@ -14,7 +14,7 @@
 		<property name="model" column="model"  />
 		<property name="workingStatus" column="working_status"  />
 		<property name="energySource" column="energy_source"  />
-		<property name="ageInYears" column="age_in_years"  />
+		<property name="dateOfManufacture" column="date_of_manufacture"  />
 		<property name="createdOn" column="created_on"  />
 		<property name="remarks" column="remarks"  />
 	</class>

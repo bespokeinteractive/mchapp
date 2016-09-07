@@ -1,101 +1,101 @@
 <script>
-	var equipmentTable;
-	var equipmentTableObject;
-	var equipmentResultsData = [];
-	
-	var getStoreEquipment = function(){
-		equipmentTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="'+emr.resourceLink('uicommons', 'images/spinner.gif')+'" /></span>');
-		var requestData = {
-			equipmentName: '',
+    var equipmentTable;
+    var equipmentTableObject;
+    var equipmentResultsData = [];
+
+    var getStoreEquipment = function () {
+        equipmentTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="' + emr.resourceLink('uicommons', 'images/spinner.gif') + '" /></span>');
+        var requestData = {
+            equipmentName: '',
             equipmentType: jq('#equipmentType').val()
-		}
-		
-		jq.getJSON('${ ui.actionLink("mchapp", "storesEquipments", "listImmunizationEquipment") }', requestData)
-			.success(function (data) {			
-				updateEquipmentResults(data);
-			}).error(function (xhr, status, err) {
-				updateEquipmentResults([]);
-			}
-		);
-	};
-	
-	var updateEquipmentResults = function(results){
-		equipmentResultsData = results || [];
-		var dataRows = [];
-		_.each(equipmentResultsData, function(result){
-			var icons = '<a class="edit-equipments" data-idnt="' + result.id + '"><i class="icon-pencil small"></i>EDIT</a>';
-			var status = "Working";
-			
-			if (result.workingStatus !== true){
-				status= "Not Working";
-			}
-			
-			dataRows.push([0, result.equipmentType, result.model, status, result.energySource, result.ageInYears, icons]);
-		});
+        }
 
-		equipmentTable.api().clear();
-		
-		if(dataRows.length > 0) {
-			equipmentTable.fnAddData(dataRows);
-		}
+        jq.getJSON('${ ui.actionLink("mchapp", "storesEquipments", "listImmunizationEquipment") }', requestData)
+                .success(function (data) {
+                    updateEquipmentResults(data);
+                }).error(function (xhr, status, err) {
+                    updateEquipmentResults([]);
+                }
+        );
+    };
 
-		refreshInTable(equipmentResultsData, equipmentTable);
-	};
-	
+    var updateEquipmentResults = function (results) {
+        equipmentResultsData = results || [];
+        var dataRows = [];
+        _.each(equipmentResultsData, function (result) {
+            var icons = '<a class="edit-equipments" data-idnt="' + result.id + '"><i class="icon-pencil small"></i>EDIT</a>';
+            var status = "Working";
+
+            if (result.workingStatus !== true) {
+                status = "Not Working";
+            }
+
+            dataRows.push([0, result.equipmentType, result.model, status, result.energySource, moment(result.dateOfManufacture, "DD.MMM.YYYY").format("DD/MM/YYYY"), icons]);
+        });
+
+        equipmentTable.api().clear();
+
+        if (dataRows.length > 0) {
+            equipmentTable.fnAddData(dataRows);
+        }
+
+        refreshInTable(equipmentResultsData, equipmentTable);
+    };
+
     jq(function () {
-		equipmentTableObject = jq("#equipmentList");
-		
-		equipmentTable = equipmentTableObject.dataTable({
-			autoWidth: false,
-			bFilter: true,
-			bJQueryUI: true,
-			bLengthChange: false,
-			iDisplayLength: 25,
-			sPaginationType: "full_numbers",
-			bSort: false,
-			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
-			oLanguage: {
-				"sInfo": "Equipments",
-				"sInfoEmpty": " ",
-				"sZeroRecords": "No Equipments Found",
-				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Equipments)",
-				"oPaginate": {
-					"sFirst": "First",
-					"sPrevious": "Previous",
-					"sNext": "Next",
-					"sLast": "Last"
-				}
-			},
+        equipmentTableObject = jq("#equipmentList");
 
-			fnDrawCallback : function(oSettings){
-				if(isTableEmpty(equipmentResultsData, equipmentTable)){
-					return;
-				}
-			},
-			
-			fnRowCallback : function (nRow, aData, index){
-				return nRow;
-			}
-		});
-		
-		equipmentTable.on( 'order.dt search.dt', function () {
-			equipmentTable.api().column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-				cell.innerHTML = i+1;
-			} );
-		}).api().draw();
-		
-		jq('#equipmentName').on('keyup', function () {
-			equipmentTable.api().search( this.value ).draw();
-		});
-	
+        equipmentTable = equipmentTableObject.dataTable({
+            autoWidth: false,
+            bFilter: true,
+            bJQueryUI: true,
+            bLengthChange: false,
+            iDisplayLength: 25,
+            sPaginationType: "full_numbers",
+            bSort: false,
+            sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
+            oLanguage: {
+                "sInfo": "Equipments",
+                "sInfoEmpty": " ",
+                "sZeroRecords": "No Equipments Found",
+                "sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Equipments)",
+                "oPaginate": {
+                    "sFirst": "First",
+                    "sPrevious": "Previous",
+                    "sNext": "Next",
+                    "sLast": "Last"
+                }
+            },
+
+            fnDrawCallback: function (oSettings) {
+                if (isTableEmpty(equipmentResultsData, equipmentTable)) {
+                    return;
+                }
+            },
+
+            fnRowCallback: function (nRow, aData, index) {
+                return nRow;
+            }
+        });
+
+        equipmentTable.on('order.dt search.dt', function () {
+            equipmentTable.api().column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).api().draw();
+
+        jq('#equipmentName').on('keyup', function () {
+            equipmentTable.api().search(this.value).draw();
+        });
+
         jq("#equipmentType").on('change', function () {
             getStoreEquipment();
         });
-		
-		getStoreEquipment();
+
+        getStoreEquipment();
     });
-	
-    
+
+
 </script>
 
 <div class="dashboard clear">
@@ -123,13 +123,13 @@
 
 <table id="equipmentList">
     <thead>
-		<th>#</th>
-		<th>TYPE</th>
-		<th>MODEL</th>
-		<th>STATUS</th>
-		<th>ENERGY SOURCE</th>
-		<th>AGE</th>
-		<th>ACTIONS</th>
+    <th>#</th>
+    <th>TYPE</th>
+    <th>MODEL</th>
+    <th>STATUS</th>
+    <th>ENERGY SOURCE</th>
+    <th>MANUFACTURED</th>
+    <th>ACTIONS</th>
     </thead>
 
     <tbody>
@@ -154,7 +154,7 @@
                         <option value="REFRIGERATOR">REFRIGERATOR</option>
                     </select>
                 </li>
-				
+
                 <li>
                     <label>Model</label>
                     <input type="text" id="equipementModel">
@@ -173,8 +173,8 @@
                 <li>
                     ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'equipementManufactured', id: 'equipementManufactured', label: 'Manufactured', useTime: false, endDate: new Date(), defaultToday: false])}
                 </li>
-				
-				<li>
+
+                <li>
                     <label>Working Status</label>
                     <select id="equipementStatus">
                         <option value="">Select Status</option>

@@ -8,7 +8,6 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class StoresEquipmentsFragmentController {
                                                      @RequestParam(value = "equipmentType", required = false) String equipmentType) {
 
         List<ImmunizationEquipment>  immunizationEquipments= immunizationService.listImmunizationEquipment(equipmentName, equipmentType);
-        return SimpleObject.fromCollection(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "ageInYears");
+        return SimpleObject.fromCollection(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "dateOfManufacture");
     }
 
     public SimpleObject saveImmunizationEquipment(UiUtils uiUtils, @RequestParam("equipementTypeName") String equipementTypeName,
@@ -46,16 +45,7 @@ public class StoresEquipmentsFragmentController {
         equipment.setModel(equipementModel);
         equipment.setRemarks(equipementRemarks);
         equipment.setWorkingStatus(equipementStatus);
-
-        Calendar dateOfManufacture = Calendar.getInstance();
-        dateOfManufacture.setTimeInMillis(dateManufactured.getTime());
-        long currentTime = System.currentTimeMillis();
-        Calendar now = Calendar.getInstance();
-        now.setTimeInMillis(currentTime);
-        //Get difference between years
-        int years = now.get(Calendar.YEAR) - dateOfManufacture.get(Calendar.YEAR);
-        equipment.setAgeInYears(years);
-
+        equipment.setDateOfManufacture(dateManufactured);
         equipment = immunizationService.saveImmunizationEquipment(equipment);
         if (equipment != null) {
             return SimpleObject.create("status", "success","message","Equipment Saved Successfully");

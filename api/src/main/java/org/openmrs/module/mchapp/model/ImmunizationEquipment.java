@@ -15,7 +15,7 @@ public class ImmunizationEquipment implements Serializable {
     private String model;
     private boolean workingStatus;
     private String energySource;
-    private int ageInYears;
+    private Date dateOfManufacture;
     private String createdBy;
     private Date createdOn;
     private String remarks;
@@ -60,12 +60,12 @@ public class ImmunizationEquipment implements Serializable {
         this.energySource = energySource;
     }
 
-    public int getAgeInYears() {
-        return ageInYears;
+    public Date getDateOfManufacture() {
+        return dateOfManufacture;
     }
 
-    public void setAgeInYears(int ageInYears) {
-        this.ageInYears = ageInYears;
+    public void setDateOfManufacture(Date dateOfManufacture) {
+        this.dateOfManufacture = dateOfManufacture;
     }
 
     public String getCreatedBy() {

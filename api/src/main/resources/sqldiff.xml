@@ -115,6 +115,18 @@
 			ALTER TABLE immunization_equipment ADD remarks VARCHAR(255);
 		</sql>
 	</diff>
+	<diff>
+		<version>1.2.4</version>
+		<author>Stanslaus Odhiambo</author>
+		<date>Sept 7th 2016</date>
+		<description>
+			Alter immunization_equipment to add date_of_manufacture column and drop age_in_years column
+		</description>
+		<sql>
+			ALTER TABLE immunization_equipment ADD date_of_manufacture DATETIME NOT NULL;
+			ALTER TABLE immunization_equipment DROP COLUMN age_in_years;
+		</sql>
+	</diff>
 
 
 </sqldiff>
