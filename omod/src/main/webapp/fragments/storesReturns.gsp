@@ -107,16 +107,6 @@
 				if(isTableEmpty(issuesReturnsData, returnsTable)){
 					return;
 				}
-				
-				returnsTableObject.find('tbody tr').unbind('click');
-				returnsTableObject.find('tbody tr').unbind('hover');
-
-				returnsTableObject.find('tbody tr').click(
-					function(){
-						highlightedMouseRowIndex = returnsTable.fnGetPosition(this);
-						selectRow(highlightedMouseRowIndex);
-					}
-				);
 			},
 			
 			fnRowCallback : function (nRow, aData, index){

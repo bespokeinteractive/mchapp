@@ -78,16 +78,6 @@
 				if(isTableEmpty(stockoutResultsData, stockoutTable)){
 					return;
 				}
-				
-				stockoutTableObject.find('tbody tr').unbind('click');
-				stockoutTableObject.find('tbody tr').unbind('hover');
-
-				stockoutTableObject.find('tbody tr').click(
-					function(){
-						highlightedMouseRowIndex = stockoutTable.fnGetPosition(this);
-						selectRow(highlightedMouseRowIndex);
-					}
-				);
 			},
 			
 			fnRowCallback : function (nRow, aData, index){

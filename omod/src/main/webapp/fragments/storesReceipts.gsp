@@ -79,16 +79,6 @@
 				if(receiptshighlightedKeyboardRowIndex != undefined && !isHighlightedRowOnVisiblePage()){
 					unHighlightRow(receiptsTable.fnGetNodes(receiptshighlightedKeyboardRowIndex));
 				}
-				
-				receiptsTableObject.find('tbody tr').unbind('click');
-				receiptsTableObject.find('tbody tr').unbind('hover');
-
-				receiptsTableObject.find('tbody tr').click(
-					function(){
-						highlightedMouseRowIndex = receiptsTable.fnGetPosition(this);
-						selectRow(highlightedMouseRowIndex);
-					}
-				);
 			},
 			
 			fnRowCallback : function (nRow, aData, index){

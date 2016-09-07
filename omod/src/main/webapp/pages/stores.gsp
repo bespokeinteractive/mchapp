@@ -58,9 +58,18 @@
                 receiptsDialog.show();
             }
             else if (jq('#issues').is(':visible')) {
-                issuesDialog.show();
+                jq('#issueName').val('');
+                jq('#issueQuantity').val('');
+                jq('#issueStage').val(0);
+                jq('#issueName').val('');
+                jq('#issueName').val('');
+                jq('#issueName').val('');
+				
+				issuesDialog.show();
             }
             else if (jq('#returns').is(':visible')) {
+				jq('#rcptName').val('');
+				
                 returnsDialog.show();
             }
             else if (jq('#stockouts').is(':visible')) {
@@ -216,6 +225,7 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     stockoutsDialog.close();
+									getStoreStockouts();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
                                 }
@@ -259,6 +269,7 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     equipmentsDialog.close();
+									getStoreEquipment();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
                                 }
@@ -409,6 +420,9 @@
 	.paging_full_numbers {
 		width: 62% !important;
 	}
+	.toast-item {
+        background-color: #222;
+    }
 </style>
 
 <div class="clear"></div>

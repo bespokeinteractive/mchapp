@@ -23,10 +23,8 @@
 		equipmentResultsData = results || [];
 		var dataRows = [];
 		_.each(equipmentResultsData, function(result){
-			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-pencil small"></i>EDIT</a>';
-			var status = "Working"
-			
-			console.log(result);
+			var icons = '<a class="edit-equipments" data-idnt="' + result.id + '"><i class="icon-pencil small"></i>EDIT</a>';
+			var status = "Working";
 			
 			if (result.workingStatus !== true){
 				status= "Not Working";
@@ -73,16 +71,6 @@
 				if(isTableEmpty(equipmentResultsData, equipmentTable)){
 					return;
 				}
-				
-				equipmentTableObject.find('tbody tr').unbind('click');
-				equipmentTableObject.find('tbody tr').unbind('hover');
-
-				equipmentTableObject.find('tbody tr').click(
-					function(){
-						highlightedMouseRowIndex = equipmentTable.fnGetPosition(this);
-						selectRow(highlightedMouseRowIndex);
-					}
-				);
 			},
 			
 			fnRowCallback : function (nRow, aData, index){

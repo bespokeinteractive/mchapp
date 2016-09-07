@@ -110,16 +110,6 @@
 				if(isTableEmpty(issuesResultsData, issuesTable)){
 					return;
 				}
-				
-				issuesTableObject.find('tbody tr').unbind('click');
-				issuesTableObject.find('tbody tr').unbind('hover');
-
-				issuesTableObject.find('tbody tr').click(
-					function(){
-						highlightedMouseRowIndex = issuesTable.fnGetPosition(this);
-						selectRow(highlightedMouseRowIndex);
-					}
-				);
 			},
 			
 			fnRowCallback : function (nRow, aData, index){
