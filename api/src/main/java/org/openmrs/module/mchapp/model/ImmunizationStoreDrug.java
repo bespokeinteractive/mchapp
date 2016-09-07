@@ -5,6 +5,7 @@ import org.openmrs.module.hospitalcore.model.InventoryDrug;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Stanslaus Odhiambo
@@ -20,6 +21,7 @@ public class ImmunizationStoreDrug implements Serializable {
     private Date createdOn;
     private Date expiryDate;
     private Person createdBy;
+    private Set<ImmunizationStoreDrugTransactionDetail> transactionDetails;
 
     public Integer getId() {
         return id;
@@ -75,5 +77,12 @@ public class ImmunizationStoreDrug implements Serializable {
 
     public void setCreatedBy(Person createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Set<ImmunizationStoreDrugTransactionDetail> getTransactionDetails() {
+        return transactionDetails;
+    }
+    public void setTransactionDetails(Set<ImmunizationStoreDrugTransactionDetail> transactionDetails) {
+        this.transactionDetails = transactionDetails;
     }
 }

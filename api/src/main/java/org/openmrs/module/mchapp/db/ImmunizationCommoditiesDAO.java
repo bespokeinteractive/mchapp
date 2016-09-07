@@ -96,4 +96,5 @@ public interface ImmunizationCommoditiesDAO {
     List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
 
 
+    List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug);
 }

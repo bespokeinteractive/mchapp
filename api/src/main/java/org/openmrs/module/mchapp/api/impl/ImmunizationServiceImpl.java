@@ -182,4 +182,9 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
         return dao.listImmunizationStockouts(outsNames, fromDate, toDate);
     }
 
+    @Override
+    public List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug) {
+        return dao.getImmunizationStoreDrugsForDrug(inventoryDrug);
+    }
+
 }

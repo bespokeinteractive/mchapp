@@ -269,7 +269,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
         Calendar stopDate = Calendar.getInstance();
 
-        if (toDate != null){
+        if (toDate != null) {
             stopDate.setTime(toDate);
             stopDate.set(Calendar.HOUR_OF_DAY, 23);
             stopDate.set(Calendar.MINUTE, 59);
@@ -298,7 +298,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         Criteria criteria = getSession().createCriteria(ImmunizationStockout.class);
         Calendar stopDate = Calendar.getInstance();
 
-        if (toDate != null){
+        if (toDate != null) {
             stopDate.setTime(toDate);
             stopDate.set(Calendar.HOUR_OF_DAY, 23);
             stopDate.set(Calendar.MINUTE, 59);
@@ -318,6 +318,13 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         } else if (fromDate == null && toDate != null) {
             criteria.add(Restrictions.le("createdOn", stopDate.getTime()));
         }
+        return criteria.list();
+    }
+
+    @Override
+    public List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
+                .add(Restrictions.eq("inventoryDrug", inventoryDrug));
         return criteria.list();
     }
 
