@@ -28,7 +28,7 @@ public class StoresEquipmentsFragmentController {
                                                      @RequestParam(value = "equipmentType", required = false) String equipmentType) {
 
         List<ImmunizationEquipment>  immunizationEquipments= immunizationService.listImmunizationEquipment(equipmentName, equipmentType);
-        return SimpleObject.fromCollection(immunizationEquipments, uiUtils, "equipmentType", "model", "workingStatus", "energySource", "ageInYears");
+        return SimpleObject.fromCollection(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "ageInYears");
     }
 
     public SimpleObject saveImmunizationEquipment(UiUtils uiUtils, @RequestParam("equipementTypeName") String equipementTypeName,

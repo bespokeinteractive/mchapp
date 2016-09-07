@@ -1,37 +1,113 @@
 <script>
-    var equipmentModel;
+	var equipmentTable;
+	var equipmentTableObject;
+	var equipmentResultsData = [];
+	
+	var getStoreEquipment = function(){
+		equipmentTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="'+emr.resourceLink('uicommons', 'images/spinner.gif')+'" /></span>');
+		var requestData = {
+			equipmentName: '',
+            equipmentType: jq('#equipmentType').val()
+		}
+		
+		jq.getJSON('${ ui.actionLink("mchapp", "storesEquipments", "listImmunizationEquipment") }', requestData)
+			.success(function (data) {			
+				updateEquipmentResults(data);
+			}).error(function (xhr, status, err) {
+				updateEquipmentResults([]);
+			}
+		);
+	};
+	
+	var updateEquipmentResults = function(results){
+		equipmentResultsData = results || [];
+		var dataRows = [];
+		_.each(equipmentResultsData, function(result){
+			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-pencil small"></i>EDIT</a>';
+			var status = "Working"
+			
+			console.log(result);
+			
+			if (result.workingStatus !== true){
+				status= "Not Working";
+			}
+			
+			dataRows.push([0, result.equipmentType, result.model, status, result.energySource, result.ageInYears, icons]);
+		});
+
+		equipmentTable.api().clear();
+		
+		if(dataRows.length > 0) {
+			equipmentTable.fnAddData(dataRows);
+		}
+
+		refreshInTable(equipmentResultsData, equipmentTable);
+	};
+	
     jq(function () {
-        equipmentModel = new EquipmentViewModel();
+		equipmentTableObject = jq("#equipmentList");
+		
+		equipmentTable = equipmentTableObject.dataTable({
+			autoWidth: false,
+			bFilter: true,
+			bJQueryUI: true,
+			bLengthChange: false,
+			iDisplayLength: 25,
+			sPaginationType: "full_numbers",
+			bSort: false,
+			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
+			oLanguage: {
+				"sInfo": "Equipments",
+				"sInfoEmpty": " ",
+				"sZeroRecords": "No Equipments Found",
+				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Equipments)",
+				"oPaginate": {
+					"sFirst": "First",
+					"sPrevious": "Previous",
+					"sNext": "Next",
+					"sLast": "Last"
+				}
+			},
 
-        listImmunizationEquipment();
+			fnDrawCallback : function(oSettings){
+				if(isTableEmpty(equipmentResultsData, equipmentTable)){
+					return;
+				}
+				
+				equipmentTableObject.find('tbody tr').unbind('click');
+				equipmentTableObject.find('tbody tr').unbind('hover');
 
-        ko.applyBindings(equipmentModel, jq("#equipmentList")[0]);
-
-    });//end of doc ready
-
-    function EquipmentViewModel() {
-        var self = this;
-        self.availableEquipment = ko.observableArray([]);
-    }
-
-    function listImmunizationEquipment(equipmentName, equipmentType) {
-
-        equipmentModel.availableEquipment.removeAll();
-        var equipmentData = {
-            equipmentName: equipmentName,
-            equipmentType: equipmentType
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "storesEquipments", "listImmunizationEquipment") }', equipmentData)
-                .success(function (data) {
-                    jq.each(data, function (i, item) {
-                        console.log(item);
-                        equipmentModel.availableEquipment.push(item);
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
-        );
-    }
+				equipmentTableObject.find('tbody tr').click(
+					function(){
+						highlightedMouseRowIndex = equipmentTable.fnGetPosition(this);
+						selectRow(highlightedMouseRowIndex);
+					}
+				);
+			},
+			
+			fnRowCallback : function (nRow, aData, index){
+				return nRow;
+			}
+		});
+		
+		equipmentTable.on( 'order.dt search.dt', function () {
+			equipmentTable.api().column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		}).api().draw();
+		
+		jq('#equipmentName').on('keyup', function () {
+			equipmentTable.api().search( this.value ).draw();
+		});
+	
+        jq("#equipmentType").on('change', function () {
+            getStoreEquipment();
+        });
+		
+		getStoreEquipment();
+    });
+	
+    
 </script>
 
 <div class="dashboard clear">
@@ -48,9 +124,9 @@
                        style="width: 410px">
                 <label>&nbsp; Type:</label>
                 <select id="equipmentType" name="equipmentType" style="width: 180px">
-                    <option value="0">SELECT TYPE</option>
-                    <option value="1">FREEZER</option>
-                    <option value="2">REFRIGERATOR</option>
+                    <option value="">SELECT TYPE</option>
+                    <option value="FREEZER">FREEZER</option>
+                    <option value="REFRIGERATOR">REFRIGERATOR</option>
                 </select>
             </div>
         </div>
@@ -59,25 +135,16 @@
 
 <table id="equipmentList">
     <thead>
-    <th>#</th>
-    <th>TYPE</th>
-    <th>MODEL</th>
-    <th>STATUS</th>
-    <th>ENERGY SOURCE</th>
-    <th>AGE</th>
-    <th>ACTIONS</th>
+		<th>#</th>
+		<th>TYPE</th>
+		<th>MODEL</th>
+		<th>STATUS</th>
+		<th>ENERGY SOURCE</th>
+		<th>AGE</th>
+		<th>ACTIONS</th>
     </thead>
 
-    <tbody data-bind="foreach: availableEquipment">
-    <tr>
-        <td data-bind="text: \$index() + 1 "></td>
-        <td data-bind="text: equipmentType"></td>
-        <td data-bind="text: model"></td>
-        <td data-bind="text: workingStatus"></td>
-        <td data-bind="text: energySource"></td>
-        <td data-bind="text: ageInYears"></td>
-        <td><i class="icon-share small"></i></td>
-    </tr>
+    <tbody>
     </tbody>
 </table>
 
