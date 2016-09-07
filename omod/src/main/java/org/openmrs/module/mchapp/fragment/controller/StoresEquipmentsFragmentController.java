@@ -34,8 +34,9 @@ public class StoresEquipmentsFragmentController {
     public SimpleObject saveImmunizationEquipment(UiUtils uiUtils, @RequestParam("equipementTypeName") String equipementTypeName,
                                                  @RequestParam("equipementModel") String equipementModel,
                                                  @RequestParam("dateManufactured") Date dateManufactured,
-                                                 @RequestParam("equipementRemarks") String equipementRemarks,
-                                                 @RequestParam( "equipementEnergySource") String equipementEnergySource) {
+                                                 @RequestParam( "equipementEnergySource") String equipementEnergySource,
+                                                 @RequestParam( "equipementStatus") boolean equipementStatus,
+                                                 @RequestParam(value = "equipementRemarks", required = false) String equipementRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationEquipment equipment=new ImmunizationEquipment();
         equipment.setCreatedOn(new Date());
@@ -44,7 +45,7 @@ public class StoresEquipmentsFragmentController {
         equipment.setEquipmentType(equipementTypeName);
         equipment.setModel(equipementModel);
         equipment.setRemarks(equipementRemarks);
-
+        equipment.setWorkingStatus(equipementStatus);
 
         Calendar dateOfManufacture = Calendar.getInstance();
         dateOfManufacture.setTimeInMillis(dateManufactured.getTime());

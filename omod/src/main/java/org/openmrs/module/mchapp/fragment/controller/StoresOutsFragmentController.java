@@ -30,7 +30,7 @@ public class StoresOutsFragmentController {
                                                      @RequestParam(value = "toDate", required = false) Date toDate) {
 
         List<ImmunizationStockout> stockouts = immunizationService.listImmunizationStockouts(outsNames,fromDate,toDate);
-        return SimpleObject.fromCollection(stockouts, uiUtils, "id", "drug.name", "createdOn", "dateDepleted", "dateRestocked", "dateModified","remarks");
+        return SimpleObject.fromCollection(stockouts, uiUtils, "id", "drug.name", "drug.id", "createdOn", "dateDepleted", "dateRestocked", "dateModified","remarks");
     }
 
     public SimpleObject saveImmunizationStockout(UiUtils uiUtils, @RequestParam("outsName") String outsName,

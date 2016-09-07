@@ -25,7 +25,7 @@
 		receiptsResultsData = results || [];
 		var dataRows = [];
 		_.each(receiptsResultsData, function(result){
-			var drugName = '<a href="storesVaccinesReceipts.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var drugName = '<a href="storesVaccines.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
 			var remarks = 'N/A';
 			var icons = '<a href="storesReceipts.page?receiptId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
 			

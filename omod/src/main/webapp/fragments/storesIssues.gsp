@@ -32,7 +32,7 @@
 		issuesResultsData = results || [];
 		var dataRows = [];
 		_.each(issuesResultsData, function(result){
-			var drugName = '<a href="storesVaccinesIssues.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var drugName = '<a href="storesVaccines.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
 			var remarks = 'N/A';
 			var icons = '<a href="storesIssues.page?issueId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
 			

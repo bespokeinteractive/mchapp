@@ -244,6 +244,7 @@
                         equipementModel: jq("#equipementModel").val(),
                         dateManufactured: jq("#equipementManufactured-field").val(),
                         equipementRemarks: jq("#equipementRemarks").val(),
+                        equipementStatus: jq("#equipementStatus").val(),
                         equipementEnergySource: jq("#equipementEnergySource").val()
                     }
 

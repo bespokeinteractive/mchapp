@@ -15,8 +15,6 @@
 		
 		jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "listImmunizationReturns") }', requestData)
 			.success(function (data) {
-				console.log(data);
-				
 				updateReturnsResults(data);
 			}).error(function (xhr, status, err) {
 				updateReturnsResults([]);
@@ -28,7 +26,7 @@
 		issuesReturnsData = results || [];
 		var dataRows = [];
 		_.each(issuesReturnsData, function(result){
-			var drugName = '<a href="storesVaccinesReturns.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var drugName = '<a href="storesVaccines.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
 			var remarks = 'N/A';
 			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
 			
@@ -46,7 +44,7 @@
 		}
 
 		refreshInTable(issuesReturnsData, returnsTable);
-	}
+	};
 
     function ReturnDrugBatchViewModel() {
         var self = this;
@@ -93,10 +91,10 @@
 			bSort: false,
 			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
 			oLanguage: {
-				"sInfo": "Issues",
+				"sInfo": "Returns",
 				"sInfoEmpty": " ",
 				"sZeroRecords": "No Issues Found",
-				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Issues)",
+				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Returns)",
 				"oPaginate": {
 					"sFirst": "First",
 					"sPrevious": "Previous",

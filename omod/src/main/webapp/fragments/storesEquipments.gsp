@@ -98,8 +98,8 @@
                         <option value="FREEZER">FREEZER</option>
                         <option value="REFRIGERATOR">REFRIGERATOR</option>
                     </select>
-
                 </li>
+				
                 <li>
                     <label>Model</label>
                     <input type="text" id="equipementModel">
@@ -117,6 +117,15 @@
 
                 <li>
                     ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'equipementManufactured', id: 'equipementManufactured', label: 'Manufactured', useTime: false, endDate: new Date(), defaultToday: false])}
+                </li>
+				
+				<li>
+                    <label>Working Status</label>
+                    <select id="equipementStatus">
+                        <option value="">Select Status</option>
+                        <option value="1">Working</option>
+                        <option value="0">Not Working</option>
+                    </select>
                 </li>
 
                 <li>

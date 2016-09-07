@@ -1,10 +1,114 @@
 <script>
-    var drugStockouts;
+	var stockoutTable;
+	var stockoutTableObject;
+	var stockoutResultsData = [];
+	
+	var getStoreStockouts = function(){
+		stockoutTableObject.find('td.dataTables_empty').html('<span><img class="search-spinner" src="'+emr.resourceLink('uicommons', 'images/spinner.gif')+'" /></span>');
+		var requestData = {
+			outsNames:	'',
+			fromDate:	jq('#outsFrom-field').val(),
+			toDate:		jq('#outsDate-field').val()
+		}
+		
+		jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "listImmunizationStockouts") }', requestData)
+			.success(function (data) {
+				updateStockoutsResults(data);
+			}).error(function (xhr, status, err) {
+				updateStockoutsResults([]);
+			}
+		);
+	};
+	
+	var updateStockoutsResults = function(results){
+		stockoutResultsData = results || [];
+		var dataRows = [];
+		_.each(stockoutResultsData, function(result){
+			var drugName = '<a href="storesVaccines.page?drugId=' + result.drug.id + '">' + result.drug.name + '</a>';
+			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			var remarks = 'N/A';
+			var depleted = '&mdash;';
+			
+			if (result.remarks !== ''){
+				remarks = result.remarks;
+			}
+			
+			if (result.dateRestocked){
+				depleted = moment(result.dateRestocked, "DD.MMM.YYYY").format('DD/MM/YYYY');
+			}
+			
+			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), drugName, moment(result.dateDepleted, "DD.MMM.YYYY").format('DD/MM/YYYY'), depleted, remarks, icons]);
+		});
+
+		stockoutTable.api().clear();
+		
+		if(dataRows.length > 0) {
+			stockoutTable.fnAddData(dataRows);
+		}
+
+		refreshInTable(stockoutResultsData, stockoutTable);
+	};
 
     jq(function () {
-        drugStockouts = new DrugStockoutsViewModel();
-        listImmunizationStockouts();
+		stockoutTableObject = jq("#stockOutList");
+		
+		stockoutTable = stockoutTableObject.dataTable({
+			autoWidth: false,
+			bFilter: true,
+			bJQueryUI: true,
+			bLengthChange: false,
+			iDisplayLength: 25,
+			sPaginationType: "full_numbers",
+			bSort: false,
+			sDom: 't<"fg-toolbar ui-toolbar ui-corner-bl ui-corner-br ui-helper-clearfix datatables-info-and-pg"ip>',
+			oLanguage: {
+				"sInfo": "Transactions",
+				"sInfoEmpty": " ",
+				"sZeroRecords": "No Transactions Found",
+				"sInfoFiltered": "(Showing _TOTAL_ of _MAX_ Transactions)",
+				"oPaginate": {
+					"sFirst": "First",
+					"sPrevious": "Previous",
+					"sNext": "Next",
+					"sLast": "Last"
+				}
+			},
 
+			fnDrawCallback : function(oSettings){
+				if(isTableEmpty(stockoutResultsData, stockoutTable)){
+					return;
+				}
+				
+				stockoutTableObject.find('tbody tr').unbind('click');
+				stockoutTableObject.find('tbody tr').unbind('hover');
+
+				stockoutTableObject.find('tbody tr').click(
+					function(){
+						highlightedMouseRowIndex = stockoutTable.fnGetPosition(this);
+						selectRow(highlightedMouseRowIndex);
+					}
+				);
+			},
+			
+			fnRowCallback : function (nRow, aData, index){
+				return nRow;
+			}
+		});
+		
+		stockoutTable.on( 'order.dt search.dt', function () {
+			stockoutTable.api().column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		}).api().draw();
+		
+		jq('#outsNames').on('keyup', function () {
+			stockoutTable.api().search( this.value ).draw();
+		});
+	
+        jq(".stockoutParams").on('change', function () {
+            getStoreStockouts();
+        });
+		
         jq("#outsName").autocomplete({
             minLength: 3,
             source: function (request, response) {
@@ -34,33 +138,9 @@
                 var drgId = ui.item.value.id;
             }
         });
-
-        ko.applyBindings(drugStockouts, jq("#stockOutList")[0]);
-    }); //end of doc ready function
-
-    function DrugStockoutsViewModel() {
-        var self = this;
-        self.availableStockouts = ko.observableArray([]);
-    }
-
-    function listImmunizationStockouts(outsNames, fromDate, toDate) {
-        drugStockouts.availableStockouts.removeAll();
-        var stockoutData = {
-            outsNames: outsNames,
-            fromDate: fromDate,
-            toDate: toDate
-        }
-        jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "listImmunizationStockouts") }', stockoutData)
-                .success(function (data) {
-                    jq.each(data, function (i, item) {
-                        drugStockouts.availableStockouts.push(item);
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
-        );
-    }
-
+		
+		getStoreStockouts();
+    });
 </script>
 
 <div class="dashboard clear">
@@ -76,8 +156,8 @@
                 <input id="outsNames" type="text" value="" name="outsNames" placeholder="Vaccine/Diluent"
                        style="width: 240px">
 
-                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'outsFrom', label: '', useTime: false, defaultToday: false, class: ['newdtp']])}
-                <label>&nbsp;&nbsp;To&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate', id: 'outsDate', label: '', useTime: false, defaultToday: false, class: ['newdtp']])}
+                <label>&nbsp;&nbsp;From&nbsp;</label>${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rFromDate', id: 'outsFrom', label: '', useTime: false, defaultToday: false, classes: ['stockoutParams']])}
+                <label>&nbsp;&nbsp;To&nbsp;</label>${  ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'rToDate',   id: 'outsDate', label: '', useTime: false, defaultToday: false, classes: ['stockoutParams']])}
             </div>
         </div>
     </div>
@@ -85,25 +165,16 @@
 
 <table id="stockOutList">
     <thead>
-    <th>#</th>
-    <th>DATE</th>
-    <th>VACCINE/DILUENT</th>
-    <th>DEPLETED</th>
-    <th>RESTOCKED</th>
-    <th>REMARKS</th>
-    <th>ACTIONS</th>
+		<th>#</th>
+		<th>DATE</th>
+		<th>VACCINE/DILUENT</th>
+		<th>DEPLETED</th>
+		<th>RESTOCKED</th>
+		<th>REMARKS</th>
+		<th>ACTIONS</th>
     </thead>
 
-    <tbody data-bind="foreach: availableStockouts">
-    <tr>
-        <td data-bind="text: \$index() + 1 "></td>
-        <td data-bind="text: createdOn"></td>
-        <td data-bind="text: drug.name"></td>
-        <td data-bind="text: dateDepleted"></td>
-        <td data-bind="text: dateRestocked"></td>
-        <td data-bind="text: remarks"></td>
-        <td><i class="icon-share small"></i></td>
-    </tr>
+    <tbody>    
     </tbody>
 </table>
 
