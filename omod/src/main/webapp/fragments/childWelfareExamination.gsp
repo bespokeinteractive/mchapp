@@ -680,8 +680,6 @@
         }).change();
 
 
-
-
     });//End of Document Ready
 
     function refreshPage() {
@@ -1413,12 +1411,12 @@ table[id*='workflowTable_'] th:nth-child(4) {
                             ${followUp.answerConcept.name}
                         </label>
                         <% } %>
-                        <% } %>
-
-                        <input id="specifyOther" type="text" name="concept.7cdc2d69-31b9-4592-9a3f-4bc167d5780b"
-                               placeholder="Please Specify"
-                               style="display: none; width: 70% ! important; float: right ! important; margin: -27px 5px 5px;">
-
+                        <% } %><br/>
+                        <label style="width: 100%!important;">
+                            <input id="specifyOther" type="text" name="concept.7cdc2d69-31b9-4592-9a3f-4bc167d5780b"
+                                   placeholder="Please Specify"
+                                   style="display: none; width: 70% ! important; float: right ! important; margin: -27px 5px 5px;">
+                        </label>
                         <span class="clear"></span>
                     </div>
                 </div>
