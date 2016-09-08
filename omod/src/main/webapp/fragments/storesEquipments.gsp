@@ -42,7 +42,7 @@
 				status= "Not Working";
 			}
 			
-			dataRows.push([0, result.equipmentType, result.model, status, result.energySource, result.ageInYears, icons]);
+			dataRows.push([0, result.equipmentType, result.model, status, result.energySource, moment(result.dateOfManufacture, "DD.MMM.YYYY").format("DD/MM/YYYY"), icons]);
 		});
 
 		equipmentTable.api().clear();

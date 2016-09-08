@@ -34,7 +34,7 @@ public class StoresEquipmentsFragmentController {
                                                         @RequestParam("equipmentId") Integer equipmentId) {
 
         ImmunizationEquipment immunizationEquipments = immunizationService.getImmunizationEquipmentById(equipmentId);
-        return SimpleObject.fromObject(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "ageInYears", "remarks");
+        return SimpleObject.fromObject(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "dateOfManufacture", "remarks");
     }
 
     public SimpleObject saveImmunizationEquipment(UiUtils uiUtils, @RequestParam("equipementTypeName") String equipementTypeName,
