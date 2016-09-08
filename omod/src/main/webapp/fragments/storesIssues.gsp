@@ -162,8 +162,7 @@
             }
         });
 		
-		ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);
-		
+		ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);		
 		getStoreIssues();
     });
 </script>

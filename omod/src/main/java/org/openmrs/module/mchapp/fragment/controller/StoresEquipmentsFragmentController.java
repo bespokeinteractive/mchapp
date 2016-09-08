@@ -30,6 +30,13 @@ public class StoresEquipmentsFragmentController {
         return SimpleObject.fromCollection(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "dateOfManufacture");
     }
 
+    public SimpleObject getImmunizationEquipmentDetails(UiUtils uiUtils,
+                                                        @RequestParam("equipmentId") Integer equipmentId) {
+
+        ImmunizationEquipment immunizationEquipments = immunizationService.getImmunizationEquipmentById(equipmentId);
+        return SimpleObject.fromObject(immunizationEquipments, uiUtils, "id", "equipmentType", "model", "workingStatus", "energySource", "ageInYears", "remarks");
+    }
+
     public SimpleObject saveImmunizationEquipment(UiUtils uiUtils, @RequestParam("equipementTypeName") String equipementTypeName,
                                                  @RequestParam("equipementModel") String equipementModel,
                                                  @RequestParam("dateManufactured") Date dateManufactured,
@@ -54,5 +61,18 @@ public class StoresEquipmentsFragmentController {
         }
     }
 
+    public SimpleObject updateImmunizationEquipment(UiUtils uiUtils, @RequestParam("equipementId") Integer equipementId,
+                                                  @RequestParam( "equipementStatus") boolean equipementStatus,
+                                                  @RequestParam(value = "equipementRemarks", required = false) String equipementRemarks) {
+        ImmunizationEquipment equipment = immunizationService.getImmunizationEquipmentById(equipementId);
+        equipment.setRemarks(equipementRemarks);
+        equipment.setWorkingStatus(equipementStatus);
+        equipment = immunizationService.saveImmunizationEquipment(equipment);
 
+        if (equipment != null) {
+            return SimpleObject.create("status", "success","message","Equipment status updated Successfully");
+        } else {
+            return SimpleObject.create("status", "error","message","Error occurred while updating Equipment");
+        }
+    }
 }

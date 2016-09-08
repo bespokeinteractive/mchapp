@@ -61,21 +61,31 @@
                 jq('#issueName').val('');
                 jq('#issueQuantity').val('');
                 jq('#issueStage').val(0);
-                jq('#issueName').val('');
-                jq('#issueName').val('');
-                jq('#issueName').val('');
+                jq('#issueRemarks').val('');
 				
 				issuesDialog.show();
             }
             else if (jq('#returns').is(':visible')) {
-				jq('#rcptName').val('');
+				jq('#rtnsName').val('');
+                jq('#rtnsQuantity').val('');
+                jq('#rtnsStage').val(0);
+                jq('#rtnsRemarks').val('');
 				
                 returnsDialog.show();
             }
             else if (jq('#stockouts').is(':visible')) {
+				jq('#outsName').val('');
+                jq('#outsRemarks').val('');
+				
                 stockoutsDialog.show();
             }
             else if (jq('#equipments').is(':visible')) {
+                jq('#equipementTypeName').val('');
+				jq('#equipementModel').val('');
+                jq('#equipementEnergySource').val('');
+                jq('#equipementStatus').val('');
+                jq('#equipementRemarks').val('');
+				
                 equipmentsDialog.show();
             }
         });
@@ -410,6 +420,11 @@
 	}
 	.ui-widget-content a {
 		color: #007fff;
+		cursor: pointer;
+	}
+	.ui-widget-content a:hover {
+		color: #000fff;
+		text-decoration: none;
 	}
 	.dataTables_info {
 		width: 35%;
