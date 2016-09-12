@@ -225,7 +225,7 @@
                 <li>
                     <label>Type</label>
                     <select id="equipementTypeName" name="equipmentType">
-                        <option value="0">SELECT TYPE</option>
+                        <option value="">SELECT TYPE</option>
                         <option value="FREEZER">FREEZER</option>
                         <option value="REFRIGERATOR">REFRIGERATOR</option>
                     </select>
