@@ -1256,7 +1256,7 @@
 			</div>
 		</fieldset>
 
-		<% if(context.getAdministrationService().getGlobalProperty("fptab.includedInPNC")=="true"){ %>
+		<% if(fptabIncludedInPNC == "true"){ %>
 			<fieldset class="no-confirmation">
 				<legend>FP Administration</legend>
 				${ui.includeFragment("fpapp", "familyPlanning")}
@@ -1353,6 +1353,17 @@
 					<textarea id="comments" name="comment.18b2b617-1631-457f-a36b-e593d948707f" style="width: 95.7%; resize: none;"></textarea>
 				</div>				
 			</div>
+			
+			<% if(fptabIncludedInPNC == "false"){ %>	
+				<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Send To<span class="important"></span></div>
+				<div class="onerow">
+					<label style="cursor: pointer; font-weight: normal; margin-top: 5px; width: auto; padding-left: 0px;">
+						<input id="sendToFamilyPlannning" name="sendToFamilyPlannning" type="checkbox" style="margin-left: 0" />
+						Send to Family Plannning
+					</label>
+				</div>			
+			<% } %>	
+			
 		</fieldset>
 	</section>
 
@@ -1421,12 +1432,8 @@
 						</tbody>
 					</table>
 					
-					<div>
-						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 45.5%;">
-							<input id="sendToFamilyPlannning" name="sendToFamilyPlannning" type="checkbox">
-							Send to Family Plannning
-						</label>
-						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 45.5%;float:right;">
+					<div>						
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.8%;">
 							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
 							Exit Patient from Program
 						</label>
