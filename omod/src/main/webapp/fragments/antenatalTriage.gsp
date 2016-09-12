@@ -45,18 +45,22 @@
         });
 
         jq("form").on("change", "#gestation", function(e) {
-            var gestationPeriod = jq(this).val();
+            var gestationPeriod = jq(this).val();			
+			if (!jq.isNumeric(gestationPeriod)){
+				alert('Invalid');
+				return false;
+			}
+			
             var lastMenstrualPeriod = moment().add(-gestationPeriod, "weeks");
-            console.log(lastMenstrualPeriod)
+			
             jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field', document.forms[0]).val(lastMenstrualPeriod.format('YYYY-MM-DD'));
             jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-display', document.forms[0]).val(lastMenstrualPeriod.format('DD MMM YYYY'));
             jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").change();
-        })
+        });
 
         function calculateExpectedDeliveryDate() {
             var lastMenstrualPeriod = jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field", document.forms[0]).val();
-            var expectedDate = moment(lastMenstrualPeriod, "YYYY-MM-DD").add(9, "months")
-			expectedDate = expectedDate.add(7, 'days');
+            var expectedDate = moment(lastMenstrualPeriod, "YYYY-MM-DD").add(280, "days");
             jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field', document.forms[0]).val(expectedDate.format('YYYY-MM-DD'));
             jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-display', document.forms[0]).val(expectedDate.format('DD MMM YYYY'));
         }
