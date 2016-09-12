@@ -89,6 +89,13 @@
                 equipmentsDialog.show();
             }
         });
+		
+		jq('.date input').dblclick(function(){
+			var fieldName = jq(this).attr('id').replace("display", "field");			
+			
+			jq('#'+fieldName).val('');			
+			jq(this).val('').change();		
+		});
 
         var receiptsDialog = emr.setupConfirmationDialog({
             dialogOpts: {
