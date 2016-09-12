@@ -233,16 +233,14 @@
                 <li>
                     <label>Batch No.</label>
                     <select id="rtnsBatchNo"
-                            data-bind="options: \$root.availableDrugs, value: drugObject, optionsText: 'batchNo'"></select>
+                            data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"></select>
                 </li>
 
                 <li>
                     <label>Expiry Date.</label>
-                    <span data-bind="text: \$root.drugObject"></span>
+					<input data-bind="value: \$root.drugObject" readonly="">
                 </li>
-
-
-
+				
                 <li>
                     <label>Remarks</label>
                     <textarea id="rtnsRemarks"></textarea>

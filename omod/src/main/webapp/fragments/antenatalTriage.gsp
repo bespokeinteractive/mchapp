@@ -3,6 +3,7 @@
     	var isEdit=${isEdit};
 		
     	jq("#editStatus").val(isEdit?"true":"false");
+		
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -139,8 +140,6 @@
 				
 				</div>
 				
-				
-				
 				<span class="arrow-border"></span>
 				<span class="arrow"></span>
 			</li>
@@ -214,10 +213,6 @@
 						</div>
 					<% }%>
 				</div>
-				
-				
-				
-				
 			</form>
 			
 			<div>
@@ -233,6 +228,7 @@
 <div class="container">	
 	<br style="clear: both">
 </div>
+
 <div class="template-holder" style="display:none;">
 	<div class="patient-profile-editor">
 		${ui.includeFragment("mchapp", "antenatalDetails")}

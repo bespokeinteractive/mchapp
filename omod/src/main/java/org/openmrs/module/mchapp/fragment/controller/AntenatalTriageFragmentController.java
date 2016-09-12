@@ -69,12 +69,9 @@ public class AntenatalTriageFragmentController {
         }
 
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
-        model.addAttribute("patientProfile",
-                PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
-        model.addAttribute("patientHistoricalProfile",
-                PatientProfileGenerator.generateHistoricalPatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
-        model.addAttribute("internalReferrals",
-                SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
+        model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
+        model.addAttribute("patientHistoricalProfile", PatientProfileGenerator.generateHistoricalPatientProfile(patient, MchMetadata._MchProgram.ANC_PROGRAM));
+        model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id"));
         model.addAttribute("queueId", config.get("queueId"));
         model.addAttribute("visitCount", getLastANCVisitNumber(patient)+1);
     }
