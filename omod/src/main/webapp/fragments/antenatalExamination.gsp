@@ -162,7 +162,8 @@
 						patientProgramId: prog,
 						programWorkflowId: idnt,
 						programWorkflowStateId: jq('#vaccine-state').val(),
-						onDateDMY: jq('#vaccine-date-field').val()
+						onDateDMY: jq('#vaccine-date-field').val(),
+                        patientId:${patient?.patientId}
 					}
 
 					jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
