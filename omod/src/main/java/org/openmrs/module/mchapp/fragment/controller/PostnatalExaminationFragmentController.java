@@ -7,6 +7,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
@@ -76,8 +77,10 @@ public class PostnatalExaminationFragmentController {
                 internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
             }
             String sendToFp = request.getParameter("sendToFamilyPlannning");
-            if(sendToFp.equals("on")){
-                internalReferral.sendToRefferedRoom(patient, MchMetadata.MchAppConstants.FAMILY_PLANNING_CLINIC_CONCEPT_UUID);
+            if(StringUtils.isNotEmpty(sendToFp)) {
+                if (sendToFp.equals("on")) {
+                    internalReferral.sendToRefferedRoom(patient, MchMetadata.MchAppConstants.FAMILY_PLANNING_CLINIC_CONCEPT_UUID);
+                }
             }
             return SimpleObject.create("status", "success", "message", "Triage information has been saved.");
         } catch (NullPointerException e) {
