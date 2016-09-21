@@ -12,7 +12,7 @@
 	var refreshInTable = function(resultData, dTable){
 		var rowCount = resultData.length;
 		if(rowCount == 0){
-			receiptsTableObject.find('td.dataTables_empty').html("No Receipts in queue");
+			dTable.find('td.dataTables_empty').html("No Records Found");
 		}
 		dTable.fnPageChange(0);
 	};
