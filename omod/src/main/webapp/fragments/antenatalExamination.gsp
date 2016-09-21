@@ -151,13 +151,13 @@
 						jq().toastmessage('showErrorToast', "Kindly select a vaccine state!");
 						return false;
 					}
-					
+
 					var idnt = jq('#vaccine-idnt').val();
 					var prog = jq('#vaccine-prog').val();
 					var name = jq('#vaccine-name').val();
-					
+
 					var state = jq('#vaccine-state').val();
-					
+
 					var stateData = {
 						patientProgramId: prog,
 						programWorkflowId: idnt,
@@ -169,20 +169,20 @@
 					jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
 					.success(function (data) {
 						jq().toastmessage('showNoticeToast', data.message);
-						
+
 						showEditWorkflowPopup(name, prog, idnt);
-						
+
 						jq('#state_name_'+idnt).text(jq('#vaccine-state option:selected').text());
 						jq('#state_date_'+idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
-						
+
 						jq('#main-show-'+idnt).show();
 						jq('#no-show-'+idnt).hide();
-						
+
 						jq('#immunizations-set').val('SET');
-						
+
 						vaccinationDialog.close();
 						return false;
-						
+
 					}).error(function (xhr, status, err) {
 						jq().toastmessage('showErrorToast', "AJAX error!" + err);
 						return false;
@@ -305,10 +305,10 @@
         var lastMenstrualPeriod = _.find(patientProfile.details, function(profile){
             return profile.uuid == "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         });
-        
-		lastMenstrualPeriod = moment(lastMenstrualPeriod, "DD-MM-YYYY");
+
+		lastMenstrualPeriod = moment(lastMenstrualPeriod.value, "DD-MM-YYYY");
         var todaysDate = moment();
-        var gestationInWeeks = Math.ceil(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
+        var gestationInWeeks = Math.round(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
 
         if(gestationInWeeks < 16) {
             jq("#lessthan16").show();
