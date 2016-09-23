@@ -6,6 +6,14 @@
     ui.includeJavascript("patientqueueapp", "jquery.dataTables.min.js")
 %>
 
+<script>
+    jq(function () {
+
+        console.log("${drugObject}");
+
+    }); //end of doc ready
+</script>
+
 <div class="clear"></div>
 
 <div>
@@ -23,8 +31,21 @@
 
             <li>
                 <i class="icon-chevron-right link"></i>
-                ${title}
+                Receipt ID: ${title}
             </li>
         </ul>
     </div>
+</div>
+
+<div>
+    ID: ${drugObject.id} <br />
+    VMM Stage: ${drugObject.id} <br />
+    Remark: ${drugObject.remark} <br />
+    Quantity Transacted: ${drugObject.quantity} <br />
+    Transaction Date: ${drugObject.createdOn} <br />
+    Created By: ${drugObject.createdBy} <br />
+    Transaction Drug: ${drugObject.storeDrug.inventoryDrug.name} <br />
+    Drug Batch: ${drugObject.storeDrug.batchNo} <br />
+    Transaction Type: ${drugObject.transactionType.transactionType} <br />
+    Issued To: ${drugObject.patient == null ? "Dispensed From Stores": patient} <br />
 </div>
