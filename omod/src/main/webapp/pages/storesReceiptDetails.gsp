@@ -1,6 +1,7 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "MCH Drug Transactions"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "MCH Stores:-Receipt Details"])
     ui.includeJavascript("billingui", "moment.js")
+
     ui.includeCss("uicommons", "datatables/dataTables_jui.css")
     ui.includeJavascript("patientqueueapp", "jquery.dataTables.min.js")
 %>
@@ -27,27 +28,3 @@
         </ul>
     </div>
 </div>
-
-<% storeDrugs.each { %>
-<table>
-    <thead>
-    <tr>
-        <th>Batch No.</th>
-        <th>${it.batchNo}</th>
-        <th>Current Qnty:</th>
-        <th>${it.currentQuantity}</th>
-        <th>Expiry Date:</th>
-        <th>${it.expiryDate}</th>
-        <th><i class="small right chevron icon-chevron-right" data-idnt="${it.batchNo}" data-name="${it.batchNo}"
-               data-prog="${it.batchNo}"></i></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td colspan="7"></td>
-    </tr>
-
-    </tbody>
-</table>
-
-<% } %>

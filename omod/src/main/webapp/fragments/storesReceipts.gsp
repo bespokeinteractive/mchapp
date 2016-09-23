@@ -27,7 +27,7 @@
 		_.each(receiptsResultsData, function(result){
 			var drugName = '<a href="storesVaccines.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
 			var remarks = 'N/A';
-			var icons = '<a href="storesReceipts.page?receiptId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			var icons = '<a href="storesReceiptDetails.page?receiptId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
 			
 			if (result.remark !== ''){
 				remarks = result.remark;
