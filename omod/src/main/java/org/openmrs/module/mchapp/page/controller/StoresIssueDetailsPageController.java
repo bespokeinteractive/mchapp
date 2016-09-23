@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Stanslaus Odhiambo
  * Created on 9/23/2016.
  */
-public class StoresReceiptDetailsPageController {
+public class StoresIssueDetailsPageController {
     private ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
 
-    public void get(@RequestParam("receiptId") Integer receiptId, PageModel model,UiUtils uiUtils) {
-        model.addAttribute("receiptId",receiptId);
-        model.addAttribute("title",receiptId);
+    public void get(@RequestParam("issueId") Integer issueId, PageModel model,UiUtils uiUtils) {
+        model.addAttribute("receiptId",issueId);
+        model.addAttribute("title",issueId);
         InventoryService service = Context.getService(InventoryService.class);
 
-        ImmunizationStoreDrugTransactionDetail drugTransactionDetail = immunizationService.getImmunizationStoreDrugTransactionDetailById(receiptId);
+        ImmunizationStoreDrugTransactionDetail drugTransactionDetail = immunizationService.getImmunizationStoreDrugTransactionDetailById(issueId);
         model.addAttribute("drugTransactionDetail",drugTransactionDetail);
         SimpleObject object = SimpleObject.fromObject(drugTransactionDetail, uiUtils,"id", "vvmStage", "remark", "quantity", "createdOn",
                 "createdBy", "storeDrug.inventoryDrug.name", "storeDrug.batchNo", "transactionType.transactionType", "patient");
