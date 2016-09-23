@@ -43,6 +43,12 @@ public class StoresIssuesFragmentController {
 
     }
 
+    public SimpleObject getImmunizationDrugDetailByBatch(UiUtils uiUtils,
+                                                         @RequestParam(value = "issueBatchNo", required = false) String issueBatchNo){
+        ImmunizationStoreDrug storeDrug = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo);
+        return SimpleObject.fromObject(storeDrug,uiUtils,"currentQuantity");
+    }
+
     public SimpleObject saveImmunizationIssues(UiUtils uiUtils, @RequestParam("issueName") String issueName,
                                               @RequestParam("issueQuantity") Integer issueQuantity,
                                               @RequestParam("issueStage") Integer issueStage,
