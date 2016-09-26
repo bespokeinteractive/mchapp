@@ -193,15 +193,15 @@
                         jq("#rtnsName").addClass("loaderror");
                         jq().toastmessage('showErrorToast', 'Ensure you have filled the drug name')
                         return false;
-                    } else if (!jq("#rtnsQuantity").val()) {
+                    } else if (!jq("#rtnsQuantity").val() || !jq.isNumeric(jq("#rtnsQuantity").val())) {
                         jq("#rtnsQuantity").addClass("loaderror");
-                        jq().toastmessage('showErrorToast', 'Ensure you have entered the quantity')
+                        jq().toastmessage('showErrorToast', 'Ensure you have entered the correct quantity')
                         return false;
                     } else if (jq("#rtnsStage").val() == "0") {
                         jq("#rtnsStage").addClass("loaderror");
                         jq().toastmessage('showErrorToast', 'Ensure you have selected the VMM Stage')
                         return false;
-                    }else if (jq("#rtnsBatchNo").val()) {
+                    } else if (jq("#rtnsBatchNo").val()) {
                         jq("#rtnsBatchNo").addClass("loaderror");
                         jq().toastmessage('showErrorToast', 'Ensure you have selected a drug to view batches')
                         return false;
