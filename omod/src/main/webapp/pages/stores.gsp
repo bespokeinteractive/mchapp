@@ -1,36 +1,36 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "MCH Stores"])
     ui.includeJavascript("billingui", "moment.js")
-	
-	ui.includeCss("uicommons", "datatables/dataTables_jui.css")
+
+    ui.includeCss("uicommons", "datatables/dataTables_jui.css")
     ui.includeJavascript("patientqueueapp", "jquery.dataTables.min.js")
 %>
 
 <script>
-	var eAction;
-	
-	var refreshInTable = function(resultData, dTable){
-		var rowCount = resultData.length;
-		if(rowCount == 0){
-			dTable.find('td.dataTables_empty').html("No Records Found");
-		}
-		dTable.fnPageChange(0);
-	};
-	
-	var isTableEmpty = function(resultData, dTable){
-		if(resultData.length > 0){
-			return false
-		}
-		return !dTable || dTable.fnGetNodes().length == 0;
-	};
-	
-	jq(function () {
-		jq("#tabs").tabs();		
-		
-		jq('#inline-tabs li').click(function(){
-			var addBtn = jq('#adder a');
-			
-			if (jq('#receipts').is(':visible')) {
+    var eAction;
+
+    var refreshInTable = function (resultData, dTable) {
+        var rowCount = resultData.length;
+        if (rowCount == 0) {
+            dTable.find('td.dataTables_empty').html("No Records Found");
+        }
+        dTable.fnPageChange(0);
+    };
+
+    var isTableEmpty = function (resultData, dTable) {
+        if (resultData.length > 0) {
+            return false
+        }
+        return !dTable || dTable.fnGetNodes().length == 0;
+    };
+
+    jq(function () {
+        jq("#tabs").tabs();
+
+        jq('#inline-tabs li').click(function () {
+            var addBtn = jq('#adder a');
+
+            if (jq('#receipts').is(':visible')) {
                 addBtn.html('<i class="icon-refresh"></i> Add Receipts');
             }
             else if (jq('#issues').is(':visible')) {
@@ -45,15 +45,15 @@
             else if (jq('#equipments').is(':visible')) {
                 addBtn.html('<i class="icon-refresh"></i> Add Equipments');
             }
-		}).click();
-		
-		jq('#adder a').click(function(){
-			if (jq('#receipts').is(':visible')) {
-				jq('#rcptName').val('');
-				jq('#rcptQuantity').val('');
-				jq('#rcptStage').val(0);				
-				jq('#rcptBatchNo').val('');
-				jq('#rcptRemarks').val('');
+        }).click();
+
+        jq('#adder a').click(function () {
+            if (jq('#receipts').is(':visible')) {
+                jq('#rcptName').val('');
+                jq('#rcptQuantity').val('');
+                jq('#rcptStage').val(0);
+                jq('#rcptBatchNo').val('');
+                jq('#rcptRemarks').val('');
 
                 receiptsDialog.show();
             }
@@ -62,40 +62,40 @@
                 jq('#issueQuantity').val('');
                 jq('#issueStage').val(0);
                 jq('#issueRemarks').val('');
-				
-				issuesDialog.show();
+
+                issuesDialog.show();
             }
             else if (jq('#returns').is(':visible')) {
-				jq('#rtnsName').val('');
+                jq('#rtnsName').val('');
                 jq('#rtnsQuantity').val('');
                 jq('#rtnsStage').val(0);
                 jq('#rtnsRemarks').val('');
-				
+
                 returnsDialog.show();
             }
             else if (jq('#stockouts').is(':visible')) {
-				jq('#outsName').val('');
+                jq('#outsName').val('');
                 jq('#outsRemarks').val('');
-				
+
                 stockoutsDialog.show();
             }
             else if (jq('#equipments').is(':visible')) {
                 jq('#equipementTypeName').val('');
-				jq('#equipementModel').val('');
+                jq('#equipementModel').val('');
                 jq('#equipementEnergySource').val('');
                 jq('#equipementStatus').val('');
                 jq('#equipementRemarks').val('');
-				
+
                 equipmentsDialog.show();
             }
         });
-		
-		jq('.date input').dblclick(function(){
-			var fieldName = jq(this).attr('id').replace("display", "field");			
-			
-			jq('#'+fieldName).val('');			
-			jq(this).val('').change();		
-		});
+
+        jq('.date input').dblclick(function () {
+            var fieldName = jq(this).attr('id').replace("display", "field");
+
+            jq('#' + fieldName).val('');
+            jq(this).val('').change();
+        });
 
         var receiptsDialog = emr.setupConfirmationDialog({
             dialogOpts: {
@@ -124,14 +124,14 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', "Receipt Stored Successfully");
                                     receiptsDialog.close();
-									getStoreReceipts();
-								}else{
-									jq().toastmessage('showErrorToast', "Error Saving Receipt");
-								}
-							}).error(function (xhr, status, err) {
-								jq().toastmessage('showErrorToast', "AJAX error!" + err);
-							}
-					);
+                                    getStoreReceipts();
+                                } else {
+                                    jq().toastmessage('showErrorToast', "Error Saving Receipt");
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
                 },
                 cancel: function () {
                     receiptsDialog.close();
@@ -165,9 +165,9 @@
                             .success(function (data) {
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
-									issuesDialog.close();
-									getStoreIssues();
-                                }else{
+                                    issuesDialog.close();
+                                    getStoreIssues();
+                                } else {
                                     jq().toastmessage('showErrorToast', data.message);
                                 }
                             }).error(function (xhr, status, err) {
@@ -189,27 +189,45 @@
             selector: '#returns-dialog',
             actions: {
                 confirm: function () {
-					var returnsData = {
-						rtnsName: jq("#rtnsName").val(),
-						rtnsQuantity: jq("#rtnsQuantity").val(),
-						rtnsStage: jq("#rtnsStage").val(),
-						rtnsBatchNo: jq("#rtnsBatchNo option:selected").text(),
-						rtnsRemarks: jq("#rtnsRemarks").val(),
-						patientId:null
-					}
-					jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "saveImmunizationReturns") }', returnsData)
-						.success(function (data) {
-							if(data.status === "success"){
-								jq().toastmessage('showSuccessToast', data.message);
-								returnsDialog.close();
-								getStoreReturns();
-							}else{
-								jq().toastmessage('showErrorToast', data.message);
-							}
-						}).error(function (xhr, status, err) {
-							jq().toastmessage('showErrorToast', "AJAX error!" + err);
-						}
-					);
+                    if (!jq("#rtnsName").val()) {
+                        jq("#rtnsName").addClass("loaderror");
+                        jq().toastmessage('showErrorToast', 'Ensure you have filled the drug name')
+                        return false;
+                    } else if (!jq("#rtnsQuantity").val()) {
+                        jq("#rtnsQuantity").addClass("loaderror");
+                        jq().toastmessage('showErrorToast', 'Ensure you have entered the quantity')
+                        return false;
+                    } else if (jq("#rtnsStage").val() == "0") {
+                        jq("#rtnsStage").addClass("loaderror");
+                        jq().toastmessage('showErrorToast', 'Ensure you have selected the VMM Stage')
+                        return false;
+                    }else if (jq("#rtnsBatchNo").val()) {
+                        jq("#rtnsBatchNo").addClass("loaderror");
+                        jq().toastmessage('showErrorToast', 'Ensure you have selected a drug to view batches')
+                        return false;
+                    }
+
+                    var returnsData = {
+                        rtnsName: jq("#rtnsName").val(),
+                        rtnsQuantity: jq("#rtnsQuantity").val(),
+                        rtnsStage: jq("#rtnsStage").val(),
+                        rtnsBatchNo: jq("#rtnsBatchNo option:selected").text(),
+                        rtnsRemarks: jq("#rtnsRemarks").val(),
+                        patientId: null
+                    }
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "saveImmunizationReturns") }', returnsData)
+                            .success(function (data) {
+                                if (data.status === "success") {
+                                    jq().toastmessage('showSuccessToast', data.message);
+                                    returnsDialog.close();
+                                    getStoreReturns();
+                                } else {
+                                    jq().toastmessage('showErrorToast', data.message);
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
                 },
                 cancel: function () {
                     returnsDialog.close();
@@ -242,7 +260,7 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     stockoutsDialog.close();
-									getStoreStockouts();
+                                    getStoreStockouts();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
                                 }
@@ -286,7 +304,7 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     equipmentsDialog.close();
-									getStoreEquipment();
+                                    getStoreEquipment();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
                                 }
@@ -305,146 +323,180 @@
 </script>
 
 <style>
-	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-		text-decoration: none;
-	}	
-	.dashboard {
-		border: 1px solid #eee;
-		margin-bottom: 5px;
-		padding: 2px 0 0;
-	}	
-	.dashboard .info-section {
-        margin: 2px 5px 5px;
-    }	
-	.dashboard .info-header i {
-		font-size: 2.5em !important;
-		margin-right: 0;
-		padding-right: 0;
-	}	
-	.info-header div {
-		display: inline-block;
-		float: right;
-		margin-top: 7px;
-	}	
-	input[type="text"], select {
-		border: 1px solid #aaa;
-		border-radius: 2px !important;
-		box-shadow: none !important;
-		box-sizing: border-box !important;
-		height: 32px;
-		padding-left: 5px;
-	}	
-	.info-header span {
-		cursor: pointer;
-		display: inline-block;
-		float: right;
-		margin-top: -2px;
-		padding-right: 5px;
-	}
-	.add-on {
-		color: #f26522;
-		float: right;
-		font-size: 8px !important;
-		left: auto;
-		margin-left: -29px;
-		margin-top: 5px !important;
-		position: absolute;
-	}	
-	li .add-on {
-		font-size: 16px !important;
-	}
-	#inline-tabs {
-		background: #f9f9f9 none repeat scroll 0 0;
-	}
-	#outsDate, #outsFrom,
-	#rcptDate, #rcptFrom,
-	#issueDate, #issueFrom,
-	#returnDate, #returnFrom {
-		float: none;
-		margin-bottom: -9px;
-		margin-top: 12px;
-		padding-right: 0;
-	}
-	#outsFrom-display, #outsDate-display,
-	#rcptFrom-display, #rcptDate-display,
-	#issueFrom-display, #issueDate-display,
-	#returnFrom-display, #returnDate-display{
-		width: 150px;
-	}
-	.name {
-		color: #f26522;
-	}	
-	#adder {
-		border: 1px none #88af28;
-		color: #fff !important;
-		float: right;
-		margin-right: -10px;
-		margin-top: 5px;
-	}
-	.dialog .dialog-content li {
-		margin-bottom: 0px;
-	}
-	.dialog label {
-		display: inline-block;
-		width: 120px;
-	}
-	.dialog select option {
-		font-size: 1.0em;
-	}
-	.dialog select {
-		display: inline-block;
-		margin: 4px 0 0;
-		width: 260px;
-		height: 38px;
-	}
-	.dialog input {
-		display: inline-block;
-		width: 260px;
-		min-width: 10%;
-		margin: 4px 0 0;
-	}
-	.dialog td input {
-		width: 40px;
-	}
-	.dialog textarea {
-		display: inline-block;
-		width: 260px;
-		min-width: 10%;
-		resize: none
-	}
-	form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus {
-		outline: 1px none #007fff;
-	}
-	#modal-overlay {
-		background: #000 none repeat scroll 0 0;
-		opacity: 0.4 !important;
-	}
-	.dialog ul {
-		margin-bottom: 20px;
-	}
-	.ui-buttonset {
-		margin-right: -6px;
-	}
-	.ui-widget-content a {
-		color: #007fff;
-		cursor: pointer;
-	}
-	.ui-widget-content a:hover {
-		color: #000fff;
-		text-decoration: none;
-	}
-	.dataTables_info {
-		width: 35%;
-	}
-	.paging_full_numbers .fg-button {
-		margin: 1px;
-	}
-	.paging_full_numbers {
-		width: 62% !important;
-	}
-	.toast-item {
-        background-color: #222;
-    }
+#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+    text-decoration: none;
+}
+
+.loaderror {
+    border: 1px solid red !important;
+}
+
+.dashboard {
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+    padding: 2px 0 0;
+}
+
+.dashboard .info-section {
+    margin: 2px 5px 5px;
+}
+
+.dashboard .info-header i {
+    font-size: 2.5em !important;
+    margin-right: 0;
+    padding-right: 0;
+}
+
+.info-header div {
+    display: inline-block;
+    float: right;
+    margin-top: 7px;
+}
+
+input[type="text"], select {
+    border: 1px solid #aaa;
+    border-radius: 2px !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+    height: 32px;
+    padding-left: 5px;
+}
+
+.info-header span {
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    margin-top: -2px;
+    padding-right: 5px;
+}
+
+.add-on {
+    color: #f26522;
+    float: right;
+    font-size: 8px !important;
+    left: auto;
+    margin-left: -29px;
+    margin-top: 5px !important;
+    position: absolute;
+}
+
+li .add-on {
+    font-size: 16px !important;
+}
+
+#inline-tabs {
+    background: #f9f9f9 none repeat scroll 0 0;
+}
+
+#outsDate, #outsFrom,
+#rcptDate, #rcptFrom,
+#issueDate, #issueFrom,
+#returnDate, #returnFrom {
+    float: none;
+    margin-bottom: -9px;
+    margin-top: 12px;
+    padding-right: 0;
+}
+
+#outsFrom-display, #outsDate-display,
+#rcptFrom-display, #rcptDate-display,
+#issueFrom-display, #issueDate-display,
+#returnFrom-display, #returnDate-display {
+    width: 150px;
+}
+
+.name {
+    color: #f26522;
+}
+
+#adder {
+    border: 1px none #88af28;
+    color: #fff !important;
+    float: right;
+    margin-right: -10px;
+    margin-top: 5px;
+}
+
+.dialog .dialog-content li {
+    margin-bottom: 0px;
+}
+
+.dialog label {
+    display: inline-block;
+    width: 120px;
+}
+
+.dialog select option {
+    font-size: 1.0em;
+}
+
+.dialog select {
+    display: inline-block;
+    margin: 4px 0 0;
+    width: 260px;
+    height: 38px;
+}
+
+.dialog input {
+    display: inline-block;
+    width: 260px;
+    min-width: 10%;
+    margin: 4px 0 0;
+}
+
+.dialog td input {
+    width: 40px;
+}
+
+.dialog textarea {
+    display: inline-block;
+    width: 260px;
+    min-width: 10%;
+    resize: none
+}
+
+form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus {
+    outline: 1px none #007fff;
+}
+
+#modal-overlay {
+    background: #000 none repeat scroll 0 0;
+    opacity: 0.4 !important;
+}
+
+.dialog ul {
+    margin-bottom: 20px;
+}
+
+.ui-buttonset {
+    margin-right: -6px;
+}
+
+.ui-widget-content a {
+    color: #007fff;
+    cursor: pointer;
+}
+
+.ui-widget-content a:hover {
+    color: #000fff;
+    text-decoration: none;
+}
+
+.dataTables_info {
+    width: 35%;
+}
+
+.paging_full_numbers .fg-button {
+    margin: 1px;
+}
+
+.paging_full_numbers {
+    width: 62% !important;
+}
+
+.toast-item {
+    background-color: #222;
+}
 </style>
 
 <div class="clear"></div>
