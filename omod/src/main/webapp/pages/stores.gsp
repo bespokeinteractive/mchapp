@@ -323,180 +323,149 @@
 </script>
 
 <style>
-#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-    text-decoration: none;
-}
-
-.loaderror {
-    border: 1px solid red !important;
-}
-
-.dashboard {
-    border: 1px solid #eee;
-    margin-bottom: 5px;
-    padding: 2px 0 0;
-}
-
-.dashboard .info-section {
-    margin: 2px 5px 5px;
-}
-
-.dashboard .info-header i {
-    font-size: 2.5em !important;
-    margin-right: 0;
-    padding-right: 0;
-}
-
-.info-header div {
-    display: inline-block;
-    float: right;
-    margin-top: 7px;
-}
-
-input[type="text"], select {
-    border: 1px solid #aaa;
-    border-radius: 2px !important;
-    box-shadow: none !important;
-    box-sizing: border-box !important;
-    height: 32px;
-    padding-left: 5px;
-}
-
-.info-header span {
-    cursor: pointer;
-    display: inline-block;
-    float: right;
-    margin-top: -2px;
-    padding-right: 5px;
-}
-
-.add-on {
-    color: #f26522;
-    float: right;
-    font-size: 8px !important;
-    left: auto;
-    margin-left: -29px;
-    margin-top: 5px !important;
-    position: absolute;
-}
-
-li .add-on {
-    font-size: 16px !important;
-}
-
-#inline-tabs {
-    background: #f9f9f9 none repeat scroll 0 0;
-}
-
-#outsDate, #outsFrom,
-#rcptDate, #rcptFrom,
-#issueDate, #issueFrom,
-#returnDate, #returnFrom {
-    float: none;
-    margin-bottom: -9px;
-    margin-top: 12px;
-    padding-right: 0;
-}
-
-#outsFrom-display, #outsDate-display,
-#rcptFrom-display, #rcptDate-display,
-#issueFrom-display, #issueDate-display,
-#returnFrom-display, #returnDate-display {
-    width: 150px;
-}
-
-.name {
-    color: #f26522;
-}
-
-#adder {
-    border: 1px none #88af28;
-    color: #fff !important;
-    float: right;
-    margin-right: -10px;
-    margin-top: 5px;
-}
-
-.dialog .dialog-content li {
-    margin-bottom: 0px;
-}
-
-.dialog label {
-    display: inline-block;
-    width: 120px;
-}
-
-.dialog select option {
-    font-size: 1.0em;
-}
-
-.dialog select {
-    display: inline-block;
-    margin: 4px 0 0;
-    width: 260px;
-    height: 38px;
-}
-
-.dialog input {
-    display: inline-block;
-    width: 260px;
-    min-width: 10%;
-    margin: 4px 0 0;
-}
-
-.dialog td input {
-    width: 40px;
-}
-
-.dialog textarea {
-    display: inline-block;
-    width: 260px;
-    min-width: 10%;
-    resize: none
-}
-
-form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus {
-    outline: 1px none #007fff;
-}
-
-#modal-overlay {
-    background: #000 none repeat scroll 0 0;
-    opacity: 0.4 !important;
-}
-
-.dialog ul {
-    margin-bottom: 20px;
-}
-
-.ui-buttonset {
-    margin-right: -6px;
-}
-
-.ui-widget-content a {
-    color: #007fff;
-    cursor: pointer;
-}
-
-.ui-widget-content a:hover {
-    color: #000fff;
-    text-decoration: none;
-}
-
-.dataTables_info {
-    width: 35%;
-}
-
-.paging_full_numbers .fg-button {
-    margin: 1px;
-}
-
-.paging_full_numbers {
-    width: 62% !important;
-}
-
-.toast-item {
-    background-color: #222;
-}
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
+	.loaderror {
+		border: 1px solid red !important;
+	}
+	.dashboard {
+		border: 1px solid #eee;
+		margin-bottom: 5px;
+		padding: 2px 0 0;
+	}
+	.dashboard .info-section {
+		margin: 2px 5px 5px;
+	}
+	.dashboard .info-header i {
+		font-size: 2.5em !important;
+		margin-right: 0;
+		padding-right: 0;
+	}
+	.info-header div {
+		display: inline-block;
+		float: right;
+		margin-top: 7px;
+	}
+	input[type="text"], select {
+		border: 1px solid #aaa;
+		border-radius: 2px !important;
+		box-shadow: none !important;
+		box-sizing: border-box !important;
+		height: 32px;
+		padding-left: 5px;
+	}
+	.info-header span {
+		cursor: pointer;
+		display: inline-block;
+		float: right;
+		margin-top: -2px;
+		padding-right: 5px;
+	}
+	.add-on {
+		color: #f26522;
+		float: right;
+		font-size: 8px !important;
+		left: auto;
+		margin-left: -29px;
+		margin-top: 5px !important;
+		position: absolute;
+	}
+	li .add-on {
+		font-size: 16px !important;
+	}
+	#inline-tabs {
+		background: #f9f9f9 none repeat scroll 0 0;
+	}
+	#outsDate, #outsFrom,
+	#rcptDate, #rcptFrom,
+	#issueDate, #issueFrom,
+	#returnDate, #returnFrom {
+		float: none;
+		margin-bottom: -9px;
+		margin-top: 12px;
+		padding-right: 0;
+	}
+	#outsFrom-display, #outsDate-display,
+	#rcptFrom-display, #rcptDate-display,
+	#issueFrom-display, #issueDate-display,
+	#returnFrom-display, #returnDate-display {
+		width: 150px;
+	}
+	.name {
+		color: #f26522;
+	}
+	#adder {
+		border: 1px none #88af28;
+		color: #fff !important;
+		float: right;
+		margin-right: -10px;
+		margin-top: 5px;
+	}
+	.dialog .dialog-content li {
+		margin-bottom: 0px;
+	}
+	.dialog label {
+		display: inline-block;
+		width: 120px;
+	}
+	.dialog select option {
+		font-size: 1.0em;
+	}
+	.dialog select {
+		display: inline-block;
+		margin: 4px 0 0;
+		width: 260px;
+		height: 38px;
+	}
+	.dialog input {
+		display: inline-block;
+		width: 260px;
+		min-width: 10%;
+		margin: 4px 0 0;
+	}
+	.dialog td input {
+		width: 40px;
+	}
+	.dialog textarea {
+		display: inline-block;
+		width: 260px;
+		min-width: 10%;
+		resize: none
+	}
+	form input:focus, form select:focus, form textarea:focus, form ul.select:focus, .form input:focus, .form select:focus, .form textarea:focus, .form ul.select:focus {
+		outline: 1px none #007fff;
+	}
+	#modal-overlay {
+		background: #000 none repeat scroll 0 0;
+		opacity: 0.4 !important;
+	}
+	.dialog ul {
+		margin-bottom: 20px;
+	}
+	.ui-buttonset {
+		margin-right: -6px;
+	}
+	.ui-widget-content a {
+		color: #007fff;
+		cursor: pointer;
+	}
+	.ui-widget-content a:hover {
+		color: #000fff;
+		text-decoration: none;
+	}
+	.dataTables_info {
+		width: 35%;
+	}
+	.paging_full_numbers .fg-button {
+		margin: 1px;
+	}
+	.paging_full_numbers {
+		width: 62% !important;
+	}
+	.toast-item {
+		background-color: #222;
+	}
 </style>
 
 <div class="clear"></div>
@@ -534,9 +503,8 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
 
         <div id="tabs" style="margin-top: 20px!important;">
             <ul id="inline-tabs">
-                <li><a href="#receipts">Receipts</a></li>
-                <li><a href="#issues">Issues</a></li>
-                <li><a href="#returns">Returns</a></li>
+                <li><a href="#drugStock">Drugs Stock</a></li>
+                <li><a href="#transactions">Transactions</a></li>
                 <li><a href="#stockouts">Stock Outs</a></li>
                 <li><a href="#equipments">Equipments</a></li>
 
@@ -548,16 +516,12 @@ form input:focus, form select:focus, form textarea:focus, form ul.select:focus, 
                 </li>
             </ul>
 
-            <div id="receipts">
-                ${ui.includeFragment("mchapp", "storesReceipts")}
+            <div id="drugStock">
+                COMING SOON
             </div>
-
-            <div id="issues">
-                ${ui.includeFragment("mchapp", "storesIssues")}
-            </div>
-
-            <div id="returns">
-                ${ui.includeFragment("mchapp", "storesReturns")}
+			
+			<div id="transactions">
+                ${ui.includeFragment("mchapp", "storesTransactions")}
             </div>
 
             <div id="stockouts">
