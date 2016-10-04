@@ -33,7 +33,7 @@
 				remarks = result.remark;
 			}
 			
-			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), drugName, '-', result.quantity, result.vvmStage, remarks, icons]);
+			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), '-', drugName, result.quantity, result.vvmStage, remarks, icons]);
 		});
 
 		receiptsTable.api().clear();
@@ -163,9 +163,9 @@
         <thead>
 			<th style="width: 1px">#</th>
 			<th>DATE</th>
-			<th>VACCINE/DILUENT</th>
 			<th>TYPE</th>
-			<th>QUANTITY</th>
+			<th>VACCINE/DILUENT</th>
+			<th>QNTY</th>
 			<th>VVM STAGE</th>
 			<th>REMARKS</th>
 			<th>ACTIONS</th>
