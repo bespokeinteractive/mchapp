@@ -87,7 +87,6 @@ public class StoresReceiptsFragmentController {
             transactionDetail.setStoreDrug(drugBatch);
         }
 
-
         //process the batch
         transactionDetail.setVvmStage(vvmStage);
         transactionDetail.setRemark(remarks);
@@ -99,8 +98,6 @@ public class StoresReceiptsFragmentController {
         } else {
             return SimpleObject.create("status", "error");
         }
-
-
     }
 
 }

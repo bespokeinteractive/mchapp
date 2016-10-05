@@ -55,7 +55,7 @@ public class StoresReturnsFragmentController {
         transactionDetail.setCreatedBy(person);
         transactionDetail.setCreatedOn(new Date());
         transactionDetail.setOpeningBalance(cummulativeQuantity);
-        transactionDetail.setClosingBalance(cummulativeQuantity - rtnsQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity + rtnsQuantity);
 
 //        TODO need rework
         if (patient != null) {
@@ -66,7 +66,7 @@ public class StoresReturnsFragmentController {
 //            drugBatch exists with the given batch
             int currentQuantity = drugBatch.getCurrentQuantity();
 
-            drugBatch.setCurrentQuantity(currentQuantity - rtnsQuantity);
+            drugBatch.setCurrentQuantity(currentQuantity + rtnsQuantity);
             transactionDetail.setStoreDrug(drugBatch);
         } else {
 //            no current drugBatch with this batch ae the drugBatch, then assign

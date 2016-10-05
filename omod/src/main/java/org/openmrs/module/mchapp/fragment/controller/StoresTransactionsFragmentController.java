@@ -22,11 +22,22 @@ public class StoresTransactionsFragmentController {
     }
 
     public List<SimpleObject> listImmunizationTransactions(UiUtils uiUtils,
-                                                       @RequestParam(value = "rcptNames", required = false) String rcptNames,
+                                                       @RequestParam(value = "transType", required = false) int transType,
+                                                       @RequestParam(value = "transName", required = false) String transName,
                                                        @RequestParam(value = "fromDate", required = false) Date fromDate,
                                                        @RequestParam(value = "toDate", required = false) Date toDate) {
+        TransactionType transactionType = null;
+        if (transType == 1){
+            transactionType = TransactionType.RECEIPTS;
+        }
+        else if (transType == 2){
+            transactionType = TransactionType.ISSUES;
+        }
+        else if (transType == 3){
+            transactionType = TransactionType.RETURNS;
+        }
 
-        List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(TransactionType.ISSUES, rcptNames, fromDate, toDate);
-        return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id");
+        List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(transactionType, transName, fromDate, toDate);
+        return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id", "transactionType.transactionType");
     }
 }
