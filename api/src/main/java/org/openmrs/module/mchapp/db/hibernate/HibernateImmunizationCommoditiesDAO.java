@@ -265,7 +265,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     }
 
     @Override
-    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate, InventoryDrug drug) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
         Calendar stopDate = Calendar.getInstance();
 
