@@ -553,8 +553,16 @@
 		color: #007fff!important;
 		padding: 3px!important;
 	}
-	
-	
+	#drugStockList{
+		font-size: 14px;
+	}
+	#drugStockList tr td:nth-child(4),
+	#drugStockList tr td:nth-child(5){
+		text-align: right;
+	}
+	#drugStockList tr td:last-child{
+		text-align: center;
+	}	
 </style>
 
 <div class="clear"></div>

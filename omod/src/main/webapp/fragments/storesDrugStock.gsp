@@ -12,10 +12,9 @@
 			toDate:		jq('#outsDate-field').val()
 		}
 		
-		jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "listImmunizationStockouts") }', requestData)
+		jq.getJSON('${ ui.actionLink("mchapp", "storesDrugStock", "listCurrentDrugStock") }', requestData)
 			.success(function (data) {
-				//updateDrugStockResults(data);
-				updateDrugStockResults([]);
+				updateDrugStockResults(data);
 			}).error(function (xhr, status, err) {
 				updateDrugStockResults([]);
 			}
@@ -26,20 +25,9 @@
 		drugStockResultsData = results || [];
 		var dataRows = [];
 		_.each(drugStockResultsData, function(result){
-			var drugName = '<a href="storesVaccines.page?drugId=' + result.drug.id + '">' + result.drug.name + '</a>';
-			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
-			var remarks = 'N/A';
-			var depleted = '&mdash;';
+			var drugName 	= '<a href="storesVaccines.page?drugId=' + result.immunizationStoreDrug.inventoryDrug.id + '">' + result.immunizationStoreDrug.inventoryDrug.name + '</a>';
 			
-			if (result.remarks !== ''){
-				remarks = result.remarks;
-			}
-			
-			if (result.dateRestocked){
-				depleted = moment(result.dateRestocked, "DD.MMM.YYYY").format('DD/MM/YYYY');
-			}
-			
-			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), drugName, moment(result.dateDepleted, "DD.MMM.YYYY").format('DD/MM/YYYY'), depleted, remarks, icons]);
+			dataRows.push([0, drugName, result.immunizationStoreDrug.inventoryDrug.category.name, result.drugQuantity.toString().formatToAccounting(0), result.immunizationStoreDrug.inventoryDrug.reorderQty, 'B']);
 		});
 
 		drugStockTable.api().clear();
@@ -93,13 +81,9 @@
 			} );
 		}).api().draw();
 		
-		jq('#outsNames').on('keyup', function () {
+		jq('#drugName').on('keyup', function () {
 			drugStockTable.api().search( this.value ).draw();
 		});
-	
-        jq(".stockoutParams").on('change', function () {
-            getStoreDrugStock();
-        });
 		
         jq("#outsName").autocomplete({
             minLength: 3,
@@ -145,10 +129,7 @@
             <div style="margin-top: -3px">
                 <i class="icon-filter" style="font-size: 26px!important; color: #5b57a6"></i>
                 <label for="drugName">&nbsp; Name:</label>
-                <input id="drugName" type="text" value="" name="drugName" placeholder="Vaccine/Diluent"
-                       style="width: 240px">
-
-                
+                <input id="drugName" type="text" value="" name="drugName" placeholder="Vaccine / Diluent" style="width:643px; margin:10px 5px 0px 0px; padding:0px 15px;">                
             </div>
         </div>
     </div>
@@ -159,10 +140,9 @@
 		<th>#</th>
 		<th>NAME</th>
 		<th>CATEGORY</th>
-		<th>FORMULATION</th>
-		<th>QUANTITY</th>
-		<th>REORDER</th>
-		<th>ATTRIBUTE</th>
+		<th style="width:75px">QUANTITY</th>
+		<th style="width:70px">REORDER</th>
+		<th style="width:80px">ATTRIBUTE</th>
     </thead>
 
     <tbody>    
