@@ -265,7 +265,7 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     }
 
     @Override
-    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate, InventoryDrug drug) {
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
         Calendar stopDate = Calendar.getInstance();
 
@@ -294,6 +294,13 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
             criteria.add(Restrictions.le("createdOn", stopDate.getTime()));
         }
 
+        return criteria.list();
+    }
+
+    @Override
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        
         return criteria.list();
     }
 

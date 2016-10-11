@@ -23,9 +23,9 @@ public class StoresVaccinesPageController {
         InventoryService service = Context.getService(InventoryService.class);
         InventoryDrug inventoryDrug = service.getDrugById(drugId);
         if(inventoryDrug!=null){
-            model.addAttribute("title",inventoryDrug.getName());
             List<ImmunizationStoreDrug> storeDrugs = immunizationService.getImmunizationStoreDrugsForDrug(inventoryDrug);
             model.addAttribute("storeDrugs",storeDrugs);
+            model.addAttribute("title",inventoryDrug.getName());
         }
     }
 }
