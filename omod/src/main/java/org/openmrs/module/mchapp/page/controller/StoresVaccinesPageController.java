@@ -20,16 +20,23 @@ public class StoresVaccinesPageController {
     private ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
 
     public void get(@RequestParam("drugId") Integer drugId, PageModel model) {
-        model.addAttribute("drugId",drugId);
         InventoryService service = Context.getService(InventoryService.class);
         InventoryDrug inventoryDrug = service.getDrugById(drugId);
-        if(inventoryDrug!=null){
-            List<ImmunizationStoreDrug> storeDrugs = immunizationService.getImmunizationStoreDrugsForDrug(inventoryDrug);
 
-            List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(188);
+        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(inventoryDrug.getName());
+        int quantity = 0;
 
-            model.addAttribute("storeDrugs",storeDrugs);
-            model.addAttribute("title",inventoryDrug.getName());
+        for(ImmunizationStoreDrug drug : drugs) {
+            quantity += drug.getCurrentQuantity();
         }
+
+        if(inventoryDrug!=null){
+            List<ImmunizationStoreDrugTransactionDetail> storeDrugs = immunizationService.listImmunizationTransactions(drugId);
+            model.addAttribute("storeDrugs",storeDrugs);
+            model.addAttribute("drug",inventoryDrug);
+        }
+
+        model.addAttribute("quantity",quantity);
+        model.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
     }
 }
