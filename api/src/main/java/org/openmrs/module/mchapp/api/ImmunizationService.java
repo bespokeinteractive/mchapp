@@ -73,11 +73,9 @@ public interface ImmunizationService extends OpenmrsService {
 
     ImmunizationStockout saveImmunizationStockout(ImmunizationStockout immunizationStockout);
 
-
-
-
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId);
 
     ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String rcptBatchNo);
 

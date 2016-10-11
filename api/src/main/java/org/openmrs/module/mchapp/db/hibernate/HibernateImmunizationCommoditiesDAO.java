@@ -13,6 +13,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.inventory.InventoryService;
+import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
 import org.openmrs.module.mchapp.model.*;
 
@@ -249,9 +250,10 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     @Override
     public List<ImmunizationStoreDrug> getAvailableDrugBatches(Integer drgId) {
         InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugById(drgId);
-        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
-                .add(Restrictions.eq("inventoryDrug", inventoryDrug))
-                .add(Restrictions.ge("currentQuantity", 0));
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class).add(Restrictions.ge("currentQuantity", 0));
+        if (drgId != null){
+            criteria.add(Restrictions.eq("inventoryDrug", inventoryDrug));
+        }
         return criteria.list();
     }
 
@@ -266,8 +268,11 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
-        criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
         Calendar stopDate = Calendar.getInstance();
+
+        if (type != null) {
+            criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
+        }
 
         if (toDate != null) {
             stopDate.setTime(toDate);
@@ -288,6 +293,25 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
             criteria.add(Restrictions.ge("createdOn", fromDate));
         } else if (fromDate == null && toDate != null) {
             criteria.add(Restrictions.le("createdOn", stopDate.getTime()));
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+
+        if (drugId != null){
+            InventoryService inventoryService = Context.getService(InventoryService.class);
+            InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+
+            if(inventoryDrug!=null){
+                ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
+                List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugsForDrug(inventoryDrug);
+
+                criteria.add(Restrictions.in("storeDrug", drugs));
+            }
         }
 
         return criteria.list();

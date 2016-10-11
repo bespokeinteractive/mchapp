@@ -1,5 +1,5 @@
 <script>
-    var returnDrugBatches;
+    var drugBatchesReturns;
 	
 	var returnsTable;
 	var returnsTableObject;
@@ -46,7 +46,7 @@
 		refreshInTable(issuesReturnsData, returnsTable);
 	};
 
-    function ReturnDrugBatchViewModel() {
+    function DrugBatchReturnsViewModel() {
         var self = this;
         self.availableDrugs = ko.observableArray([]);
         self.drugObject = ko.observable();
@@ -67,9 +67,9 @@
                         jq(".confirm").hide();
                     }
 
-                    returnDrugBatches.availableDrugs.removeAll();
+                    drugBatchesReturns.availableDrugs.removeAll();
                     jq.each(data.drugs, function (i, item) {
-                        returnDrugBatches.availableDrugs.push(item);
+                        drugBatchesReturns.availableDrugs.push(item);
                     });
                 }).error(function (xhr, status, err) {
                     jq().toastmessage('showErrorToast', "AJAX error!" + err);
@@ -77,7 +77,7 @@
         );
     }
     jq(function () {
-        returnDrugBatches = new ReturnDrugBatchViewModel();
+        drugBatchesReturns = new DrugBatchReturnsViewModel();
 
 		returnsTableObject = jq("#returnsList");
 		
@@ -159,7 +159,7 @@
             }
         });
 
-        ko.applyBindings(returnDrugBatches, jq("#returns-dialog")[0]);
+        ko.applyBindings(drugBatchesReturns, jq("#returns-dialog")[0]);
 		
 		getStoreReturns();
     });//end of document ready function

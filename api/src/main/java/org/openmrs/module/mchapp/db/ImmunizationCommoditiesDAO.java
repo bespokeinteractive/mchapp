@@ -93,8 +93,9 @@ public interface ImmunizationCommoditiesDAO {
 
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 
-    List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId);
 
+    List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
 
     List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug);
 }
