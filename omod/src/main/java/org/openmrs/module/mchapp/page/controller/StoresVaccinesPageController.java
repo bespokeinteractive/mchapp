@@ -5,6 +5,7 @@ import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
+import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,6 +25,9 @@ public class StoresVaccinesPageController {
         InventoryDrug inventoryDrug = service.getDrugById(drugId);
         if(inventoryDrug!=null){
             List<ImmunizationStoreDrug> storeDrugs = immunizationService.getImmunizationStoreDrugsForDrug(inventoryDrug);
+
+            List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(188);
+
             model.addAttribute("storeDrugs",storeDrugs);
             model.addAttribute("title",inventoryDrug.getName());
         }

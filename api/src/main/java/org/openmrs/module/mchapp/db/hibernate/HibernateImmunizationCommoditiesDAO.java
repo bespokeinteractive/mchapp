@@ -13,6 +13,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.inventory.InventoryService;
+import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
 import org.openmrs.module.mchapp.model.*;
 
@@ -300,7 +301,19 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
-        
+
+        if (drugId != null){
+            InventoryService inventoryService = Context.getService(InventoryService.class);
+            InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+
+            if(inventoryDrug!=null){
+                ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
+                List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugsForDrug(inventoryDrug);
+
+                criteria.add(Restrictions.in("storeDrug", drugs));
+            }
+        }
+
         return criteria.list();
     }
 
