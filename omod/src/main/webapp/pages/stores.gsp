@@ -147,6 +147,25 @@
             jq('#' + fieldName).val('');
             jq(this).val('').change();
         });
+		
+		jq('#stockOutList').on("click", ".update-stockouts", function(){
+			var idnt = jq(this).data('idnt');
+			
+			jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "getImmunizationStockoutTransaction") }', {transactionId: idnt})
+				.success(function (data) {
+					var depletedDate = data.depletedOn;
+					
+					jq('#outsEditId').val(idnt);
+					jq('#outsEditName').val(data.name);
+					jq('#outsEditRemarks').val(data.remarks);
+					
+					jq('#outsEditExpiry-field').val(moment(depletedDate).format('YYYY-MM-DD'));
+					jq('#outsEditExpiry-display').val(moment(depletedDate).format('DD MMM YYYY'));
+					
+					stockoutsEditDialog.show();					
+				}
+			);
+		});
 
         var receiptsDialog = emr.setupConfirmationDialog({
             dialogOpts: {
@@ -326,6 +345,47 @@
                 },
                 cancel: function () {
                     stockoutsDialog.close();
+                }
+            }
+        });
+		
+		var stockoutsEditDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#stockouts-dialog-edit',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                    var stockoutsData = {
+                        outsIdnt: jq("#outsEditId").val(),
+                        depletionDate: jq("#outsEditExpiry-field").val(),
+                        dateRestocked: jq("#outsEditRestocked-field").val(),
+                        outsRemarks: jq("#outsEditRemarks").val()
+                    }
+
+                    if (jq.trim(stockoutsData.depletionDate) == "") {
+                        jq().toastmessage('showErrorToast', "Check to ensure that Date Depleted been filled");
+                        return false;
+                    }
+					
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "updateImmunizationStockout") }', stockoutsData)
+						.success(function (data) {
+							if (data.status === "success") {
+								jq().toastmessage('showSuccessToast', data.message);
+								stockoutsEditDialog.close();
+								getStoreStockouts();
+							} else {
+								jq().toastmessage('showErrorToast', data.message);
+							}
+						}).error(function (xhr, status, err) {
+							jq().toastmessage('showErrorToast', "AJAX error!" + err);
+						}
+                    );
+                },
+                cancel: function () {
+                    stockoutsEditDialog.close();
                 }
             }
         });

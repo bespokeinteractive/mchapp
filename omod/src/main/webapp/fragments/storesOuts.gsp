@@ -25,7 +25,7 @@
 		var dataRows = [];
 		_.each(stockoutResultsData, function(result){
 			var drugName = '<a href="storesVaccines.page?drugId=' + result.drug.id + '">' + result.drug.name + '</a>';
-			var icons = '<a class="update-stockouts" title="Update Transaction"><i class="icon-file-text small"></i></a> <a title="View Transaction" href="stockoutsDetails.page?transactionId=' + result.id + '"><i class="icon-bar-chart small"></i></a>';
+			var icons = '<a class="update-stockouts" data-idnt="' + result.id + '" title="Update Transaction"><i class="icon-file-text small"></i></a> <a title="View Transaction" href="stockoutsDetails.page?transactionId=' + result.id + '"><i class="icon-bar-chart small"></i></a>';
 			var remarks = 'N/A';
 			var depleted = '&mdash;';
 			
@@ -190,6 +190,43 @@
                 <li>
                     <label>Remarks</label>
                     <textarea id="outsRemarks"></textarea>
+                </li>
+            </ul>
+
+            <label class="button confirm"
+                   style="float: right; width: auto ! important; margin-right: 5px;">Confirm</label>
+            <label class="button cancel" style="width: auto!important;">Cancel</label>
+        </form>
+    </div>
+</div>
+
+<div id="stockouts-dialog-edit" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Update StockOuts</h3>
+    </div>
+
+    <div class="dialog-content">
+        <form id="receiptsForm">
+            <ul>
+                <li>
+                    <label>Vaccine/Diluent</label>
+                    <input id="outsEditName" type="text" readonly="">
+                    <input id="outsEditId" type="hidden" readonly="">
+                </li>
+
+                <li>
+                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsExpiry', id: 'outsEditExpiry', label: 'Depleted On', endDate: new Date(),useTime: false, defaultToday: false])}
+                </li>
+				
+                <li>
+                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsExpiry', id: 'outsEditRestocked', label: 'Restocked On', endDate: new Date(),useTime: false, defaultToday: false])}
+                </li>
+
+                <li>
+                    <label>Remarks</label>
+                    <textarea id="outsEditRemarks"></textarea>
                 </li>
             </ul>
 
