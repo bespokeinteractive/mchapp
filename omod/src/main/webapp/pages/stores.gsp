@@ -195,6 +195,8 @@
 							if (data.status === "success") {
 								jq().toastmessage('showSuccessToast', "Receipt Added Successfully");
 								receiptsDialog.close();
+								
+								getStoreDrugStock();
 								getStoreTransactions();
 								
 								if (requestData.closeStockouts == 1){
@@ -241,6 +243,8 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     issuesDialog.close();
+									
+									getStoreDrugStock();
                                     getStoreTransactions();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
@@ -295,6 +299,8 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     returnsDialog.close();
+									
+									getStoreDrugStock();
                                     getStoreTransactions();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);

@@ -221,7 +221,7 @@
                 </li>
 				
                 <li>
-                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsExpiry', id: 'outsEditRestocked', label: 'Restocked On', endDate: new Date(),useTime: false, defaultToday: false])}
+                    ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'outsEditExpiry', id: 'outsEditRestocked', label: 'Restocked On', endDate: new Date(),useTime: false, defaultToday: false])}
                 </li>
 
                 <li>
