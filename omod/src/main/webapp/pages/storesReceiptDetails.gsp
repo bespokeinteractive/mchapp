@@ -9,7 +9,7 @@
 <script>
     jq(function () {
 
-        console.log("${drugObject}");
+        
 
     }); //end of doc ready
 </script>
