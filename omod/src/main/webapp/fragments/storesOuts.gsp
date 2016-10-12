@@ -25,7 +25,7 @@
 		var dataRows = [];
 		_.each(stockoutResultsData, function(result){
 			var drugName = '<a href="storesVaccines.page?drugId=' + result.drug.id + '">' + result.drug.name + '</a>';
-			var icons = '<a href="storesReturns.page?returnId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			var icons = '<a class="update-stockouts" title="Update Transaction"><i class="icon-file-text small"></i></a> <a title="View Transaction" href="stockoutsDetails.page?transactionId=' + result.id + '"><i class="icon-bar-chart small"></i></a>';
 			var remarks = 'N/A';
 			var depleted = '&mdash;';
 			

@@ -144,6 +144,17 @@
                 //set parent category
                 var catId = ui.item.value.category.id;
                 var drgId = ui.item.value.id;
+				
+				jq.getJSON('${ ui.actionLink("mchapp", "storesReceipts", "checkForUnclosedStockouts") }', {drugId : drgId}).success(function (data) {
+					if (data == 1){
+						jq('#closeStockouts').show(300);
+					} else{
+						jq('#closeStockouts input').attr('checked', false);
+						jq('#closeStockouts').hide(300);
+					}
+				});
+				
+				
             }
         });
 		
@@ -155,13 +166,13 @@
                             searchPhrase: request.term
                         }
                 ).success(function (data) {
-                            var results = [];
-                            for (var i in data) {
-                                var result = {label: data[i].name, value: data[i]};
-                                results.push(result);
-                            }
-                            response(results);
-                        });
+					var results = [];
+					for (var i in data) {
+						var result = {label: data[i].name, value: data[i]};
+						results.push(result);
+					}
+					response(results);
+				});
             },
             focus: function (event, ui) {
                 jq("#issueName").val(ui.item.value.name);
@@ -309,6 +320,14 @@
                 <li>
                     <label>Remarks</label>
                     <textarea id="rcptRemarks"></textarea>
+                </li>
+				
+				<li id="closeStockouts">
+                    <label>&nbsp;</label>
+                    <label style="cursor:pointer; background: #fff799 none repeat scroll 0% 0%; padding: 5px; border: 1px solid #ddd; border-radius: 2px; width:248px;">
+						<input type="checkbox" id="inputCloseStockouts" style="width: auto; margin-top: 4px" />
+						Close Open Transactions
+					</label>
                 </li>
             </ul>
 

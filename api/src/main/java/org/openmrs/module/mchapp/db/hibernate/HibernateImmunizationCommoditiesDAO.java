@@ -346,6 +346,27 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     }
 
     @Override
+    public List<ImmunizationStockout> listImmunizationStockouts(Integer drugId, Boolean currentlyOpen) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStockout.class);
+
+        if (drugId != null){
+            InventoryService inventoryService = Context.getService(InventoryService.class);
+            InventoryDrug inventoryDrug = inventoryService.getDrugById(drugId);
+
+            if(inventoryDrug != null){
+                List<InventoryDrug> drugs = inventoryService.findDrug(null, inventoryDrug.getName());
+                criteria.add(Restrictions.in("drug", drugs));
+            }
+        }
+
+        if (currentlyOpen == true){
+            criteria.add(Restrictions.isNull("dateRestocked"));
+        }
+
+        return criteria.list();
+    }
+
+    @Override
     public List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class)
                 .add(Restrictions.eq("inventoryDrug", inventoryDrug));

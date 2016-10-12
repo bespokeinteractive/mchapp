@@ -98,7 +98,10 @@
 					jq('#rcptBatchNo').val('');
 					jq('#rcptRemarks').val('');
 					
-					receiptsDialog.show();					
+					jq('#closeStockouts input').attr('checked', false);
+					jq('#closeStockouts').hide();
+					
+					receiptsDialog.show();
 				}
 				else if (value == 2){
 					jq('#issueName').val('');
@@ -161,6 +164,7 @@
                         rcptBatchNo: jq("#rcptBatchNo").val(),
                         expiryDate: jq("#rcptExpiry-field").val(),
                         remarks: jq("#rcptRemarks").val(),
+                        closeStockouts: jq('#inputCloseStockouts:checked').length
                     }
                     if (jq.trim(requestData.storeDrugName) == "" || jq.trim(requestData.quantity) == "" ||
                             jq.trim(requestData.vvmStage) == "" || jq.trim(requestData.rcptBatchNo) == "" || jq.trim(requestData.expiryDate) == "") {
@@ -173,6 +177,10 @@
 								jq().toastmessage('showSuccessToast', "Receipt Added Successfully");
 								receiptsDialog.close();
 								getStoreTransactions();
+								
+								if (requestData.closeStockouts == 1){
+									getStoreStockouts();
+								}
 							} else {
 								jq().toastmessage('showErrorToast', "Error Saving Receipt");
 							}
@@ -553,6 +561,7 @@
 		color: #007fff!important;
 		padding: 3px!important;
 	}
+	#stockOutList,
 	#drugStockList{
 		font-size: 14px;
 	}

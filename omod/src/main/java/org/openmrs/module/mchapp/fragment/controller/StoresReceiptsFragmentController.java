@@ -1,15 +1,13 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.mchapp.api.ImmunizationService;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
-import org.openmrs.module.mchapp.model.ImmunizationStoreTransactionType;
-import org.openmrs.module.mchapp.model.TransactionType;
+import org.openmrs.module.mchapp.model.*;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,16 +35,24 @@ public class StoresReceiptsFragmentController {
         return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id");
     }
 
-    public SimpleObject saveImmunizationReceipts(UiUtils uiUtils, @RequestParam("storeDrugName") String storeDrugName,
+    public Integer checkForUnclosedStockouts(UiUtils ui,
+                                             @RequestParam("drugId") Integer drugId){
+        List<ImmunizationStockout> drugStockouts = immunizationService.listImmunizationStockouts(drugId, true);
+        return drugStockouts.size();
+    }
+
+    public SimpleObject saveImmunizationReceipts(UiUtils ui, @RequestParam("storeDrugName") String storeDrugName,
                                                  @RequestParam("quantity") Integer quantity,
                                                  @RequestParam("vvmStage") Integer vvmStage,
                                                  @RequestParam("rcptBatchNo") String rcptBatchNo,
                                                  @RequestParam("expiryDate") Date expiryDate,
                                                  @RequestParam(value = "patient", required = false) Patient patient,
-                                                 @RequestParam(value = "remarks", required = false) String remarks) {
+                                                 @RequestParam(value = "remarks", required = false) String remarks,
+                                                 @RequestParam(value = "closeStockouts", required = false) int closeStockouts) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
         ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo);
+        InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(storeDrugName);
 
         List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(storeDrugName);
         int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
@@ -61,28 +67,35 @@ public class StoresReceiptsFragmentController {
         transactionDetail.setOpeningBalance(cummulativeQuantity);
         transactionDetail.setClosingBalance(cummulativeQuantity + quantity);
 
+        ImmunizationStoreDrug immunizationStoreDrug = new ImmunizationStoreDrug();
+        immunizationStoreDrug.setExpiryDate(expiryDate);
+        immunizationStoreDrug.setCurrentQuantity(quantity);
+        immunizationStoreDrug.setCreatedBy(person);
+        immunizationStoreDrug.setBatchNo(rcptBatchNo);
+        immunizationStoreDrug.setCreatedOn(new Date());
+        immunizationStoreDrug.setInventoryDrug(inventoryDrug);
+
         if (patient != null) {
             transactionDetail.setPatient(patient);
         }
         transactionDetail.setQuantity(quantity);
 
         if (drugBatch != null) {
+            if (drugBatch.getInventoryDrug().getName() == storeDrugName){
 //            drugBatch exists with the given batch
-            int currentQuantity = drugBatch.getCurrentQuantity();
+                int currentQuantity = drugBatch.getCurrentQuantity();
 
-            currentQuantity += quantity;
-            drugBatch.setCurrentQuantity(currentQuantity);
-            transactionDetail.setStoreDrug(drugBatch);
+                currentQuantity += quantity;
+                drugBatch.setCurrentQuantity(currentQuantity);
+                transactionDetail.setStoreDrug(drugBatch);
+            }
+            else {
+                // It's not the same drug
+                drugBatch = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
+                transactionDetail.setStoreDrug(drugBatch);
+            }
         } else {
 //            no current drugBatch with this batch ae the drugBatch, then assign
-            InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(storeDrugName);
-            ImmunizationStoreDrug immunizationStoreDrug = new ImmunizationStoreDrug();
-            immunizationStoreDrug.setExpiryDate(expiryDate);
-            immunizationStoreDrug.setCurrentQuantity(quantity);
-            immunizationStoreDrug.setCreatedBy(person);
-            immunizationStoreDrug.setBatchNo(rcptBatchNo);
-            immunizationStoreDrug.setCreatedOn(new Date());
-            immunizationStoreDrug.setInventoryDrug(inventoryDrug);
             drugBatch = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
             transactionDetail.setStoreDrug(drugBatch);
         }
@@ -93,6 +106,11 @@ public class StoresReceiptsFragmentController {
         ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.RECEIPTS.getValue());
         transactionDetail.setTransactionType(transactionType);
         ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
+
+        if (closeStockouts == 1){
+            closeImmunizationStockouts(ui, inventoryDrug);
+        }
+
         if (storeDrugTransactionDetail != null) {
             return SimpleObject.create("status", "success");
         } else {
@@ -100,4 +118,12 @@ public class StoresReceiptsFragmentController {
         }
     }
 
+    public void closeImmunizationStockouts(UiUtils ui, InventoryDrug drug){
+        List<ImmunizationStockout> stockouts = immunizationService.listImmunizationStockouts(drug.getId() ,true);
+
+        for (ImmunizationStockout stockout : stockouts) {
+            stockout.setDateRestocked(new Date());
+            immunizationService.saveImmunizationStockout(stockout);
+        }
+    }
 }
