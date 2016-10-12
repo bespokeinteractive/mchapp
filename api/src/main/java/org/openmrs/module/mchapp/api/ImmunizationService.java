@@ -83,6 +83,8 @@ public interface ImmunizationService extends OpenmrsService {
 
     List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
 
+    List<ImmunizationStockout> listImmunizationStockouts(Integer drugId, Boolean currentlyOpen);
+
 
     List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug);
 }

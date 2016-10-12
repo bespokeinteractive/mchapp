@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "MCH Stores:-Receipt Details"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "MCH Stockout Details"])
     ui.includeJavascript("billingui", "moment.js")
 
     ui.includeCss("uicommons", "datatables/dataTables_jui.css")
@@ -31,21 +31,17 @@
 
             <li>
                 <i class="icon-chevron-right link"></i>
-                Receipt ID: ${title}
+                Transaction: 00${transactionId}
             </li>
         </ul>
     </div>
 </div>
 
 <div>
-    ID: ${drugObject.id} <br />
-    VMM Stage: ${drugObject.id} <br />
-    Remark: ${drugObject.remark} <br />
-    Quantity Transacted: ${drugObject.quantity} <br />
-    Transaction Date: ${drugObject.createdOn} <br />
-    Created By: ${drugObject.createdBy} <br />
-    Transaction Drug: ${drugObject.storeDrug.inventoryDrug.name} <br />
-    Drug Batch: ${drugObject.storeDrug.batchNo} <br />
-    Transaction Type: ${drugObject.transactionType.transactionType} <br />
-    Issued To: ${drugObject.patient == null ? "Dispensed From Stores": patient} <br />
+    ID: ${stockout.id} <br />
+    Drug: ${stockout.drug.name} <br />
+    Date: ${ui.formatDatePretty(stockout.createdOn)} <br />
+    Depleted On: ${ui.formatDatePretty(stockout.dateDepleted)} <br />
+    Restocked On: ${stockout.dateRestocked? ui.formatDatePretty(stockout.dateRestocked) : 'N/A'} <br />
+    Remarks: ${stockout.remarks} <br />
 </div>

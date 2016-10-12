@@ -98,7 +98,10 @@
 					jq('#rcptBatchNo').val('');
 					jq('#rcptRemarks').val('');
 					
-					receiptsDialog.show();					
+					jq('#closeStockouts input').attr('checked', false);
+					jq('#closeStockouts').hide();
+					
+					receiptsDialog.show();
 				}
 				else if (value == 2){
 					jq('#issueName').val('');
@@ -144,6 +147,25 @@
             jq('#' + fieldName).val('');
             jq(this).val('').change();
         });
+		
+		jq('#stockOutList').on("click", ".update-stockouts", function(){
+			var idnt = jq(this).data('idnt');
+			
+			jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "getImmunizationStockoutTransaction") }', {transactionId: idnt})
+				.success(function (data) {
+					var depletedDate = data.depletedOn;
+					
+					jq('#outsEditId').val(idnt);
+					jq('#outsEditName').val(data.name);
+					jq('#outsEditRemarks').val(data.remarks);
+					
+					jq('#outsEditExpiry-field').val(moment(depletedDate).format('YYYY-MM-DD'));
+					jq('#outsEditExpiry-display').val(moment(depletedDate).format('DD MMM YYYY'));
+					
+					stockoutsEditDialog.show();					
+				}
+			);
+		});
 
         var receiptsDialog = emr.setupConfirmationDialog({
             dialogOpts: {
@@ -161,6 +183,7 @@
                         rcptBatchNo: jq("#rcptBatchNo").val(),
                         expiryDate: jq("#rcptExpiry-field").val(),
                         remarks: jq("#rcptRemarks").val(),
+                        closeStockouts: jq('#inputCloseStockouts:checked').length
                     }
                     if (jq.trim(requestData.storeDrugName) == "" || jq.trim(requestData.quantity) == "" ||
                             jq.trim(requestData.vvmStage) == "" || jq.trim(requestData.rcptBatchNo) == "" || jq.trim(requestData.expiryDate) == "") {
@@ -172,7 +195,13 @@
 							if (data.status === "success") {
 								jq().toastmessage('showSuccessToast', "Receipt Added Successfully");
 								receiptsDialog.close();
+								
+								getStoreDrugStock();
 								getStoreTransactions();
+								
+								if (requestData.closeStockouts == 1){
+									getStoreStockouts();
+								}
 							} else {
 								jq().toastmessage('showErrorToast', "Error Saving Receipt");
 							}
@@ -214,6 +243,8 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     issuesDialog.close();
+									
+									getStoreDrugStock();
                                     getStoreTransactions();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
@@ -268,6 +299,8 @@
                                 if (data.status === "success") {
                                     jq().toastmessage('showSuccessToast', data.message);
                                     returnsDialog.close();
+									
+									getStoreDrugStock();
                                     getStoreTransactions();
                                 } else {
                                     jq().toastmessage('showErrorToast', data.message);
@@ -318,6 +351,47 @@
                 },
                 cancel: function () {
                     stockoutsDialog.close();
+                }
+            }
+        });
+		
+		var stockoutsEditDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#stockouts-dialog-edit',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                    var stockoutsData = {
+                        outsIdnt: jq("#outsEditId").val(),
+                        depletionDate: jq("#outsEditExpiry-field").val(),
+                        dateRestocked: jq("#outsEditRestocked-field").val(),
+                        outsRemarks: jq("#outsEditRemarks").val()
+                    }
+
+                    if (jq.trim(stockoutsData.depletionDate) == "") {
+                        jq().toastmessage('showErrorToast', "Check to ensure that Date Depleted been filled");
+                        return false;
+                    }
+					
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesOuts", "updateImmunizationStockout") }', stockoutsData)
+						.success(function (data) {
+							if (data.status === "success") {
+								jq().toastmessage('showSuccessToast', data.message);
+								stockoutsEditDialog.close();
+								getStoreStockouts();
+							} else {
+								jq().toastmessage('showErrorToast', data.message);
+							}
+						}).error(function (xhr, status, err) {
+							jq().toastmessage('showErrorToast', "AJAX error!" + err);
+						}
+                    );
+                },
+                cancel: function () {
+                    stockoutsEditDialog.close();
                 }
             }
         });
@@ -553,6 +627,7 @@
 		color: #007fff!important;
 		padding: 3px!important;
 	}
+	#stockOutList,
 	#drugStockList{
 		font-size: 14px;
 	}
