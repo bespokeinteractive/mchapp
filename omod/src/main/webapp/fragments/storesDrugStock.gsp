@@ -26,8 +26,13 @@
 		var dataRows = [];
 		_.each(drugStockResultsData, function(result){
 			var drugName 	= '<a href="storesVaccines.page?drugId=' + result.immunizationStoreDrug.inventoryDrug.id + '">' + result.immunizationStoreDrug.inventoryDrug.name + '</a>';
+			var attribute	= 'B';
 			
-			dataRows.push([0, drugName, result.immunizationStoreDrug.inventoryDrug.category.name, result.drugQuantity.toString().formatToAccounting(0), result.immunizationStoreDrug.inventoryDrug.reorderQty, 'B']);
+			if (result.immunizationStoreDrug.inventoryDrug.attribute == 1){
+				attribute = 'A';
+			}
+			
+			dataRows.push([0, drugName, result.immunizationStoreDrug.inventoryDrug.category.name, result.drugQuantity.toString().formatToAccounting(0), result.immunizationStoreDrug.inventoryDrug.reorderQty, attribute]);
 		});
 
 		drugStockTable.api().clear();

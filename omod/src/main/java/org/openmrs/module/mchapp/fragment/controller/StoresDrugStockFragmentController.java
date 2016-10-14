@@ -45,7 +45,7 @@ public class StoresDrugStockFragmentController {
         }
 
         if (stockDrugs!=null){
-            return SimpleObject.fromCollection(drugStockBalances, ui, "immunizationStoreDrug.id", "immunizationStoreDrug.batchNo", "immunizationStoreDrug.inventoryDrug.id", "immunizationStoreDrug.inventoryDrug.name", "immunizationStoreDrug.inventoryDrug.category.name", "immunizationStoreDrug.inventoryDrug.reorderQty", "drugQuantity");
+            return SimpleObject.fromCollection(drugStockBalances, ui, "immunizationStoreDrug.id", "immunizationStoreDrug.batchNo", "immunizationStoreDrug.inventoryDrug.id", "immunizationStoreDrug.inventoryDrug.name", "immunizationStoreDrug.inventoryDrug.category.name", "immunizationStoreDrug.inventoryDrug.reorderQty", "immunizationStoreDrug.inventoryDrug.attribute", "drugQuantity");
         }
 
         return SimpleObject.fromCollection(Collections.EMPTY_LIST, ui);
