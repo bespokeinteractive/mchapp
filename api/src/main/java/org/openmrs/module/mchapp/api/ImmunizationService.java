@@ -55,6 +55,8 @@ public interface ImmunizationService extends OpenmrsService {
 
     ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail);
 
+    ImmunizationStorePatientTransaction saveImmunizationStorePatientTransaction(ImmunizationStorePatientTransaction patientTransaction);
+
     /*        ImmunizationEquipment     */
     List<ImmunizationEquipment> getAllImmunizationEquipments();
 

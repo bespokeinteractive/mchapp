@@ -59,6 +59,8 @@ public interface ImmunizationCommoditiesDAO {
 
     ImmunizationStoreDrugTransactionDetail saveImmunizationStoreDrugTransactionDetail(ImmunizationStoreDrugTransactionDetail transactionDetail);
 
+    ImmunizationStorePatientTransaction saveImmunizationStorePatientTransaction(ImmunizationStorePatientTransaction patientTransaction);
+
 
     /*        ImmunizationEquipment     */
     List<ImmunizationEquipment> getAllImmunizationEquipments();

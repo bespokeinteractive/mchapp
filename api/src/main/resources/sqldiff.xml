@@ -115,6 +115,7 @@
 			ALTER TABLE immunization_equipment ADD remarks VARCHAR(255);
 		</sql>
 	</diff>
+
 	<diff>
 		<version>1.2.4</version>
 		<author>Stanslaus Odhiambo</author>
@@ -128,5 +129,41 @@
 		</sql>
 	</diff>
 
+	<diff>
+		<version>1.2.5</version>
+		<author>Dennis Henry</author>
+		<date>Oct 13th 2016</date>
+		<description>
+			add patient immunization transaction table to store immunization details
+		</description>
+		<sql>
+			CREATE TABLE IF NOT EXISTS immunization_store_patient_transaction (id INT NOT NULL AUTO_INCREMENT, patient_id INT(11) NOT NULL, immunization_store_drug_id INT NOT NULL, quantity INT NULL, created_on DATETIME NULL, created_by INT(11) NOT NULL,remark VARCHAR(150) NULL, PRIMARY KEY (id), INDEX fk_immunization_store_patient_transaction_person1_idx (created_by ASC),  INDEX fk_immunization_store_patient_transaction_patient1_idx (patient_id ASC), INDEX fk_immunization_store_patient_transaction_immunization__idx1(immunization_store_drug_id ASC), CONSTRAINT fk_immunization_store_patient_transaction_person1 FOREIGN KEY (created_by) REFERENCES person (person_id) ON DELETE NO ACTION  ON UPDATE NO ACTION, CONSTRAINT fk_immunization_store_patient_transaction_patient1 FOREIGN KEY (patient_id) REFERENCES patient (patient_id) ON DELETE NO ACTION ON UPDATE NO ACTION, CONSTRAINT fk_immunization_store_patient_transaction_immunization_st2  FOREIGN KEY (immunization_store_drug_id) REFERENCES immunization_store_drug (id) ON DELETE NO ACTION ON UPDATE NO ACTION);
+        </sql>
+	</diff>
 
+    <diff>
+        <version>1.2.6</version>
+        <author>Dennis Henry</author>
+        <date>Oct 13th 2016</date>
+        <description>
+            add vvm stage to immunization_store_patient_transaction table
+        </description>
+        <sql>
+            ALTER TABLE immunization_store_patient_transaction ADD vvm_stage INT(11) NOT NULL DEFAULT 0 AFTER immunization_store_drug_id;
+        </sql>
+    </diff>
+
+    <diff>
+        <version>1.2.7</version>
+        <author>Dennis Henry</author>
+        <date>Oct 14th 2016</date>
+        <description>
+            add immunization_state to immunization_store_patient_transaction table
+        </description>
+        <sql>
+            ALTER TABLE immunization_store_patient_transaction ADD immunization_state INT(11) NOT NULL DEFAULT 0 AFTER patient_id;
+			ALTER TABLE immunization_store_patient_transaction ADD INDEX fk_immunization_store_patient_transaction_state1_idx (immunization_state ASC);
+			ALTER TABLE immunization_store_patient_transaction ADD CONSTRAINT fk_immunization_store_patient_transaction_state1 FOREIGN KEY (immunization_state) REFERENCES patient_state (patient_state_id) ON DELETE NO ACTION  ON UPDATE NO ACTION;
+        </sql>
+    </diff>
 </sqldiff>

@@ -123,17 +123,33 @@
             selector: '#vaccinations-dialog',
             actions: {
                 confirm: function () {
-                    if (jq('#vaccine-state').val() == 0) {
+                    var idnt 		= jq('#vaccine-idnt').val();
+                    var prog 		= jq('#vaccine-prog').val();
+                    var name 		= jq('#vaccine-name').val();
+                    var state 		= jq('#vaccine-state').val();
+                    var batchNo 	= jq('#vaccine-batch').val();
+                    var vvmStage 	= jq('#vaccine-stage').val();
+                    var quantity 	= jq('#vaccine-quantity').val();
+					
+                    if (state == 0) {
                         jq().toastmessage('showErrorToast', "Kindly select a vaccine state!");
                         return false;
                     }
-
-                    var idnt = jq('#vaccine-idnt').val();
-                    var prog = jq('#vaccine-prog').val();
-                    var name = jq('#vaccine-name').val();
-                    var state = jq('#vaccine-state').val();
-                    var batchNo = jq('#vaccine-batch').val();
-                    var quantity = jq('#vaccine-quantity').val();
+					
+					if (batchNo == 0) {
+                        jq().toastmessage('showErrorToast', "Kindly select a vaccine Batch!");
+                        return false;
+                    }
+					
+					if (vvmStage == 0) {
+                        jq().toastmessage('showErrorToast', "Kindly select a vaccine VVM Stage!");
+                        return false;
+                    }
+					
+					if (!jq.isNumeric(quantity)) {
+                        jq().toastmessage('showErrorToast', "Invalid Vaccine Quantity!");
+                        return false;
+                    }
 
                     var stateData = {
                         patientProgramId: prog,
@@ -141,31 +157,33 @@
                         programWorkflowStateId: jq('#vaccine-state').val(),
                         onDateDMY: jq('#vaccine-date-field').val(),
                         batchNo: batchNo,
+                        vvmStage: vvmStage,
                         quantity: quantity,
                         patientId:${patient?.patientId}
                     }
 
                     jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-                            .success(function (data) {
-                                jq().toastmessage('showNoticeToast', data.message);
+						.success(function (data) {
+							jq().toastmessage('showNoticeToast', data.message);
 
-                                showEditWorkflowPopup(name, prog, idnt);
+							showEditWorkflowPopup(name, prog, idnt);
 
-                                jq('#state_name_' + idnt).text(jq('#vaccine-state option:selected').text());
-                                jq('#state_date_' + idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
+							jq('#state_name_' + idnt).text(jq('#vaccine-state option:selected').text());
+							jq('#state_date_' + idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
 
-                                jq('#main-show-' + idnt).show();
-                                jq('#no-show-' + idnt).hide();
+							jq('#main-show-' + idnt).show();
+							jq('#no-show-' + idnt).hide();
 
-                                jq('#immunizations-set').val('SET');
+							jq('#immunizations-set').val('SET');
 
-                                vaccinationDialog.close();
-                                return false;
+							vaccinationDialog.close();
+							return false;
 
-                            }).error(function (xhr, status, err) {
-                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                                return false;
-                            });
+						}).error(function (xhr, status, err) {
+							jq().toastmessage('showErrorToast', "AJAX error!" + err);
+							return false;
+						}
+					);
 
                 },
                 cancel: function () {
@@ -179,6 +197,7 @@
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
+			
             jq('#vaccine-idnt').val(idnt);
             jq('#vaccine-name').val(name);
             jq('#vaccine-prog').val(prog);
@@ -214,9 +233,6 @@
 
         var patientProfile = JSON.parse('${patientProfile}');
         var patientHistoricalProfile = JSON.parse('${patientHistoricalProfile}');
-
-        console.log(patientProfile);
-        console.log(patientHistoricalProfile);
 
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -302,7 +318,6 @@
 
                     jq.getJSON('${ ui.actionLink("patientdashboardapp", "ClinicalNotes", "getDrugUnit") }').success(function (data) {
                         var durgunits = jq.map(data, function (drugUnit) {
-                            console.log(drugUnit);
                             jq('#drugUnitsSelect').append(jq('<option>').val(drugUnit.id).text(drugUnit.label));
                         });
                     });
@@ -714,7 +729,6 @@
                     } else {
                         for (index in data) {
                             var item = data[index];
-                            console.log(item);
                             var row = '<tr>';
                             row += '<td>' + (parseInt(index) + 1) + '</td>';
                             row += '<td>' + item.stateName + '</td>';
@@ -837,24 +851,22 @@
             drgName: drgName
         }
         jq.getJSON('${ ui.actionLink("mchapp", "childWelfareExamination", "getBatchesForSelectedDrug") }', requestData)
-                .success(function (data) {
-                    if (data.status === "success") {
-                        jq().toastmessage('showSuccessToast', data.message);
-                    } else if (data.status === "fail") {
-                        jq().toastmessage('showErrorToast', data.message);
-                    }
+			.success(function (data) {
+				var options = jq("#vaccine-batch");
+				options.empty();
+				options.append(jq("<option />").val("0").text("Select Batch"));
+				
+				if (data.status === "fail") {
+					jq().toastmessage('showErrorToast', data.message);
+					return false;
+				}
 
-                    var options = jq("#vaccine-batch");
-                    jq(options).empty();
-                    options.append(jq("<option />").val("0").text("Select Batch"));
-                    jq.each(data.drugs, function (i, item) {
-                        console.log(item);
-
-                        options.append(jq("<option />").val(item.batchNo).text(item.batchNo));
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
+				jq.each(data.drugs, function (i, item) {
+					options.append(jq("<option />").val(item.id).text(item.batchNo));
+				});
+			}).error(function (xhr, status, err) {
+				jq().toastmessage('showErrorToast', "AJAX error!" + err);
+			}
         );
 
     }
@@ -1876,6 +1888,18 @@ table[id*='workflowTable_'] th:nth-child(4) {
                     <option value="0">Select a Batch</option>
                 </select>
             </li>
+			
+			<li>
+                <label for="vaccine-stage">VVM Stage:</label>
+                <select id="vaccine-stage">
+                    <option value="0">Select Stage</option>
+                    <option value="1">Stage 01</option>
+                    <option value="2">Stage 02</option>
+                    <option value="3">Stage 03</option>
+                    <option value="4">Stage 04</option>
+                </select>
+            </li>
+			
             <li>
                 <label for="vaccine-quantity">Quantity:</label>
                 <input type="text" id="vaccine-quantity" name="vaccine-quantity" value="1"/>

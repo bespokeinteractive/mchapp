@@ -121,6 +121,11 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     }
 
     @Override
+    public ImmunizationStorePatientTransaction saveImmunizationStorePatientTransaction(ImmunizationStorePatientTransaction patientTransaction) {
+        return dao.saveImmunizationStorePatientTransaction(patientTransaction);
+    }
+
+    @Override
     public List<ImmunizationEquipment> getAllImmunizationEquipments() {
         return dao.getAllImmunizationEquipments();
     }

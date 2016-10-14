@@ -3,6 +3,7 @@ package org.openmrs.module.mchapp.fragment.controller;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
+import org.openmrs.module.mchapp.model.ImmunizationStorePatientTransaction;
 import org.openmrs.module.mchapp.model.TransactionType;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
