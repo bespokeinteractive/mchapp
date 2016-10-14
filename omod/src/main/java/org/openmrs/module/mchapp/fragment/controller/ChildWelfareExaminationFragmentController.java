@@ -49,8 +49,6 @@ public class ChildWelfareExaminationFragmentController {
         model.addAttribute("internalReferrals", SimpleObject.fromCollection(Referral.getInternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
-
-
         model.addAttribute("queueId", queueId);
     }
 
@@ -61,8 +59,7 @@ public class ChildWelfareExaminationFragmentController {
             HttpServletRequest request) {
 
 
-        OpdPatientQueue patientQueue = Context.getService(
-                PatientQueueService.class).getOpdPatientQueueById(queueId);
+        OpdPatientQueue patientQueue = Context.getService(PatientQueueService.class).getOpdPatientQueueById(queueId);
         String location = "CWC Exam Room";
         if (patientQueue != null) {
             location = patientQueue.getOpdConceptName();
@@ -98,11 +95,7 @@ public class ChildWelfareExaminationFragmentController {
             return SimpleObject.create("status", "error", "message",
                 e.getMessage());
         }
-
-
     }
-
-
 
     public static SimpleObject getBatchesForSelectedDrug(UiUtils uiUtils,
                                                          @RequestParam("drgName") String drgName) {
@@ -113,10 +106,10 @@ public class ChildWelfareExaminationFragmentController {
         }
 
         if (storeDrugs!=null && storeDrugs.size() > 0) {
-            List<SimpleObject> simpleObjects = SimpleObject.fromCollection(storeDrugs, uiUtils, "batchNo", "currentQuantity", "expiryDate");
-            return SimpleObject.create("status","success","message","Found Drugs","drugs",simpleObjects);
+            List<SimpleObject> simpleObjects = SimpleObject.fromCollection(storeDrugs, uiUtils, "id", "batchNo", "currentQuantity", "expiryDate");
+            return SimpleObject.create("status", "success", "message", "Found Drugs", "drugs",simpleObjects);
         }else{
-            return SimpleObject.create("status","fail","message","No Batch for this Drug");
+            return SimpleObject.create("status", "fail", "message", "No Batch for this Drug");
         }
     }
 }

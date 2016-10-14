@@ -15,10 +15,7 @@ import org.openmrs.module.mchapp.api.PatientStateItem;
 import org.openmrs.module.mchapp.api.model.ClinicalForm;
 import org.openmrs.module.mchapp.api.parsers.QueueLogs;
 import org.openmrs.module.mchapp.api.parsers.SendForExaminationParser;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrug;
-import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
-import org.openmrs.module.mchapp.model.ImmunizationStoreTransactionType;
-import org.openmrs.module.mchapp.model.TransactionType;
+import org.openmrs.module.mchapp.model.*;
 import org.openmrs.module.patientdashboardapp.model.Referral;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -203,14 +200,16 @@ public class CwcTriageFragmentController {
         return SimpleObject.fromCollection(ret, uiUtils, "id", "name", "description");
     }
 
-    public SimpleObject changeToState(HttpServletRequest request, UiUtils uiUtils) {
+    public SimpleObject changeToState(HttpServletRequest request,
+                                      UiUtils ui) {
         Integer patientProgramId = Integer.parseInt(request.getParameter("patientProgramId"));
         Integer programWorkflowId = Integer.parseInt(request.getParameter("programWorkflowId"));
         Integer programWorkflowStateId = Integer.parseInt(request.getParameter("programWorkflowStateId"));
+
         Integer patientId = Integer.parseInt(request.getParameter("patientId"));
-        String vvmStage = request.getParameter("vvmStage");
-        String batchNo = request.getParameter("batchNo");
-        String quantity = request.getParameter("quantity");
+        Integer vvmStage = Integer.parseInt(request.getParameter("vvmStage"));
+        Integer quantity = Integer.parseInt(request.getParameter("quantity"));
+        Integer batchNo = Integer.parseInt(request.getParameter("batchNo"));
 
         Patient patient = Context.getPatientService().getPatient(patientId);
 
@@ -219,66 +218,42 @@ public class CwcTriageFragmentController {
         PatientProgram pp = s.getPatientProgram(patientProgramId);
         ProgramWorkflowState st = pp.getProgram().getWorkflow(programWorkflowId).getState(programWorkflowStateId);
         Date onDate = null;
+
         if (onDateDMY != null && onDateDMY.length() > 0) {
             try {
                 DateFormat bigEndianDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 onDate = bigEndianDateFormat.parse(onDateDMY);
                 pp.transitionToState(st, onDate);
-                s.savePatientProgram(pp);
+                pp = s.savePatientProgram(pp);
 
-                updateImmunizationTransactionDetails(batchNo,quantity,vvmStage,patient);
+                for (PatientState state : pp.getCurrentStates()){
+                    updateImmunizationStorePatientTransaction(patient, batchNo, vvmStage, quantity, state);
+                }
             } catch (ParseException e) {
                 return SimpleObject.create("status", "error", "message", e.getMessage());
             } catch (Exception e) {
                 return SimpleObject.create("status", "error", "message", e.getMessage());
             }
         }
-        return SimpleObject.create("status", "success", "message", "State changed Successfully");
 
+        return SimpleObject.create("status", "success", "message", "State changed Successfully");
     }
 
-    private void updateImmunizationTransactionDetails(String batchNo, String quantity,String vvmStage,Patient patient) throws Exception {
+    private void updateImmunizationStorePatientTransaction(Patient patient, Integer drugBatch, Integer vvmStage, Integer quantity, PatientState state) throws Exception{
+        ImmunizationStorePatientTransaction patientTransaction = new ImmunizationStorePatientTransaction();
+        ImmunizationStoreDrug storeDrug = immunizationService.getImmunizationStoreDrugById(drugBatch);
+
         Person person = Context.getAuthenticatedUser().getPerson();
-        ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
 
-        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(batchNo);
-        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
+        patientTransaction.setPatient(patient);
+        patientTransaction.setState(state);
+        patientTransaction.setStoreDrug(storeDrug);
+        patientTransaction.setVvmStage(vvmStage);
+        patientTransaction.setQuantity(quantity);
+        patientTransaction.setCreatedOn(new Date());
+        patientTransaction.setCreatedBy(person);
+        patientTransaction.setRemark("N/A");
 
-        int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
-        for(ImmunizationStoreDrug drug : drugs) {
-            cummulativeQuantity += drug.getCurrentQuantity();
-        }
-
-        transactionDetail.setCreatedBy(person);
-        transactionDetail.setCreatedOn(new Date());
-        int intQuantity = Integer.parseInt(quantity);
-        transactionDetail.setQuantity(intQuantity);
-
-        transactionDetail.setOpeningBalance(cummulativeQuantity);
-        transactionDetail.setClosingBalance(cummulativeQuantity - intQuantity);
-
-//        TODO need rework
-        if (patient != null) {
-            transactionDetail.setPatient(patient);
-        }
-
-        if (drugBatch != null) {
-//            drugBatch exists with the given batch
-            int currentQuantity = drugBatch.getCurrentQuantity();
-            int i = currentQuantity - intQuantity;
-            drugBatch.setCurrentQuantity(i);
-            transactionDetail.setStoreDrug(drugBatch);
-        } else {
-//            no current drugBatch with this batch ae the drugBatch, then assign
-            throw new Exception("No Drug Found for selected Batch");
-        }
-        //process the batch
-        if(StringUtils.isNotEmpty(vvmStage)){
-            transactionDetail.setVvmStage(Integer.parseInt(vvmStage));
-        }
-        ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.ISSUES.getValue());
-        transactionDetail.setTransactionType(transactionType);
-        ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
-
+        patientTransaction = immunizationService.saveImmunizationStorePatientTransaction(patientTransaction);
     }
 }

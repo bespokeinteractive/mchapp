@@ -141,31 +141,33 @@
                         programWorkflowStateId: jq('#vaccine-state').val(),
                         onDateDMY: jq('#vaccine-date-field').val(),
                         batchNo: batchNo,
+                        vvmStage: 1,
                         quantity: quantity,
                         patientId:${patient?.patientId}
                     }
 
                     jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
-                            .success(function (data) {
-                                jq().toastmessage('showNoticeToast', data.message);
+						.success(function (data) {
+							jq().toastmessage('showNoticeToast', data.message);
 
-                                showEditWorkflowPopup(name, prog, idnt);
+							showEditWorkflowPopup(name, prog, idnt);
 
-                                jq('#state_name_' + idnt).text(jq('#vaccine-state option:selected').text());
-                                jq('#state_date_' + idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
+							jq('#state_name_' + idnt).text(jq('#vaccine-state option:selected').text());
+							jq('#state_date_' + idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
 
-                                jq('#main-show-' + idnt).show();
-                                jq('#no-show-' + idnt).hide();
+							jq('#main-show-' + idnt).show();
+							jq('#no-show-' + idnt).hide();
 
-                                jq('#immunizations-set').val('SET');
+							jq('#immunizations-set').val('SET');
 
-                                vaccinationDialog.close();
-                                return false;
+							vaccinationDialog.close();
+							return false;
 
-                            }).error(function (xhr, status, err) {
-                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                                return false;
-                            });
+						}).error(function (xhr, status, err) {
+							jq().toastmessage('showErrorToast', "AJAX error!" + err);
+							return false;
+						}
+					);
 
                 },
                 cancel: function () {
@@ -179,6 +181,7 @@
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
+			
             jq('#vaccine-idnt').val(idnt);
             jq('#vaccine-name').val(name);
             jq('#vaccine-prog').val(prog);
@@ -837,24 +840,24 @@
             drgName: drgName
         }
         jq.getJSON('${ ui.actionLink("mchapp", "childWelfareExamination", "getBatchesForSelectedDrug") }', requestData)
-                .success(function (data) {
-                    if (data.status === "success") {
-                        jq().toastmessage('showSuccessToast', data.message);
-                    } else if (data.status === "fail") {
-                        jq().toastmessage('showErrorToast', data.message);
-                    }
+			.success(function (data) {
+				var options = jq("#vaccine-batch");
+				options.empty();
+				options.append(jq("<option />").val("0").text("Select Batch"));
+				
+				if (data.status === "fail") {
+					jq().toastmessage('showErrorToast', data.message);
+					return false;
+				}
 
-                    var options = jq("#vaccine-batch");
-                    jq(options).empty();
-                    options.append(jq("<option />").val("0").text("Select Batch"));
-                    jq.each(data.drugs, function (i, item) {
-                        console.log(item);
-
-                        options.append(jq("<option />").val(item.batchNo).text(item.batchNo));
-                    });
-                }).error(function (xhr, status, err) {
-                    jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                }
+				jq.each(data.drugs, function (i, item) {
+					console.log(data.drugs);
+					
+					options.append(jq("<option />").val(item.id).text(item.batchNo));
+				});
+			}).error(function (xhr, status, err) {
+				jq().toastmessage('showErrorToast', "AJAX error!" + err);
+			}
         );
 
     }

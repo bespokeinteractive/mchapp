@@ -162,6 +162,11 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         return (ImmunizationStoreDrugTransactionDetail) getSession().merge(transactionDetail);
     }
 
+    @Override
+    public ImmunizationStorePatientTransaction saveImmunizationStorePatientTransaction(ImmunizationStorePatientTransaction patientTransaction) {
+        return (ImmunizationStorePatientTransaction) getSession().merge(patientTransaction);
+    }
+
 
     /*        ImmunizationEquipment     */
     @Override
