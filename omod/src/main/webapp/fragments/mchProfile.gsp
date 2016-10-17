@@ -10,7 +10,7 @@
 		<div id="profile-items">
 			<div class="thirty-three-perc">
 				<small><i class="icon-calendar small"></i> Enrolled:</small> 
-				${ui.formatDatePretty(enrollmentDate)}	
+				{{=moment(enrollmentDate).format('DD/MM/YYYY')}}
 			</div>
 			{{ _.each(details, function(profileDetail) { }}
 				{{if (isValidDate(profileDetail.value)) { }}
@@ -39,7 +39,7 @@
 			<div class="thirty-three-perc">
 				<small><i class="icon-calendar small"></i> Enrolled:</small>
 				<span>
-					${ui.formatDatePretty(enrollmentDate)}	
+					{{=moment(enrollmentDate).format('DD/MM/YYYY')}}
 				</span>
 			</div>
 			
@@ -83,7 +83,7 @@
 			<div class="thirty-three-perc">
 				<small><i class="icon-calendar small"></i> Enrolled:</small>
 				<span>
-					${ui.formatDatePretty(enrollmentDate)}	
+					{{=moment(enrollmentDate).format('DD/MM/YYYY')}}
 				</span>
 			</div>
 			

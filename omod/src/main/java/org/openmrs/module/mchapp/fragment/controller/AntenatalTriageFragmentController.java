@@ -102,9 +102,11 @@ public class AntenatalTriageFragmentController {
     }
 
     public SimpleObject saveAntenatalTriageInformation(@RequestParam("patientId") Patient patient,
-            @RequestParam("queueId") Integer queueId, @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
-            @RequestParam(value = "isEdit", required = false) Boolean isEdit, UiSessionContext session,
-            HttpServletRequest request) {
+                                                       @RequestParam("queueId") Integer queueId,
+                                                       @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
+                                                       @RequestParam(value = "isEdit", required = false) Boolean isEdit,
+                                                       UiSessionContext session,
+                                                       HttpServletRequest request) {
         SimpleObject saveStatus = null;
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);

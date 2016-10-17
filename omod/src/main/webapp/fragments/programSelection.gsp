@@ -1,5 +1,5 @@
 <%
-	ui.includeJavascript("uicommons", "moment.js")
+	ui.includeJavascript("billingui", "moment.js")
 %>
 
 <script>
@@ -32,7 +32,7 @@
 		
 		jq('.confirm').click(function(){
 			if (!jq("input[name='enrollIn']:checked").val()) {
-				jq().toastmessage('showErrorToast', 'No MCH programme has been selected');
+				jq().toastmessage('showErrorToast', 'No Programme has been selected');
 			}
 
 			var programme = jq("input[name='enrollIn']:checked").val();	
@@ -44,12 +44,22 @@
 			else if (age > 5 && gender =='M'){
 				jq().toastmessage('showErrorToast', 'This programme is only valid for Women or Children upto 5yrs');
 				return false;
-			}
+			}			
 			
-			handleEnrollInProgram(
-				"${ui.actionLink('mchapp', 'programSelection', '" + programme + "')}",
-				successUrl
-			);			
+			if ('${source?source:""}' == 'clinic' && programme != 'enrollInCwc'){
+				if (programme == 'enrollInAnc'){
+					jq('#ancDateEnrolled').val(jq('#date-enrolled-field').val());
+					enrollAncDialog.show();
+				} else {
+					jq('#pncDateEnrolled').val(jq('#date-enrolled-field').val());
+					enrollPncDialog.show();
+				}
+			}
+			else{
+				handleEnrollInProgram("${ui.actionLink('mchapp', 'programSelection', '" + programme + "')}",
+					successUrl
+				);
+			}
 		});
 		
 		var handleEnrollInProgram = function (postUrl, successUrl) {
@@ -57,7 +67,7 @@
 				postUrl,
 				{
 					patientId: ${patient.id},
-					dateEnrolled: moment(jq("#date-enrolled-field").val(), "YYYY-MM-DD").format("DD/MM/YYYY"),
+					dateEnrolled: jq("#date-enrolled-field").val(),
 				},
 				null,
 				'json'
@@ -75,11 +85,112 @@
 				//display error message
 			});
 		};
+		
+		var enrollAncDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#enrollAncDialog',
+            actions: {
+                confirm: function () {
+					var requestData = {
+						parity		: jq('#parity').val(),
+						gravida		: jq('#gravida').val(),
+						lmp			: jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field').val(),
+						edd			: jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field').val(),
+						gestation	: jq('#gestation').val(),
+						visitCount	: jq('#visitNumber').val()
+					};
+					
+					if (requestData.parity == '' || requestData.gravida == '' || requestData.lmp == '' || requestData.edd == '' || requestData.gestation == '' || requestData.visitCount == ''){
+						jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled');
+						return false;
+					}
+					
+					var data = jq("form#enrollAncDialog").serialize();				
+					
+					jq.post('${ui.actionLink("mchapp", "programSelection", "enrollInAnc")}',
+						data,
+						null,
+						'json'
+					).done(function(data){
+						if (data.status === "success") {
+							jq().toastmessage('showSuccessToast', data.message);
+							window.location = successUrl;
+						} else if (data.status === "error") {
+							jq().toastmessage('showErrorToast', data.message);
+						}
+					}).fail(function(){
+						//display error message
+					});
+					
+                    
+					
+					
+					
+                    enrollAncDialog.close();
+                },
+                cancel: function () {
+                    enrollAncDialog.close();
+                }
+            }
+        });
+		
+		var enrollPncDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#enrollPncDialog',
+            actions: {
+                confirm: function () {
+					var requestData = {
+						deliveryMode: jq('#deliveryMode').val(),
+						deliveryDate: jq('#5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field').val(),
+					};
+					
+					if (requestData.deliveryMode == '' || requestData.deliveryDate == ''){
+						jq().toastmessage('showErrorToast', 'Ensure that Mode of Delivery and Delivery Date have been filled properly');
+						return false;
+					}
+					
+					var data = jq("form#enrollPncDialog").serialize();				
+					
+					jq.post('${ui.actionLink("mchapp", "programSelection", "enrollInPnc")}',
+						data,
+						null,
+						'json'
+					).done(function(data){
+						if (data.status === "success") {
+							jq().toastmessage('showSuccessToast', data.message);
+							window.location = successUrl;
+						} else if (data.status === "error") {
+							jq().toastmessage('showErrorToast', data.message);
+						}
+					}).fail(function(){
+						//display error message
+					});
+					
+                    
+					
+					
+					
+                    enrollAncDialog.close();
+                },
+                cancel: function () {
+                    enrollAncDialog.close();
+                }
+            }
+        });
 	});
 </script>
 
 <style>
-	input[type="text"], input[type="password"], select {
+	input[type="text"], 
+	input[type="number"], 
+	input[type="password"], 
+	select {
 		border: 1px solid #aaa !important;
 		border-radius: 2px !important;
 		box-shadow: none !important;
@@ -297,3 +408,100 @@
 <div class="container">	
 	<br style="clear: both">
 </div>
+
+<form method="post" id="enrollAncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>ANTENATAL DETAILS</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="parity">Parity</label>
+				<input type="text" name="concept.1053AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="parity" />
+				<span class="append-to-value">Pregnancies</span>
+				
+				<input type="hidden" name="patientId" value="${patient.id}" />
+				<input id="ancDateEnrolled" type="hidden" name="dateEnrolled" value="" />
+			</li>
+
+			<li>
+				<label for="gravida">Gravida</label>
+				<input type="text" name="concept.5624AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="gravida" />
+				<span class="append-to-value">Pregnancies</span>
+			</li>
+
+			<li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'L.M.P', useTime: false, defaultToday: false, endDate: new Date(), class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			</li>
+
+			<li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'E.D.D', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+			</li>
+
+			<li>
+				<label for="gestation">Gestation</label>
+				<input type="text" id="gestation">
+				<span class="append-to-value">Weeks</span>
+			</li>
+			
+			<li>
+				<label for="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Visit #</label>
+				<input id="visitNumber" name="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="1" type="number">
+			</li>
+			
+            <span class="button confirm" id="processProgramExit" style="float: right; margin-right: 35px;">
+				<i class="icon-save small"></i>
+				Save
+			</span>
+			
+            <span class="button cancel">Cancel</span>
+        </ul>
+    </div>
+</form>
+
+<form method="post" id="enrollPncDialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>POST-NATAL DETAILS</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5599AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date of Delivery', useTime: false, defaultToday: false, endDate: new Date()])}
+				
+				<input type="hidden" name="patientId" value="${patient.id}" />
+				<input id="pncDateEnrolled" type="hidden" name="dateEnrolled" value="" />
+			</li>
+		
+			<li>
+				<label for="deliveryPlace">Place of Delivery</label>
+				<input id="deliveryPlace" type="text" name="concept.f131507e-6acd-4bbe-afb5-4e39503e5a00" >
+			</li>
+			
+			<li>
+				<label for="deliveryMode">Mode of Delivery</label>
+				<select id="deliveryMode" name="concept.a875ae0b-893c-47f8-9ebe-f721c8d0b130">
+					<option value="">Select Option</option>					
+					<% deliveryMode.each { modes -> %>
+ 						<option value="${modes.uuid}">${modes.label}</option>
+ 					<% } %>
+				</select>
+			</li>
+			
+			<li>
+				<label for="babyState">State of Baby</label>
+				<input id="babyState" type="text" name="concept.5ddb1a3e-0e88-426c-939a-abf4776b024a" >
+			</li>
+			
+            <span class="button confirm" id="processProgramExit" style="float: right; margin-right: 35px;">
+				<i class="icon-save small"></i>
+				Save
+			</span>
+			
+            <span class="button cancel">Cancel</span>
+        </ul>
+    </div>
+</form>

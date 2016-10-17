@@ -1,6 +1,5 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "Mother Child Health"])
-    ui.includeJavascript("billingui", "moment.js")
 %>
 <script type="text/javascript">
     var successUrl = "${ui.pageLink('mchapp','main',[patientId: patient, queueId: queueId])}";
@@ -20,6 +19,20 @@
                 || str.indexOf(dt.format('DD MMMM YY')) >= 0;
         return result;
     }
+	
+	function calculateExpectedDeliveryDate() {
+		var lastMenstrualPeriod = jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field", document.forms[0]).val();
+		var expectedDate = moment(lastMenstrualPeriod, "YYYY-MM-DD").add(280, "days");
+		jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field', document.forms[0]).val(expectedDate.format('YYYY-MM-DD'));
+		jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-display', document.forms[0]).val(expectedDate.format('DD MMM YYYY'));
+	}
+
+	function calculateGestationInWeeks(){
+		var lastMenstrualPeriod = moment(jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field", document.forms[0]).val(), "YYYY-MM-DD");
+		var expectedDate = moment();
+		var gestationInWeeks = Math.round(moment.duration(expectedDate.diff(lastMenstrualPeriod)).asWeeks());
+		jq('#gestation', document.forms[0]).val(gestationInWeeks);
+	}
 	
 	jq(function() {
 		var age;
@@ -50,6 +63,25 @@
 		}
 		
 		jq('#agename').text(age);
+		
+		jq("form").on("change", "#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", function(e){
+            calculateExpectedDeliveryDate();
+            calculateGestationInWeeks();
+        });
+
+        jq("form").on("change", "#gestation", function(e) {
+            var gestationPeriod = jq(this).val();			
+			if (!jq.isNumeric(gestationPeriod)){
+				alert('Invalid');
+				return false;
+			}
+			
+            var lastMenstrualPeriod = moment().add(-gestationPeriod, "weeks");
+			
+            jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field', document.forms[0]).val(lastMenstrualPeriod.format('YYYY-MM-DD'));
+            jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-display', document.forms[0]).val(lastMenstrualPeriod.format('DD MMM YYYY'));
+            jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").change();
+        });
 	});
 </script>
 
@@ -178,6 +210,7 @@
 
 	.add-on {
 		color: #f26522;
+		left: -38px;
 	}
 
 	.append-to-value {
@@ -232,14 +265,35 @@
 		box-shadow: 0 0 1px 0 #ccc !important;
 	}
 
-	form input[type="checkbox"], .form input[type="checkbox"] {
+	form input[type="checkbox"], 
+	.form input[type="checkbox"] {
 		margin-top: 4px;
 		cursor: pointer;
 	}
 	#modal-overlay {
 		background: #000 none repeat scroll 0 0;
 		opacity: 0.4 !important;
+	}	
+	.dialog-content label {
+		display: inline-block;
+		width: 130px !important;
 	}
+	.dialog-content select,
+	.dialog-content input[type="text"],
+	.dialog-content input[type="number"] {
+		display: inline-block;
+		margin: 0 !important;
+		min-width: 30% !important;
+		width: 210px !important;
+	}
+	.dialog-content .append-to-value {
+		margin-top: 7px;
+		padding-right: 44px;
+	}
+	.dialog select option {
+		font-size: 1em;
+	}
+	
 </style>
 
 
@@ -304,4 +358,4 @@
     </div>
 </div>
 
-${ui.includeFragment("mchapp", "programSelection", [patientId: patientId, queueId: queueId])}
+${ui.includeFragment("mchapp", "programSelection", [patientId: patientId, queueId: queueId, source: 'clinic'])}
