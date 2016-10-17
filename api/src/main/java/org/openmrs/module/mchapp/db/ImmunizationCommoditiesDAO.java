@@ -73,8 +73,6 @@ public interface ImmunizationCommoditiesDAO {
 
     List<ImmunizationEquipment> listImmunizationEquipment(String equipmentName, String equipmentType);
 
-
-
     List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug);
 
     ImmunizationStockout getImmunizationStockoutById(int id);

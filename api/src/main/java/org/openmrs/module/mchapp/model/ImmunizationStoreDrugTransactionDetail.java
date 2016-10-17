@@ -18,6 +18,7 @@ public class ImmunizationStoreDrugTransactionDetail implements Serializable {
     private Patient patient;
     private ImmunizationStoreTransactionType transactionType;
     private ImmunizationStoreDrug storeDrug;
+    private String transactionAccount;
     private String remark;
     private int quantity;
     private int openingBalance;
@@ -48,6 +49,10 @@ public class ImmunizationStoreDrugTransactionDetail implements Serializable {
     public void setTransactionType(ImmunizationStoreTransactionType transactionType) {
         this.transactionType = transactionType;
     }
+
+    public String getTransactionAccount() { return transactionAccount; }
+
+    public void setTransactionAccount(String transactionAccount) { this.transactionAccount = transactionAccount; }
 
     public ImmunizationStoreDrug getStoreDrug() {
         return storeDrug;

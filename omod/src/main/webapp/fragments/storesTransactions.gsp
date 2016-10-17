@@ -342,7 +342,7 @@
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
 
-        <h3>Add/Edit Issues</h3>
+        <h3>Add Issues</h3>
     </div>
 
     <div class="dialog-content">
@@ -379,6 +379,15 @@
                 <li>
                     <label>Expiry Date:</label>
                     <input data-bind="value: \$root.drugObject" readonly="">
+                </li>
+				
+				<li>
+                    <label>Issue To:</label>
+                    <select id="issueAccount">
+                        <option value="">Select Destination</option>
+                        <option>MCH Clinic</option>
+                        <option>Community Health Worker</option>
+                    </select>
                 </li>
 
                 <li>
@@ -426,8 +435,7 @@
 
                 <li>
                     <label>Batch No.</label>
-                    <select id="rtnsBatchNo"
-                            data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"></select>
+                    <select id="rtnsBatchNo" data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"></select>
                 </li>
 
                 <li>

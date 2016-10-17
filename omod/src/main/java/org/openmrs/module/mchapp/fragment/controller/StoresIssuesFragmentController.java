@@ -50,11 +50,12 @@ public class StoresIssuesFragmentController {
     }
 
     public SimpleObject saveImmunizationIssues(UiUtils uiUtils, @RequestParam("issueName") String issueName,
-                                              @RequestParam("issueQuantity") Integer issueQuantity,
-                                              @RequestParam("issueStage") Integer issueStage,
-                                              @RequestParam("issueBatchNo") String issueBatchNo,
-                                              @RequestParam(value = "patientId", required = false) Patient patient,
-                                              @RequestParam(value = "issueRemarks", required = false) String issueRemarks) {
+                                               @RequestParam("issueQuantity") Integer issueQuantity,
+                                               @RequestParam("issueStage") Integer issueStage,
+                                               @RequestParam("issueBatchNo") String issueBatchNo,
+                                               @RequestParam(value = "patientId", required = false) Patient patient,
+                                               @RequestParam(value = "issueAccount", required = false) String issueAccount,
+                                               @RequestParam(value = "issueRemarks", required = false) String issueRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
 
@@ -92,6 +93,8 @@ public class StoresIssuesFragmentController {
         //process the batch
         transactionDetail.setVvmStage(issueStage);
         transactionDetail.setRemark(issueRemarks);
+        transactionDetail.setTransactionAccount(issueAccount);
+
         ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.ISSUES.getValue());
         transactionDetail.setTransactionType(transactionType);
         ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);

@@ -230,14 +230,18 @@
                         issueQuantity: jq("#issueQuantity").val(),
                         issueStage: jq("#issueStage").val(),
                         issueBatchNo: jq("#issueBatchNo option:selected").text(),
+                        issueAccount: jq("#issueAccount").val(),
                         issueRemarks: jq("#issueRemarks").val(),
                         patientId: null
                     }
                     if (jq.trim(issueData.issueName) == "" || jq.trim(issueData.issueQuantity) == "" ||
-                            jq.trim(issueData.issueStage) == "" || jq.trim(issueData.issueBatchNo) == "") {
+                            jq.trim(issueData.issueStage) == "" || jq.trim(issueData.issueBatchNo) == "" || jq.trim(issueData.issueAccount) == "") {
                         jq().toastmessage('showErrorToast', "Check that the required fields have been filled");
                         return false;
                     }
+					
+					console.log(issueData.issueAccount);
+										
                     jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "saveImmunizationIssues") }', issueData)
                             .success(function (data) {
                                 if (data.status === "success") {
