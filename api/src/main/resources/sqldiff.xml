@@ -166,4 +166,19 @@
 			ALTER TABLE immunization_store_patient_transaction ADD CONSTRAINT fk_immunization_store_patient_transaction_state1 FOREIGN KEY (immunization_state) REFERENCES patient_state (patient_state_id) ON DELETE NO ACTION  ON UPDATE NO ACTION;
         </sql>
     </diff>
+
+	<diff>
+		<version>1.2.8</version>
+		<author>Dennis Henry</author>
+		<date>Oct 17th 2016</date>
+		<description>
+			add Issue to Account and Return to supplier to the table immunization_store_transaction_type. Alter immunization_store_drug_transaction_detail to include the field transaction_account
+		</description>
+		<sql>
+			INSERT INTO immunization_store_transaction_type(id, transaction_type) VALUES(3, "Issue Returns") ON DUPLICATE KEY UPDATE transaction_type="Issue Returns";
+			INSERT INTO immunization_store_transaction_type(id, transaction_type) VALUES(4, "Issue To Account") ON DUPLICATE KEY UPDATE transaction_type="Issue To Account";
+			INSERT INTO immunization_store_transaction_type(id, transaction_type) VALUES(5, "Return To Supplier") ON DUPLICATE KEY UPDATE transaction_type="Return To Supplier";
+			ALTER TABLE immunization_store_drug_transaction_detail ADD transaction_account VARCHAR(150) NULL AFTER transaction_type;
+		</sql>
+	</diff>
 </sqldiff>

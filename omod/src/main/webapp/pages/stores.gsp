@@ -693,7 +693,8 @@
 								<li><a data-value="1"><i class="icon-file-text"></i>Add Receipts</a></li>
 								<li><a data-value="2"><i class="icon-reply"></i>Add Issues</a></li>
 								<li><a data-value="3"><i class="icon-retweet"></i>Add Returns</a></li>
-								<li><a data-value="4"><i class="icon-thumbs-down"></i>Return To KEPI</a></li>
+								<li><a data-value="4"><i class="icon-reply"></i>Issue To Account</a></li>
+								<li><a data-value="5"><i class="icon-thumbs-down"></i>Return To Supplier</a></li>
 							</ul>
 						</div>
 					</div>					
