@@ -39,6 +39,8 @@
 				
 				drugBatches.availableDrugs.removeAll();
 				drugBatchesReturns.availableDrugs.removeAll();
+				drugBatchesAccount.availableDrugs.removeAll();
+				drugBatchesSupplier.availableDrugs.removeAll();
 				
 				if (testingFor == 2){
 					jq.each(data.drugs, function (i, item) {
@@ -47,6 +49,14 @@
 				} else if (testingFor == 3){
 					jq.each(data.drugs, function (i, item) {
 						drugBatchesReturns.availableDrugs.push(item);
+					});
+				} else if (testingFor == 4){
+					jq.each(data.drugs, function (i, item) {
+						drugBatchesAccount.availableDrugs.push(item);
+					});
+				} else if (testingFor == 5){
+					jq.each(data.drugs, function (i, item) {
+						drugBatchesSupplier.availableDrugs.push(item);
 					});
 				}
 
@@ -92,33 +102,30 @@
 				var value = jq(this).data('value');
 				
 				if (value == 1){
-					jq('#rcptName').val('');
-					jq('#rcptQuantity').val('');
-					jq('#rcptStage').val(0);
-					jq('#rcptBatchNo').val('');
-					jq('#rcptRemarks').val('');
+					document.getElementById("receiptsForm").reset();					
+					receiptsDialog.show();
 					
 					jq('#closeStockouts input').attr('checked', false);
-					jq('#closeStockouts').hide();
-					
-					receiptsDialog.show();
+					jq('#closeStockouts').hide();					
 				}
 				else if (value == 2){
-					jq('#issueName').val('');
-					jq('#issueQuantity').val('');
-					jq('#issueStage').val(0);
-					jq('#issueRemarks').val('');					
-					
+					document.getElementById("returnsForm").reset();
 					issuesDialog.show();					
 				}
 				else if (value == 3){
-					jq('#rtnsName').val('');
-					jq('#rtnsQuantity').val('');
-					jq('#rtnsStage').val(0);
-					jq('#rtnsRemarks').val('');
-				
+					document.getElementById("returnsForm").reset();				
 					returnsDialog.show();					
 				}
+				else if (value == 4){
+					document.getElementById("issuesAccountForm").reset();
+					issuesAccountDialog.show();					
+				}
+				else if (value == 5){
+					document.getElementById("supplierReturnsForm").reset();				
+					supplierReturnsDialog.show();					
+				}
+				
+				
 				else {
 					jq().toastmessage('showErrorToast', 'This feature is currently un-available in this release');
 					return false;
@@ -230,14 +237,18 @@
                         issueQuantity: jq("#issueQuantity").val(),
                         issueStage: jq("#issueStage").val(),
                         issueBatchNo: jq("#issueBatchNo option:selected").text(),
+                        issueAccount: jq("#issueAccount").val(),
                         issueRemarks: jq("#issueRemarks").val(),
                         patientId: null
                     }
                     if (jq.trim(issueData.issueName) == "" || jq.trim(issueData.issueQuantity) == "" ||
-                            jq.trim(issueData.issueStage) == "" || jq.trim(issueData.issueBatchNo) == "") {
+                            jq.trim(issueData.issueStage) == "" || jq.trim(issueData.issueBatchNo) == "" || jq.trim(issueData.issueAccount) == "") {
                         jq().toastmessage('showErrorToast', "Check that the required fields have been filled");
                         return false;
                     }
+					
+					console.log(issueData.issueAccount);
+										
                     jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "saveImmunizationIssues") }', issueData)
                             .success(function (data) {
                                 if (data.status === "success") {
@@ -256,6 +267,51 @@
                 },
                 cancel: function () {
                     issuesDialog.close();
+                }
+            }
+        });
+		
+		var issuesAccountDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#issues-account-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                    var requestData = {
+                        accountName: 			jq("#accountName").val(),
+                        issueAccountName: 		jq("#issueAccountName").val(),
+                        issueAccountQuantity:	jq("#issueAccountQuantity").val(),
+                        issueAccountStage: 		jq("#issueAccountStage").val(),
+                        issueAccountBatchNo: 	jq("#issueAccountBatchNo option:selected").text(),
+                        issueAccountRemarks:	jq("#issueAccountRemarks").val()
+                    }
+					
+                    if (jq.trim(requestData.issueAccountName) == "" || jq.trim(requestData.issueAccountQuantity) == "" || jq.trim(requestData.issueAccountStage) == "" || jq.trim(requestData.issueAccountBatchNo) == "" || jq.trim(requestData.accountName) == "") {
+                        jq().toastmessage('showErrorToast', "Check that all the required fields have been filled");
+                        return false;
+                    }
+										
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "saveImmunizationIssuesToAccount") }', requestData)
+                            .success(function (data) {
+                                if (data.status === "success") {
+                                    jq().toastmessage('showSuccessToast', data.message);
+                                    issuesAccountDialog.close();
+									
+									getStoreDrugStock();
+                                    getStoreTransactions();
+                                } else {
+                                    jq().toastmessage('showErrorToast', data.message);
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
+                },
+                cancel: function () {
+                    issuesAccountDialog.close();
                 }
             }
         });
@@ -312,6 +368,44 @@
                 },
                 cancel: function () {
                     returnsDialog.close();
+                }
+            }
+        });
+		
+		var supplierReturnsDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#supplier-returns-dialog',
+            actions: {
+                confirm: function () {
+                    var requestData = {
+                        supplierName: 			jq("#supplierName").val(),
+                        supplierRtnsName:		jq("#supplierRtnsName").val(),
+                        supplierRtnsQuantity:	jq("#supplierRtnsQuantity").val(),
+                        supplierRtnsStage: 		jq("#supplierRtnsStage").val(),
+                        supplierRtnsBatchNo: 	jq("#supplierRtnsBatchNo option:selected").text(),
+                        supplierRtnsRemarks: 	jq("#supplierRtnsRemarks").val()
+                    }
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "saveImmunizationReturnsToSupplier") }', requestData)
+                            .success(function (data) {
+                                if (data.status === "success") {
+                                    jq().toastmessage('showSuccessToast', data.message);
+                                    supplierReturnsDialog.close();
+									
+									getStoreDrugStock();
+                                    getStoreTransactions();
+                                } else {
+                                    jq().toastmessage('showErrorToast', data.message);
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
+                },
+                cancel: function () {
+                    supplierReturnsDialog.close();
                 }
             }
         });
@@ -693,7 +787,8 @@
 								<li><a data-value="1"><i class="icon-file-text"></i>Add Receipts</a></li>
 								<li><a data-value="2"><i class="icon-reply"></i>Add Issues</a></li>
 								<li><a data-value="3"><i class="icon-retweet"></i>Add Returns</a></li>
-								<li><a data-value="4"><i class="icon-thumbs-down"></i>Return To KEPI</a></li>
+								<li><a data-value="4"><i class="icon-reply"></i>Issue To Account</a></li>
+								<li><a data-value="5"><i class="icon-thumbs-down"></i>Return To Supplier</a></li>
 							</ul>
 						</div>
 					</div>					

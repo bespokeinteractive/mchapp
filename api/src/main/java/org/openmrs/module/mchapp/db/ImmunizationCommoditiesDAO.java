@@ -41,6 +41,8 @@ public interface ImmunizationCommoditiesDAO {
 
     ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo);
 
+    ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo, String drugName);
+
     ImmunizationStoreDrug saveImmunizationStoreDrug(ImmunizationStoreDrug storeDrug);
 
 
@@ -72,8 +74,6 @@ public interface ImmunizationCommoditiesDAO {
     ImmunizationEquipment saveImmunizationEquipment(ImmunizationEquipment immunizationEquipment);
 
     List<ImmunizationEquipment> listImmunizationEquipment(String equipmentName, String equipmentType);
-
-
 
     List<ImmunizationStockout> getImmunizationStockoutByDrug(InventoryDrug drug);
 

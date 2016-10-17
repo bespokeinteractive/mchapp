@@ -7,7 +7,9 @@ package org.openmrs.module.mchapp.model;
 public enum TransactionType {
     RECEIPTS(1),
     ISSUES(2),
-    RETURNS(3);
+    RETURNS(3),
+    ISSUE_TO_ACCOUNT(4),
+    SUPPLIER_RETURNS(5);
     private int value;
 
     private TransactionType(int value) {

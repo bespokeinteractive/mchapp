@@ -43,7 +43,7 @@ public class StoresReturnsFragmentController {
                                               @RequestParam(value = "rtnsRemarks" , required = false) String rtnsRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
-        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo);
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo, rtnsName);
 
         List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
         int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
@@ -76,6 +76,57 @@ public class StoresReturnsFragmentController {
         transactionDetail.setVvmStage(rtnsStage);
         transactionDetail.setRemark(rtnsRemarks);
         ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.RETURNS.getValue());
+        transactionDetail.setTransactionType(transactionType);
+        ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
+        if (storeDrugTransactionDetail != null) {
+            return SimpleObject.create("status", "success","message","Drug Return Saved Successfully");
+        } else {
+            return SimpleObject.create("status", "error","message","Error occurred while saving Return");
+        }
+
+
+    }
+
+    public SimpleObject saveImmunizationReturnsToSupplier(UiUtils uiUtils,
+                                                          @RequestParam("supplierName") String supplierName,
+                                                          @RequestParam("supplierRtnsName") String supplierRtnsName,
+                                                          @RequestParam("supplierRtnsQuantity") Integer supplierRtnsQuantity,
+                                                          @RequestParam("supplierRtnsStage") Integer supplierRtnsStage,
+                                                          @RequestParam("supplierRtnsBatchNo") String supplierRtnsBatchNo,
+                                                          @RequestParam(value = "supplierRtnsRemarks" , required = false) String supplierRtnsRemarks) {
+        Person person = Context.getAuthenticatedUser().getPerson();
+        ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(supplierRtnsBatchNo, supplierRtnsName);
+
+        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
+        int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
+
+        for(ImmunizationStoreDrug drug : drugs) {
+            cummulativeQuantity += drug.getCurrentQuantity();
+        }
+
+        transactionDetail.setCreatedBy(person);
+        transactionDetail.setCreatedOn(new Date());
+        transactionDetail.setOpeningBalance(cummulativeQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity + supplierRtnsQuantity);
+
+        transactionDetail.setQuantity(supplierRtnsQuantity);
+        if (drugBatch != null) {
+//          drugBatch exists with the given batch
+            int currentQuantity = drugBatch.getCurrentQuantity();
+
+            drugBatch.setCurrentQuantity(currentQuantity + supplierRtnsQuantity);
+            transactionDetail.setStoreDrug(drugBatch);
+        } else {
+//          no current drugBatch with this batch ae the drugBatch, then assign
+            return SimpleObject.create("status", "error","message","No Drug Found for selected Batch");
+        }
+        //process the batch
+        transactionDetail.setVvmStage(supplierRtnsStage);
+        transactionDetail.setRemark(supplierRtnsRemarks);
+        transactionDetail.setTransactionAccount(supplierName);
+
+        ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.SUPPLIER_RETURNS.getValue());
         transactionDetail.setTransactionType(transactionType);
         ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
         if (storeDrugTransactionDetail != null) {

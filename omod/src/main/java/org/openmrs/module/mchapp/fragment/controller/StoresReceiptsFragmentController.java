@@ -51,7 +51,7 @@ public class StoresReceiptsFragmentController {
                                                  @RequestParam(value = "closeStockouts", required = false) int closeStockouts) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
-        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo);
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rcptBatchNo, storeDrugName);
         InventoryDrug inventoryDrug = Context.getService(InventoryService.class).getDrugByName(storeDrugName);
 
         List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(storeDrugName);
@@ -81,21 +81,14 @@ public class StoresReceiptsFragmentController {
         transactionDetail.setQuantity(quantity);
 
         if (drugBatch != null) {
-            if (drugBatch.getInventoryDrug().getName() == storeDrugName){
-//            drugBatch exists with the given batch
-                int currentQuantity = drugBatch.getCurrentQuantity();
+//          drugBatch exists with the given batch
+            int currentQuantity = drugBatch.getCurrentQuantity();
 
-                currentQuantity += quantity;
-                drugBatch.setCurrentQuantity(currentQuantity);
-                transactionDetail.setStoreDrug(drugBatch);
-            }
-            else {
-                // It's not the same drug
-                drugBatch = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
-                transactionDetail.setStoreDrug(drugBatch);
-            }
+            currentQuantity += quantity;
+            drugBatch.setCurrentQuantity(currentQuantity);
+            transactionDetail.setStoreDrug(drugBatch);
         } else {
-//            no current drugBatch with this batch ae the drugBatch, then assign
+//          no current drugBatch with this batch ae the drugBatch, then assign
             drugBatch = immunizationService.saveImmunizationStoreDrug(immunizationStoreDrug);
             transactionDetail.setStoreDrug(drugBatch);
         }

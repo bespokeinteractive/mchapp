@@ -6,6 +6,8 @@
 	
 	var drugBatches;
 	var drugBatchesReturns;
+	var drugBatchesAccount;
+	var drugBatchesSupplier;
 
     function DrugBatchViewModel() {
         var self = this;
@@ -14,6 +16,18 @@
     }
 	
 	function DrugBatchReturnsViewModel() {
+        var self = this;
+        self.availableDrugs = ko.observableArray([]);
+        self.drugObject = ko.observable();
+    }
+	
+	function DrugBatchAccountViewModel() {
+        var self = this;
+        self.availableDrugs = ko.observableArray([]);
+        self.drugObject = ko.observable();
+    }
+	
+	function DrugBatchSupplierViewModel() {
         var self = this;
         self.availableDrugs = ko.observableArray([]);
         self.drugObject = ko.observable();
@@ -42,14 +56,19 @@
 		var dataRows = [];
 		_.each(transactionsResultsData, function(result){
 			var drugName = '<a href="storesVaccines.page?drugId=' + result.storeDrug.inventoryDrug.id + '">' + result.storeDrug.inventoryDrug.name + '</a>';
+			var transactionType = result.transactionType.transactionType;	
 			var remarks = 'N/A';
 			var icons = '<a href="storesReceiptDetails.page?receiptId=' + result.id + '"><i class="icon-bar-chart small"></i>VIEW</a>';
+			
+			if (result.transactionType.id == 2 && result.transactionAccount != null){
+				transactionType = 'ISSUE TO ' + result.transactionAccount;
+			}
 			
 			if (result.remark !== ''){
 				remarks = result.remark;
 			}
 			
-			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), result.transactionType.transactionType.toUpperCase(), drugName, result.quantity, result.vvmStage, remarks, icons]);
+			dataRows.push([0, moment(result.createdOn, "DD.MMM.YYYY").format('DD/MM/YYYY'), transactionType.toUpperCase(), drugName, result.quantity, result.vvmStage, remarks, icons]);
 		});
 
 		transactionsTable.api().clear();
@@ -66,6 +85,8 @@
 		
 		drugBatches = new DrugBatchViewModel();
 		drugBatchesReturns = new DrugBatchReturnsViewModel();
+		drugBatchesAccount = new DrugBatchAccountViewModel();
+		drugBatchesSupplier = new DrugBatchSupplierViewModel();
 		
 		transactionsTable = transactionsTableObject.dataTable({
 			autoWidth: false,
@@ -135,12 +156,12 @@
 				});
             },
             focus: function (event, ui) {
-                jq("#rcptName").val(ui.item.value.name);
+                jq(this).val(ui.item.value.name);
                 return false;
             },
             select: function (event, ui) {
                 event.preventDefault();
-                jQuery("#rcptName").val(ui.item.value.name);
+                jq(this).val(ui.item.value.name);
                 //set parent category
                 var catId = ui.item.value.category.id;
                 var drgId = ui.item.value.id;
@@ -152,9 +173,7 @@
 						jq('#closeStockouts input').attr('checked', false);
 						jq('#closeStockouts').hide(300);
 					}
-				});
-				
-				
+				});				
             }
         });
 		
@@ -175,17 +194,78 @@
 				});
             },
             focus: function (event, ui) {
-                jq("#issueName").val(ui.item.value.name);
+                jq(this).val(ui.item.value.name);
                 return false;
             },
             select: function (event, ui) {
                 event.preventDefault();
-                var drgName = ui.item.value.name;
-                jQuery("#issueName").val(drgName);
+                jq(this).val(ui.item.value.name);
 
                 var catId = ui.item.value.category.id;
                 var drgId = ui.item.value.id;
-                checkBatchAvailability(drgId, drgName, 2);
+                checkBatchAvailability(drgId, ui.item.value.name, 2);
+            }
+        });
+		
+		jq("#supplierRtnsName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("pharmacyapp", "addReceiptsToStore", "fetchDrugListByName") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+					var results = [];
+					for (var i in data) {
+						var result = {label: data[i].name, value: data[i]};
+						results.push(result);
+					}
+					response(results);
+				});
+            },
+            focus: function (event, ui) {
+                jq(this).val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                jq(this).val(ui.item.value.name);
+
+                var catId = ui.item.value.category.id;
+                var drgId = ui.item.value.id;
+				
+                checkBatchAvailability(drgId, ui.item.value.name, 5);
+            }
+        });
+		
+		jq("#issueAccountName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("pharmacyapp", "addReceiptsToStore", "fetchDrugListByName") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+					var results = [];
+					for (var i in data) {
+						var result = {label: data[i].name, value: data[i]};
+						results.push(result);
+					}
+					response(results);
+				});
+            },
+            focus: function (event, ui) {
+                jq(this).val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                jq(this).val(ui.item.value.name);
+
+                var catId = ui.item.value.category.id;
+                var drgId = ui.item.value.id;
+				
+                checkBatchAvailability(drgId, ui.item.value.name, 4);
             }
         });
 		
@@ -212,7 +292,7 @@
             select: function (event, ui) {
                 event.preventDefault();
                 var drgName = ui.item.value.name;
-                jQuery("#rtnsName").val(drgName);
+                jq("#rtnsName").val(drgName);
                 //set parent category
                 var catId = ui.item.value.category.id;
                 var drgId = ui.item.value.id;
@@ -224,6 +304,8 @@
 		
 		ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);
 		ko.applyBindings(drugBatchesReturns, jq("#returns-dialog")[0]);
+		ko.applyBindings(drugBatchesAccount, jq("#issues-account-dialog")[0]);
+		ko.applyBindings(drugBatchesSupplier, jq("#supplier-returns-dialog")[0]);
     });
 </script>
 
@@ -342,7 +424,7 @@
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
 
-        <h3>Add/Edit Issues</h3>
+        <h3>Add Issues</h3>
     </div>
 
     <div class="dialog-content">
@@ -380,10 +462,80 @@
                     <label>Expiry Date:</label>
                     <input data-bind="value: \$root.drugObject" readonly="">
                 </li>
+				
+				<li>
+                    <label>Issue To:</label>
+                    <select id="issueAccount">
+                        <option value="">Select Destination</option>
+                        <option>MCH Clinic</option>
+                        <option>Community Health Worker</option>
+                    </select>
+                </li>
 
                 <li>
                     <label>Remarks</label>
                     <textarea id="issueRemarks"></textarea>
+                </li>
+            </ul>
+
+            <label class="button confirm"
+                   style="float: right; width: auto ! important; margin-right: 5px;">Submit</label>
+            <label class="button cancel" style="width: auto!important;">Cancel</label>
+        </form>
+    </div>
+</div>
+
+<div id="issues-account-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Issues To Account</h3>
+    </div>
+
+    <div class="dialog-content">
+        <form id="issuesAccountForm">
+            <ul>
+				<li>
+                    <label>Account Name:</label>
+                    <input id="accountName" type="text">
+                </li>
+				
+                <li>
+                    <label>Vaccine/Diluent:</label>
+                    <input id="issueAccountName" type="text">
+                </li>
+
+                <li>
+                    <label>Quantity:</label>
+                    <input type="text" id="issueAccountQuantity" class="quantityVal">
+                </li>
+
+                <li>
+                    <label>VVM Stage:</label>
+                    <select id="issueAccountStage">
+                        <option value="0">Select Stage</option>
+                        <option value="1">Stage 1</option>
+                        <option value="2">Stage 2</option>
+                        <option value="3">Stage 3</option>
+                        <option value="4">Stage 4</option>
+                    </select>
+                </li>
+
+                <li>
+                    <label>Batch No.:</label>
+                    <select id="issueAccountBatchNo"
+                            data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"
+                            class="quantityVal"></select>
+                </li>
+
+                <li>
+                    <label>Expiry Date:</label>
+                    <input data-bind="value: \$root.drugObject" readonly="">
+                </li>
+
+                <li>
+                    <label>Remarks:</label>
+                    <textarea id="issueAccountRemarks"></textarea>
                 </li>
             </ul>
 
@@ -426,8 +578,7 @@
 
                 <li>
                     <label>Batch No.</label>
-                    <select id="rtnsBatchNo"
-                            data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"></select>
+                    <select id="rtnsBatchNo" data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"></select>
                 </li>
 
                 <li>
@@ -438,6 +589,65 @@
                 <li>
                     <label>Remarks</label>
                     <textarea id="rtnsRemarks"></textarea>
+                </li>
+            </ul>
+
+            <label class="button confirm"
+                   style="float: right; width: auto ! important; margin-right: 5px;">Confirm</label>
+            <label class="button cancel" style="width: auto!important;">Cancel</label>
+        </form>
+    </div>
+</div>
+
+<div id="supplier-returns-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+
+        <h3>Return To Supplier</h3>
+    </div>
+
+    <div class="dialog-content">
+        <form id="supplierReturnsForm">
+            <ul>
+				<li>
+                    <label>Supplier Name:</label>
+                    <input id="supplierName" type="text">
+                </li>
+				
+                <li>
+                    <label>Vaccine/Diluent:</label>
+                    <input id="supplierRtnsName" type="text">
+                </li>
+				
+                <li>
+                    <label>Quantity</label>
+                    <input type="text" id="supplierRtnsQuantity">
+                </li>
+
+                <li>
+                    <label>VVM Stage</label>
+                    <select id="supplierRtnsStage">
+                        <option value="0">Select Stage</option>
+                        <option value="1">Stage 1</option>
+                        <option value="2">Stage 2</option>
+                        <option value="3">Stage 3</option>
+                        <option value="4">Stage 4</option>
+                    </select>
+                </li>
+
+                <li>
+                    <label>Batch No.</label>
+                    <select id="supplierRtnsBatchNo" data-bind="options: \$root.availableDrugs, value: drugObject, optionsValue: 'expiryDate', optionsText: 'batchNo'"></select>
+                </li>
+
+                <li>
+                    <label>Expiry Date.</label>
+					<input data-bind="value: \$root.drugObject" readonly="">
+                </li>
+				
+                <li>
+                    <label>Remarks</label>
+                    <textarea id="supplierRtnsRemarks"></textarea>
                 </li>
             </ul>
 

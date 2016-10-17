@@ -17,6 +17,7 @@
 					 column="immunization_store_drug_id" cascade="none"  />
         <many-to-one name="createdBy" class="org.openmrs.Person"
                      column="created_by" cascade="none"  />
+        <property name="transactionAccount" column="transaction_account"  />
         <property name="quantity" column="quantity"  />
         <property name="vvmStage" column="vvm_stage"  />
         <property name="createdOn" column="created_on"  />
