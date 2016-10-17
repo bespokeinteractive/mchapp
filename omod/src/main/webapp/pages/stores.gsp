@@ -40,6 +40,7 @@
 				drugBatches.availableDrugs.removeAll();
 				drugBatchesReturns.availableDrugs.removeAll();
 				drugBatchesAccount.availableDrugs.removeAll();
+				drugBatchesSupplier.availableDrugs.removeAll();
 				
 				if (testingFor == 2){
 					jq.each(data.drugs, function (i, item) {
@@ -52,6 +53,10 @@
 				} else if (testingFor == 4){
 					jq.each(data.drugs, function (i, item) {
 						drugBatchesAccount.availableDrugs.push(item);
+					});
+				} else if (testingFor == 5){
+					jq.each(data.drugs, function (i, item) {
+						drugBatchesSupplier.availableDrugs.push(item);
 					});
 				}
 
@@ -97,42 +102,28 @@
 				var value = jq(this).data('value');
 				
 				if (value == 1){
-					jq('#rcptName').val('');
-					jq('#rcptQuantity').val('');
-					jq('#rcptStage').val(0);
-					jq('#rcptBatchNo').val('');
-					jq('#rcptRemarks').val('');
+					document.getElementById("receiptsForm").reset();					
+					receiptsDialog.show();
 					
 					jq('#closeStockouts input').attr('checked', false);
-					jq('#closeStockouts').hide();
-					
-					receiptsDialog.show();
+					jq('#closeStockouts').hide();					
 				}
 				else if (value == 2){
-					jq('#issueName').val('');
-					jq('#issueQuantity').val('');
-					jq('#issueStage').val(0);
-					jq('#issueRemarks').val('');					
-					
+					document.getElementById("returnsForm").reset();
 					issuesDialog.show();					
 				}
 				else if (value == 3){
-					jq('#rtnsName').val('');
-					jq('#rtnsQuantity').val('');
-					jq('#rtnsStage').val(0);
-					jq('#rtnsRemarks').val('');
-				
+					document.getElementById("returnsForm").reset();				
 					returnsDialog.show();					
 				}
 				else if (value == 4){
-					jq('#rtnsName').val('');
-					jq('#rtnsQuantity').val('');
-					jq('#rtnsStage').val(0);
-					jq('#rtnsRemarks').val('');
-				
+					document.getElementById("issuesAccountForm").reset();
 					issuesAccountDialog.show();					
 				}
-				
+				else if (value == 5){
+					document.getElementById("supplierReturnsForm").reset();				
+					supplierReturnsDialog.show();					
+				}
 				
 				
 				else {
@@ -377,6 +368,44 @@
                 },
                 cancel: function () {
                     returnsDialog.close();
+                }
+            }
+        });
+		
+		var supplierReturnsDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#supplier-returns-dialog',
+            actions: {
+                confirm: function () {
+                    var requestData = {
+                        supplierName: 			jq("#supplierName").val(),
+                        supplierRtnsName:		jq("#supplierRtnsName").val(),
+                        supplierRtnsQuantity:	jq("#supplierRtnsQuantity").val(),
+                        supplierRtnsStage: 		jq("#supplierRtnsStage").val(),
+                        supplierRtnsBatchNo: 	jq("#supplierRtnsBatchNo option:selected").text(),
+                        supplierRtnsRemarks: 	jq("#supplierRtnsRemarks").val()
+                    }
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesReturns", "saveImmunizationReturnsToSupplier") }', requestData)
+                            .success(function (data) {
+                                if (data.status === "success") {
+                                    jq().toastmessage('showSuccessToast', data.message);
+                                    supplierReturnsDialog.close();
+									
+									getStoreDrugStock();
+                                    getStoreTransactions();
+                                } else {
+                                    jq().toastmessage('showErrorToast', data.message);
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
+                },
+                cancel: function () {
+                    supplierReturnsDialog.close();
                 }
             }
         });

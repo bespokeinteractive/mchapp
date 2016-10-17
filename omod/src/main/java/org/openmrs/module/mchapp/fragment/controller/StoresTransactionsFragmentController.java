@@ -45,6 +45,6 @@ public class StoresTransactionsFragmentController {
         }
 
         List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(transactionType, transName, fromDate, toDate);
-        return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id", "transactionType.transactionType");
+        return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "transactionAccount", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id", "transactionType.transactionType", "transactionType.id");
     }
 }
