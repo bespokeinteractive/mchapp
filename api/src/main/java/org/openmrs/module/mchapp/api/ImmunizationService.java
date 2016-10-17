@@ -31,6 +31,9 @@ public interface ImmunizationService extends OpenmrsService {
     ImmunizationStoreDrug getImmunizationStoreDrugById(int id);
 
     ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo);
+
+    ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo, String drugName);
+
     List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName);
 
     ImmunizationStoreDrug saveImmunizationStoreDrug(ImmunizationStoreDrug storeDrug);

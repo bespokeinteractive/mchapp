@@ -102,6 +102,20 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
     public ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo) {
         Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class);
         criteria.add(Restrictions.eq("batchNo", batchNo));
+
+        ImmunizationStoreDrug storeDrug = (ImmunizationStoreDrug) criteria.uniqueResult();
+        return storeDrug;
+    }
+
+    @Override
+    public ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo, String drugName) {
+        InventoryService inventoryService = Context.getService(InventoryService.class);
+        InventoryDrug inventoryDrug = inventoryService.getDrugByName(drugName);
+
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrug.class);
+        criteria.add(Restrictions.eq("batchNo", batchNo));
+        criteria.add(Restrictions.eq("inventoryDrug", inventoryDrug));
+
         ImmunizationStoreDrug storeDrug = (ImmunizationStoreDrug) criteria.uniqueResult();
         return storeDrug;
     }

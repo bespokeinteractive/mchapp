@@ -66,6 +66,11 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     }
 
     @Override
+    public ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo, String drugName) {
+        return dao.getImmunizationStoreDrugByBatchNo(batchNo, drugName);
+    }
+
+    @Override
     public List<ImmunizationStoreDrug> getImmunizationStoreDrugByName(String drugName) {
         return dao.getImmunizationStoreDrugByName(drugName);
     }

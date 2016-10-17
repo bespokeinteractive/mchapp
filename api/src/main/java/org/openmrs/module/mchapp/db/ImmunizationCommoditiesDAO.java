@@ -41,6 +41,8 @@ public interface ImmunizationCommoditiesDAO {
 
     ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo);
 
+    ImmunizationStoreDrug getImmunizationStoreDrugByBatchNo(String batchNo, String drugName);
+
     ImmunizationStoreDrug saveImmunizationStoreDrug(ImmunizationStoreDrug storeDrug);
 
 

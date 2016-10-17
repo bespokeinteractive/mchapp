@@ -37,6 +37,12 @@ public class StoresTransactionsFragmentController {
         else if (transType == 3){
             transactionType = TransactionType.RETURNS;
         }
+        else if (transType == 4){
+            transactionType = TransactionType.ISSUE_TO_ACCOUNT;
+        }
+        else if (transType == 5){
+            transactionType = TransactionType.SUPPLIER_RETURNS;
+        }
 
         List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(transactionType, transName, fromDate, toDate);
         return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id", "transactionType.transactionType");

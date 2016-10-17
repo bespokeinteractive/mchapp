@@ -43,7 +43,7 @@ public class StoresReturnsFragmentController {
                                               @RequestParam(value = "rtnsRemarks" , required = false) String rtnsRemarks) {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
-        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo);
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(rtnsBatchNo, rtnsName);
 
         List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
         int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE

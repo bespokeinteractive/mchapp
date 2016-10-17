@@ -39,6 +39,7 @@
 				
 				drugBatches.availableDrugs.removeAll();
 				drugBatchesReturns.availableDrugs.removeAll();
+				drugBatchesAccount.availableDrugs.removeAll();
 				
 				if (testingFor == 2){
 					jq.each(data.drugs, function (i, item) {
@@ -47,6 +48,10 @@
 				} else if (testingFor == 3){
 					jq.each(data.drugs, function (i, item) {
 						drugBatchesReturns.availableDrugs.push(item);
+					});
+				} else if (testingFor == 4){
+					jq.each(data.drugs, function (i, item) {
+						drugBatchesAccount.availableDrugs.push(item);
 					});
 				}
 
@@ -119,6 +124,17 @@
 				
 					returnsDialog.show();					
 				}
+				else if (value == 4){
+					jq('#rtnsName').val('');
+					jq('#rtnsQuantity').val('');
+					jq('#rtnsStage').val(0);
+					jq('#rtnsRemarks').val('');
+				
+					issuesAccountDialog.show();					
+				}
+				
+				
+				
 				else {
 					jq().toastmessage('showErrorToast', 'This feature is currently un-available in this release');
 					return false;
@@ -260,6 +276,51 @@
                 },
                 cancel: function () {
                     issuesDialog.close();
+                }
+            }
+        });
+		
+		var issuesAccountDialog = emr.setupConfirmationDialog({
+            dialogOpts: {
+                overlayClose: false,
+                close: true
+            },
+            selector: '#issues-account-dialog',
+            actions: {
+                confirm: function () {
+                    //Code Here
+                    var requestData = {
+                        accountName: 			jq("#accountName").val(),
+                        issueAccountName: 		jq("#issueAccountName").val(),
+                        issueAccountQuantity:	jq("#issueAccountQuantity").val(),
+                        issueAccountStage: 		jq("#issueAccountStage").val(),
+                        issueAccountBatchNo: 	jq("#issueAccountBatchNo option:selected").text(),
+                        issueAccountRemarks:	jq("#issueAccountRemarks").val()
+                    }
+					
+                    if (jq.trim(requestData.issueAccountName) == "" || jq.trim(requestData.issueAccountQuantity) == "" || jq.trim(requestData.issueAccountStage) == "" || jq.trim(requestData.issueAccountBatchNo) == "" || jq.trim(requestData.accountName) == "") {
+                        jq().toastmessage('showErrorToast', "Check that all the required fields have been filled");
+                        return false;
+                    }
+										
+                    jq.getJSON('${ ui.actionLink("mchapp", "storesIssues", "saveImmunizationIssuesToAccount") }', requestData)
+                            .success(function (data) {
+                                if (data.status === "success") {
+                                    jq().toastmessage('showSuccessToast', data.message);
+                                    issuesAccountDialog.close();
+									
+									getStoreDrugStock();
+                                    getStoreTransactions();
+                                } else {
+                                    jq().toastmessage('showErrorToast', data.message);
+                                }
+                            }).error(function (xhr, status, err) {
+                                jq().toastmessage('showErrorToast', "AJAX error!" + err);
+                            }
+                    );
+                },
+                cancel: function () {
+                    issuesAccountDialog.close();
                 }
             }
         });

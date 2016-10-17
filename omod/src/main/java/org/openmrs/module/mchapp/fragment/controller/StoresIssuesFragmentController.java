@@ -45,7 +45,7 @@ public class StoresIssuesFragmentController {
 
     public SimpleObject getImmunizationDrugDetailByBatch(UiUtils uiUtils,
                                                          @RequestParam(value = "issueBatchNo", required = false) String issueBatchNo){
-        ImmunizationStoreDrug storeDrug = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo);
+        ImmunizationStoreDrug storeDrug = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo, null);
         return SimpleObject.fromObject(storeDrug,uiUtils,"currentQuantity");
     }
 
@@ -59,7 +59,7 @@ public class StoresIssuesFragmentController {
         Person person = Context.getAuthenticatedUser().getPerson();
         ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
 
-        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo);
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(issueBatchNo, issueName);
         List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
 
         int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
@@ -100,6 +100,59 @@ public class StoresIssuesFragmentController {
         ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
         if (storeDrugTransactionDetail != null) {
             return SimpleObject.create("status", "success","message","Drug Issue Saved Successfully");
+        } else {
+            return SimpleObject.create("status", "error","message","Error occurred while saving Issue");
+        }
+
+
+    }
+
+    public SimpleObject saveImmunizationIssuesToAccount(UiUtils uiUtils,
+                                                        @RequestParam("accountName") String accountName,
+                                                        @RequestParam("issueAccountName") String issueAccountName,
+                                                        @RequestParam("issueAccountQuantity") Integer issueAccountQuantity,
+                                                        @RequestParam("issueAccountStage") Integer issueAccountStage,
+                                                        @RequestParam("issueAccountBatchNo") String issueAccountBatchNo,
+                                                        @RequestParam(value = "issueAccountRemarks", required = false) String issueAccountRemarks) {
+        Person person = Context.getAuthenticatedUser().getPerson();
+        ImmunizationStoreDrugTransactionDetail transactionDetail = new ImmunizationStoreDrugTransactionDetail();
+
+        ImmunizationStoreDrug drugBatch = immunizationService.getImmunizationStoreDrugByBatchNo(issueAccountBatchNo, issueAccountName);
+        List<ImmunizationStoreDrug> drugs = immunizationService.getImmunizationStoreDrugByName(drugBatch.getInventoryDrug().getName());
+
+        int cummulativeQuantity = 0; //GET QUANTITY FROM THE LAST TRANSACTION IN THE immunization_store_drug_transaction_detail TABLE
+        for(ImmunizationStoreDrug drug : drugs) {
+            cummulativeQuantity += drug.getCurrentQuantity();
+        }
+
+        transactionDetail.setCreatedBy(person);
+        transactionDetail.setCreatedOn(new Date());
+        transactionDetail.setQuantity(issueAccountQuantity);
+
+        transactionDetail.setOpeningBalance(cummulativeQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity - issueAccountQuantity);
+
+        if (drugBatch != null) {
+//            drugBatch exists with the given batch
+            int currentQuantity = drugBatch.getCurrentQuantity();
+            int i = currentQuantity - issueAccountQuantity;
+
+            drugBatch.setCurrentQuantity(i);
+            transactionDetail.setStoreDrug(drugBatch);
+        } else {
+//            no current drugBatch with this batch ae the drugBatch, then assign
+            return SimpleObject.create("status", "error","message","No Drug Found for selected Batch");
+        }
+        //process the batch
+        transactionDetail.setVvmStage(issueAccountStage);
+        transactionDetail.setRemark(issueAccountRemarks);
+        transactionDetail.setTransactionAccount(accountName);
+
+        ImmunizationStoreTransactionType transactionType = immunizationService.getTransactionTypeById(TransactionType.ISSUE_TO_ACCOUNT.getValue());
+        transactionDetail.setTransactionType(transactionType);
+        ImmunizationStoreDrugTransactionDetail storeDrugTransactionDetail = immunizationService.saveImmunizationStoreDrugTransactionDetail(transactionDetail);
+        if (storeDrugTransactionDetail != null) {
+            return SimpleObject.create("status", "success", "message", "Issue To Account Successfully Saved");
         } else {
             return SimpleObject.create("status", "error","message","Error occurred while saving Issue");
         }
