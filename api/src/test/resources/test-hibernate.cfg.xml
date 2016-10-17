@@ -20,6 +20,5 @@
         <mapping resource="TriagePatientQueue.hbm.xml"/>
         <mapping resource="TriagePatientQueueLog.hbm.xml"/>
         <mapping resource="ImmunizationStoreTransactionType.hbm.xml" />
-        <mapping resource="ImmunizationStorePatientTransaction.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
