@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
+import org.hibernate.criterion.MatchMode;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.model.ImmunizationStoreDrugTransactionDetail;
@@ -9,6 +10,7 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,4 +49,35 @@ public class StoresTransactionsFragmentController {
         List<ImmunizationStoreDrugTransactionDetail> transactionDetails = immunizationService.listImmunizationTransactions(transactionType, transName, fromDate, toDate);
         return SimpleObject.fromCollection(transactionDetails, uiUtils, "createdOn", "storeDrug.inventoryDrug.name", "transactionAccount", "storeDrug.inventoryDrug.id", "quantity", "vvmStage", "remark", "id", "transactionType.transactionType", "transactionType.id");
     }
+
+    public ArrayList<String> fetchDistinctTransactionAccounts(@RequestParam(value = "searchPhrase") String searchPhrase, UiUtils ui) {
+        List<ImmunizationStoreDrugTransactionDetail> lists = immunizationService.listImmunizationTransactionsByAccounts(TransactionType.ISSUE_TO_ACCOUNT, searchPhrase, MatchMode.ANYWHERE);
+        ArrayList<String> transactionAccounts = new ArrayList();
+
+        for(ImmunizationStoreDrugTransactionDetail list : lists) {
+            if (list.getTransactionAccount() != null){
+                if (!transactionAccounts.contains(list.getTransactionAccount())){
+                    transactionAccounts.add(list.getTransactionAccount());
+                }
+            }
+        }
+
+        return transactionAccounts;
+    }
+
+    public ArrayList<String> fetchDistinctSupplierAccounts(@RequestParam(value = "searchPhrase") String searchPhrase, UiUtils ui) {
+        List<ImmunizationStoreDrugTransactionDetail> lists = immunizationService.listImmunizationTransactionsByAccounts(TransactionType.SUPPLIER_RETURNS, searchPhrase, MatchMode.ANYWHERE);
+        ArrayList<String> supplierAccounts = new ArrayList();
+
+        for(ImmunizationStoreDrugTransactionDetail list : lists) {
+            if (list.getTransactionAccount() != null){
+                if (!supplierAccounts.contains(list.getTransactionAccount())){
+                    supplierAccounts.add(list.getTransactionAccount());
+                }
+            }
+        }
+
+        return supplierAccounts;
+    }
+
 }

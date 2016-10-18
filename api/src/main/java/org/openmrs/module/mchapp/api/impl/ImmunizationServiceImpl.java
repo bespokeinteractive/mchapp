@@ -2,6 +2,7 @@ package org.openmrs.module.mchapp.api.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.MatchMode;
 import org.openmrs.Patient;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -179,6 +180,11 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     @Override
     public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId) {
         return dao.listImmunizationTransactions(drugId);
+    }
+
+    @Override
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactionsByAccounts(TransactionType type, String accountName, MatchMode mode) {
+        return dao.listImmunizationTransactionsByAccounts(type, accountName, mode);
     }
 
     @Override

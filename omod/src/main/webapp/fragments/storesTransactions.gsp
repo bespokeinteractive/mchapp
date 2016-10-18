@@ -300,6 +300,58 @@
             }
         });
 		
+		jq("#accountName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("mchapp", "StoresTransactions", "fetchDistinctTransactionAccounts") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+                            var results = [];
+                            for (var i in data) {
+                                var result = {label: data[i].name, value: data[i]};
+                                results.push(result);
+                            }
+                            response(results);
+                        });
+            },
+            focus: function (event, ui) {
+                jq("#rtnsName").val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                jq(this).val(ui.item.value.toUpperCase());
+            }
+        });
+		
+		jq("#supplierName").autocomplete({
+            minLength: 3,
+            source: function (request, response) {
+                jq.getJSON('${ ui.actionLink("mchapp", "StoresTransactions", "fetchDistinctSupplierAccounts") }',
+                        {
+                            searchPhrase: request.term
+                        }
+                ).success(function (data) {
+                            var results = [];
+                            for (var i in data) {
+                                var result = {label: data[i].name, value: data[i]};
+                                results.push(result);
+                            }
+                            response(results);
+                        });
+            },
+            focus: function (event, ui) {
+                jq("#rtnsName").val(ui.item.value.name);
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                jq(this).val(ui.item.value.toUpperCase());
+            }
+        });
+		
 		getStoreTransactions();
 		
 		ko.applyBindings(drugBatches, jq("#issues-dialog")[0]);

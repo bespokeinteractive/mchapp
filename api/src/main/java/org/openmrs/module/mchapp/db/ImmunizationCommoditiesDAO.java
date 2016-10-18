@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.db;
 
+import org.hibernate.criterion.MatchMode;
 import org.openmrs.Patient;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
@@ -95,7 +96,10 @@ public interface ImmunizationCommoditiesDAO {
 
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactionsByAccounts(TransactionType type, String accountName, MatchMode mode);
+
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId);
+
 
     List<ImmunizationStockout> listImmunizationStockouts(String outsNames, Date fromDate, Date toDate);
 

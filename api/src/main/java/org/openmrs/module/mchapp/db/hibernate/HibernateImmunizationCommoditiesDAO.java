@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.NotYetImplementedException;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -331,6 +332,21 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
 
                 criteria.add(Restrictions.in("storeDrug", drugs));
             }
+        }
+
+        return criteria.list();
+    }
+
+    public List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactionsByAccounts(TransactionType type, String accountName, MatchMode mode) {
+        Criteria criteria = getSession().createCriteria(ImmunizationStoreDrugTransactionDetail.class);
+        Calendar stopDate = Calendar.getInstance();
+
+        if (type != null) {
+            criteria.add(Restrictions.eq("transactionType", getImmunizationStoreTransactionTypeById(type.getValue())));
+        }
+
+        if (StringUtils.isNotEmpty(accountName)) {
+            criteria.add(Restrictions.like("transactionAccount", accountName, mode));
         }
 
         return criteria.list();

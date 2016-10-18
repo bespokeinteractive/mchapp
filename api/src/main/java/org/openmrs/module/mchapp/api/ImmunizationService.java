@@ -1,5 +1,6 @@
 package org.openmrs.module.mchapp.api;
 
+import org.hibernate.criterion.MatchMode;
 import org.openmrs.Patient;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.db.DAOException;
@@ -81,6 +82,8 @@ public interface ImmunizationService extends OpenmrsService {
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(TransactionType type, String rcptNames, Date fromDate, Date toDate);
 
     List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactions(Integer drugId);
+
+    List<ImmunizationStoreDrugTransactionDetail> listImmunizationTransactionsByAccounts(TransactionType type, String accountName, MatchMode mode);
 
     ImmunizationStoreDrug getImmunizationStoreDrugByExactName(String rcptBatchNo);
 
