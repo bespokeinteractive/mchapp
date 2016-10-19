@@ -108,7 +108,7 @@ public class StoresReturnsFragmentController {
         transactionDetail.setCreatedBy(person);
         transactionDetail.setCreatedOn(new Date());
         transactionDetail.setOpeningBalance(cummulativeQuantity);
-        transactionDetail.setClosingBalance(cummulativeQuantity + supplierRtnsQuantity);
+        transactionDetail.setClosingBalance(cummulativeQuantity - supplierRtnsQuantity);
 
         transactionDetail.setQuantity(supplierRtnsQuantity);
         if (drugBatch != null) {
