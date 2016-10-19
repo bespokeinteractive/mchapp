@@ -115,7 +115,7 @@ public class StoresReturnsFragmentController {
 //          drugBatch exists with the given batch
             int currentQuantity = drugBatch.getCurrentQuantity();
 
-            drugBatch.setCurrentQuantity(currentQuantity + supplierRtnsQuantity);
+            drugBatch.setCurrentQuantity(currentQuantity - supplierRtnsQuantity);
             transactionDetail.setStoreDrug(drugBatch);
         } else {
 //          no current drugBatch with this batch ae the drugBatch, then assign
