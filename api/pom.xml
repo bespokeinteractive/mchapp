@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>mchapp</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3</version>
 	</parent>
 
 	<artifactId>mchapp-api</artifactId>
@@ -103,6 +103,10 @@
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>inventory-omod</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>inventory-api</artifactId>
 		</dependency>
 	</dependencies>
 	

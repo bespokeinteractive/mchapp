@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.mchapp.model">
+
+	<class name="ImmunizationEquipment" table="immunization_equipment" batch-size="500">
+		<id name="id" type="int" column="id" unsaved-value="0">
+				<generator class="native" />
+		</id>
+		<property name="createdBy" column="created_by" length="45"  />
+		<property name="equipmentType" column="equipment_type" length="45"  />
+		<property name="model" column="model"  />
+		<property name="workingStatus" column="working_status"  />
+		<property name="energySource" column="energy_source"  />
+		<property name="dateOfManufacture" column="date_of_manufacture"  />
+		<property name="createdOn" column="created_on"  />
+		<property name="remarks" column="remarks"  />
+	</class>
+</hibernate-mapping>

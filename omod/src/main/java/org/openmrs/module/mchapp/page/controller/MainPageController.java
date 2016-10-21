@@ -6,6 +6,8 @@ import org.openmrs.PatientProgram;
 import org.openmrs.Program;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
+import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.OpdPatientQueue;
 import org.openmrs.module.hospitalcore.model.PatientSearch;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.api.ListItem;
@@ -24,9 +26,9 @@ public class MainPageController {
     private static final int MAX_ANC_PNC_DURATION = 9;
 
     public String get(
-        @RequestParam("patientId") Patient patient,
-        @RequestParam(value = "queueId") Integer queueId,
-        PageModel model, UiUtils uiUtils) {
+            @RequestParam("patientId") Patient patient,
+            @RequestParam(value = "queueId") Integer queueId,
+            PageModel model, UiUtils uiUtils) {
 
         MchService mchService = Context.getService(MchService.class);
         model.addAttribute("patient", patient);
@@ -50,7 +52,17 @@ public class MainPageController {
         Calendar minEnrollmentDate = Calendar.getInstance();
         List<ListItem> possibleProgramOutcomes = new ArrayList<ListItem>();
         Collection<ConceptAnswer> cwcFollowUps = new ArrayList<ConceptAnswer>();
-        if (enrolledInANC) {
+        PatientQueueService queueService = Context.getService(PatientQueueService.class);
+        OpdPatientQueue patientQueue = queueService.getOpdPatientQueueById(queueId);
+        String opdConcept = patientQueue.getOpdConceptName();
+
+        if (patientQueue != null) {
+            model.addAttribute("opdConcept", opdConcept); //MCH IMMUNIZATION or MCH CLINIC
+        }
+
+        if(opdConcept.equalsIgnoreCase("FAMILY PLANNING CLINIC")){
+            return "redirect:" + uiUtils.pageLink("fpapp", "main") + "?patientId=" + patient.getPatientId() + "&queueId=" + queueId;
+        } else if (enrolledInANC) {
             model.addAttribute("title", "ANC Clinic");
             minEnrollmentDate.add(Calendar.MONTH, -MAX_ANC_PNC_DURATION);
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.ANC_PROGRAM);
@@ -61,13 +73,18 @@ public class MainPageController {
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.PNC_PROGRAM);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
         } else if (enrolledInCWC) {
-            model.addAttribute("title", "CWC Clinic");
+            if (opdConcept.equalsIgnoreCase("MCH CLINIC")) {
+                model.addAttribute("title", "CWC Clinic");
+            } else if (opdConcept.equalsIgnoreCase("MCH IMMUNIZATION")) {
+                model.addAttribute("title", "CWC IMMUNIZATION");
+            }
+
             program = Context.getProgramWorkflowService().getProgramByUuid(MchMetadata._MchProgram.CWC_PROGRAM);
             minEnrollmentDate.add(Calendar.YEAR, -MAX_CWC_DURATION);
             possibleProgramOutcomes = mchService.getPossibleOutcomes(program.getProgramId());
-            cwcFollowUps=Context.getConceptService().getConceptByName("CWC FOLLOW UP").getAnswers();
+            cwcFollowUps = Context.getConceptService().getConceptByName("CWC FOLLOW UP").getAnswers();
             model.addAttribute("cwcFollowUpList", cwcFollowUps);
-        } else{
+        } else {
             return "redirect:" + uiUtils.pageLink("mchapp", "enroll") + "?patientId=" + patient.getPatientId() + "&queueId=" + queueId;
         }
 
@@ -76,14 +93,15 @@ public class MainPageController {
 
         //handles case when patient is yet to enroll in a patient program
         PatientProgram patientProgram = null;
-        if(patientPrograms.size() > 0){
+        if (patientPrograms.size() > 0) {
             patientProgram = patientPrograms.get(0);
             //        TODO pull the correct enrollment Date
             model.addAttribute("enrollmentDate", patientProgram.getDateEnrolled());
-        }else{
+        } else {
             patientProgram = new PatientProgram();
             model.addAttribute("enrollmentDate", new Date());
         }
+
 
         model.addAttribute("patientProgram", patientProgram);
         model.addAttribute("possibleProgramOutcomes", possibleProgramOutcomes);

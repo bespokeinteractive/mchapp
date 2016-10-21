@@ -16,11 +16,18 @@ public class MchMetadata extends AbstractMetadataBundle {
     }
 
     public static final class MchAppConstants {
+        public static final String FAMILY_PLANNING_CLINIC_CONCEPT_UUID = "68f095fb-1701-42b1-bd30-46d5f0473ae6";
+
         public static final String CWC_FOLLOW_UP = "6f7b4285-a04b-4f8b-be85-81c325289539";
         public static final String CWC_BREASTFEEDING_COUNCELLING = "42197783-8b24-49b0-b290-cbb368fa0113";
         public static final String CWC_BREASTFEEDING_EXCLUSSIVE = "42197783-8b24-49b0-b290-cbb368fa0113";
         public static final String CWC_BREASTFEEDING_FOR_INFECTED = "8a3c420e-b4ff-4710-81fd-90c7bfa6de72";
 
+        public static final String CWC_LLITN = "160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        public static final String CWC_DEWORMED = "159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        public static final String CWC_VITAMIN_A_SUPPLEMENTATION = "c1346a48-9777-428f-a908-e8bff24e4e37";
+        public static final String CWC_SUPPLEMENTED_WITH_MNP = "534705aa-8857-4e70-9b08-b363fb3ce677";
+        
         public static final String CWC_EXAMINATION_CLASS = "8d491a9a-c2cc-11de-8d13-0010c6dffd0f";
         public static final String CWC_EXAMINATION_DATATYPE = "8d4a48b6-c2cc-11de-8d13-0010c6dffd0f";
 
@@ -43,6 +50,9 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String ANC_EXCERCISE = "0a92efcc-51b3-448d-b4e3-a743ea5aa18c";
         public static final String ANC_DEWORMING = "159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         public static final String ANC_LLITN = "160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        
+        public static final String PNC_CERVICAL_SCREENING_METHOD = "50c026c3-f2bc-44b9-a9dd-e972ffcbb774";
+        public static final String PNC_CERVICAL_SCREENING_RESULT = "1406dbf3-05da-4264-9659-fb688cea5809";
     }
 
     public static final class MchAppTriageConstants {
@@ -71,6 +81,7 @@ public class MchMetadata extends AbstractMetadataBundle {
         public static final String ANC_PROGRAM_CONCEPT = "ae6a8bba-b7cd-4e2f-8c87-720c86966666";
         public static final String PNC_PROGRAM = "a15f2617-9f5d-4022-8de3-181b2e286a28";
         public static final String PNC_PROGRAM_CONCEPT = "f5d0b8a9-aacc-4d78-9c9e-792197debc77";
+        public static final String ANTENATAL_VISIT_NUMBER = "1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         public static final Integer INITIAL_MCH_CLINIC_VISIT = 2;
         public static final Integer RETURN_ANC_CLINIC_VISIT = 3;
         public static final Integer RETURN_PNC_CLINIC_VISIT = 4;

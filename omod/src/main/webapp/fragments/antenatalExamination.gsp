@@ -42,8 +42,7 @@
 			var data = jq("form#antenatalExaminationsForm").serialize();
             data = data + "&" + objectToQueryString.convert(drugOrders["drug_orders"]);
 
-            jq.post(
-              '${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
+            jq.post('${ui.actionLink("mchapp", "antenatalExamination", "saveAntenatalExaminationInformation")}',
               data,
               function (data) {
                   if (data.status === "success") {
@@ -106,6 +105,10 @@
             }
         });
 		
+		jq('#tetanus-batch-no').keyup(function(){
+			this.value = this.value.toUpperCase();
+		});
+		
 		//submit data
         jq("#antenatalExaminationSubmitButton").on("click", function(event){
             event.preventDefault();
@@ -148,37 +151,38 @@
 						jq().toastmessage('showErrorToast', "Kindly select a vaccine state!");
 						return false;
 					}
-					
+
 					var idnt = jq('#vaccine-idnt').val();
 					var prog = jq('#vaccine-prog').val();
 					var name = jq('#vaccine-name').val();
-					
+
 					var state = jq('#vaccine-state').val();
-					
+
 					var stateData = {
 						patientProgramId: prog,
 						programWorkflowId: idnt,
 						programWorkflowStateId: jq('#vaccine-state').val(),
-						onDateDMY: jq('#vaccine-date-field').val()
+						onDateDMY: jq('#vaccine-date-field').val(),
+                        patientId:${patient?.patientId}
 					}
 
 					jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
 					.success(function (data) {
 						jq().toastmessage('showNoticeToast', data.message);
-						
+
 						showEditWorkflowPopup(name, prog, idnt);
-						
+
 						jq('#state_name_'+idnt).text(jq('#vaccine-state option:selected').text());
 						jq('#state_date_'+idnt).text(moment(jq('#vaccine-date-field').val()).fromNow());
-						
+
 						jq('#main-show-'+idnt).show();
 						jq('#no-show-'+idnt).hide();
-						
+
 						jq('#immunizations-set').val('SET');
-						
+
 						vaccinationDialog.close();
 						return false;
-						
+
 					}).error(function (xhr, status, err) {
 						jq().toastmessage('showErrorToast', "AJAX error!" + err);
 						return false;
@@ -189,11 +193,68 @@
                 }
             }
         });
+		
+		var tetanusVaccineDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+            selector: '#tetanus-vaccine-dialog',
+            actions: {
+                confirm: function () {
+					var batchNo = jq('#tetanus-batch-no').val();
+					
+					if (batchNo == ''){
+						jq().toastmessage('showErrorToast', 'Kindly specify the Batch Number');
+						jq(this).focus();
+						return false;
+					}
+					
+					jq().toastmessage({
+						sticky: true
+					});
+					var savingMessage = jq().toastmessage('showSuccessToast', 'Please wait as Information is being Saved...');
+			
+					jq.getJSON('${ ui.actionLink("mchapp", "antenatalExamination", "saveTetanusToxoid") }', {
+						patientId: '${patient.id}',
+						drugId: 188,
+						formulation: 438,
+						frequency: 'QID',
+						batchNo: batchNo,
+						injDate: jq('#tetanus-vaccine-date-field').val()
+					}).success(function (data) {
+						jq().toastmessage('removeToast', savingMessage);
+						jq().toastmessage('showSuccessToast', 'Successfully saved Tetanus Toxoid Vaccine');						
+						tetanusVaccineDialog.close();
+						location.reload();
+						
+					}).error(function (xhr, status, err) {
+						jq().toastmessage('removeToast', savingMessage);
+						jq().toastmessage('showErrorToast', "Saving Failed! " + err);
+						
+					});
+                    
+                },
+                cancel: function () {
+                    tetanusVaccineDialog.close();
+                }
+            }
+        });
 
         jq('.update-vaccine a').click(function(){
 			var idnt = jq(this).data('idnt');
 			var name = jq(this).data('name');
 			var prog = jq(this).data('prog');
+			
+			if (typeof(idnt) === 'undefined'){
+				if (jq(this).attr('id') == 'update-tetanus-vaccine'){
+					tetanusVaccineDialog.show();
+					return false;				
+				}
+				else{
+					return false;				
+				}
+			}
 			
 			jq('#vaccine-idnt').val(idnt);
 			jq('#vaccine-name').val(name);
@@ -201,7 +262,7 @@
 			
 			jq('#vaccine-state').html(jq('#changeToState_'+idnt).html());			
 		
-			vaccinationDialog.show();		
+			vaccinationDialog.show();
 		});
 
         jq("#programExit").on("click", function (e) {
@@ -212,6 +273,8 @@
             var idnt = jq(this).data('idnt');
             var name = jq(this).data('name');
             var prog = jq(this).data('prog');
+			
+			if (typeof(idnt) === 'undefined'){ return false }
 
             if (jq(this).hasClass('icon-chevron-right')){
                 jq(this).removeClass('icon-chevron-right');
@@ -242,9 +305,10 @@
         var lastMenstrualPeriod = _.find(patientProfile.details, function(profile){
             return profile.uuid == "1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         });
-        var lastMenstrualPeriod = moment(lastMenstrualPeriod.value, "DD-MM-YYYY");
+
+		lastMenstrualPeriod = moment(lastMenstrualPeriod.value, "DD-MM-YYYY");
         var todaysDate = moment();
-        var gestationInWeeks = Math.ceil(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
+        var gestationInWeeks = Math.round(moment.duration(todaysDate.diff(lastMenstrualPeriod)).asWeeks());
 
         if(gestationInWeeks < 16) {
             jq("#lessthan16").show();
@@ -754,6 +818,19 @@
 				output += 'ANC Exercise Given: ' + jq("input[name='concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c']:checked").data('value') + '<br/>';
 			}
 			
+			if (jq(this).attr('name') == 'test.folate'){
+				if (jq(this).data('value') == 'Yes'){
+					jq('.iron-individual-doses').hide();
+					jq("input[name='concept.424bd134-a3af-4095-8fe9-374f0af13768'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").attr('checked', 'true');
+					jq("input[name='concept.8ee937e9-07b9-4962-94b0-73c05df8652a'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").attr('checked', 'true');
+				}
+				else{
+					jq('.iron-individual-doses').show();
+					jq("input[name='concept.424bd134-a3af-4095-8fe9-374f0af13768'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").removeAttr('checked');
+					jq("input[name='concept.8ee937e9-07b9-4962-94b0-73c05df8652a'][value='4536f271-5430-4345-b5f7-37ca4cfe1553']").removeAttr('checked');
+				}			
+			}
+			
 			jq('#summaryTable tr:eq(7) td:eq(1)').html(output);
 		});
 		
@@ -790,13 +867,12 @@
 				jq('#externalRefferalSpc').hide();
 			}
 		}).change();
-
-
 		
 		jq('#lessthan16 span.small').click(function(){
 			jq('#lessthan16').hide(500);
 		});
-
+		
+		jq('#malariaProphylaxisLink .chevron').click();
     });
 
     function selectReferrals(selectedReferral){
@@ -1082,6 +1158,21 @@
 		margin-top: -5px;
 		
 	}
+    .important {
+        color: #f00 !important;
+    }
+	
+	.treatment-info .testbox{
+		min-height:	100px!important;
+		height: 	100px!important;
+	}
+	.iron-individual-doses{
+		display: none;
+		border-left: 5px solid rgb(242, 101, 34);
+		display: block;
+		margin-left: 37px;
+		padding-top: 0;
+	}
 </style>
 
 <script id="examination-detail-template" type="text/template">
@@ -1126,6 +1217,181 @@
 	<section>
 		<span class="title">Clinical Notes</span>
 		
+        <fieldset class="no-confirmation">
+            <legend>Immunizations</legend>
+
+            <div style="padding: 0 4px">
+                <field>
+
+                </field>
+
+                <div style="min-width: 78%" class="col16 dashboard">
+					
+					<div id="data-holder">
+						<div style="" valign="top">
+							<div class="info-section" style="width: 100.7%">
+								<div class="info-header">
+									<i class="icon-medicine"></i>
+									<h3> TETANUS VACCINES</h3>
+									<a><i class="icon-chevron-down small right chevron"></i></a>
+								</div>
+
+								<div class="info-body">
+									<div style="display: nones;">
+										<table>
+											<thead>
+												<tr>
+													<thead>
+														<th>#</th>
+														<th>VACCINE</th>
+														<th>GIVEN ON</th>
+														<th>RECORDED</th>
+														<th>PROVIDER</th>
+													</thead>
+												</tr>
+											</thead>
+
+											<tbody>
+												<% if (tetanusVaccines.size() == 0) {%>
+													<tr>
+														<td></td>
+														<td colspan="5">No Records Found<br/></td>
+													</tr>
+												<% } else {%>
+													<% tetanusVaccines.eachWithIndex { vaccines, index -> %>
+														<tr>
+															<td>${index+1}</td>
+															<td>TETANUS TOXOID</td>
+															<td>${vaccines.dateGiven.toString().substring(0,10)}</td>
+															<td>${vaccines.dateRecorded.toString().substring(0,10)}</td>
+															<td>${vaccines.provider}</td>															
+														</tr>
+													<% } %>
+												<% } %>
+											</tbody>
+										</table>
+
+										<div class="update-vaccine">
+											<a id="update-tetanus-vaccine">
+												<i class="icon-pencil small"></i>
+												Update Vaccine
+											</a>											
+										</div>
+
+										<div class="clear"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+                    <% patientProgram.program.workflows.each { workflow -> %>
+						<% if (workflow.programWorkflowId != 10 && workflow.programWorkflowId != 11) { %>
+							<% def stateId; def stateStart; def stateName; %>
+							<div id="data-holder">
+								<div style="" valign="top">
+									<div class="info-section" style="width: 100.7%">
+										<% patientProgram.states.each { state -> %>
+										<% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
+											stateId = state.state.concept.conceptId;
+											stateName = state.state.concept.name;
+											stateStart = state.startDate;
+										} %>
+										<% } %>
+
+										<div class="info-header">
+											<i class="icon-medicine"></i>
+
+											<h3>${workflow.concept.name}</h3>
+											<a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+										</div>
+
+										<div class="info-body">
+											<div id="${workflow.programWorkflowId}" style="display: none;">
+												<table id="workflowTable_${workflow.programWorkflowId}">
+													<thead>
+													<tr>
+													<thead>
+													<th>#</th>
+													<th>VACCINE</th>
+													<th>GIVEN ON</th>
+													<th>RECORDED</th>
+													<th>PROVIDER</th>
+													</thead>
+												</tr>
+												</thead>
+
+													<tbody>
+
+													</tbody>
+												</table>
+
+												<div class="update-vaccine">
+													<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}">
+														<i class="icon-pencil small"></i>
+														Update Vaccine
+													</a>											
+												</div>
+
+												<div class="clear"></div>
+
+												<div style="display: none">
+													<select name="changeToState_${workflow.programWorkflowId}"
+															id="changeToState_${workflow.programWorkflowId}">
+														<option value="0">Select a State</option>
+														<% if (workflow.states != null || workflow.states != "") { %>
+														<% workflow.states.each { state -> %>
+														<option id="${state.id}"
+																value="${state.id}">${state.concept.name}</option>
+														<% } %>
+														<% } %>
+													</select>
+												</div>
+
+											</div>
+
+										   <div id="currentStateDetails_${workflow.programWorkflowId}">
+												<% if (stateId != null) { %>
+													<div id='main-show-${workflow.programWorkflowId}'>
+														<span class="status active"></span>
+														<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
+														
+														<small style="font-size: 77%; margin-left: 10px;">
+															( <span class="icon-time"></span>
+															Date: <span id="state_date_${workflow.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
+														</small>												
+													</div>											
+												<% } else { %>
+													<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
+														<em>(No Previous Vaccinations Found)</em>												
+													</div>
+													<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
+														<span class="status active"></span>
+														<span id="state_name_${workflow.programWorkflowId}"></span>
+														
+														<small style="font-size: 77%; margin-left: 10px;">
+															( <span class="icon-time"></span>
+															Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
+														</small>												
+													</div>
+												<% } %>
+
+											</div>
+
+										</div>
+									</div>
+								</td>
+								</div>
+							
+							</div>
+						<% } %>
+					
+                    <% } %>
+
+                </div>
+            </div>
+        </fieldset>
+		
 		<fieldset class="no-confirmation">
 			<legend>Symptoms</legend>
 			<div style="padding: 0 4px">
@@ -1146,118 +1412,6 @@
 				<div id="symptoms-holder"></div>
 			</div>
 		</fieldset>
-
-        <fieldset class="no-confirmation">
-            <legend>Immunizations</legend>
-
-            <div style="padding: 0 4px">
-                <field>
-
-                </field>
-
-                <div style="min-width: 78%" class="col16 dashboard">
-                    <% patientProgram.program.workflows.each { workflow -> %>
-                    <% def stateId; def stateStart; def stateName; %>
-                    <div id="data-holder">
-                        <div style="" valign="top">
-                            <div class="info-section">
-                                <% patientProgram.states.each { state -> %>
-                                <% if (!state.voided && state.state.programWorkflow.programWorkflowId == workflow.programWorkflowId && state.active) {
-                                    stateId = state.state.concept.conceptId;
-                                    stateName = state.state.concept.name;
-                                    stateStart = state.startDate;
-                                } %>
-                                <% } %>
-
-                                <div class="info-header">
-                                    <i class="icon-medicine"></i>
-
-                                    <h3>${workflow.concept.name}</h3>
-                                    <a><i class="icon-chevron-right small right chevron" data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
-                                </div>
-
-                                <div class="info-body">
-                                    <div id="${workflow.programWorkflowId}" style="display: none;">
-                                        <table id="workflowTable_${workflow.programWorkflowId}">
-                                            <thead>
-                                            <tr>
-                                            <thead>
-                                            <th>#</th>
-                                            <th>VACCINE</th>
-                                            <th>GIVEN ON</th>
-                                            <th>RECORDED</th>
-                                            <th>PROVIDER</th>
-                                            </thead>
-                                        </tr>
-                                        </thead>
-
-                                            <tbody>
-
-                                            </tbody>
-                                        </table>
-
-                                        <div class="update-vaccine">
-											<a data-idnt="${workflow.programWorkflowId}" data-name="${workflow.concept.name}" data-prog="${patientProgram.patientProgramId}">
-												<i class="icon-pencil small"></i>
-												Update Vaccine
-											</a>											
-										</div>
-
-                                        <div class="">&nbsp;</div>
-
-                                        <div style="display: none">
-											<select name="changeToState_${workflow.programWorkflowId}"
-													id="changeToState_${workflow.programWorkflowId}">
-												<option value="0">Select a State</option>
-												<% if (workflow.states != null || workflow.states != "") { %>
-												<% workflow.states.each { state -> %>
-												<option id="${state.id}"
-														value="${state.id}">${state.concept.name}</option>
-												<% } %>
-												<% } %>
-											</select>
-										</div>
-
-                                    </div>
-
-                                   <div id="currentStateDetails_${workflow.programWorkflowId}">
-										<% if (stateId != null) { %>
-											<div id='main-show-${workflow.programWorkflowId}'>
-												<span class="status active"></span>
-												<span id="state_name_${workflow.programWorkflowId}">${stateName}</span>
-												
-												<small style="font-size: 77%; margin-left: 10px;">
-													( <span class="icon-time"></span>
-													Date: <span id="state_date_${workflow.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
-												</small>												
-											</div>											
-										<% } else { %>
-											<div id="no-show-${workflow.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
-												<em>(No Previous Vaccinations Found)</em>												
-											</div>
-									 		<div id='main-show-${workflow.programWorkflowId}' style="display: none;">
-												<span class="status active"></span>
-												<span id="state_name_${workflow.programWorkflowId}"></span>
-												
-												<small style="font-size: 77%; margin-left: 10px;">
-													( <span class="icon-time"></span>
-													Date: <span id="state_date_${workflow.programWorkflowId}"></span> )
-												</small>												
-											</div>
-										<% } %>
-
-									</div>
-
-                                </div>
-                            </div>
-                        </td>
-                        </div>
-                        <% } %>
-
-                    </div>
-                </div>
-            </div>
-        </fieldset>
 
 		<fieldset class="no-confirmation">
 			<legend>Examinations</legend>
@@ -1818,16 +1972,122 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>Treatment</legend>
-			<label class="label title-label" style="width: auto;">Treatment</label>
+			<legend>Prophylatic Drugs</legend>			
 			
 			<field>
 				<input type="hidden" id="treatment-info-set" class=""/>
 				<span id="treatment-info-lbl" class="field-error" style="display: none"></span>
 			</field>
 			
+			<div style="min-width: 78%" class="col16 dashboard">
+				<% def malariaProphylaxis = patientProgram.program.workflows.find { it.programWorkflowId == 10} %>				
+				<% def stateId; def stateStart; def stateName; %>
+				
+				<div id="data-holder">
+					<div style="" valign="top">
+						<div class="info-section" style="width: 100.7%;">
+							<% patientProgram.states.each { state -> %>
+							<% if (!state.voided && state.state.programWorkflow.programWorkflowId == malariaProphylaxis.programWorkflowId && state.active) {
+								stateId = state.state.concept.conceptId;
+								stateName = state.state.concept.name;
+								stateStart = state.startDate;
+							} %>
+							<% } %>
+
+							<div class="info-header" style="text-transform: uppercase">
+								<i class="icon-medicine"></i>
+
+								<h3>${malariaProphylaxis.concept.name}</h3>
+								<a id="malariaProphylaxisLink"><i class="icon-chevron-right small right chevron" data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}"></i></a>
+							</div>
+
+							<div class="info-body">
+								<div id="${malariaProphylaxis.programWorkflowId}" style="display: none;">
+									<table id="workflowTable_${malariaProphylaxis.programWorkflowId}">
+										<thead>
+										<tr>
+										<thead>
+										<th>#</th>
+										<th>ANTI-MALARIAL</th>
+										<th>GIVEN ON</th>
+										<th>RECORDED</th>
+										<th>PROVIDER</th>
+										</thead>
+									</tr>
+									</thead>
+
+										<tbody>
+
+										</tbody>
+									</table>
+
+									<div class="update-vaccine">
+										<a data-idnt="${malariaProphylaxis.programWorkflowId}" data-name="${malariaProphylaxis.concept.name}" data-prog="${patientProgram.patientProgramId}">
+											<i class="icon-pencil small"></i>
+											Update Malarial Vaccine
+										</a>											
+									</div>
+
+									<div class="">&nbsp;</div>
+
+									<div style="display: none">
+										<select name="changeToState_${malariaProphylaxis.programWorkflowId}"
+												id="changeToState_${malariaProphylaxis.programWorkflowId}">
+											<option value="0">Select a State</option>
+											<% if (malariaProphylaxis.states != null || malariaProphylaxis.states != "") { %>
+											<% malariaProphylaxis.states.each { state -> %>
+											<option id="${state.id}"
+													value="${state.id}">${state.concept.name}</option>
+											<% } %>
+											<% } %>
+										</select>
+									</div>
+
+								</div>
+
+								<div id="currentStateDetails_${malariaProphylaxis.programWorkflowId}">
+									<% if (stateId != null) { %>
+										<div id='main-show-${malariaProphylaxis.programWorkflowId}'>
+											<span class="status active"></span>
+											<span id="state_name_${malariaProphylaxis.programWorkflowId}">${stateName}</span>
+											
+											<small style="font-size: 77%; margin-left: 10px;">
+												( <span class="icon-time"></span>
+												Date: <span id="state_date_${malariaProphylaxis.programWorkflowId}">${ui.formatDatePretty(stateStart)}</span> )
+											</small>												
+										</div>											
+									<% } else { %>
+										<div id="no-show-${malariaProphylaxis.programWorkflowId}" style="margin-left: 20px; color: rgb(153, 153, 153);">
+											<em>(No Previous Records Found)</em>												
+										</div>
+										<div id='main-show-${malariaProphylaxis.programWorkflowId}' style="display: none;">
+											<span class="status active"></span>
+											<span id="state_name_${malariaProphylaxis.programWorkflowId}"></span>
+											
+											<small style="font-size: 77%; margin-left: 10px;">
+												( <span class="icon-time"></span>
+												Date: <span id="state_date_${malariaProphylaxis.programWorkflowId}"></span> )
+											</small>												
+										</div>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col16 dashboard" style="min-width: 78%">
+				<div class="info-section" style="width: 100.7%;">
+					<div class="info-header" style="text-transform: uppercase;">
+						<i class="icon-paste"></i>
+						<h3>Treatment</h3>
+					</div>				
+				</div>
+			</div>		
+			
 			<div class="onerow floating-controls treatment-info">
-				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
+				<div class="col4" style="width: 50%; margin: 0 1% 0 0">
 					<div class="testbox">
 						<div>Deworming</div>
 						<label>
@@ -1839,11 +2099,9 @@
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.159922AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label><br/>
-					</div>
-				</div>
+					</div>				
 					
-				<div class="col4" style="width: 33%; margin: 0 1% 0 0">
-					<div class="testbox">
+					<div class="testbox" style="height: 190px!important">
 						<div>Received LLITN</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
@@ -1853,12 +2111,12 @@
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.160428AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
-					</div>					
+					</div>
 				</div>
 				
-				<div class="col4 last" style="width: 32%;">
+				<div class="col4 last" style="width: 49%;">
 					<div class="testbox">
-						<div>ANC Exercise given?</div>
+						<div>ANC Exercise Given</div>
 						<label>
 							<input id="couple-counselled" data-value="Yes" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="4536f271-5430-4345-b5f7-37ca4cfe1553">
 							Yes
@@ -1867,13 +2125,44 @@
 							<input id="couple-counselled" data-value="No" type="radio" name="concept.0a92efcc-51b3-448d-b4e3-a743ea5aa18c" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9">
 							No
 						</label>
-					</div>				
+					</div>
+					
+					<div class="testbox iron-folate" style="height: 190px!important">
+						<div>Iron & Folate Given</div>
+						<label style="width: 300px;">
+							<input id="couple-counselled" data-value="Yes" name="test.folate" type="radio"/>
+							Combined Dose
+						</label><br/>
+						
+						<label style="width: 300px;">
+							<input id="couple-counselled" data-value="No"  name="test.folate" type="radio"/>
+							Individual Doses
+						</label><br/>
+						
+						<span class="iron-individual-doses" style="margin-top: 5px; display: none;">
+							<label style="width: 300px; margin-top: -4px; margin-left: -5px;">
+								<span>Folic Acid</span>
+							</label>
+							
+							<input data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><span style="color: #363463">Yes</span>
+							<input data-value="Yes" type="radio" name="concept.424bd134-a3af-4095-8fe9-374f0af13768" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><span style="color: #363463">No</span>
+						</span>	<br/>
+						
+						<span class="iron-individual-doses" style="margin-top: -18px; display: none;">
+							<label style="width: 300px; margin-top: -4px; margin-left: -5px;">
+								<span>Iron Supplements</span>
+							</label>
+							
+							<input data-value="Yes" type="radio" name="concept.8ee937e9-07b9-4962-94b0-73c05df8652a" value="4536f271-5430-4345-b5f7-37ca4cfe1553"><span style="color: #363463">Yes</span>
+							<input data-value="Yes" type="radio" name="concept.8ee937e9-07b9-4962-94b0-73c05df8652a" value="606720bb-4a7a-4c4c-b3b5-9a8e910758c9"><span style="color: #363463">No</span>							
+						</span>
+					</div>
 				</div>
 			</div>
 		</fieldset>
 
 		<fieldset>
-			<legend>Referral</legend>
+			<legend>Referral Information</legend>
 			
 			<field>
 				<input type="hidden" id="referral-set" class=""/>
@@ -1883,7 +2172,7 @@
 			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Next Visit</div>
 			<div id="next-visit-date" class="onerow">
 				<div class="col4" style="padding-top: 5px;">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false,  defaultToday: true, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -2078,7 +2367,7 @@
                     <input class="drug-name" id="drugName" type="text">
                 </li>
                 <li>
-                    <label>Dosage</label>
+                    <label>Dosage<span class="important">*<span></label>
                     <input type="text" id="drugDosage" style="width: 60px !important;">
                     <select id="drugUnitsSelect" style="width: 174px !important;">
                         <option value="0">Select Unit</option>
@@ -2099,7 +2388,7 @@
                 </li>
 
                 <li>
-                    <label>Number of Days</label>
+                    <label>Number of Days<span class="important">*<span></label>
                     <input id="numberOfDays" type="text">
                 </li>
                 <li>
@@ -2137,6 +2426,43 @@
 			
 			<li>				
 				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'vaccine-date', id: 'vaccine-date', label: 'Change Date', useTime: false, defaultToday: true,startDate: patient.birthdate, endDate: new Date()])}
+			</li>
+			
+			<span class="button confirm" style="float: right; margin-right: 17px;">
+				<i class="icon-save small"></i>
+				Save
+			</span>
+			
+			<span class="button cancel">Cancel</span>
+		</ul>
+    </div>
+</div>
+
+<div id="tetanus-vaccine-dialog" class="dialog" style="display: none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE VACCINE</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="vaccine-name">Vaccine Name:</label>
+				<input type="text" id="tetanus-vaccine-name" readonly="" value="Tetanus Toxoid"/>
+			</li>
+			
+			<li>
+				<label for="vaccine-name">Batch Number:</label>
+				<select id="tetanus-batch-no">
+                    <option value="">Choose Batch No.</option>
+					<% tetanusBatchNo.drugs.each { drug -> %>
+						<option value="${drug.batchNo}">${drug.batchNo}</option>					
+					<% } %>
+				</select>
+			</li>
+			
+			<li>				
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'tetanus-vaccine-date', id: 'tetanus-vaccine-date', label: 'Date Given', useTime: false, defaultToday: true, startDate: patient.birthdate, endDate: new Date()])}
 			</li>
 			
 			<span class="button confirm" style="float: right; margin-right: 17px;">

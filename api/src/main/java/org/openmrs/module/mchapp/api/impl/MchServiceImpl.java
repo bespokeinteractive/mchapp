@@ -16,6 +16,7 @@ import org.openmrs.module.mchapp.MchProfileConcepts;
 import org.openmrs.module.mchapp.VisitListItem;
 import org.openmrs.module.mchapp.api.ListItem;
 import org.openmrs.module.mchapp.api.MchService;
+import org.openmrs.module.mchapp.api.model.ClinicalForm;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.util.OpenmrsUtil;
 
@@ -146,14 +147,13 @@ public class MchServiceImpl implements MchService {
     }
 
     @Override
-    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-                                      List<OpdTestOrder> testOrders, String program, String encounterType, Location location, Integer visitTypeId) {
-        Encounter mchEncounter = saveMchEncounter(patient, encounterObservations,
-                drugOrders, testOrders, program, 
+    public Encounter saveMchEncounter(ClinicalForm form, String encounterType,
+                                      Location location, Integer visitTypeId) {
+        Encounter mchEncounter = saveMchEncounter(form,
                 encounterType, location);
         Visit visit = new Visit();
         visit.setLocation(location);
-        visit.setPatient(patient);
+        visit.setPatient(form.getPatient());
         visit.setDateCreated(new Date());
         visit.setStartDatetime(new Date());
         VisitType visitType = Context.getVisitService().getVisitType(visitTypeId);
@@ -164,27 +164,30 @@ public class MchServiceImpl implements MchService {
 
 
     @Override
-    public Encounter saveMchEncounter(Patient patient, List<Obs> encounterObservations, List<OpdDrugOrder> drugOrders,
-                                      List<OpdTestOrder> testOrders, String program, String encounterType, Location location) {
+    public Encounter saveMchEncounter(ClinicalForm form, String encounterType,
+            Location location) {
+        if (form == null) {
+            throw new IllegalArgumentException("form argument cannot be null");
+        }
         Encounter mchEncounter = new Encounter();
-        mchEncounter.setPatient(patient);
+        mchEncounter.setPatient(form.getPatient());
         mchEncounter.setLocation(location);
         Date encounterDateTime = new Date();
-        if (encounterObservations.size() > 0) {
-            encounterDateTime = encounterObservations.get(0).getObsDatetime();
+        if (form.getObservations().size() > 0) {
+            encounterDateTime = form.getObservations().get(0).getObsDatetime();
         }
         mchEncounter.setEncounterDatetime(encounterDateTime);
         EncounterType mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(encounterType);
         mchEncounter.setEncounterType(mchEncounterType);
-        for (Obs obs : encounterObservations) {
+        for (Obs obs : form.getObservations()) {
             mchEncounter.addObs(obs);
         }
         mchEncounter = Context.getEncounterService().saveEncounter(mchEncounter);
-        for (OpdDrugOrder drugOrder : drugOrders) {
+        for (OpdDrugOrder drugOrder : form.getDrugOrders()) {
             drugOrder.setEncounter(mchEncounter);
             Context.getService(PatientDashboardService.class).saveOrUpdateOpdDrugOrder(drugOrder);
         }
-        for (OpdTestOrder testOrder : testOrders) {
+        for (OpdTestOrder testOrder : form.getTestOrders()) {
             testOrder.setEncounter(mchEncounter);
             testOrder = Context.getService(PatientDashboardService.class).saveOrUpdateOpdOrder(testOrder);
             FreeInvestigationProcessor.process(testOrder, location);

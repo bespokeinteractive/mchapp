@@ -762,7 +762,9 @@
 	.simple-form-ui section, .simple-form-ui #confirmation, .simple-form-ui form section, .simple-form-ui form #confirmation {
 		background: #fff none repeat scroll 0 0;
 	}
-	
+	.important {
+	    color: #f00 !important;
+	}	
 </style>
 
 <script id="diagnosis-template" type="text/template">
@@ -1124,12 +1126,12 @@
 							<div>
 								<span>Screening Results:</span><br/>
 									<label>
-										<input id="screening-positive" type="radio" data-value="Positive" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="7480ebef-125b-4e0d-a8e5-256224ee31a0" data-value="Positive">
+										<input id="screening-positive" type="radio" data-value="Positive" name="concept.a9452df7-b81c-43b2-9b2d-56ea74a828b0" value="7480ebef-125b-4e0d-a8e5-256224ee31a0" data-value="Positive">
 										Positive
 									</label><br/>
 								
 									<label>
-										<input id="screening-negative" type="radio" data-value="Negative" name="concept.1406dbf3-05da-4264-9659-fb688cea5809" value="aca8224b-2f4b-46cb-b75d-9e532745d61f" data-value="Negative">
+										<input id="screening-negative" type="radio" data-value="Negative" name="concept.a9452df7-b81c-43b2-9b2d-56ea74a828b0" value="aca8224b-2f4b-46cb-b75d-9e532745d61f" data-value="Negative">
 										Negative
 									</label><br/>
 							</div>
@@ -1254,44 +1256,12 @@
 			</div>
 		</fieldset>
 
-		<fieldset>
-			<legend>Family Planning</legend>
-			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Family Planning<span class="important"></span></div>
-
-			<field>
-				<input type="hidden" id="family-planning-set" class=""/>
-				<span id="family-planning-lbl" class="field-error" style="display: none"></span>
-			</field>
-
-			<div class="onerow floating-controls misc-info">
-				<div class="col4" style="width: 48%;">
-					
-					<label for="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" style="width: auto; color: #009384">FP Method </label>
-					
-					<select name="concept.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-						<option value="0" >Select Option</option>
-						<% if (familyPlanningOptions != null || familyPlanningOptions != "") { %>
-						<% familyPlanningOptions.each { familyPlanningOption -> %>
-						<option value="${familyPlanningOption.answerConcept.uuid}">${familyPlanningOption.answerConcept.name}</option>
-						<% } %>
-						<% } %>
-					</select>
-				</div>
-
-				<div class="col4 last" style="width: 49%;">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'Date', useTime: false, defaultToday: false, endDate: new Date(), class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-				</div>
-
-				<div class="col4 last" style="width: 100%; margin-top: 10px;">
-					<label for="fp-comment" style="width: auto; color: #009384">Comments</label>
-					<textarea name="comment.374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="fp-comment" style="width: 97%"></textarea>
-				</div>
-			</div>
-
-
-
-
-		</fieldset>
+		<% if(fptabIncludedInPNC == "true"){ %>
+			<fieldset class="no-confirmation">
+				<legend>FP Administration</legend>
+				${ui.includeFragment("fpapp", "familyPlanning")}
+			</fieldset>
+		<% } %>
 
 		<fieldset>
 			<legend>Referral Options</legend>
@@ -1304,7 +1274,7 @@
 			<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Next Visit<span class="important"></span></div>
 			<div id="next-visit-date" class="onerow">
 				<div class="col4" style="padding-top: 5px;">
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false, startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.ac5c88af-3104-4ca2-b1f7-2073b1364065', id: 'next-visit-date', label: 'Next Visit Date',useTime: false,  defaultToday: true,  startToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -1383,6 +1353,17 @@
 					<textarea id="comments" name="comment.18b2b617-1631-457f-a36b-e593d948707f" style="width: 95.7%; resize: none;"></textarea>
 				</div>				
 			</div>
+			
+			<% if(fptabIncludedInPNC == "false"){ %>	
+				<div class="label title-label" style="width: auto; border-bottom: 1px solid rgb(221, 221, 221); padding: 10px 0px 2px 10px;">Send To<span class="important"></span></div>
+				<div class="onerow">
+					<label style="cursor: pointer; font-weight: normal; margin-top: 5px; width: auto; padding-left: 0px;">
+						<input id="sendToFamilyPlannning" name="sendToFamilyPlannning" type="checkbox" style="margin-left: 0" />
+						Send to Family Plannning
+					</label>
+				</div>			
+			<% } %>	
+			
 		</fieldset>
 	</section>
 
@@ -1451,8 +1432,8 @@
 						</tbody>
 					</table>
 					
-					<div>
-						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.5%;">
+					<div>						
+						<label style="padding: 3px 10px; border: 1px solid #fff799; background: rgb(255, 247, 153) none repeat scroll 0px 0px; cursor: pointer; font-weight: normal; margin-top: 12px; width: 96.8%;">
 							<input id="exitPatientFromProgramme" type="checkbox" name="exitPatientFromProgramme">
 							Exit Patient from Program
 						</label>
@@ -1495,7 +1476,7 @@
                     <input class="drug-name" id="drugName" type="text">
                 </li>
                 <li>
-                    <label>Dosage</label>
+                    <label>Dosage<span class="important">*<span></label>
                     <input type="text" id="drugDosage" style="width: 60px !important;">
                     <select id="drugUnitsSelect" style="width: 174px !important;">
                         <option value="0">Select Unit</option>
@@ -1516,7 +1497,7 @@
                 </li>
 
                 <li>
-                    <label>Number of Days</label>
+                    <label>Number of Days<span class="important">*<span></label>
                     <input id="numberOfDays" type="text">
                 </li>
                 <li>

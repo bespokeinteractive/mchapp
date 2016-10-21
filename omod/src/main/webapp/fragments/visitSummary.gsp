@@ -331,6 +331,16 @@
 				<span>{{=hivCoupleCouncelled}}</span>
 				<div class="clear"></div>
 			</div>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Cervical Screening Method:</label>
+				<span>{{=pncCervicalScreeningMethod}}</span>
+				<div class="clear"></div>
+			</div>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Cervical Screening Result:</label>
+				<span>{{=pncCervicalScreeningResult}}</span>
+				<div class="clear"></div>
+			</div>
 			
 			<div>
 				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Exercise Given:</label>
@@ -423,6 +433,28 @@
 				<span>{{-externalReferral}}</span>
 				<div class="clear"></div>
 			</div>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>RECEIVED LLITN:</label>
+				<span>{{=cwcLLITN}}</span>
+			    <div class="clear"></div>
+		     </div>
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Dewormed:</label>
+				<span>{{=cwcDewormed}}</span>
+				<div class="clear"></div>
+			</div>
+
+			<div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>Vitamin A Supplementation:</label>
+				<span>{{=cwcVitaminASupplementation}}</span>
+				<div class="clear"></div>
+			</div>
+            <div>
+				<label style="display: inline-block; font-weight: bold; width: 210px"><span class="status active"></span>MNP Supplementation:</label>
+				<span>{{=cwcSupplementedWithMNP}}</span>
+				<div class="clear"></div>
+            </div>
+
 		<% } %>
 	</div>
 </script>

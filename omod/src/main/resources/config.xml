@@ -2,67 +2,83 @@
 
 <module configVersion="1.2">
 
-	<!-- Module Properties -->
-	<id>${project.parent.artifactId}</id>
-	<name>${project.parent.name}</name>
-	<version>${project.parent.version}</version>
-	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
-	<author>Bespoke</author>
-	<description>
-		${project.parent.description}
-	</description>
-	<updateURL>https://modules.openmrs.org/modules/download/${project.parent.artifactId}/update.rdf</updateURL>
-	<require_version>${openMRSVersion}</require_version>
-	<!-- / Module Properties -->
+    <!-- Module Properties -->
+    <id>${project.parent.artifactId}</id>
+    <name>${project.parent.name}</name>
+    <version>${project.parent.version}</version>
+    <package>${project.parent.groupId}.${project.parent.artifactId}</package>
+    <author>Bespoke</author>
+    <description>
+        ${project.parent.description}
+    </description>
+    <updateURL>https://modules.openmrs.org/modules/download/${project.parent.artifactId}/update.rdf</updateURL>
+    <require_version>${openMRSVersion}</require_version>
+    <!-- / Module Properties -->
 
-	
-	<!-- Required Modules -->
-	<require_modules>
-		<require_module version="1.7">
-			org.openmrs.module.uicommons
-		</require_module>
-		<require_module version="3.3.1">
-			org.openmrs.module.uiframework
-		</require_module>
-		<require_module version="1.7">
-			org.openmrs.module.metadatadeploy
-		</require_module>
-		<require_module version="1.5.3">
-			org.openmrs.module.hospitalcore
-		</require_module>
-		<require_module version="2.0.12">
-			org.openmrs.module.inventory
-		</require_module>
-		<require_module version="1.0-SNAPSHOT">
-			org.openmrs.module.patientdashboardapp
-		</require_module>
-	</require_modules>
-	<!-- / Required Modules -->
-	
-	<!-- Module Activator -->
-	<activator>${project.parent.groupId}.${project.parent.artifactId}.MCHAppActivator</activator>
-	
-	
-	<!-- Maps hibernate file's, if present -->
-	<mappingFiles>
-				
-	</mappingFiles>
 
-	<!-- Internationalization -->
-	<!-- All message codes should start with ${project.parent.artifactId}. -->
-	<messages>
-		<lang>en</lang>
-		<file>messages.properties</file>
-	</messages>
-	<messages>
-		<lang>fr</lang>
-		<file>messages_fr.properties</file>
-	</messages>
-	<messages>
-		<lang>es</lang>
-		<file>messages_es.properties</file>
-	</messages>
-	<!-- /Internationalization -->
+    <!-- Required Modules -->
+    <require_modules>
+        <require_module version="1.7">
+            org.openmrs.module.uicommons
+        </require_module>
+        <require_module version="3.3.1">
+            org.openmrs.module.uiframework
+        </require_module>
+        <require_module version="1.7">
+            org.openmrs.module.metadatadeploy
+        </require_module>
+        <require_module version="1.5.3">
+            org.openmrs.module.hospitalcore
+        </require_module>
+        <require_module version="2.0.12">
+            org.openmrs.module.inventory
+        </require_module>
+        <require_module version="1.0-SNAPSHOT">
+            org.openmrs.module.patientdashboardapp
+        </require_module>
+    </require_modules>
+    <!-- / Required Modules -->
 
+    <!-- Module Activator -->
+    <activator>${project.parent.groupId}.${project.parent.artifactId}.MCHAppActivator</activator>
+
+
+    <!-- Maps hibernate file's, if present -->
+    <mappingFiles>
+
+        ImmunizationStoreTransactionType.hbm.xml
+        ImmunizationStoreDrug.hbm.xml
+        ImmunizationStorePatientTransaction.hbm.xml
+        ImmunizationStoreDrugTransactionDetail.hbm.xml
+        ImmunizationEquipment.hbm.xml
+        ImmunizationStockout.hbm.xml
+
+    </mappingFiles>
+
+    <!-- Internationalization -->
+    <!-- All message codes should start with ${project.parent.artifactId}. -->
+    <messages>
+        <lang>en</lang>
+        <file>messages.properties</file>
+    </messages>
+    <messages>
+        <lang>fr</lang>
+        <file>messages_fr.properties</file>
+    </messages>
+    <messages>
+        <lang>es</lang>
+        <file>messages_es.properties</file>
+    </messages>
+    <!-- /Internationalization -->
+	<!-- Required global properties -->
+	<globalProperty>
+		<property>fptab.includedInPNC</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			To determine whether to include family planning tab in pnc if same clinician is serving both pnc and fp patients
+		</description>
+	</globalProperty>
+
+	<!-- /Required global properties -->
 </module>
 

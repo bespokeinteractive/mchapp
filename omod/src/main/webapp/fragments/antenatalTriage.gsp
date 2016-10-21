@@ -1,8 +1,9 @@
 <script>
-
     jq(function () {
     	var isEdit=${isEdit};
+		
     	jq("#editStatus").val(isEdit?"true":"false");
+		
         var patientProfile = JSON.parse('${patientProfile}');
         if (patientProfile.details.length > 0) {
             var patientProfileTemplate = _.template(jq("#patient-profile-template").html());
@@ -45,18 +46,22 @@
         });
 
         jq("form").on("change", "#gestation", function(e) {
-            var gestationPeriod = jq(this).val();
+            var gestationPeriod = jq(this).val();			
+			if (!jq.isNumeric(gestationPeriod)){
+				alert('Invalid');
+				return false;
+			}
+			
             var lastMenstrualPeriod = moment().add(-gestationPeriod, "weeks");
-            console.log(lastMenstrualPeriod)
+			
             jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field', document.forms[0]).val(lastMenstrualPeriod.format('YYYY-MM-DD'));
             jq('#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-display', document.forms[0]).val(lastMenstrualPeriod.format('DD MMM YYYY'));
             jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA").change();
-        })
+        });
 
         function calculateExpectedDeliveryDate() {
             var lastMenstrualPeriod = jq("#1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field", document.forms[0]).val();
-            var expectedDate = moment(lastMenstrualPeriod, "YYYY-MM-DD").add(9, "months")
-			expectedDate = expectedDate.add(7, 'days');
+            var expectedDate = moment(lastMenstrualPeriod, "YYYY-MM-DD").add(280, "days");
             jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-field', document.forms[0]).val(expectedDate.format('YYYY-MM-DD'));
             jq('#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-display', document.forms[0]).val(expectedDate.format('DD MMM YYYY'));
         }
@@ -76,6 +81,12 @@
 				jq().toastmessage('showErrorToast', "Check that the L.M.P has been provided!");
 				return false;
 			}
+			
+			if (!jq.isNumeric(jq('#visitNumber').val())){
+				jq().toastmessage('showErrorToast', "Check that the ANC Visit Count has been filled properly!");
+				return false;
+			}
+			
             event.preventDefault();
             var data = jq("form#antenatal-triage-form").serialize();
 
@@ -129,8 +140,6 @@
 				
 				</div>
 				
-				
-				
 				<span class="arrow-border"></span>
 				<span class="arrow"></span>
 			</li>
@@ -140,7 +149,7 @@
 		</ul>
 	</div>
 	
-	<div style="min-width: 78%" class="col16 dashboard">
+	<div style="min-width: 70%" class="col16 dashboard">
 		<div class="info-section">
 			<form id="antenatal-triage-form">
 			<input type="hidden" value="" id="editStatus" name="isEdit"/>
@@ -151,10 +160,10 @@
 					<h3>TRIAGE DETAILS</h3>
 				</div>
 				
-				<div class="info-body">						
+				<div class="info-body" style="margin-bottom: 20px; padding-bottom: 10px;">
 					<input type="hidden" name="patientId" value="${patientId}" >
 					<input type="hidden" name="queueId" value="${queueId}" >
-					<input type="hidden" name="patientEnrollmentDate" value="${patientProgram?patientProgram.dateEnrolled:"--"}">
+					<input type="hidden" name="patientEnrollmentDate" value='${patientProgram?patientProgram.dateEnrolled:"--"}'>
 					<div>
 						<label for="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Weight</label>
 						<input type="text" id="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name="concept.5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" class="number numeric-range" value="${weight}"/>
@@ -180,21 +189,34 @@
 						<span class="append-to-value">Diastolic</span>
 						<span id="12484" class="field-error" style="display: none"></span>
 					</div>					
-					
-				<%if(!isEdit){ %>
+				</div>
+				
+				<div class="info-header">
+					<i class="icon-group"></i>
+					<h3>VISIT DETAILS</h3>
+				</div>
+				
+				<div class="info-body">
 					<div>
-						<label></label>
-						<label style="padding-left: 0px; width: auto; cursor: pointer;">
-							<input type="checkbox" name="send_for_examination" value="yes" >
-							Tick to Send to Examination Room
-						</label>
+						<label for="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">Number of Visit</label>
+						<input type="text" name="concept.1425AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="visitNumber" value="${visitCount}">
+						<span id="" class="field-error" style="display: none"></span>
 					</div>
+			
+					<%if(!isEdit){ %>
+						<div>
+							<label></label>
+							<label style="padding-left: 0px; width: auto; cursor: pointer;">
+								<input type="checkbox" name="send_for_examination" value="11303942-75cd-442a-aead-ae1d2ea9b3eb" >
+								Tick to Send to Examination Room
+							</label>
+						</div>
 					<% }%>
 				</div>
 			</form>
 			
 			<div>
-				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 50px;">
+				<span class="button submit confirm right" id="antenatalTriageFormSubmitButton" style="margin-top: 10px; margin-right: 30px;">
 					<i class="icon-save"></i>
 					Save
 				</span>
@@ -207,41 +229,9 @@
 	<br style="clear: both">
 </div>
 
-
 <div class="template-holder" style="display:none;">
 	<div class="patient-profile-editor">
-		<div class="info-header">
-			<i class="icon-user-md"></i>
-			<h3>ANTENATAL DETAILS</h3>
-		</div>
-		
-		<div class="info-body" style="margin-bottom: 20px; padding-bottom: 10px;">
-			<div>				
-				<label for="parity">Parity</label>
-				<input type="text" name="concept.1053AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="parity" />				
-				<span class="append-to-value">Pregnancies</span>
-			</div>
-		
-			<div>
-				<label for="gravidae">Gravida</label>
-				<input type="text" name="concept.5624AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" id="gravida" />
-				<span class="append-to-value">Pregnancies</span>
-			</div>
-			
-			<div>				
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '1427AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'L.M.P', useTime: false, defaultToday: false, endDate: new Date(), class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-			</div>
-			
-			<div>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'concept.5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', id: '5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', label: 'E.D.D', useTime: false, defaultToday: false, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
-			</div>
-			
-			<div>
-				<label for="gestation">Gestation</label>
-				<input type="text" id="gestation">
-				<span class="append-to-value">Weeks</span>
-			</div>
-		</div>
+		${ui.includeFragment("mchapp", "antenatalDetails")}
 	</div>
 </div>
 <div class="">&nbsp;</div>

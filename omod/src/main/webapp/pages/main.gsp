@@ -207,6 +207,28 @@
                 jq('#task-symptom').hide();
             }
         });
+		
+		jq('.fp-administration input').change(function(){
+			var output = '';
+			
+			if (jq('.fp-method').val() != ''){
+				output += 'Method: ' + jq('.fp-method').val() + '<br/>';
+			}
+			
+			if (jq('.ft-type input:checked').length > 0){
+				output += 'FP Type: ' + jq('.ft-type input:checked').data('value') + '<br/>';
+			}
+			
+			if (jq('#quantity-given').val() != ''){
+				output += 'Quantity: ' + jq('#quantity-given').val() + '<br/>';
+			}			
+			
+			if (output == ''){
+				output += 'N/A';
+			}
+			
+			jq('#summaryTable tr:eq(8) td:eq(1)').html(output);
+		});
 	});
 	
 	function symptomsSummary(){
@@ -504,8 +526,21 @@
 	.floating-controls textarea{
 		resize: none;
 	}
+	.info-header h3{
+		color: #f26522;
+	}
 	#cancelButton{
 		margin-left: 5px;
+	}
+	.fp-administration textarea,
+	.fp-administration input[type="text"]{
+		width: 75%!important;
+	}
+	.fp-administration input[type="radio"] {
+		-webkit-appearance: checkbox;
+		-moz-appearance: checkbox;
+		-ms-appearance: checkbox;
+		cursor: pointer;
 	}
 </style>
 
@@ -576,7 +611,13 @@ ${ui.includeFragment("mchapp","mchProfile")}
 
 <div class="mch-tabs" style="margin-top:5px!important;">
 	<ul>
-		<li id="cn"><a href="#clinical-notes">Clinical Notes</a></li>
+		<li id="cn"><a href="#clinical-notes">
+			<% if (opdConcept.equalsIgnoreCase("MCH CLINIC")) { %>
+				<span class="title">Clinical Notes</span>
+			<% } else if (opdConcept.equalsIgnoreCase("MCH IMMUNIZATION")){ %>
+				<span class="title">Immunizations</span>
+			<% } %>
+		</a></li>
 		<li id="ti"><a href="#triage-info">Triage Information</a></li>
 		<li id="cs"><a href="#clinical-summary">Clinical History</a></li>
 		<li id="lr"><a href="#investigations">Lab Reports</a></li>

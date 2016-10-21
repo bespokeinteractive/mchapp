@@ -163,14 +163,14 @@
 	.col15 {
 		display: inline-block;
 		float: left;
-		max-width: 22%;
-		min-width: 22%;
+		max-width: 35%;
+		min-width: 28%;
 	}
 
 	.col16 {
 		display: inline-block;
 		float: left;
-		width: 730px;
+		width: 720px;
 	}
 
 	#date-enrolled label {
@@ -187,13 +187,13 @@
 		left: auto;
 		margin-left: -200px;
 		margin-top: 13px;
-		padding-right: 55px;
+		padding-right: 35px;
 		position: relative;
 	}
 
 	.menu-title span {
 		display: inline-block;
-		width: 65px;
+		width: 80px;
 	}
 
 	span a:hover {
@@ -212,7 +212,7 @@
 	.form input,
 	.form textarea {
 		display: inline-block;
-		min-width: 70%;
+		min-width: 74%;
 	}
 
 	form select,
@@ -220,7 +220,7 @@
 	.form select,
 	.form ul.select {
 		display: inline-block;
-		min-width: 73%;
+		min-width: 74%;
 	}
 
 	#5596AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA label,
@@ -240,6 +240,12 @@
 	#modal-overlay {
 		background: #000 none repeat scroll 0 0;
 		opacity: 0.4 !important;
+	}
+	ul.left-menu li {
+		width: 250px;
+	}
+	.dashboard .info-header h3 {
+		color: #f26522;
 	}
 </style>
 
