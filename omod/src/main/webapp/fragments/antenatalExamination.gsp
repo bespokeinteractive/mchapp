@@ -1786,7 +1786,7 @@
                         </label><br/>
 
                         <label>
-                            <input id="couple-counselled" type="radio" data-value="CD4 Count" name="concept.9e93ea80-3d6d-4e60-98cf-d29e53b4703cd" value="52dcb4b5-eea3-4155-b3b6-26f4a255d06ad">
+                            <input id="couple-counselled" type="radio" data-value="CD4 Count" name="concept.9e93ea80-3d6d-4e60-98cf-d29e53b4703c" value="52dcb4b5-eea3-4155-b3b6-26f4a255d06ad">
                             CD4 Count
                         </label><br/>
 
