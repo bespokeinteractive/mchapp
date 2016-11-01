@@ -163,12 +163,15 @@
 						programWorkflowId: idnt,
 						programWorkflowStateId: jq('#vaccine-state').val(),
 						onDateDMY: jq('#vaccine-date-field').val(),
-                        patientId:${patient?.patientId}
+                        patientId:${patient?.patientId},
+                        batchNo: null,                                              
+						vvmStage: null,
+                        quantity: null
 					}
 
 					jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
 					.success(function (data) {
-						jq().toastmessage('showNoticeToast', data.message);
+						jq().toastmessage('showSuccessToast', data.message);
 
 						showEditWorkflowPopup(name, prog, idnt);
 
@@ -938,7 +941,7 @@
         }
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
                 .success(function (data) {
-                    jq().toastmessage('showNoticeToast', data.message);
+                    jq().toastmessage('showSuccessToast', data.message);
                     refreshPage();
                     jq("#programExit").hide();
                 }).error(function (xhr, status, err) {
@@ -1007,7 +1010,7 @@
             jq().toastmessage('showErrorToast', "Select Date!");
             return;
         } else {
-            jq().toastmessage('showNoticeToast', "Saving State...!");
+            jq().toastmessage('showSuccessToast', "Saving State...!");
             processHandleChangeWorkflowState(stateId, onDate);
         }
     }
@@ -1027,7 +1030,7 @@
 
         jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "changeToState") }', stateData)
 		.success(function (data) {
-			jq().toastmessage('showNoticeToast', data.message);
+			jq().toastmessage('showSuccessToast', data.message);
 			return data.status;
 		}).error(function (xhr, status, err) {
 			jq().toastmessage('showErrorToast', "AJAX error!" + err);
