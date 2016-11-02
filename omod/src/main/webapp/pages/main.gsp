@@ -533,6 +533,7 @@
 		margin-left: 5px;
 	}
 	.fp-administration textarea,
+	.fp-administration select,
 	.fp-administration input[type="text"]{
 		width: 75%!important;
 	}

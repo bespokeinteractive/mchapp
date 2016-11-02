@@ -93,6 +93,5 @@ public interface ImmunizationService extends OpenmrsService {
 
     List<ImmunizationStockout> listImmunizationStockouts(Integer drugId, Boolean currentlyOpen);
 
-
     List<ImmunizationStoreDrug> getImmunizationStoreDrugsForDrug(InventoryDrug inventoryDrug);
 }

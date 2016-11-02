@@ -41,7 +41,7 @@ public class CwcTriageFragmentController {
     private static ImmunizationService immunizationService = Context.getService(ImmunizationService.class);
     protected Logger log = LoggerFactory.getLogger(CwcTriageFragmentController.class);
     public void controller(FragmentModel model, FragmentConfiguration config, UiUtils ui,
-            @RequestParam(value = "encounterId", required = false) String encounterId) {
+                           @RequestParam(value = "encounterId", required = false) String encounterId) {
 
         if (StringUtils.isNotEmpty(encounterId)) {
             model.addAttribute("weightCategoryValue", "");
@@ -50,28 +50,28 @@ public class CwcTriageFragmentController {
             Set<Obs> obs = Context.getEncounterService().getEncounterByUuid(current.getUuid()).getAllObs();
             for (Obs s : obs) {
                 switch (s.getConcept().getId()) {
-                case 5089: {
-                    model.addAttribute("weight", s.getValueNumeric());
-                    break;
-                }
-                case 5090: {
-                    model.addAttribute("height", s.getValueNumeric());
-                    break;
-                }
-                case 5712: {
-                    model.addAttribute("muac", s.getValueNumeric());
-                    break;
-                }
-                case 1854: {
-                    Concept wCat = s.getValueCoded();
-                    model.addAttribute("weightCategoryValue", wCat.getUuid());
-                    break;
-                }
-                case 100126186: {
-                    Concept gStat = s.getValueCoded();
-                    model.addAttribute("growthStatusValue", gStat.getUuid());
-                    break;
-                }
+                    case 5089: {
+                        model.addAttribute("weight", s.getValueNumeric());
+                        break;
+                    }
+                    case 5090: {
+                        model.addAttribute("height", s.getValueNumeric());
+                        break;
+                    }
+                    case 5712: {
+                        model.addAttribute("muac", s.getValueNumeric());
+                        break;
+                    }
+                    case 1854: {
+                        Concept wCat = s.getValueCoded();
+                        model.addAttribute("weightCategoryValue", wCat.getUuid());
+                        break;
+                    }
+                    case 100126186: {
+                        Concept gStat = s.getValueCoded();
+                        model.addAttribute("growthStatusValue", gStat.getUuid());
+                        break;
+                    }
                 }
             }
         } else {
@@ -115,15 +115,15 @@ public class CwcTriageFragmentController {
     }
 
     public SimpleObject saveCwcTriageInfo(@RequestParam("patientId") Patient patient,
-            @RequestParam("queueId") Integer queueId, @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
-            @RequestParam(value = "isEdit", required = false) Boolean isEdit, UiSessionContext session,
-            HttpServletRequest request) {
+                                          @RequestParam("queueId") Integer queueId, @RequestParam("patientEnrollmentDate") Date patientEnrollmentDate,
+                                          @RequestParam(value = "isEdit", required = false) Boolean isEdit, UiSessionContext session,
+                                          HttpServletRequest request) {
         PatientQueueService queueService = Context.getService(PatientQueueService.class);
         TriagePatientQueue queue = queueService.getTriagePatientQueueById(queueId);
         try {
             ClinicalForm form = ClinicalForm.generateForm(request, patient, null);
             List<Object> previousVisitsByPatient = Context.getService(MchService.class).findVisitsByPatient(patient, true,
-                true, patientEnrollmentDate);
+                    true, patientEnrollmentDate);
             int visitTypeId;
             if (previousVisitsByPatient.size() == 0) {
                 visitTypeId = MchMetadata._MchProgram.INITIAL_MCH_CLINIC_VISIT;
@@ -131,11 +131,11 @@ public class CwcTriageFragmentController {
                 visitTypeId = MchMetadata._MchProgram.RETURN_CWC_CLINIC_VISIT;
             }
             Encounter encounter = Context.getService(MchService.class).saveMchEncounter(form,
-                MchMetadata._MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
+                    MchMetadata._MchEncounterType.CWC_TRIAGE_ENCOUNTER_TYPE, session.getSessionLocation(), visitTypeId);
             if (request.getParameter("send_for_examination") != null) {
                 String visitStatus = queue.getVisitStatus();
                 SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
-                    patient, visitStatus);
+                        patient, visitStatus);
             }
 
             if (!isEdit) {
@@ -143,15 +143,15 @@ public class CwcTriageFragmentController {
             }
 
             return SimpleObject.create("status", "success", "message", "Triage information has been saved.", "isEdit",
-                isEdit);
+                    isEdit);
         } catch (NullPointerException e) {
             log.error(e.getMessage());
             return SimpleObject.create("status", "error", "message",
-                e.getMessage());
+                    e.getMessage());
         } catch (ParseException e) {
             log.error(e.getMessage());
             return SimpleObject.create("status", "error", "message",
-                e.getMessage());
+                    e.getMessage());
         }
     }
 
@@ -207,9 +207,16 @@ public class CwcTriageFragmentController {
         Integer programWorkflowStateId = Integer.parseInt(request.getParameter("programWorkflowStateId"));
 
         Integer patientId = Integer.parseInt(request.getParameter("patientId"));
-        Integer vvmStage = Integer.parseInt(request.getParameter("vvmStage"));
-        Integer quantity = Integer.parseInt(request.getParameter("quantity"));
-        Integer batchNo = Integer.parseInt(request.getParameter("batchNo"));
+        Integer batchNo = null;
+        Integer vvmStage = null;
+        Integer quantity = null;
+
+        if (!request.getParameter("batchNo").equals("")){
+            batchNo = Integer.parseInt(request.getParameter("batchNo"));
+            vvmStage = Integer.parseInt(request.getParameter("vvmStage"));
+            quantity = Integer.parseInt(request.getParameter("quantity"));
+        }
+
 
         Patient patient = Context.getPatientService().getPatient(patientId);
 
@@ -226,8 +233,10 @@ public class CwcTriageFragmentController {
                 pp.transitionToState(st, onDate);
                 pp = s.savePatientProgram(pp);
 
-                for (PatientState state : pp.getCurrentStates()){
-                    updateImmunizationStorePatientTransaction(patient, batchNo, vvmStage, quantity, state);
+                if (batchNo != null){
+                    for (PatientState state : pp.getCurrentStates()){
+                        updateImmunizationStorePatientTransaction(patient, batchNo, vvmStage, quantity, state);
+                    }
                 }
             } catch (ParseException e) {
                 return SimpleObject.create("status", "error", "message", e.getMessage());

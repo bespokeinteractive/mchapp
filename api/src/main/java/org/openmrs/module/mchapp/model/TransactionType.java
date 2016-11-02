@@ -10,6 +10,7 @@ public enum TransactionType {
     RETURNS(3),
     ISSUE_TO_ACCOUNT(4),
     SUPPLIER_RETURNS(5);
+
     private int value;
 
     private TransactionType(int value) {
