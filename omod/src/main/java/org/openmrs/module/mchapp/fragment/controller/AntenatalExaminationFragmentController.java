@@ -112,21 +112,7 @@ public class AntenatalExaminationFragmentController {
                                     UiSessionContext session) {
         InventoryService inventoryService = (InventoryService) Context
                 .getService(InventoryService.class);
-        List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
-
-        InventoryStoreRoleRelation srl = null;
-        Role rl = null;
-        for (Role r : role) {
-            if (inventoryService.getStoreRoleByName(r.toString()) != null) {
-                srl = inventoryService.getStoreRoleByName(r.toString());
-                rl = r;
-            }
-        }
-
-        InventoryStore store = null;
-        if (srl != null) {
-            store = inventoryService.getStoreById(srl.getStoreid());
-        }
+        InventoryStore store = inventoryService.getStoreById(4);
 
         Encounter encounter = new Encounter();
         EncounterType mchEncounterType = Context.getEncounterService().getEncounterTypeByUuid(MchMetadata._MchEncounterType.ANC_ENCOUNTER_TYPE);
