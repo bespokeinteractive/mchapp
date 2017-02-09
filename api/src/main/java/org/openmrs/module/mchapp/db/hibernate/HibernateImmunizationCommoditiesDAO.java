@@ -1,15 +1,20 @@
 package org.openmrs.module.mchapp.db.hibernate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.Person;
+import org.openmrs.PersonName;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalcore.model.InventoryDrug;
@@ -19,9 +24,7 @@ import org.openmrs.module.mchapp.db.ImmunizationCommoditiesDAO;
 import org.openmrs.module.mchapp.model.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Stanslaus Odhiambo
@@ -49,6 +52,24 @@ public class HibernateImmunizationCommoditiesDAO implements ImmunizationCommodit
         return sessionFactory;
     }
 
+    @Override
+    public Integer getLastTetanusToxoidVaccineCount(Integer patientId){
+        String issue = "0";
+        String hql = "SELECT issue_count FROM inventory_store_drug_patient_detail isdpt INNER JOIN inventory_store_drug_patient isdp ON isdp.id=isdpt.store_drug_patient_id INNER JOIN inventory_store_drug_transaction_detail isdtd ON isdpt.transaction_detail_id=isdtd.id WHERE drug_id=188 AND patient_id=" + patientId + " ORDER BY issue_count DESC LIMIT 1";
+        SQLQuery sqlquery = this.sessionFactory.getCurrentSession().createSQLQuery(hql);
+        List query = sqlquery.list();
+
+        if(CollectionUtils.isNotEmpty(query)) {
+            Iterator iterator = query.iterator();
+            while(iterator.hasNext()) {
+                Object o = iterator.next();
+                if (o != null){
+                    issue = o.toString();
+                }
+            }
+        }
+        return Integer.parseInt(issue) + 1;
+    }
 
     @Override
     public List<ImmunizationStoreDrug> listImmunizationStoreDrug(String name, int min, int max) throws DAOException {

@@ -206,10 +206,17 @@
             actions: {
                 confirm: function () {
 					var batchNo = jq('#tetanus-batch-no').val();
+					var issueNo = jq('#tetanus-issue-count').val();
+					
+					if (!jq.isNumeric(issueNo)){
+						jq().toastmessage('showErrorToast', 'Kindly specify the Vaccine Issue Number');
+						jq('#tetanus-issue-count').focus();
+						return false;
+					}
 					
 					if (batchNo == ''){
 						jq().toastmessage('showErrorToast', 'Kindly specify the Batch Number');
-						jq(this).focus();
+						jq('#tetanus-batch-no').focus();
 						return false;
 					}
 					
@@ -224,6 +231,7 @@
 						formulation: 438,
 						frequency: 'QID',
 						batchNo: batchNo,
+						issueNo: issueNo,
 						injDate: jq('#tetanus-vaccine-date-field').val()
 					}).success(function (data) {
 						jq().toastmessage('removeToast', savingMessage);
@@ -251,7 +259,22 @@
 			
 			if (typeof(idnt) === 'undefined'){
 				if (jq(this).attr('id') == 'update-tetanus-vaccine'){
-					tetanusVaccineDialog.show();
+					jq.ajax({
+						type: "GET",
+						url: '${ ui.actionLink("mchapp", "antenatalExamination", "getTetanusToxoidCount") }',
+						data: ({
+							patientId: ${patient.id}
+						}),
+						dataType: "json",
+						success: function (data) {
+							jq('#tetanus-issue-count').val(data);
+							tetanusVaccineDialog.show();
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							console.log(thrownError);
+						}
+					});
+				
 					return false;				
 				}
 				else{
@@ -2450,8 +2473,13 @@
     <div class="dialog-content">
         <ul>
 			<li>
-				<label for="vaccine-name">Vaccine Name:</label>
+				<label for="tetanus-vaccine-name">Vaccine Name:</label>
 				<input type="text" id="tetanus-vaccine-name" readonly="" value="Tetanus Toxoid"/>
+			</li>
+			
+			<li>
+				<label for="tetanus-issue-count">Issue Count:</label>
+				<input type="text" id="tetanus-issue-count" />
 			</li>
 			
 			<li>

@@ -19,6 +19,8 @@ import java.util.List;
 public interface ImmunizationService extends OpenmrsService {
     List<ImmunizationStoreTransactionType> getAllTransactionTypes();
 
+    Integer getLastTetanusToxoidVaccineCount(Integer patientId);
+
     ImmunizationStoreTransactionType getTransactionTypeByName(String name);
 
     ImmunizationStoreTransactionType getTransactionTypeById(int id);

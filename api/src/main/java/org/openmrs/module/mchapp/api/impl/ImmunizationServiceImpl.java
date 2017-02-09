@@ -36,6 +36,11 @@ public class ImmunizationServiceImpl extends BaseOpenmrsService implements Immun
     }
 
     @Override
+    public Integer getLastTetanusToxoidVaccineCount(Integer patientId){
+        return dao.getLastTetanusToxoidVaccineCount(patientId);
+    }
+
+    @Override
     public ImmunizationStoreTransactionType getTransactionTypeByName(String name) {
         return dao.getTransactionTypeByName(name);
     }
