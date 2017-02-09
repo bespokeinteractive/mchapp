@@ -2,7 +2,6 @@
     ui.includeCss("patientdashboardapp", "patientdashboardapp.css");
 
     ui.includeJavascript("uicommons", "handlebars/handlebars.min.js", Integer.MAX_VALUE - 1)
-
     ui.includeJavascript("uicommons", "navigator/validators.js", Integer.MAX_VALUE - 19)
     ui.includeJavascript("uicommons", "navigator/navigator.js", Integer.MAX_VALUE - 20)
     ui.includeJavascript("uicommons", "navigator/navigatorHandlers.js", Integer.MAX_VALUE - 21)
@@ -62,11 +61,11 @@
                 outcomeId: outcomeId
             }
             jq.getJSON('${ ui.actionLink("mchapp", "cwcTriage", "updatePatientProgram") }', updateData)
-                    .success(function (data) {
-                        SubmitInformation();
-                    }).error(function (xhr, status, err) {
-                        jq().toastmessage('showErrorToast', "AJAX error!" + err);
-                    }
+				.success(function (data) {
+					SubmitInformation();
+				}).error(function (xhr, status, err) {
+					jq().toastmessage('showErrorToast', "AJAX error!" + err);
+				}
             );
         }
 
@@ -192,6 +191,12 @@
                 }
             }
         });
+		
+		jq('#vaccine-state').change(function(){
+			if (jq('#vaccine-name').val() == 'VITAMIN A' && jq('#vaccine-state').val() != 0){
+				checkVitaminABatchesAvailability();			
+			}
+		});
 
         jq('.update-vaccine a').click(function () {
             var idnt = jq(this).data('idnt');
@@ -571,7 +576,6 @@
             jq('#feeding-info-set').val('SET');
 
             var output = '';
-
             if (jq("input[name='concept.a082375c-bfe4-4395-9ed5-d58e9ab0edd3']:checked").val() == '4536f271-5430-4345-b5f7-37ca4cfe1553') {
                 output += '&#9745; Exclusive Breastfeeding (0-6 months)<br/>';
             }
@@ -847,6 +851,10 @@
 
 
     function checkBatchAvailability(drgName) {
+		if (drgName == 'VITAMIN A'){
+			return false;		
+		}
+		
         var requestData = {
             drgName: drgName
         }
@@ -868,7 +876,30 @@
 				jq().toastmessage('showErrorToast', "AJAX error!" + err);
 			}
         );
+    }
+	
+	function checkVitaminABatchesAvailability() {		
+        var requestData = {
+            drgName: jq('#vaccine-state :selected').text().split("(")[0].trim()
+        }
+        jq.getJSON('${ ui.actionLink("mchapp", "childWelfareExamination", "getBatchesForSelectedDrug") }', requestData)
+			.success(function (data) {
+				var options = jq("#vaccine-batch");
+				options.empty();
+				options.append(jq("<option />").val("0").text("Select Batch"));
+				
+				if (data.status === "fail") {
+					jq().toastmessage('showErrorToast', data.message);
+					return false;
+				}
 
+				jq.each(data.drugs, function (i, item) {
+					options.append(jq("<option />").val(item.id).text(item.batchNo));
+				});
+			}).error(function (xhr, status, err) {
+				jq().toastmessage('showErrorToast', "AJAX error!" + err);
+			}
+        );
     }
 </script>
 
@@ -1824,7 +1855,6 @@ table[id*='workflowTable_'] th:nth-child(4) {
 <div id="exitCwcDialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-
         <h3>Exit From Program</h3>
     </div>
 
@@ -1863,7 +1893,6 @@ table[id*='workflowTable_'] th:nth-child(4) {
 <div id="vaccinations-dialog" class="dialog" style="display: none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-
         <h3>UPDATE VACCINE</h3>
     </div>
 
