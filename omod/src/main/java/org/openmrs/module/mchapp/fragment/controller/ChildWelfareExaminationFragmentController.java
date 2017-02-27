@@ -105,7 +105,7 @@ public class ChildWelfareExaminationFragmentController {
 
             if (request.getParameter("child_fully_immunized") == null) {
                 pa.setValue("false");
-            }else {
+            } else {
                 if (!pa.getValue().equals("true")){
                     pa.setDateCreated(new Date());
                 }
@@ -115,18 +115,14 @@ public class ChildWelfareExaminationFragmentController {
             patient.addAttribute(pa);
             Context.getPatientService().savePatient(patient);
 
-
-
-
-
-
             QueueLogs.logOpdPatient(patientQueue, encounter);
-            return SimpleObject.create("status", "success", "message",
-                "Examination information has been saved.");
-        } catch (Exception e) {
+            return SimpleObject.create("status", "success", "message", "Examination information has been saved.");
+        } catch (NullPointerException e) {
             log.error(e.getMessage());
-            return SimpleObject.create("status", "error", "message",
-                e.getMessage());
+            return SimpleObject.create("status", "error", "message", e.getMessage());
+        } catch (ParseException e) {
+            log.error(e.getMessage());
+            return SimpleObject.create("status", "error", "message", e.getMessage());
         }
     }
 
