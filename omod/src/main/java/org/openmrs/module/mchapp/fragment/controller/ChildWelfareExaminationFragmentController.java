@@ -1,7 +1,6 @@
 package org.openmrs.module.mchapp.fragment.controller;
 
-import org.openmrs.Encounter;
-import org.openmrs.Patient;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.PatientQueueService;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +43,8 @@ public class ChildWelfareExaminationFragmentController {
         String queueId = config.get("queueId").toString();
         String patientID = config.get("patientId").toString();
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(patientID));
+        PersonAttribute pa = patient.getAttribute(MchMetadata.MchAppConstants.CWC_CHILD_COMPLETED_IMMUNIZATION);
+
         model.addAttribute("patient", patient);
         model.addAttribute("patientProfile", PatientProfileGenerator.generatePatientProfile(patient, MchMetadata._MchProgram.CWC_PROGRAM));
         model.addAttribute("patientHistoricalProfile", PatientProfileGenerator.generateHistoricalPatientProfile(patient, MchMetadata._MchProgram.CWC_PROGRAM));
@@ -50,6 +52,13 @@ public class ChildWelfareExaminationFragmentController {
         model.addAttribute("externalReferrals", SimpleObject.fromCollection(Referral.getExternalReferralOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("referralReasons", SimpleObject.fromCollection(ReferralReasons.getReferralReasonsOptions(), ui, "label", "id", "uuid"));
         model.addAttribute("queueId", queueId);
+
+        if (pa == null){
+            model.addAttribute("immunizationStatus", "false");
+        }
+        else {
+            model.addAttribute("immunizationStatus", pa.getValue());
+        }
     }
 
     public SimpleObject saveCwcExaminationInformation(
@@ -74,23 +83,47 @@ public class ChildWelfareExaminationFragmentController {
                 internalReferral.sendToRefferedRoom(patient, refferedRoomUuid);
             }
 
-            PatientQueueService queueService = Context.getService(PatientQueueService.class);
-            OpdPatientQueue queue = queueService.getOpdPatientQueueById(queueId);
+            //PatientQueueService queueService = Context.getService(PatientQueueService.class);
+            //OpdPatientQueue queue = queueService.getOpdPatientQueueById(queueId);
 
             if (request.getParameter("send_for_examination") != null) {
-                String visitStatus = queue.getVisitStatus();
+                String visitStatus = patientQueue.getVisitStatus();
                 SendForExaminationParser.parse("send_for_examination", request.getParameterValues("send_for_examination"),
                         patient, visitStatus);
             }
 
+            System.out.println("CHECKED VALUE:::::" + request.getParameter("child_fully_immunized"));
+
+            PersonAttribute pa = patient.getAttribute(MchMetadata.MchAppConstants.CWC_CHILD_COMPLETED_IMMUNIZATION);
+            if (pa == null) {
+                pa = new PersonAttribute();
+                pa.setPerson(patient);
+                pa.setAttributeType(new PersonAttributeType(52));
+                pa.setCreator(new User(1));
+                pa.setDateCreated(new Date());
+            }
+
+            if (request.getParameter("child_fully_immunized") == null) {
+                pa.setValue("false");
+            }else {
+                if (!pa.getValue().equals("true")){
+                    pa.setDateCreated(new Date());
+                }
+                pa.setValue("true");
+            }
+
+            patient.addAttribute(pa);
+            Context.getPatientService().savePatient(patient);
+
+
+
+
+
+
             QueueLogs.logOpdPatient(patientQueue, encounter);
             return SimpleObject.create("status", "success", "message",
                 "Examination information has been saved.");
-        } catch (NullPointerException e) {
-            log.error(e.getMessage());
-            return SimpleObject.create("status", "error", "message",
-                e.getMessage());
-        } catch (ParseException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             return SimpleObject.create("status", "error", "message",
                 e.getMessage());

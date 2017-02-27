@@ -1656,9 +1656,9 @@ table[id*='workflowTable_'] th:nth-child(4) {
 <% } else { %>
 
 <style>
-#formBreadcrumb {
-    display: none;
-}
+	#formBreadcrumb {
+		display: none;
+	}
 </style>
 
 <form method="post" id="cwcExaminationsForm">
@@ -1770,6 +1770,24 @@ table[id*='workflowTable_'] th:nth-child(4) {
                 </div>
             </div>
             <% } %>
+			
+			<div class="info-section">
+				 <div class="info-header">
+                    <i class="icon-medicine"></i>
+                    <h3>IMMUNIZATION STATUS</h3>
+                </div>
+				
+				<div class="info-body">
+					<div>
+						<div style="margin-left: 20px;">
+							<label style="cursor: pointer; font-weight: normal; width: 90%; padding: 0px; margin: 0px 0px 5px;">
+								<input name="child_fully_immunized" value="true" type="checkbox" ${immunizationStatus=='true'?'checked':''}>
+								Child is fully immunized
+							</label>
+						</div>
+					</div>
+				</div>
+            </div>
 
         </div>
     </div>
