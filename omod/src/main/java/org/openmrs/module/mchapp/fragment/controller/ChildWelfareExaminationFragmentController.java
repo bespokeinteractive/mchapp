@@ -99,7 +99,7 @@ public class ChildWelfareExaminationFragmentController {
                 pa = new PersonAttribute();
                 pa.setPerson(patient);
                 pa.setAttributeType(new PersonAttributeType(52));
-                pa.setCreator(new User(1));
+                pa.setCreator(Context.getAuthenticatedUser());
                 pa.setDateCreated(new Date());
             }
 
