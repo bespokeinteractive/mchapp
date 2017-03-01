@@ -15,6 +15,7 @@ import java.util.List;
  *         Interface that declares the functionalities to be implemented by the implementing class that enters into a contract with it
  */
 public interface ImmunizationCommoditiesDAO {
+    Integer getLastTetanusToxoidVaccineCount(Integer patientId);
 
     //    TODO Behaviours for implementing the Immunization functionalities
     List<ImmunizationStoreDrug> listImmunizationStoreDrug(String name, int min, int max) throws DAOException;

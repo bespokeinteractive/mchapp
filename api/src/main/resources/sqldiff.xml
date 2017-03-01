@@ -181,4 +181,17 @@
 			ALTER TABLE immunization_store_drug_transaction_detail ADD transaction_account VARCHAR(150) NULL AFTER transaction_type;
 		</sql>
 	</diff>
+
+	<diff>
+		<version>1.2.9</version>
+		<author>Dennis Henry</author>
+		<date>Feb 27th 2017</date>
+		<description>
+			Create a new Person Attribute that will store the value of whether a child has been fully Immunized. Remove faulty entries in previous immunization_store_patient_transaction table.
+		</description>
+		<sql>
+			DELETE FROM immunization_store_patient_transaction;
+			INSERT INTO person_attribute_type (person_attribute_type_id,`name`,`description`,`format`,creator,date_created,`uuid`,sort_weight) VALUES (52,'Child Fully Immunized','Stored property whether a child has completed immunization','java.lang.Boolean',1,'2017-02-27','fd00a449-a5bc-a32f-bdd2-377ec1887c5c',52);
+		</sql>
+	</diff>
 </sqldiff>

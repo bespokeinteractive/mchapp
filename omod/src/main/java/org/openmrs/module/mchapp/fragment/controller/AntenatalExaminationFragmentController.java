@@ -18,6 +18,7 @@ import org.openmrs.module.inventory.util.DateUtils;
 import org.openmrs.module.mchapp.InternalReferral;
 import org.openmrs.module.mchapp.MchMetadata;
 import org.openmrs.module.mchapp.MchStores;
+import org.openmrs.module.mchapp.api.ImmunizationService;
 import org.openmrs.module.mchapp.api.MchEncounterService;
 import org.openmrs.module.mchapp.api.MchService;
 import org.openmrs.module.mchapp.api.model.ClinicalForm;
@@ -109,6 +110,7 @@ public class AntenatalExaminationFragmentController {
                                    @RequestParam(value = "frequency", required = false) String frequency,
                                    @RequestParam(value = "injDate", required = false) Date injDate,
                                    @RequestParam(value = "batchNo", required = false) String batchNo,
+                                   @RequestParam(value = "issueNo", required = false) Integer issueNo,
                                     UiSessionContext session) {
         InventoryService inventoryService = (InventoryService) Context
                 .getService(InventoryService.class);
@@ -133,6 +135,10 @@ public class AntenatalExaminationFragmentController {
         transaction.setCreatedOn(new Date());
         transaction.setCreatedBy(Context.getAuthenticatedUser().getGivenName());
         transaction = inventoryService.saveStoreDrugTransaction(transaction);
+
+        if (issueNo == null){
+            issueNo = 1;
+        }
 
         //for (InventoryStoreDrugPatientDetail pDetail : listDrugIssue) {
         Date date1 = new Date();
@@ -183,7 +189,7 @@ public class AntenatalExaminationFragmentController {
         inventoryStoreDrugPatient.setName(patient.getPersonName().toString());
         inventoryStoreDrugPatient.setIdentifier(patient.getIdentifiers().toString());
         inventoryStoreDrugPatient.setCreatedBy(Context.getAuthenticatedUser().getGivenName());
-        inventoryStoreDrugPatient.setCreatedOn(date1);
+        inventoryStoreDrugPatient.setCreatedOn(injDate);
         inventoryStoreDrugPatient.setValues(0);
         inventoryStoreDrugPatient.setStatuss(0);
         inventoryStoreDrugPatient.setComment("");
@@ -194,8 +200,14 @@ public class AntenatalExaminationFragmentController {
         inventoryStoreDrugPatientDetail.setStoreDrugPatient(inventoryStoreDrugPatient);
         inventoryStoreDrugPatientDetail.setTransactionDetail(transDetail);
         inventoryStoreDrugPatientDetail.setQuantity(1);
+        inventoryStoreDrugPatientDetail.setIssueCount(issueNo);
         inventoryStoreDrugPatientDetail = inventoryService.saveStoreDrugPatientDetail(inventoryStoreDrugPatientDetail);
 
         return "success";
+    }
+
+    public Integer getTetanusToxoidCount(@RequestParam(value = "patientId", required = false) Integer patientId,
+                                    UiSessionContext session) {
+        return Context.getService(ImmunizationService.class).getLastTetanusToxoidVaccineCount(patientId);
     }
 }

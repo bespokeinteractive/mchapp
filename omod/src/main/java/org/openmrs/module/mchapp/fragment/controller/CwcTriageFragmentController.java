@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -223,7 +224,8 @@ public class CwcTriageFragmentController {
         String onDateDMY = request.getParameter("onDateDMY");
         ProgramWorkflowService s = Context.getProgramWorkflowService();
         PatientProgram pp = s.getPatientProgram(patientProgramId);
-        ProgramWorkflowState st = pp.getProgram().getWorkflow(programWorkflowId).getState(programWorkflowStateId);
+        ProgramWorkflow pwf = pp.getProgram().getWorkflow(programWorkflowId);
+        ProgramWorkflowState st = pwf.getState(programWorkflowStateId);
         Date onDate = null;
 
         if (onDateDMY != null && onDateDMY.length() > 0) {
@@ -234,9 +236,7 @@ public class CwcTriageFragmentController {
                 pp = s.savePatientProgram(pp);
 
                 if (batchNo != null){
-                    for (PatientState state : pp.getCurrentStates()){
-                        updateImmunizationStorePatientTransaction(patient, batchNo, vvmStage, quantity, state);
-                    }
+                    updateImmunizationStorePatientTransaction(patient, batchNo, vvmStage, quantity, pp.getCurrentState(pwf));
                 }
             } catch (ParseException e) {
                 return SimpleObject.create("status", "error", "message", e.getMessage());
