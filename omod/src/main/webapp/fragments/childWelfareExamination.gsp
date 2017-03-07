@@ -1773,7 +1773,7 @@ table[id*='workflowTable_'] th:nth-child(4) {
 			
 			<div class="info-section">
 				 <div class="info-header">
-                    <i class="icon-medicine"></i>
+                    <i class="icon-ok"></i>
                     <h3>IMMUNIZATION STATUS</h3>
                 </div>
 				
